@@ -1,0 +1,245 @@
+# Unified external deployments, provider sandboxes, and Workbox integration.
+# Authored planning source for the Openship fork; this repository has no KVX renderer.
+
+[meta]
+feature     = "workbox-cloud-deployments"
+name        = "Unified provider deployments, sandboxes, machines, and Workbox"
+version     = "0.1.0-proposed"
+status      = "proposed"
+review_date = "2026-11-16"
+intro       = "Extend Openship's existing project, credential, deployment and destination model so one explicit interface can deploy service containers, provider-managed sandboxes, VM-like machines, and Workbox workloads to Railway, multiple Vercel accounts, Fly.io, and self-managed servers. Native Railway and Vercel sandboxes are first-class provider resources and are not service containers. Workbox remains a separate adapter and host capability model; a Workbox daemon is a service/host, while a Workbox sandbox is a child workload."
+
+[decisions]
+d_1  = "RULED by this spec: deployment target identity is a provider connection plus provider resource identifiers. A project never infers an account from the newest credential, a provider default, or a caller-supplied label."
+d_2  = "RULED by this spec: service containers, provider sandboxes, VM/machine resources, and Workbox sandboxes have different lifecycle and persistence semantics. They share normalized operations only through capability adapters."
+d_3  = "RULED by this spec: Railway services and Railway Sandboxes use separate adapters and records. Railway services are container deployments with staged configuration; Railway Sandboxes are isolated Linux VMs scoped to an environment with exec, SSH, checkpoints/forks, routes and idle destruction."
+d_4  = "RULED by this spec: Vercel project deployments and Vercel Sandbox resources use separate adapters and records. Vercel Sandboxes are Firecracker microVMs with a sandbox/session model, persistent snapshots by default, auto-resume, managed or OCI images, network policy and privileged-in-sandbox workloads."
+d_5  = "RULED by this spec: Fly Machines and Fly Sprites are different provider resource kinds and APIs. A Workbox sandbox or checkpoint is never silently represented as a Fly Sprite or Machine."
+d_6  = "RULED by this spec: Workbox integration uses its REST/WebSocket/SDK contract and scoped API keys. Workbox's current provider mapping is partial for capabilities, lifetime, attach, transfer and output digests; the adapter reports those gaps instead of fabricating parity."
+d_7  = "RULED by this spec: every external mutation has a durable operation, an idempotency key, and inspect-after-timeout reconciliation. UNKNOWN is not success and cannot be retried blindly."
+d_8  = "RULED by this spec: credentials are organization-scoped, encrypted and server-resolved. Multiple Vercel accounts or teams are distinct connections with immutable provider identity snapshots and explicit project/environment bindings."
+d_9  = "FLAGGED for live qualification: a Workbox daemon needs Linux user namespaces, cgroup v2 delegation, bubblewrap, overlayfs and network tooling. A normal Railway or Vercel service container is not assumed to satisfy those prerequisites."
+d_10 = "FLAGGED for owner decision: sprite machine means the Fly Sprites API resource unless a future Workbox release defines an equivalent profile. The current Workbox upstream contains no sprite primitive."
+
+[req.1]
+title = "Explicit target and workload model"
+story = "As an operator, I need the destination picker to distinguish what is being run from where it runs, so that a service container is never treated as a sandbox or machine."
+ac_1 = "The domain model SHALL represent provider connection, deployment target, workload kind and immutable provider resource identity separately. Workload kinds SHALL include service, railway-sandbox, vercel-sandbox, fly-machine, fly-sprite, workbox-host and workbox-sandbox."
+ac_2 = "A target SHALL carry provider, connectionId, account or workspace identity, project/environment/region scope where applicable, and provider resource IDs. A deployment SHALL retain the resolved target snapshot and provider revision or resource ID."
+ac_3 = "Capability discovery SHALL return supported operations, persistence, snapshot/checkpoint, idle policy, exec/session, file transfer, network mode, public ingress, logs, rollback, and resource limits for the selected target. Unsupported combinations SHALL be rejected before mutation with a machine-readable reason."
+ac_4 = "Existing local, SSH/self-managed, managed Cloud, Docker, bare, Compose, Kubernetes and cluster targets SHALL remain valid and continue using their current host runtime path."
+
+[req.2]
+title = "Connections and account isolation"
+story = "As an organization administrator, I need several Railway, Vercel and Fly accounts to coexist without credential crossover, so that every deployment is attributable to one intended provider scope."
+ac_1 = "Provider connections SHALL reuse the encrypted organization-scoped credential registry, add deploy and sandbox capabilities, and keep migration capability distinct from deployment capability."
+ac_2 = "Each Vercel account or team connection SHALL store a provider-reported opaque account identity and optional team identity at verification time. Two connections with the same project name or team label SHALL remain independently selectable."
+ac_3 = "Railway connections SHALL preserve token scope and workspace or environment identity. Fly connections SHALL preserve organization identity and separate Machine and Sprites API origins. Workbox connections SHALL store base URL and key reference while keeping the bearer value encrypted."
+ac_4 = "OAuth state SHALL be single-use, PKCE-bound and tied to initiating user and organization. API tokens, refresh tokens, Workbox keys and SSH material SHALL never appear in URLs, logs, event payloads, UI responses or audit metadata."
+ac_5 = "Deploy, rotate, verify and remove operations SHALL require the existing administrator/settings permissions and SHALL audit the connection ID, provider identity and redacted outcome."
+
+[req.3]
+title = "Service container deployments"
+story = "As an operator, I need ordinary applications and background services to deploy through provider-native service APIs, while retaining Openship's existing host runtimes for self-managed servers."
+ac_1 = "Railway service deployment SHALL map source or image, variables, staged changes, deploy, deployment status, logs, domains, volumes, restart and rollback to a Railway service/environment, and SHALL not create a Railway Sandbox."
+ac_2 = "Vercel project deployment SHALL map source or prebuilt output, project configuration, environment values, deployment, aliases/domains, status, logs and rollback or promotion to the selected account/team project, and SHALL not create a Vercel Sandbox."
+ac_3 = "Fly Machine deployment SHALL map image, region, env/secrets, volumes, checks, process groups, start/stop/restart, health, logs and image or release rollback to a Fly Machine app."
+ac_4 = "Self-managed server deployment SHALL keep the existing SSH host-key pinning, Docker/Bare/Compose/Kubernetes runtime selection, destination ownership and SSRF restrictions. External provider adapters SHALL not route through the control plane's local Docker socket or filesystem."
+ac_5 = "Service containers SHALL expose readiness, public route and rollback semantics appropriate to the provider. A provider request being accepted SHALL not be recorded as a ready deployment until observed state and readiness satisfy the selected policy."
+
+[req.4]
+title = "Railway Sandboxes"
+story = "As an operator, I need Railway's native isolated VMs available in the same interface as services, with their own lifecycle and environment binding."
+ac_1 = "The Railway Sandbox adapter SHALL create, list, inspect, exec, connect or SSH, transfer files, run Docker where supported by the current image, checkpoint, fork, publish or inspect domains, stop and destroy sandboxes through the current Railway sandbox API or SDK."
+ac_2 = "A Railway Sandbox target SHALL be bound to one Railway environment and SHALL preserve region, VM resources, networkIsolation (ISOLATED or PRIVATE), idleTimeoutMinutes, env references, public domains and checkpoint or fork provenance."
+ac_3 = "The UI and API SHALL show that a Railway Sandbox is an isolated Linux VM and SHALL show idle destruction, per-environment concurrency, resource and route limits before creation. Production traffic guidance SHALL direct users to a Railway service when a service is the required workload kind."
+ac_4 = "Sandbox commands, files, sessions and checkpoints SHALL be represented as child operations of the sandbox resource, not as service deployments. A sandbox route SHALL not be treated as a durable service domain without an explicit user action and provider confirmation."
+
+[req.5]
+title = "Vercel Sandboxes"
+story = "As an operator, I need current Vercel Sandbox capabilities, including persistent and non-persistent modes, without conflating them with Vercel project deployments."
+ac_1 = "The Vercel Sandbox adapter SHALL support create or get-or-create by project-scoped name, run commands, durable sessions, file operations, stop, resume, delete, tags, ports, network policy, managed or OCI images, snapshots and resource inspection through the supported Vercel Sandbox SDK/API."
+ac_2 = "The adapter SHALL preserve Vercel's two-level sandbox/session model. Persistent sandboxes SHALL be modeled as a long-lived sandbox with automatically saved filesystem snapshots and resumable sessions; non-persistent sandboxes SHALL be modeled as discard-on-stop workloads."
+ac_3 = "Vercel Sandbox SHALL support provider capabilities such as Firecracker isolation, system-privileged processes, Docker-in-sandbox, custom images, secure networking and snapshot retention where returned by the selected account and plan."
+ac_4 = "A Vercel Sandbox SHALL never be represented as a Vercel project deployment, Function, Fluid Compute service or ordinary Openship service container. The UI SHALL provide separate create, stop/resume, session and snapshot actions."
+ac_5 = "The adapter SHALL enforce account/project scope, sandbox name uniqueness, snapshot retention and provider time limits; it SHALL surface provider limits and billing-relevant persistence before creation."
+
+[req.6]
+title = "Fly Machines and Fly Sprites"
+story = "As an operator, I need Fly's VM and Sprite resources in one destination picker while retaining their distinct APIs and lifecycle semantics."
+ac_1 = "Fly Machine targets SHALL use the Machines API and preserve app, organization, region, image, volumes, checks, env/secrets and machine ID."
+ac_2 = "Fly Sprite targets SHALL use the Sprites API and preserve sprite name, organization, persistent filesystem, sleep/wake state, checkpoints, services, network policy and private or public URL state."
+ac_3 = "Fly Machine and Fly Sprite operations SHALL report separate capability profiles, logs, exec/session behavior, restart and rollback semantics. A Workbox sandbox ID or checkpoint SHALL not be used as a Fly Sprite ID without an explicit transfer operation and receipt."
+ac_4 = "The provider registry SHALL use separate credentials or explicit origin scopes for api.machines.dev and api.sprites.dev, with least-privilege token handling and provider-specific verification."
+
+[req.7]
+title = "Workbox environments and sandbox adapter"
+story = "As an operator, I need Workbox environments and features available through the same interface, whether Workbox is remote or provisioned on a compatible host, and I need native provider sandboxes to remain distinguishable from Workbox sandboxes."
+ac_1 = "A Workbox host SHALL be represented as a service or host deployment that exposes the Workbox REST/WebSocket API. A Workbox sandbox SHALL be a child resource created through that API; it SHALL not be stored as a generic service container."
+ac_2 = "The Workbox adapter SHALL use the SDK or REST/WS API for capabilities, prepare, create, list, observe, attach, execute, inspect, stop, transfer, lifetime and destroy, plus Workbox-specific reconcile, events, asks, artifacts and checkpoints where available."
+ac_3 = "Workbox environment mapping SHALL preserve rootfs, runtime, profile limits, network mode, labels, secretRefs, idempotencyKey, sessions, output-gap information, checkpoints and artifact or evidence references. Secret values SHALL be injected only through provider-supported references."
+ac_4 = "The adapter SHALL expose Workbox's current capability gaps: no native capabilities or lifetime endpoint, partial attach/transfer/output digest behavior, no general persistent shared storage or public ingress guarantee, and no native sprite API. Gaps SHALL be visible in preflight and UI."
+ac_5 = "Workbox host deployment SHALL run a doctor/readyz preflight for Linux user namespaces, cgroup v2, subordinate IDs, bubblewrap, overlayfs, nftables, rootfs and runtime availability. Missing prerequisites SHALL produce UNSUPPORTED or BLOCKED and SHALL not be bypassed by deploying a normal unprivileged service."
+ac_6 = "Provider-native Railway Sandbox and Vercel Sandbox resources MAY implement the normalized sandbox operations directly. They SHALL carry provider provenance and SHALL not be labelled Workbox unless a Workbox adapter is actually driving them."
+ac_7 = "A requested sprite machine SHALL resolve to fly-sprite or an explicitly named future Workbox sprite profile. If no provider capability matches, the operation SHALL stop at plan review with an actionable unsupported result."
+
+[req.8]
+title = "Unified interfaces"
+story = "As a user, I need the web dashboard, desktop app, CLI and SDK to select the same provider connection, target, workload kind and environment without hidden defaults."
+ac_1 = "The target picker SHALL show provider, account or workspace, project/environment, region, workload kind and capability warnings before apply. It SHALL preserve the existing self-managed server selector and server runtime choices."
+ac_2 = "The dashboard SHALL provide separate service and sandbox or machine detail views, including status, logs, commands or sessions, routes, snapshots/checkpoints, idle policy, cost or quota signals and destructive actions appropriate to the resource kind."
+ac_3 = "CLI and SDK operations SHALL accept explicit destination or target IDs and connection IDs; the existing server option SHALL remain a compatibility alias. No surface SHALL silently select the newest credential or last-used provider account when several qualify."
+ac_4 = "HTTP, native SDK and CLI calls SHALL enter the same authorized platform operations and return normalized status, capability, provider identifiers, URLs, operation IDs and reconciliation state."
+
+[req.9]
+title = "Durability, safety and reconciliation"
+story = "As a platform operator, I need external mutations to survive retries, crashes and provider ambiguity without leaking credentials or claiming false success."
+ac_1 = "Every mutating external call SHALL persist intent, idempotency key, target snapshot, provider request identity and operation state before sending the request."
+ac_2 = "Timeouts, disconnects, duplicate webhooks, provider rate limits and process restarts SHALL enter reconciliation. Recovery SHALL inspect provider state and compare immutable target and revision data before completing, retrying or requesting action."
+ac_3 = "Provider responses, logs and errors SHALL be bounded and redacted. User-controlled provider endpoints, Workbox URLs and self-managed hosts SHALL retain fixed-origin or SSRF protections, DNS pinning and host-key pinning."
+ac_4 = "Destroy, rollback and transfer SHALL require explicit confirmation where the provider cannot guarantee atomicity. Partial resources SHALL remain visible with cleanup state and receipt rather than being silently forgotten."
+
+[req.10]
+title = "Evidence and qualification"
+story = "As the owner, I need proof separated by evidence class so that fixture tests do not become claims of live provider or release readiness."
+ac_1 = "Contract and adapter tests SHALL cover target isolation, capability rejection, idempotency, inspect-after-timeout, status normalization, logs, redaction, rate limits, rollback and cleanup for every provider kind."
+ac_2 = "Provider fixture tests SHALL cover Railway service and sandbox, Vercel project and sandbox, Fly Machine and Sprite, Workbox remote, and self-managed SSH/Docker/Bare paths with provider responses captured as sanitized fixtures."
+ac_3 = "Real Docker and prepared Workbox host tests SHALL exercise sandbox/session/checkpoint/secret flows and worker restart recovery. They SHALL not be reported as Railway, Vercel or Fly live qualification."
+ac_4 = "Opt-in live tests SHALL use disposable provider resources and credentials supplied through the environment, fail when enabled and unavailable, write sanitized evidence and cleanup receipts, and separately record account, browser, DNS, billing, endurance and release evidence."
+ac_5 = "Documentation SHALL publish the provider matrix, workload distinctions, credential setup, unsupported combinations, recovery behavior, cost or quota implications and the exact evidence boundary."
+
+[design]
+architecture = "Add an external-deployment provider layer below shared platform operations and beside the existing host runtime adapters. Keep Docker/Bare/SSH/Compose/Kubernetes resolution intact. A provider connection identifies credentials and account scope; a deployment target identifies provider resources; a workload record identifies service, sandbox or machine semantics; a durable operation records intent and reconciliation."
+provider_kinds = "railway-service, railway-sandbox, vercel-project, vercel-sandbox, fly-machine, fly-sprite, self-managed-server, workbox-host, workbox-sandbox"
+normalized_operations = "discover, capabilities, preflight, plan, apply, observe, logs, exec_or_session, files, checkpoint_or_snapshot, stop_or_resume, promote_or_rollback, destroy, reconcile"
+service_semantics = "A service is a provider deployment target for an image or source that exposes readiness, routes and revision history. It is long-lived or scheduled according to provider semantics and does not inherit sandbox checkpoint, idle or session behavior."
+sandbox_semantics = "A sandbox is an isolated VM or sandbox resource for commands, sessions, files and optional snapshots/checkpoints. It has provider-specific idle, persistence, network and public-route rules and is not a service container."
+workbox_semantics = "Workbox-host deploys the daemon; Workbox-sandbox creates a child sandbox through REST/WS/SDK. Native Railway and Vercel sandboxes use their own adapters and provenance even when a Workbox environment profile supplies common intent."
+security = "Reuse credential encryption, org authorization, audit, idempotency, host-key pinning and SSRF controls. Resolve secrets only in provider adapters. Bind Workbox keys to sandbox IDs or labels and never copy ambient controller credentials into a sandbox."
+references = ["https://docs.railway.com/services", "https://docs.railway.com/sandboxes", "https://vercel.com/docs/sandbox", "https://vercel.com/docs/sandbox/concepts/persistent-sandboxes", "https://github.com/Sidiora-Labs/workbox", "https://github.com/Sidiora-Labs/workbox/blob/main/docs/hyperfide-provider.md", "https://fly.io/sprites/", "https://docs.fly.io/sprites/api"]
+
+[documentation]
+mode      = "manual"
+status    = "pending"
+audiences = ["operator", "developer", "agent"]
+targets   = ["README.md", "docs/**", "apps/web/content/docs/**"]
+
+[tasks]
+heading = "Implementation Plan: unified external deployments and Workbox"
+
+[task.0.1]
+title      = "Lock provider and workload vocabulary"
+status     = "planned"
+wave       = 0
+requires   = []
+touches    = ["spec/workbox-cloud-deployments/spec.kvx", "docs/plans/workbox-cloud-deployments.md", "packages/core/src/types.ts", "packages/core/src/credentials.ts", "packages/contracts/src"]
+verify_cmd = "git diff --check && rg -n \"railway-sandbox|vercel-sandbox|fly-sprite|workbox-sandbox|service container\" spec/workbox-cloud-deployments/spec.kvx docs/plans/workbox-cloud-deployments.md"
+do_1       = "Confirm provider resource kinds, service-versus-sandbox semantics, target identity fields and the owner decision for sprite machine mapping."
+do_2       = "Record current Railway and Vercel sandbox capabilities and explicit unsupported combinations without changing runtime code."
+reqs       = ["1.1", "1.3", "4.1", "5.1", "6.2", "7.7"]
+
+[task.1.1]
+title      = "Connection capability and account identity model"
+status     = "planned"
+wave       = 1
+requires   = ["0.1"]
+touches    = ["packages/core/src/credentials.ts", "packages/contracts/src/credentials.ts", "packages/platform/src/engine/modules/credentials/**", "packages/db/src/schema/credential.ts", "packages/db/drizzle/**", "apps/dashboard/src/components/credentials/**"]
+verify_cmd = "bun test packages/core/src/credentials.test.ts packages/contracts/test/credentials.test.ts packages/platform/test/credentials*"
+do_1       = "Add deploy and sandbox capability descriptors, Railway/Vercel/Fly/Workbox fields, immutable provider identity snapshots and explicit selectors while preserving migration providers."
+do_2       = "Extend verification and OAuth/API-token flows with origin allowlists, PKCE/state binding, account drift checks, encrypted secret resolution and redacted audit records."
+reqs       = ["2.1", "2.2", "2.3", "2.4", "2.5", "6.4"]
+
+[task.1.2]
+title      = "Target and durable external operation records"
+status     = "planned"
+wave       = 1
+requires   = ["1.1"]
+touches    = ["packages/db/src/schema/project.ts", "packages/db/src/schema/deployment.ts", "packages/contracts/src/deployments.ts", "packages/platform/src/engine/lib/platform.ts", "packages/platform/src/engine/modules/deployments/**", "packages/db/drizzle/**"]
+verify_cmd = "bun test packages/db/src/*deployment* packages/platform/test/deployment* packages/contracts/test/deployments.test.ts"
+do_1       = "Add provider target bindings, workload kind, provider resource identity, target snapshot and capability result without overloading serverId."
+do_2       = "Add durable external operation intent, idempotency, provider request identity, reconciliation state and cleanup receipts."
+reqs       = ["1.2", "3.5", "8.4", "9.1", "9.2"]
+
+[task.2.1]
+title      = "Provider-neutral adapter contract and safety boundary"
+status     = "planned"
+wave       = 2
+requires   = ["1.2"]
+touches    = ["packages/platform/src/engine/modules/external-deployments/**", "packages/adapters/src/external/**", "packages/contracts/src/external-deployments.ts"]
+verify_cmd = "bun test packages/platform/test/external-deployment* packages/adapters/test/external*"
+do_1       = "Implement discover, capabilities, preflight, plan, apply, observe, logs, exec/session, files, snapshot/checkpoint, lifecycle, rollback, destroy and reconcile contracts."
+do_2       = "Centralize bounded fetch, fixed origins, retries, redaction, inspect-after-timeout and unsupported-capability errors."
+reqs       = ["1.3", "3.5", "9.1", "9.2", "9.3"]
+
+[task.2.2]
+title      = "Railway service and sandbox adapters"
+status     = "planned"
+wave       = 2
+requires   = ["2.1"]
+touches    = ["packages/platform/src/engine/modules/external-deployments/providers/railway-service.ts", "packages/platform/src/engine/modules/external-deployments/providers/railway-sandbox.ts", "packages/platform/src/engine/modules/migration/providers/railway.ts", "packages/contracts/src"]
+verify_cmd = "bun test packages/platform/test/railway-service* packages/platform/test/railway-sandbox* apps/api/test/e2e/railway*"
+do_1       = "Keep current Railway migration discovery intact and add service deployment through staged changes, environment variables, revisions, logs, domains and volumes."
+do_2       = "Add native Railway Sandbox create, exec, SSH/session, files, checkpoints/forks, domains, network isolation, idle timeout, resource limits and destroy with environment-scoped provenance."
+do_3       = "Return service or sandbox capability profiles and reject service-only or sandbox-only operations before mutation."
+reqs       = ["3.1", "4.1", "4.2", "4.3", "4.4"]
+
+[task.2.3]
+title      = "Vercel project and sandbox adapters"
+status     = "planned"
+wave       = 2
+requires   = ["2.1"]
+touches    = ["packages/platform/src/engine/modules/external-deployments/providers/vercel-project.ts", "packages/platform/src/engine/modules/external-deployments/providers/vercel-sandbox.ts", "packages/platform/src/engine/modules/migration/providers/vercel.ts", "packages/contracts/src"]
+verify_cmd = "bun test packages/platform/test/vercel-project* packages/platform/test/vercel-sandbox* apps/api/test/e2e/vercel*"
+do_1       = "Keep Vercel migration discovery separate and add project deployment with account/team binding, source or prebuilt output, env-on-next-deploy behavior, aliases/domains, logs and promotion or rollback."
+do_2       = "Add current Vercel Sandbox SDK/API operations, including name-scoped get-or-create, persistent or non-persistent mode, sessions, auto-resume, snapshots, images, ports, tags, network policy and delete."
+do_3       = "Model Vercel sandbox and project deployment detail pages and enforce provider limits, retention and account scope."
+reqs       = ["3.2", "5.1", "5.2", "5.3", "5.4", "5.5"]
+
+[task.2.4]
+title      = "Fly Machines and Sprites adapters"
+status     = "planned"
+wave       = 2
+requires   = ["2.1"]
+touches    = ["packages/platform/src/engine/modules/external-deployments/providers/fly-machine.ts", "packages/platform/src/engine/modules/external-deployments/providers/fly-sprite.ts", "packages/adapters/src/external/fly/**", "packages/contracts/src"]
+verify_cmd = "bun test packages/platform/test/fly-machine* packages/platform/test/fly-sprite*"
+do_1       = "Implement Fly Machines lifecycle and deployment receipts against the Machines API."
+do_2       = "Implement Fly Sprites lifecycle, exec, files, services, checkpoints, wake/sleep and URL/network policy against the Sprites API as a distinct provider kind."
+do_3       = "Require explicit transfer receipts for any Workbox-to-Sprite or Machine promotion and preserve provenance."
+reqs       = ["3.3", "6.1", "6.2", "6.3", "6.4"]
+
+[task.3.1]
+title      = "Workbox remote adapter and host preflight"
+status     = "planned"
+wave       = 3
+requires   = ["2.1"]
+touches    = ["packages/platform/src/engine/modules/external-deployments/providers/workbox.ts", "packages/adapters/src/external/workbox/**", "packages/contracts/src/workbox.ts"]
+verify_cmd = "bun test packages/platform/test/workbox* packages/adapters/test/workbox*"
+do_1       = "Use @workbox/sdk or REST/WS with scoped keys, idempotent create, desired-versus-observed state, sessions, output gap handling, files, checkpoints, events, asks, artifacts and reconcile."
+do_2       = "Add a host doctor/readyz preflight and capability projection for rootfs/runtime, user namespaces, cgroup v2, subordinate IDs, bubblewrap, overlayfs and nftables."
+do_3       = "Expose current Workbox provider contract gaps and never label a native Railway/Vercel/Fly sandbox as Workbox without adapter provenance."
+reqs       = ["7.1", "7.2", "7.3", "7.4", "7.5", "7.6"]
+
+[task.3.2]
+title      = "Unified API, dashboard, desktop, CLI and SDK"
+status     = "planned"
+wave       = 3
+requires   = ["2.2", "2.3", "2.4", "3.1"]
+touches    = ["apps/api/src/modules/deployments/**", "apps/dashboard/src/components/deploy/**", "apps/dashboard/src/components/migration/**", "apps/dashboard/src/lib/api/**", "apps/desktop/src/**", "apps/cli/src/commands/deployment.ts", "packages/sdk/src/**", "packages/ui/src/AppLogo.tsx"]
+verify_cmd = "bun run --cwd apps/api typecheck && bun run --cwd apps/dashboard typecheck && bun test apps/dashboard/src/components/deploy apps/cli/test packages/sdk/test"
+do_1       = "Replace hard-coded four-target UI assumptions with provider/account/project/environment/workload selectors while retaining self-managed server UX."
+do_2       = "Add separate service, sandbox and machine detail panels for logs, sessions, routes, snapshots/checkpoints, idle policy, resource limits and destructive actions."
+do_3       = "Add explicit CLI/SDK destination and connection options, preserving --server as an alias, and add Fly/Workbox provider logos and localized labels."
+reqs       = ["8.1", "8.2", "8.3", "8.4"]
+
+[task.4.1]
+title      = "Contract, fixture, live and recovery qualification"
+status     = "planned"
+wave       = 4
+requires   = ["3.2"]
+touches    = ["apps/api/test/**", "packages/platform/test/**", "packages/adapters/test/**", "apps/dashboard/test/**", "docs/platform-migrations.md", "docs/plans/workbox-cloud-deployments.md", ".github/workflows/**"]
+verify_cmd = "bun run lint && bun run test && bun run build:all && bun run docs:check && git diff --check"
+do_1       = "Add provider-neutral contract tests and per-provider fixtures for service and sandbox semantics, account isolation, idempotency, redaction, unsupported capability and cleanup."
+do_2       = "Add real-Docker and prepared-Workbox-host tests for sessions, checkpoints, secret refs, output gaps, restart reconciliation and target provenance."
+do_3       = "Add opt-in disposable Railway, Vercel and Fly live matrices with fail-when-enabled behavior, sanitized evidence and cleanup receipts; separate browser, DNS, billing, endurance and release gates."
+do_4       = "Update operator and developer docs with the service-versus-sandbox table, provider capability matrix, Workbox limitations and current official provider references."
+reqs       = ["10.1", "10.2", "10.3", "10.4", "10.5"]

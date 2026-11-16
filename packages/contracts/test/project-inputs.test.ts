@@ -28,6 +28,26 @@ describe("project publicEndpoints domain cap (issue #1018)", () => {
     const publicEndpoints = [{ port: 99999, customDomain: "d1.example.com" }];
     expect(() => parseInput(UpdateProjectBody, { publicEndpoints })).toThrow();
   });
+
+  it("accepts explicit external target bindings on create and ensure-shaped input", () => {
+    const parsed = parseInput(CreateProjectBody, {
+      name: "sandbox-app",
+      targetId: "target-1",
+      connectionId: "connection-1",
+      workloadKind: "railway-sandbox",
+    });
+    expect(parsed).toMatchObject({
+      targetId: "target-1",
+      connectionId: "connection-1",
+      workloadKind: "railway-sandbox",
+    });
+  });
+
+  it("does not expose target rebinding through generic project update", () => {
+    expect((UpdateProjectBody as { properties: Record<string, unknown> }).properties).not.toHaveProperty("targetId");
+    expect((UpdateProjectBody as { properties: Record<string, unknown> }).properties).not.toHaveProperty("connectionId");
+    expect((UpdateProjectBody as { properties: Record<string, unknown> }).properties).not.toHaveProperty("workloadKind");
+  });
 });
 
 

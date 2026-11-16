@@ -396,6 +396,20 @@ export const CreateProjectBody = Type.Object({
       description: "Execution server for this project: a connected host or a Cloud workspace's managed server.",
     }),
   ),
+  /** Explicit external provider target binding; omitted for host/local projects. */
+  targetId: Type.Optional(Type.String({ minLength: 1, maxLength: 200 })),
+  connectionId: Type.Optional(Type.String({ minLength: 1, maxLength: 200 })),
+  workloadKind: Type.Optional(
+    Type.Union([
+      Type.Literal("service"),
+      Type.Literal("railway-sandbox"),
+      Type.Literal("vercel-sandbox"),
+      Type.Literal("fly-machine"),
+      Type.Literal("fly-sprite"),
+      Type.Literal("workbox-host"),
+      Type.Literal("workbox-sandbox"),
+    ]),
+  ),
   /** Override the auto-generated slug (used as free subdomain: slug.opsh.io) */
   slug: Type.Optional(
     Type.String({ minLength: 1, maxLength: 63, pattern: "^[a-z0-9]([a-z0-9-]*[a-z0-9])?$" }),
@@ -561,7 +575,7 @@ export const CreateProjectBody = Type.Object({
 // `serverId` is create/ensure-only. Keeping it out of the generic PATCH body is
 // also what keeps PROJECT_UPDATE_KEYS from becoming a target-retargeting path.
 export const UpdateProjectBody = Type.Object({
-  ...Type.Partial(Type.Omit(CreateProjectBody, ["serverId"])).properties,
+  ...Type.Partial(Type.Omit(CreateProjectBody, ["serverId", "targetId", "connectionId", "workloadKind"])).properties,
   iconUrl: Type.Optional(Type.Union([Type.String({ maxLength: MAX_IMAGE_URL_LENGTH }), Type.Null()])),
 });
 

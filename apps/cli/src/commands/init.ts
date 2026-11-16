@@ -20,6 +20,11 @@ import type { ProjectLink } from "../lib/project-link";
 import { getActiveContext } from "../lib/config";
 import { err, info, isJsonMode, ok, printJson } from "../lib/output";
 import { parseDeploymentEnvironment } from "../lib/command-input";
+import type { ExternalWorkloadKind } from "@repo/sdk/client";
+
+const WORKLOAD_KINDS = new Set<ExternalWorkloadKind>([
+  "service", "railway-sandbox", "vercel-sandbox", "fly-machine", "fly-sprite", "workbox-host", "workbox-sandbox",
+]);
 
 interface ProjectRow {
   id: string;
@@ -32,6 +37,9 @@ export const initCommand = new Command("init")
   .description("Link the current directory to an Openship project (.openship/project.json)")
   .option("--project <id>", "Project id to link (skips the picker)")
   .option("--environment <name>", "Default deploy variable set: production | preview", "production")
+  .option("--destination <id>", "Default external deployment target ID")
+  .option("--connection <id>", "Default provider connection ID")
+  .option("--workload <kind>", "Default workload: service | railway-sandbox | vercel-sandbox | fly-machine | fly-sprite | workbox-host | workbox-sandbox")
   .option("--dir <path>", "Directory to initialize", process.cwd())
   .option("--force", "Overwrite an existing project link")
   .option("-y, --yes", "Non-interactive: fail instead of prompting")
@@ -40,6 +48,10 @@ export const initCommand = new Command("init")
     const linkDir = join(root, ".openship");
     const linkPath = join(linkDir, "project.json");
     const environment = parseDeploymentEnvironment(opts.environment);
+    if (opts.workload && !WORKLOAD_KINDS.has(opts.workload as ExternalWorkloadKind)) {
+      err(`Invalid workload kind: ${opts.workload}`);
+      exitCommand(1);
+    }
 
     if (existsSync(linkPath) && !opts.force) {
       err(`Already linked (${linkPath}). Re-run with --force to overwrite.`);
@@ -101,7 +113,12 @@ export const initCommand = new Command("init")
       ...(session
         ? { native: { instanceId: session.ship.instanceId, organizationId: session.client.organizationId } }
         : { context: getActiveContext(), apiUrl: getRemoteClient().http.apiUrl, organizationId: getCommandOrganization() }),
-      defaults: { environment },
+      defaults: {
+        environment,
+        ...(opts.destination ? { targetId: opts.destination } : {}),
+        ...(opts.connection ? { connectionId: opts.connection } : {}),
+        ...(opts.workload ? { workloadKind: opts.workload } : {}),
+      },
     };
 
     mkdirSync(linkDir, { recursive: true });

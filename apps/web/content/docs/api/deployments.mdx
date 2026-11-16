@@ -406,4 +406,17 @@ valid IDs.
 | Read certificate status for a domain. | `deployments.sslStatus(input)` | `POST /api/deployments/ssl/status`<br />`deployment:read` |
 | Request certificate renewal for a domain. | `deployments.renewSsl(input)` | `POST /api/deployments/ssl/renew`<br />`deployment:write` |
 
+### External targets
+
+| Operation | SDK | REST API |
+| --- | --- | --- |
+| Read the normalized capability profile for an explicit provider connection and workload. | `externalDeployments.capabilities(input)` | `POST /api/external-deployments/capabilities`<br />`settings:read` |
+| Check provider, account, resource and host prerequisites before mutation. | `externalDeployments.preflight(input)` | `POST /api/external-deployments/preflight`<br />`settings:read` |
+| Create an idempotent external deployment plan with a target snapshot and expiry. | `externalDeployments.plan(input)` | `POST /api/external-deployments/plan`<br />`settings:read` |
+| Apply a confirmed external deployment plan and return a durable operation. | `externalDeployments.apply(input)` | `POST /api/external-deployments/apply`<br />`deployment:write` |
+| Observe and reconcile an external target or operation. | `externalDeployments.observe(input)` | `POST /api/external-deployments/observe`<br />`settings:read` |
+| List the organization's explicit provider targets for dashboard, CLI and SDK selection. | `externalDeployments.targets()` | `GET /api/external-deployments/targets`<br />`settings:read` |
+| Execute a bounded command in a selected external sandbox or Workbox child operation. | `externalDeployments.exec(input)` | `POST /api/external-deployments/exec`<br />`deployment:write` |
+| Destroy a selected external sandbox or workload after explicit confirmation. | `externalDeployments.destroy(input)` | `POST /api/external-deployments/destroy`<br />`deployment:write` |
+
 {/* api-operations:end */}

@@ -53,6 +53,7 @@ import { createRemoteMailOperations } from "./mail-client";
 import type { MailOperations } from "@repo/contracts";
 import { createRemoteMigrationOperations } from "./migration-client";
 import type { MigrationOperations } from "@repo/contracts";
+import { createRemoteExternalDeploymentOperations, type ExternalDeploymentOperations } from "./external-deployment-client";
 import { createRemoteInstanceOperations } from "./instance-client";
 import type { InstanceOperations } from "@repo/contracts";
 import type { ProjectOperations, SourceOperations, ServiceOperations, DomainOperations, DnsOperations, CredentialOperations, ServerOperations, SystemOperations, AppOperations } from "@repo/contracts";
@@ -65,7 +66,13 @@ export { HttpClient, type HttpClientOptions, type HttpRequestOptions, type Pagin
 export { parseSSE, type SSEEvent } from "./events";
 export { iteratePages, type Page, type PageRequest, type PageIteratorOptions } from "./pagination";
 export { createDeploymentHandle, waitForDeployment, consumeDeploymentEvents, type DeploymentHandle, type DeploymentOutcome, type WaitForDeploymentOptions, type DecodedDeploymentEvent, type DeploymentStreamResult } from "./deployment-handle";
-export type { DeploySourceInput, SourceDeploymentResult } from "./source-input";
+export { createRemoteExternalDeploymentOperations, type ExternalDeploymentOperations, type ExternalDeploymentInput } from "./external-deployment-client";
+export type {
+  DeploySourceInput,
+  SourceDeploymentResult,
+  ExternalTargetInput,
+  ExternalWorkloadKind,
+} from "./source-input";
 export type { TerminalOperations, TerminalOptions, TerminalSession, TerminalSocket } from "./terminal-client";
 export type * from "@repo/contracts";
 
@@ -78,6 +85,8 @@ export class OpenshipClient {
   /** Self-hosted mail administration through the authenticated remote controller. */
   readonly mail: MailOperations;
   readonly migrations: MigrationOperations;
+  /** Provider-neutral target, sandbox, machine and Workbox operations. */
+  readonly externalDeployments: ExternalDeploymentOperations;
   readonly instance: InstanceOperations;
   readonly deployments: DeploymentOperations;
   readonly projects: ProjectOperations;
@@ -117,6 +126,7 @@ export class OpenshipClient {
     this.terminal = createRemoteTerminalOperations(http);
     this.mail = createRemoteMailOperations(http);
     this.migrations = createRemoteMigrationOperations(http);
+    this.externalDeployments = createRemoteExternalDeploymentOperations(http);
     this.instance = createRemoteInstanceOperations(http);
     this.projects = createRemoteProjectOperations(http, options.fetch);
     this.sources = createRemoteSourceOperations(http);

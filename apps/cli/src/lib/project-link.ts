@@ -5,6 +5,7 @@
  */
 import { readFileSync, existsSync } from "node:fs";
 import { join, dirname, parse } from "node:path";
+import type { ExternalWorkloadKind } from "@repo/sdk/client";
 
 export interface ProjectLink {
   projectId?: string;
@@ -17,7 +18,12 @@ export interface ProjectLink {
   /** Explicit remote organization scope, when selected at link time. */
   organizationId?: string;
   native?: { instanceId: string; organizationId: string };
-  defaults?: { environment: string };
+  defaults?: {
+    environment: string;
+    targetId?: string;
+    connectionId?: string;
+    workloadKind?: ExternalWorkloadKind;
+  };
 }
 
 const LINK_REL = join(".openship", "project.json");

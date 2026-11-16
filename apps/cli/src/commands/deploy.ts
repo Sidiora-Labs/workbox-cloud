@@ -18,6 +18,7 @@ import { execFileSync } from "node:child_process";
 import ora from "ora";
 import { getShipClient, assertLinkedProjectConnection, ApiError } from "../lib/ship-client";
 import type { CreateDeploymentInput, CreateDeploymentResult } from "@repo/sdk/client";
+import type { ExternalWorkloadKind } from "@repo/sdk/client";
 import { readProjectLink } from "../lib/project-link";
 import { streamDeploymentLogs } from "../lib/deploy-stream";
 import { isJsonMode, printJson, err, info } from "../lib/output";
@@ -61,6 +62,27 @@ function composeReviewDetails(error: unknown): string | null {
   ].join("\n");
 }
 
+const WORKLOAD_KINDS = new Set<ExternalWorkloadKind>([
+  "service", "railway-sandbox", "vercel-sandbox", "fly-machine", "fly-sprite", "workbox-host", "workbox-sandbox",
+]);
+
+function resolveExternalTarget(opts: Record<string, unknown>, link: ReturnType<typeof readProjectLink>) {
+  const destination = typeof opts.destination === "string" ? opts.destination : undefined;
+  const target = typeof opts.target === "string" ? opts.target : undefined;
+  if (destination && target && destination !== target)
+    throw new Error("--destination and --target must identify the same target");
+  const targetId = destination || target || link?.defaults?.targetId;
+  const connectionId = (typeof opts.connection === "string" ? opts.connection : undefined) || link?.defaults?.connectionId;
+  const workloadKind = (typeof opts.workload === "string" ? opts.workload : undefined) || link?.defaults?.workloadKind;
+  if (targetId && typeof opts.server === "string" && opts.server)
+    throw new Error("--server cannot be combined with an external --destination/--target");
+  if (workloadKind && !WORKLOAD_KINDS.has(workloadKind as ExternalWorkloadKind))
+    throw new Error(`Invalid workload kind: ${workloadKind}`);
+  if (workloadKind && workloadKind !== "service" && !targetId)
+    throw new Error(`--destination is required for workload ${workloadKind}`);
+  return { targetId, connectionId, workloadKind: workloadKind as ExternalWorkloadKind | undefined };
+}
+
 export const deployCommand = new Command("deploy")
   .description("Trigger a deployment for the current project")
   .option("--project <id>", "Project ID (defaults to the linked project in .openship/project.json)")
@@ -78,6 +100,10 @@ export const deployCommand = new Command("deploy")
     "Project name for a folder (non-git) deploy (defaults to the directory name)",
   )
   .option("--server <id>", "Registered server ID (see `openship server list`)")
+  .option("--destination <id>", "Explicit external deployment target ID")
+  .option("--target <id>", "Alias for --destination")
+  .option("--connection <id>", "Provider connection ID (required for external accounts when not bound by target)")
+  .option("--workload <kind>", "Workload: service | railway-sandbox | vercel-sandbox | fly-machine | fly-sprite | workbox-host | workbox-sandbox")
   .option("--watch", "Stream the deployment logs until it finishes")
   .option("--timeout <ms>", "Maximum watch duration; timing out leaves the deployment running", timeoutMilliseconds, 600_000)
   .action(async (opts) => {
@@ -86,6 +112,7 @@ export const deployCommand = new Command("deploy")
     const link = opts.project ? null : readProjectLink();
     assertLinkedProjectConnection(link);
     const env = parseDeploymentEnvironment(opts.env ?? link?.defaults?.environment ?? "production");
+    const externalTarget = resolveExternalTarget(opts as Record<string, unknown>, link);
 
     // Never turn a redeploy from the wrong directory into an implicit upload.
     // --name remains an opt-in for existing folder-deploy scripts outside Git.
@@ -133,6 +160,7 @@ export const deployCommand = new Command("deploy")
           projectId: opts.project || link?.projectId,
           environment: env,
           serverId: opts.server,
+          ...externalTarget,
           serviceIds,
           onStep: (m) => {
             if (spinner) spinner.text = m;
@@ -171,18 +199,19 @@ export const deployCommand = new Command("deploy")
       const branch: string | undefined =
         opts.branch || link?.branch || git(["rev-parse", "--abbrev-ref", "HEAD"]);
 
-      const body: CreateDeploymentInput = {
+      const body = {
         projectId,
         branch,
         commitSha: opts.commit || undefined,
         environment: env,
         serverId: opts.server || undefined,
+        ...externalTarget,
         forceAll: opts.forceAll || undefined,
         serviceIds,
         smartRoute: opts.smartRoute || undefined,
         refresh: opts.refresh || undefined,
         acceptComposeChanges: opts.acceptComposeChanges || undefined,
-      };
+      } as CreateDeploymentInput;
 
       const spinner = isJsonMode() ? null : ora("Triggering deployment").start();
       let result: CreateDeploymentResult;

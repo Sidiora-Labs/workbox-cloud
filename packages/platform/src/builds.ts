@@ -44,6 +44,8 @@ export function createBuildOperations(authorization: Authorization, dependencies
     },
     async buildAccess(ctx, value) {
       const input = parseInput(BuildAccessBody, value);
+      if (input.workloadKind && input.workloadKind !== "service" && !input.targetId)
+        throw new AppError("A non-service workload requires an explicit external targetId.", 400, "EXTERNAL_TARGET_REQUIRED");
       const context = await authorization.authorize(ctx, { resourceType: "project", resourceId: input.projectId, action: "write", capability: "deployments:trigger" });
       return result(context, await resources().access(context, input));
     },

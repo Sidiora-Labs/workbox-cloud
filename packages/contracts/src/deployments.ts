@@ -2,6 +2,7 @@ import { Type, type Static } from "@sinclair/typebox";
 import { Value } from "@sinclair/typebox/value";
 import { ValidationError } from "@repo/core";
 import type { DeploymentResourceOperations } from "./deployment-resources";
+import { ExternalWorkloadKindSchema } from "./external-deployments";
 
 /** Public command shared by HTTP, native callers, and the remote client. */
 export const CreateDeploymentSchema = Type.Object({
@@ -9,6 +10,10 @@ export const CreateDeploymentSchema = Type.Object({
   serverId: Type.Optional(
     Type.String({ minLength: 1, description: "Registered server to target." }),
   ),
+  /** Explicit external target binding. Host targets continue to use serverId. */
+  targetId: Type.Optional(Type.String({ minLength: 1, maxLength: 200 })),
+  connectionId: Type.Optional(Type.String({ minLength: 1, maxLength: 200 })),
+  workloadKind: Type.Optional(ExternalWorkloadKindSchema),
   branch: Type.Optional(Type.String()),
   commitSha: Type.Optional(Type.String()),
   environment: Type.Optional(
@@ -57,7 +62,11 @@ export function parseCreateDeploymentInput(value: unknown): CreateDeploymentInpu
     }
     throw new ValidationError("Invalid deployment input", details);
   }
-  return snapshot;
+  const parsed = snapshot as CreateDeploymentInput;
+  if (parsed.workloadKind && parsed.workloadKind !== "service" && !parsed.targetId) {
+    throw new ValidationError("A non-service workload requires an explicit external targetId.");
+  }
+  return parsed;
 }
 
 /** JSON representation returned by the existing deployment API. Dates are ISO strings in both transports. */

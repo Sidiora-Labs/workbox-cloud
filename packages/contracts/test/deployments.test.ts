@@ -14,6 +14,7 @@ describe("deployment contract", () => {
       "acceptComposeChanges",
       "branch",
       "commitSha",
+      "connectionId",
       "environment",
       "forceAll",
       "projectId",
@@ -21,6 +22,8 @@ describe("deployment contract", () => {
       "serverId",
       "serviceIds",
       "smartRoute",
+      "targetId",
+      "workloadKind",
     ]);
     expect(
       Value.Check(CreateDeploymentSchema, {
@@ -52,6 +55,21 @@ describe("deployment contract", () => {
     expect(
       isCreateDeploymentResult({ ...ids, deployment: deploymentFixture(), skipped: true }),
     ).toBe(true);
+  });
+
+  it("preserves an explicit external target binding", () => {
+    expect(
+      parseCreateDeploymentInput({
+        projectId: "p1",
+        targetId: "target-1",
+        connectionId: "connection-1",
+        workloadKind: "vercel-sandbox",
+      }),
+    ).toMatchObject({
+      targetId: "target-1",
+      connectionId: "connection-1",
+      workloadKind: "vercel-sandbox",
+    });
   });
 
   it("distinguishes pending checks from manual build admission", () => {

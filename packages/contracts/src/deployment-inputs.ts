@@ -150,6 +150,20 @@ export const BuildAccessBody = Type.Object({
   serverId: Type.Optional(
     Type.String({ description: "Target server id when deployTarget='server'." }),
   ),
+  /** Explicit external provider target; never inferred from a credential. */
+  targetId: Type.Optional(Type.String({ minLength: 1, maxLength: 200 })),
+  connectionId: Type.Optional(Type.String({ minLength: 1, maxLength: 200 })),
+  workloadKind: Type.Optional(
+    Type.Union([
+      Type.Literal("service"),
+      Type.Literal("railway-sandbox"),
+      Type.Literal("vercel-sandbox"),
+      Type.Literal("fly-machine"),
+      Type.Literal("fly-sprite"),
+      Type.Literal("workbox-host"),
+      Type.Literal("workbox-sandbox"),
+    ]),
+  ),
   runtimeMode: Type.Optional(Type.Union([Type.Literal("bare"), Type.Literal("docker")])),
   serviceDeploymentMode: Type.Optional(
     Type.Union([Type.Literal("services"), Type.Literal("single")]),

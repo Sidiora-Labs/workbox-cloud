@@ -55,8 +55,10 @@ import type { PlatformBackupOperations } from "./backups";
 import { BackupProjectSchemas, BackupPolicySchemas, BackupRunSchemas, BackupRestoreSchemas } from "@repo/contracts";
 import { BackupDestinationCollectionSchemas, BackupDestinationResourceSchemas } from "@repo/contracts";
 import { AppCollectionSchemas, AppResourceSchemas } from "@repo/contracts";
+import { ExternalDeploymentCollectionSchemas } from "@repo/contracts";
 import type { ExecutionContext } from "./context";
 import type { PlatformSourceOperations } from "./sources";
+import type { PlatformExternalDeploymentOperations } from "./external-deployments";
 import type { TransferListItem } from "node:worker_threads";
 import type { NativeCloseOptions, NativeOperator, NativePlatformOptions } from "./native-config";
 
@@ -317,6 +319,7 @@ export async function createNativePlatform(value: NativePlatformOptions): Promis
     domains: Object.freeze(domains),
     dns: Object.freeze(dns),
     credentials: Object.freeze(credentials),
+    externalDeployments: Object.freeze(Object.fromEntries(Object.keys(ExternalDeploymentCollectionSchemas).map(name => [name, (...args: unknown[]) => call(`externalDeployments.${name}`, ...args)]))) as PlatformExternalDeploymentOperations,
     servers: Object.freeze(servers),
     backups: Object.freeze(backups),
     referralProgram: Object.freeze(Object.fromEntries(Object.keys(ReferralOperationSchemas).map(name => [name, (...args: unknown[]) => call(`referralProgram.${name}`, ...args)]))) as PlatformReferralOperations,

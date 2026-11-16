@@ -31,7 +31,7 @@
 import { normalizeRegistryHost } from "./image-ref";
 
 /** What a credential is FOR. Consumers ask by capability, never by provider id. */
-export type CredentialCapability = "image-pull" | "dns" | "migration";
+export type CredentialCapability = "image-pull" | "dns" | "migration" | "deploy" | "sandbox";
 
 export type CredentialFieldType = "text" | "secret" | "select";
 
@@ -70,6 +70,9 @@ export interface CredentialProvider {
   readonly id: string;
   readonly label: string;
   readonly capability: CredentialCapability;
+  /** Additional operations this connection can authorize. `capability` remains
+   * the legacy primary capability for existing consumers. */
+  readonly capabilities?: readonly CredentialCapability[];
   /**
    * Devicon SLUG for the brand logo — not a URL.
    *
@@ -99,6 +102,7 @@ export const CREDENTIAL_PROVIDERS = [
     id: "railway",
     label: "Railway",
     capability: "migration",
+    capabilities: ["migration", "deploy", "sandbox"],
     icon: "railway",
     summary: "Import projects, services and persistent data from Railway.",
     selector: null,
@@ -128,12 +132,19 @@ export const CREDENTIAL_PROVIDERS = [
         type: "text",
         help: "Required for a workspace token. Find it in Railway workspace settings.",
       },
+      {
+        key: "accountId",
+        label: "Account or workspace identity",
+        type: "text",
+        help: "Optional opaque identity captured when the connection is verified.",
+      },
     ],
   },
   {
     id: "vercel",
     label: "Vercel",
     capability: "migration",
+    capabilities: ["migration", "deploy", "sandbox"],
     icon: "vercel",
     summary:
       "Import applications and configuration from Vercel, with a review of linked data services.",
@@ -152,6 +163,98 @@ export const CREDENTIAL_PROVIDERS = [
         label: "Team ID",
         type: "text",
         help: "For team projects, use the team ID from Vercel team settings.",
+      },
+      {
+        key: "accountId",
+        label: "Account identity",
+        type: "text",
+        help: "Optional opaque account identity captured when the connection is verified.",
+      },
+    ],
+  },
+  {
+    id: "fly",
+    label: "Fly.io",
+    capability: "deploy",
+    capabilities: ["deploy", "sandbox"],
+    icon: "fly",
+    summary: "Deploy Fly Machines and operate Fly Sprites through explicit organization scopes.",
+    selector: {
+      label: "Organization ID",
+      placeholder: "org_…",
+      help: "The Fly organization this token may manage.",
+      required: true,
+    },
+    fields: [
+      {
+        key: "apiToken",
+        label: "Fly API token",
+        type: "secret",
+        inputType: "text",
+        required: true,
+        help: "Use a token scoped to the selected Fly organization.",
+      },
+      {
+        key: "organizationId",
+        label: "Organization ID",
+        type: "text",
+        required: true,
+      },
+      {
+        key: "machineOrigin",
+        label: "Machines API origin",
+        type: "text",
+        required: true,
+        help: "Use the provider's approved Machines API origin; arbitrary origins are rejected by the adapter.",
+      },
+      {
+        key: "spriteOrigin",
+        label: "Sprites API origin",
+        type: "text",
+        required: true,
+        help: "Use the provider's approved Sprites API origin; arbitrary origins are rejected by the adapter.",
+      },
+    ],
+  },
+  {
+    id: "workbox",
+    label: "Workbox",
+    capability: "sandbox",
+    capabilities: ["sandbox", "deploy"],
+    icon: "workbox",
+    summary: "Connect to a Workbox host for scoped sandboxes, sessions, artifacts and checkpoints.",
+    selector: {
+      label: "Workbox endpoint",
+      placeholder: "https://workbox.example.com",
+      help: "The HTTPS Workbox API endpoint. Private or loopback endpoints are validated by the server policy.",
+      required: true,
+    },
+    fields: [
+      {
+        key: "baseUrl",
+        label: "Base URL",
+        type: "text",
+        required: true,
+        help: "The Workbox REST/WebSocket endpoint.",
+      },
+      {
+        key: "apiKey",
+        label: "Scoped API key",
+        type: "secret",
+        inputType: "text",
+        required: true,
+        help: "Use a key bound to the intended sandbox IDs or labels with the least required scopes.",
+      },
+      {
+        key: "scope",
+        label: "Key scope",
+        type: "select",
+        required: true,
+        options: [
+          { value: "read", label: "Read" },
+          { value: "exec", label: "Read and execute" },
+          { value: "admin", label: "Sandbox administration" },
+        ],
       },
     ],
   },
@@ -238,7 +341,9 @@ export function getCredentialProvider(id: string): CredentialProvider | undefine
 export function credentialProvidersFor(
   capability: CredentialCapability,
 ): readonly CredentialProvider[] {
-  return CREDENTIAL_PROVIDERS.filter((p) => p.capability === capability);
+  return CREDENTIAL_PROVIDERS.filter(
+    (p) => p.capability === capability || (p as CredentialProvider).capabilities?.includes(capability),
+  );
 }
 
 /**

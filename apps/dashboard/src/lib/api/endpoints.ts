@@ -154,6 +154,18 @@ export const endpoints = {
   },
 
   /* ---------------------------------------------------------------- */
+  /*  External provider targets                                        */
+  /* ---------------------------------------------------------------- */
+  externalDeployments: {
+    targets: "external-deployments/targets",
+    capabilities: "external-deployments/capabilities",
+    preflight: "external-deployments/preflight",
+    plan: "external-deployments/plan",
+    apply: "external-deployments/apply",
+    observe: "external-deployments/observe",
+  },
+
+  /* ---------------------------------------------------------------- */
   /*  Domains                                                          */
   /* ---------------------------------------------------------------- */
   domains: {

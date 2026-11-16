@@ -4,6 +4,11 @@ import ServerSelector from "@/components/shared/ServerSelector";
 import type { DeployTarget } from "@/context/deployment/types";
 import { useI18n } from "@/components/i18n-provider";
 import { usePlatform } from "@/context/PlatformContext";
+import {
+  ExternalDestinationPicker,
+  type ExternalDestinationOption,
+  type ExternalDestinationValue,
+} from "@/components/deploy/ExternalDestinationPicker";
 
 export interface AppDestination {
   /**
@@ -22,6 +27,8 @@ export interface AppDestination {
    *  the operator recognises instead of re-fetching the server row for it. */
   serverName?: string;
   hasGpu?: boolean;
+  /** Provider target selected by the external destination registry. */
+  external?: ExternalDestinationValue;
 }
 
 /** Catalog apps use the same acquired/connected server destinations as source projects. */
@@ -34,6 +41,9 @@ export function AppDestinationPicker({
   onReadyChange,
   needsGpu = false,
   selfHostedOnly = false,
+  externalDestinations,
+  externalDestination,
+  onExternalDestinationChange,
 }: {
   value: AppDestination | null;
   onChange: (d: AppDestination) => void;
@@ -43,35 +53,63 @@ export function AppDestinationPicker({
   onReadyChange?: (ready: boolean) => void;
   needsGpu?: boolean;
   selfHostedOnly?: boolean;
+  /** Optional provider targets. Empty/omitted preserves the server-only picker. */
+  externalDestinations?: readonly ExternalDestinationOption[];
+  externalDestination?: ExternalDestinationValue | null;
+  onExternalDestinationChange?: (
+    value: ExternalDestinationValue,
+    option: ExternalDestinationOption,
+  ) => void;
 }) {
   const { t } = useI18n();
   const { selfHosted } = usePlatform();
   return (
-    <ServerSelector
-      value={value?.serverId}
-      disabled={disabled}
-      readOnly={readOnly}
-      selectedName={value?.serverName}
-      disabledReason={disabledReason}
-      onReadyChange={onReadyChange}
-      label={t.billing.workspaces.destination}
-      forDeployment
-      autoSelectFirst
-      useSavedDefault
-      compact
-      needsGpu={needsGpu}
-      selfHostedOnly={selfHostedOnly}
-      onSelect={(server) => {
-        if (!server && selfHosted) return;
-        onChange({
-          deployTarget: server ? (server.raw.managed ? "cloud" : "server") : "cloud",
-          serverId: server?.id,
-          workspaceId: server?.raw.managed?.id,
-          serverHost: server?.host,
-          serverName: server?.name,
-          hasGpu: server?.raw.gpu?.available === true,
-        });
-      }}
-    />
+    <div className="space-y-4">
+      {externalDestinations && externalDestinations.length > 0 && onExternalDestinationChange && (
+        <ExternalDestinationPicker
+          options={externalDestinations}
+          value={externalDestination ?? value?.external}
+          onChange={(external, option) => {
+            onExternalDestinationChange(external, option);
+            onChange({
+              deployTarget: "cloud",
+              external,
+              serverId: undefined,
+              workspaceId: undefined,
+              serverHost: undefined,
+              serverName: option.name,
+            });
+          }}
+          disabled={disabled || readOnly}
+        />
+      )}
+      <ServerSelector
+        value={value?.serverId}
+        disabled={disabled}
+        readOnly={readOnly}
+        selectedName={value?.serverName}
+        disabledReason={disabledReason}
+        onReadyChange={onReadyChange}
+        label={t.billing.workspaces.destination}
+        forDeployment
+        autoSelectFirst
+        useSavedDefault
+        compact
+        needsGpu={needsGpu}
+        selfHostedOnly={selfHostedOnly}
+        onSelect={(server) => {
+          if (!server && selfHosted) return;
+          onChange({
+            deployTarget: server ? (server.raw.managed ? "cloud" : "server") : "cloud",
+            serverId: server?.id,
+            workspaceId: server?.raw.managed?.id,
+            serverHost: server?.host,
+            serverName: server?.name,
+            hasGpu: server?.raw.gpu?.available === true,
+            external: undefined,
+          });
+        }}
+      />
+    </div>
   );
 }

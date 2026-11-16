@@ -23,7 +23,12 @@ import { env } from "../../config/env";
 import { DigitalOceanApiError, digitaloceanRequest } from "../../lib/digitalocean-api";
 import { safeFetch, type SafeFetchResponse } from "../../lib/safe-fetch";
 import { trustedRegistryRealm } from "../../lib/registry-auth";
-import { verifyProviderAccess, type MigrationProvider } from "./provider-api";
+import {
+  providerJson,
+  verifyProviderAccess,
+  workboxReady,
+  type MigrationProvider,
+} from "./provider-api";
 
 export interface VerifyResult {
   ok: boolean;
@@ -235,10 +240,58 @@ const verifyDigitalOcean: Verifier = async ({ secrets }) => {
   }
 };
 
+/** Fly credentials are checked against both fixed control-plane origins so a
+ * token cannot be stored while only one of the two requested resource kinds is
+ * usable. Response bodies are deliberately ignored. */
+const verifyFly: Verifier = async ({ publicFields, secrets }) => {
+  const apiToken = secrets.apiToken ?? "";
+  const organizationId = publicFields.organizationId?.trim() ?? "";
+  if (!apiToken) return { ok: false, reason: "A Fly API token is required." };
+  if (!organizationId) return { ok: false, reason: "A Fly organization ID is required." };
+  try {
+    const auth = { Authorization: `Bearer ${apiToken}` };
+    await providerJson(new URL(`https://api.machines.dev/v1/apps?org_slug=${encodeURIComponent(organizationId)}`), { headers: auth });
+    await providerJson(new URL("https://api.sprites.dev/v1/sprites"), { headers: auth });
+    return { ok: true };
+  } catch (error) {
+    const status = error instanceof Error ? error.message : "";
+    return {
+      ok: false,
+      reason: /refused access|rejected/i.test(status)
+        ? "Fly rejected this token for the selected organization."
+        : "Fly could not verify this connection. Check the token and organization ID.",
+    };
+  }
+};
+
+const verifyWorkbox: Verifier = async ({ selector, publicFields, secrets }) => {
+  const baseUrl = publicFields.baseUrl || selector || "";
+  const apiKey = secrets.apiKey ?? "";
+  if (!baseUrl) return { ok: false, reason: "A Workbox endpoint is required." };
+  if (!apiKey) return { ok: false, reason: "A Workbox scoped API key is required." };
+  try {
+    await workboxReady(baseUrl, apiKey, {
+      allowPrivate: !env.CLOUD_MODE,
+      allowHttp: !env.CLOUD_MODE,
+    });
+    return { ok: true };
+  } catch (error) {
+    const code = error instanceof Error ? error.message : "";
+    return {
+      ok: false,
+      reason: /rejected|access denied/i.test(code)
+        ? "Workbox rejected this scoped API key."
+        : "Workbox could not verify this endpoint. Check readiness and network policy.",
+    };
+  }
+};
+
 const VERIFIERS: Record<string, Verifier> = {
   "docker-registry": verifyDockerRegistry,
   cloudflare: verifyCloudflare,
   digitalocean: verifyDigitalOcean,
+  fly: verifyFly,
+  workbox: verifyWorkbox,
   ...Object.fromEntries(
     (["railway", "vercel"] as const).map((provider) => [
       provider,

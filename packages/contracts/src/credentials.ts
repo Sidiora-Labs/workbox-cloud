@@ -35,7 +35,20 @@ export const CredentialProviderSchema = Type.Object({
     Type.Literal("image-pull"),
     Type.Literal("dns"),
     Type.Literal("migration"),
+    Type.Literal("deploy"),
+    Type.Literal("sandbox"),
   ]),
+  capabilities: Type.Optional(
+    Type.Array(
+      Type.Union([
+        Type.Literal("image-pull"),
+        Type.Literal("dns"),
+        Type.Literal("migration"),
+        Type.Literal("deploy"),
+        Type.Literal("sandbox"),
+      ]),
+    ),
+  ),
   authorization: Type.Optional(Type.Object({ available: Type.Boolean() })),
   selector: Type.Union([
     Type.Null(),

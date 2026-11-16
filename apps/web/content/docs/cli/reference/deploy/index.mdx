@@ -28,5 +28,9 @@ openship deploy [options]
 | `--folder` | Upload the current folder as source (also works inside a Git repository) |
 | `--name <name>` | Project name for a folder (non-git) deploy (defaults to the directory name) |
 | `--server <id>` | Registered server ID (see `openship server list`) |
+| `--destination <id>` | Explicit external deployment target ID |
+| `--target <id>` | Alias for --destination |
+| `--connection <id>` | Provider connection ID (required for external accounts when not bound by target) |
+| `--workload <kind>` | Workload: service \| railway-sandbox \| vercel-sandbox \| fly-machine \| fly-sprite \| workbox-host \| workbox-sandbox |
 | `--watch` | Stream the deployment logs until it finishes |
 | `--timeout <ms>` | Maximum watch duration; timing out leaves the deployment running (default: 600000) |

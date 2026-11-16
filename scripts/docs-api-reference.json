@@ -4032,6 +4032,54 @@
       "section": "Security maintenance",
       "description": "Subscribe to this server run’s saved steps, live logs and final verification. Reconnect only reads the existing run; requires server admin.",
       "route": "GET /api/system/servers/:id/security/runs/:runId/stream"
+    },
+    "externalDeployments.capabilities": {
+      "page": "deployments",
+      "section": "External targets",
+      "description": "Read the normalized capability profile for an explicit provider connection and workload.",
+      "route": "POST /api/external-deployments/capabilities"
+    },
+    "externalDeployments.preflight": {
+      "page": "deployments",
+      "section": "External targets",
+      "description": "Check provider, account, resource and host prerequisites before mutation.",
+      "route": "POST /api/external-deployments/preflight"
+    },
+    "externalDeployments.plan": {
+      "page": "deployments",
+      "section": "External targets",
+      "description": "Create an idempotent external deployment plan with a target snapshot and expiry.",
+      "route": "POST /api/external-deployments/plan"
+    },
+    "externalDeployments.apply": {
+      "page": "deployments",
+      "section": "External targets",
+      "description": "Apply a confirmed external deployment plan and return a durable operation.",
+      "route": "POST /api/external-deployments/apply"
+    },
+    "externalDeployments.observe": {
+      "page": "deployments",
+      "section": "External targets",
+      "description": "Observe and reconcile an external target or operation.",
+      "route": "POST /api/external-deployments/observe"
+    },
+    "externalDeployments.targets": {
+      "page": "deployments",
+      "section": "External targets",
+      "description": "List the organization's explicit provider targets for dashboard, CLI and SDK selection.",
+      "route": "GET /api/external-deployments/targets"
+    },
+    "externalDeployments.exec": {
+      "page": "deployments",
+      "section": "External targets",
+      "description": "Execute a bounded command in a selected external sandbox or Workbox child operation.",
+      "route": "POST /api/external-deployments/exec"
+    },
+    "externalDeployments.destroy": {
+      "page": "deployments",
+      "section": "External targets",
+      "description": "Destroy a selected external sandbox or workload after explicit confirmation.",
+      "route": "POST /api/external-deployments/destroy"
     }
   },
   "http": {

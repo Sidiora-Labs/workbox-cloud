@@ -17,7 +17,8 @@ export { OpenshipOperatorClient, type OpenshipOperatorClientOptions } from "./op
 export { normalizeComposeServices } from "./compose";
 export { iteratePages, type Page, type PageRequest, type PageIteratorOptions } from "./pagination";
 export { createDeploymentHandle, waitForDeployment, consumeDeploymentEvents, type DeploymentHandle, type DeploymentOutcome, type WaitForDeploymentOptions, type DecodedDeploymentEvent, type DeploymentStreamResult } from "./deployment-handle";
-export type { DeploySourceInput, SourceDeploymentResult } from "./source-input";
+export type { DeploySourceInput, SourceDeploymentResult, ExternalTargetInput, ExternalWorkloadKind } from "./source-input";
+export type { ExternalDeploymentOperations, ExternalDeploymentInput } from "./external-deployment-client";
 export type * from "@repo/contracts";
 export {
   AppError,

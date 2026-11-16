@@ -73,6 +73,35 @@ describe("the provider catalogue", () => {
     expect(credentialProvidersFor("dns").map((p) => p.id)).toEqual(["cloudflare", "digitalocean"]);
   });
 
+  it("exposes deploy and sandbox providers without changing migration selection", () => {
+    expect(credentialProvidersFor("migration").map((p) => p.id)).toEqual(["railway", "vercel"]);
+    expect(credentialProvidersFor("deploy").map((p) => p.id)).toEqual([
+      "railway",
+      "vercel",
+      "fly",
+      "workbox",
+    ]);
+    expect(credentialProvidersFor("sandbox").map((p) => p.id)).toEqual([
+      "railway",
+      "vercel",
+      "fly",
+      "workbox",
+    ]);
+  });
+
+  it("keeps account and endpoint identity in readable fields", () => {
+    const vercel = getCredentialProvider("vercel")!;
+    const fly = getCredentialProvider("fly")!;
+    const workbox = getCredentialProvider("workbox")!;
+
+    expect(splitCredentialValues(vercel, { apiToken: "secret", teamId: "team_1", accountId: "acct_1" })).toEqual({
+      publicFields: { teamId: "team_1", accountId: "acct_1" },
+      secrets: { apiToken: "secret" },
+    });
+    expect(fly.fields.some((field) => field.key === "machineOrigin")).toBe(true);
+    expect(workbox.fields.some((field) => field.key === "apiKey" && field.type === "secret")).toBe(true);
+  });
+
   it("returns undefined for an unknown id rather than throwing", () => {
     expect(getCredentialProvider("nope")).toBeUndefined();
   });

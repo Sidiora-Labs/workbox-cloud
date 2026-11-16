@@ -41,6 +41,7 @@ export { appsApi } from "./apps";
 export type { AppCatalogEntry, AppCatalogField, InstallAppResult } from "./apps";
 export { deployApi } from "./deploy";
 export type { RestorePlanUI } from "./deploy";
+export { externalDeploymentsApi } from "./external-deployments";
 export { domainsApi } from "./domains";
 export { credentialsApi, type Credential } from "./credentials";
 export {

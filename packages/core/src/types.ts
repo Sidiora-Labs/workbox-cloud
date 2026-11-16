@@ -53,6 +53,37 @@ export type BuildStrategy = "server" | "local";
 export type DeployTarget = "local" | "server" | "cloud" | "cluster";
 
 /**
+ * A provider resource kind used by the external deployment layer.
+ *
+ * This is deliberately separate from DeployTarget: the existing target union
+ * describes Openship's host runtimes, while these values describe provider
+ * resources with different lifecycle and persistence semantics.
+ */
+export type ExternalWorkloadKind =
+  | "service"
+  | "railway-sandbox"
+  | "vercel-sandbox"
+  | "fly-machine"
+  | "fly-sprite"
+  | "self-managed-server"
+  | "workbox-host"
+  | "workbox-sandbox";
+
+export type ExternalProvider = "railway" | "vercel" | "fly" | "self-managed" | "workbox";
+
+export interface ExternalTargetIdentity {
+  provider: ExternalProvider;
+  connectionId: string;
+  workloadKind: ExternalWorkloadKind;
+  /** Opaque provider account/workspace/team identity captured at verification. */
+  accountIdentity?: string | null;
+  projectId?: string | null;
+  environmentId?: string | null;
+  resourceId?: string | null;
+  region?: string | null;
+}
+
+/**
  * A project's deploy target, derived from its durable infrastructure bindings.
  *
  * There is deliberately no `deployTarget` column — see the schema notes on

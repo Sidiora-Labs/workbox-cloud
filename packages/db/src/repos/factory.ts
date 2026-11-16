@@ -90,6 +90,13 @@ export {
   type NewDnsCredential,
 } from "./dns-credential.repo";
 export { createCredentialRepo, type Credential, type NewCredential } from "./credential.repo";
+export {
+  createExternalDeploymentRepo,
+  type ExternalDeploymentTarget,
+  type NewExternalDeploymentTarget,
+  type ExternalDeploymentOperation,
+  type NewExternalDeploymentOperation,
+} from "./external-deployment.repo";
 export { createRouteRuleRepo, type RouteRule, type NewRouteRule } from "./route-rule.repo";
 export {
   createWebhookSourceRepo,
@@ -338,6 +345,7 @@ import { createDomainRepo } from "./domain.repo";
 import { createDomainDnsChallengeRepo } from "./domain-dns-challenge.repo";
 import { createDnsCredentialRepo } from "./dns-credential.repo";
 import { createCredentialRepo } from "./credential.repo";
+import { createExternalDeploymentRepo } from "./external-deployment.repo";
 import { createRouteProtectionRepo } from "./route-protection.repo";
 import { createRouteRuleRepo } from "./route-rule.repo";
 import { createWebhookSourceRepo } from "./webhook-source.repo";
@@ -429,6 +437,7 @@ export function createRepositories(db: Database, encryption: ConfigurationEncryp
     domainDnsChallenge: createDomainDnsChallengeRepo(db),
     dnsCredential: createDnsCredentialRepo(db),
     credential: createCredentialRepo(db),
+    externalDeployment: createExternalDeploymentRepo(db),
     ingress: createIngressRepo(db),
     routeRule: createRouteRuleRepo(db),
     routeProtection: createRouteProtectionRepo(db, encryption),

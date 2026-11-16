@@ -1,6 +1,26 @@
 import { ValidationError } from "@repo/contracts";
 
-export interface DeploySourceInput {
+/** Provider workload kinds accepted by the unified deployment target flow. */
+export type ExternalWorkloadKind =
+  | "service"
+  | "railway-sandbox"
+  | "vercel-sandbox"
+  | "fly-machine"
+  | "fly-sprite"
+  | "workbox-host"
+  | "workbox-sandbox";
+
+/** Explicit destination binding for non-host deployment providers. */
+export interface ExternalTargetInput {
+  /** Durable provider target record. */
+  targetId?: string;
+  /** Organization-scoped credential/account connection. */
+  connectionId?: string;
+  /** Provider resource kind; service remains the default for ordinary deploys. */
+  workloadKind?: ExternalWorkloadKind;
+}
+
+export interface DeploySourceInput extends ExternalTargetInput {
   source:
     | { type: "directory"; path: string }
     | { type: "files"; files: Readonly<Record<string, string | Uint8Array>> };
@@ -22,12 +42,15 @@ export interface SourceDeploymentResult {
 /** Capture public inputs before asynchronous module loading, I/O, or identity checks. */
 export function snapshotSourceInput(input: DeploySourceInput): DeploySourceInput {
   if (!input || typeof input !== "object") throw new ValidationError("A deployment source is required");
-  const { source, name, projectId, environment, serverId, signal, onStep } = input ?? {};
-  for (const value of [name, projectId, serverId])
+  const { source, name, projectId, environment, serverId, targetId, connectionId, workloadKind, signal, onStep } = input ?? {};
+  for (const value of [name, projectId, serverId, targetId, connectionId])
     if (value !== undefined && (typeof value !== "string" || !value.trim()))
       throw new ValidationError("Names and identifiers must be nonempty strings");
   if (environment !== undefined && environment !== "production" && environment !== "preview")
     throw new ValidationError("Invalid deployment environment");
+  if (workloadKind !== undefined && ![
+    "service", "railway-sandbox", "vercel-sandbox", "fly-machine", "fly-sprite", "workbox-host", "workbox-sandbox",
+  ].includes(workloadKind)) throw new ValidationError("Invalid workload kind");
   if (input.serviceIds !== undefined && (!Array.isArray(input.serviceIds) || input.serviceIds.some((id) => typeof id !== "string" || !id)))
     throw new ValidationError("serviceIds must contain nonempty identifiers");
   let snapshot: DeploySourceInput["source"];
@@ -43,5 +66,17 @@ export function snapshotSourceInput(input: DeploySourceInput): DeploySourceInput
   } else {
     throw new ValidationError("A directory or generated files source is required");
   }
-  return { source: snapshot, name, projectId, environment, serverId, signal, onStep, serviceIds: input.serviceIds ? [...input.serviceIds] : undefined };
+  return {
+    source: snapshot,
+    name,
+    projectId,
+    environment,
+    serverId,
+    targetId,
+    connectionId,
+    workloadKind,
+    signal,
+    onStep,
+    serviceIds: input.serviceIds ? [...input.serviceIds] : undefined,
+  };
 }

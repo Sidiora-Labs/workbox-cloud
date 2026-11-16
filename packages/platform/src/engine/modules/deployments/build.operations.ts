@@ -18,6 +18,7 @@ import { composeSourceChanges, composeSourceRevision } from "./compose-review";
 import { projectServicesToDeployableServices } from "./compose/project-services";
 import { audit } from "../../lib/audit-emitter";
 import { assertLocalSourceContentAccess } from "../../lib/local-source-authority";
+import { deployBoundExternalTarget } from "../external-deployments/external.operations";
 
 /** Validate the source and permission to include editable values in its scan. */
 async function preparationSource(ctx: ExecutionContext, body: PrepareDeploymentInput): Promise<Source> {
@@ -100,6 +101,25 @@ export const buildDependencies: BuildDependencies = {
     }));
   },
   async access(ctx, input) {
+    if (input.targetId) {
+      const operation = await deployBoundExternalTarget(ctx, {
+        projectId: input.projectId,
+        targetId: input.targetId,
+        connectionId: input.connectionId,
+        workloadKind: input.workloadKind,
+        revision: input.composeRevision ?? input.branch,
+        source: {
+          ...(input.uploadSessionId ? { uploadSessionId: input.uploadSessionId } : {}),
+          ...(input.branch ? { branch: input.branch } : {}),
+        },
+        environment: input.envVars,
+        workload: {
+          ...(input.environment ? { environment: input.environment } : {}),
+          ...(input.deployTarget ? { deployTarget: input.deployTarget } : {}),
+        },
+      });
+      return { deployment_id: operation.id, project_id: input.projectId };
+    }
     if (process.env.OPENSHIP_NATIVE === "true" && process.env.OPENSHIP_NATIVE_ROUTING === "none" && input.publicEndpoints === undefined) input.publicEndpoints = [];
     const source = await resolveProjectAuthority(input.projectId, ctx.organizationId);
     // A destination changes where commands run, never where a project is stored.

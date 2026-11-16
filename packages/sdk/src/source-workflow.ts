@@ -28,6 +28,9 @@ export async function deploySourceWorkflow(ship: { projects: ProjectOperations; 
     workloadType: scan.workloadType, runtimeMode: scan.runtimeMode,
     ...(hasServer && scan.port ? { port: scan.port } : {}),
     ...(services?.length ? { services } : {}),
+    ...(input.targetId ? { targetId: input.targetId } : {}),
+    ...(input.connectionId ? { connectionId: input.connectionId } : {}),
+    ...(input.workloadKind ? { workloadKind: input.workloadKind } : {}),
     monorepoApps: scan.monorepoApps, monorepoWorkspace: scan.monorepoWorkspace,
     composePath: scan.composePath, volumes: scan.volumes, routingConfig: scan.routing,
   }));
@@ -38,6 +41,9 @@ export async function deploySourceWorkflow(ship: { projects: ProjectOperations; 
     environment: input.environment,
     ...(services?.length ? { services } : {}),
     ...(input.serviceIds?.length ? { serviceIds: input.serviceIds } : {}),
+    ...(input.targetId ? { targetId: input.targetId } : {}),
+    ...(input.connectionId ? { connectionId: input.connectionId } : {}),
+    ...(input.workloadKind ? { workloadKind: input.workloadKind } : {}),
   }));
   return { deployment_id: deployment.deployment_id, project_id: deployment.project_id,
     ...(scan.configDiagnostics && { configDiagnostics: scan.configDiagnostics }) };

@@ -126,3 +126,4 @@ export * from "./assistant-agents";
 
 export * from "./server-security";
 export * from "./platform-migration";
+export * from "./external-deployments";

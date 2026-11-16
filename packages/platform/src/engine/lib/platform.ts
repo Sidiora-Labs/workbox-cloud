@@ -28,6 +28,8 @@ import { deploymentSslOperations } from "../modules/deployments/ssl.operations";
 import { appDependencies } from "../modules/apps/app.operations";
 import { backupDestinationDependencies } from "../modules/backup-destinations/destination.operations";
 import { backupDependencies } from "../modules/backups/backup.operations";
+import { externalDeploymentDependencies } from "../modules/external-deployments/external.operations";
+import { deployBoundExternalTarget } from "../modules/external-deployments/external.operations";
 
 import { jobDependencies } from "../modules/jobs/job.operations";
 
@@ -67,6 +69,7 @@ export function getPlatformKernel(): PlatformKernel {
     domains: domainDependencies,
     dns: dnsDependencies,
     credentials: credentialDependencies,
+    externalDeployments: externalDeploymentDependencies,
     servers: serverDependencies,
     system: systemDependencies,
     apps: appDependencies,
@@ -130,6 +133,24 @@ export function getPlatformKernel(): PlatformKernel {
         ctx.organizationId,
         options.projectSource,
       );
+      // An explicit external target is handled by the provider-neutral adapter
+      // in this control plane. Cloud-owned projects still use the existing
+      // owner-account forwarding path below, so credentials never cross the
+      // local/cloud boundary.
+      if (input.targetId && source !== "cloud") {
+        const operation = await deployBoundExternalTarget(ctx, {
+          projectId: input.projectId,
+          targetId: input.targetId,
+          connectionId: input.connectionId,
+          workloadKind: input.workloadKind,
+          revision: input.commitSha ?? input.branch,
+          source: {
+            ...(input.branch ? { branch: input.branch } : {}),
+            ...(input.commitSha ? { commitSha: input.commitSha } : {}),
+          },
+        });
+        return { deployment_id: operation.id, project_id: input.projectId };
+      }
       if (source !== "cloud") return null;
       // Current links bind an OWNER ACCOUNT, not a local org to a cloud org.
       assertCloudProxyScope(ctx);

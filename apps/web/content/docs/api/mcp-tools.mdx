@@ -5,7 +5,7 @@ description: Generated tool descriptions, API mappings, availability, and intent
 
 This catalog is generated from the route metadata used by MCP discovery. Run `tools/list` against your instance for its current input schemas and the tools available to your credential. See [MCP setup](/docs/mcp), [protocol and arguments](/docs/api/mcp), and the [cluster/scaling workflow](/docs/guides/mcp-clusters-and-scaling).
 
-The current API has **568 unique tools**. Permission tags below describe the route's initial authority; shared operations also enforce workspace, resource, source-access and instance-admin requirements. Self-hosted tools are unavailable on the hosted Cloud controller.
+The current API has **576 unique tools**. Permission tags below describe the route's initial authority; shared operations also enforce workspace, resource, source-access and instance-admin requirements. Self-hosted tools are unavailable on the hosted Cloud controller.
 
 ## Tools
 
@@ -267,6 +267,19 @@ The current API has **568 unique tools**. Permission tags below describe the rou
 | `post_domains_preview`<br />`POST /api/domains/preview` | Preview the DNS records a domain will need, before adding it. | `domain:read` |
 | `post_domains_renew_all`<br />`POST /api/domains/renew-all` | Attempt certificate renewal for eligible domains in this workspace. Inspect individual domain SSL state afterward; one domain’s failure does not prove all renewals failed. | `domain:write` |
 | `post_domains_verify_pending`<br />`POST /api/domains/verify-pending` | Recheck pending domains in this workspace and record current DNS/verification results. Read individual domain status for remaining blockers. | `domain:write` |
+
+### external-deployments
+
+| Tool and HTTP route | Description | Access |
+| --- | --- | --- |
+| `get_external_deployments_targets`<br />`GET /api/external-deployments/targets` | List the organization's explicit external deployment targets. Provider credentials and secrets are never returned. | `settings:read` |
+| `post_external_deployments_apply`<br />`POST /api/external-deployments/apply` | Apply a reviewed external deployment plan with confirmation and an idempotency key. | `deployment:write` |
+| `post_external_deployments_capabilities`<br />`POST /api/external-deployments/capabilities` | Read the capability profile for an explicit provider target and workload kind. | `settings:read` |
+| `post_external_deployments_destroy`<br />`POST /api/external-deployments/destroy` | Destroy an external sandbox or workload after explicit confirmation. | `deployment:write` |
+| `post_external_deployments_exec`<br />`POST /api/external-deployments/exec` | Execute a reviewed command in an external sandbox or Workbox child and return bounded output. | `deployment:write` |
+| `post_external_deployments_observe`<br />`POST /api/external-deployments/observe` | Observe an explicit external target or operation and reconcile provider state. | `settings:read` |
+| `post_external_deployments_plan`<br />`POST /api/external-deployments/plan` | Build an expiring external deployment plan from an explicit target, source/image and environment. | `settings:read` |
+| `post_external_deployments_preflight`<br />`POST /api/external-deployments/preflight` | Check whether an explicit provider target can host the requested workload before mutation. | `settings:read` |
 
 ### github
 

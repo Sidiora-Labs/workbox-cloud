@@ -2,11 +2,19 @@ import { AppError } from "@repo/core";
 import { safeFetch } from "../../lib/safe-fetch";
 
 export type MigrationProvider = "railway" | "vercel";
+export type FixedProvider = MigrationProvider | "fly-machines" | "fly-sprites";
 export interface ProviderAccess {
   provider: MigrationProvider;
   publicFields: Record<string, string>;
   secrets: Record<string, string>;
 }
+
+export const FIXED_PROVIDER_ORIGINS = Object.freeze([
+  "https://api.vercel.com",
+  "https://backboard.railway.com",
+  "https://api.machines.dev",
+  "https://api.sprites.dev",
+] as const);
 
 /** Fixed provider origins, bounded responses, no redirects, and no upstream
  * response bodies in errors: provider errors can contain credentials or env. */
@@ -18,7 +26,7 @@ export async function providerJson<T>(
     body?: string;
   } = {},
 ): Promise<T> {
-  if (!["https://api.vercel.com", "https://backboard.railway.com"].includes(url.origin))
+  if (!(FIXED_PROVIDER_ORIGINS as readonly string[]).includes(url.origin))
     throw new AppError("Unsupported connection endpoint", 400, "CONNECTION_ENDPOINT_INVALID");
   let response;
   try {
@@ -53,6 +61,49 @@ export async function providerJson<T>(
       "The provider returned an invalid response",
       502,
       "CONNECTION_RESPONSE_INVALID",
+    );
+  }
+}
+
+/**
+ * Workbox endpoints are operator-configured rather than one global provider
+ * origin. The URL is still fetched through safeFetch so DNS is pinned and
+ * private/loopback targets remain available only to a self-hosted instance.
+ */
+export async function workboxReady(
+  baseUrl: string,
+  apiKey: string,
+  options: { allowPrivate?: boolean; allowHttp?: boolean } = {},
+): Promise<void> {
+  let base: URL;
+  try {
+    base = new URL(baseUrl);
+  } catch {
+    throw new AppError("Workbox endpoint is invalid", 400, "CONNECTION_ENDPOINT_INVALID");
+  }
+  if (base.protocol !== "https:" && !(options.allowHttp && base.protocol === "http:"))
+    throw new AppError("Workbox endpoint must use HTTPS", 400, "CONNECTION_ENDPOINT_INVALID");
+  if (!apiKey) throw new AppError("Reconnect Workbox before verifying", 409, "CONNECTION_RECONNECT_REQUIRED");
+  const endpoint = new URL("readyz", `${base.href.replace(/\/$/, "")}/`);
+  let response;
+  try {
+    response = await safeFetch(endpoint.href, {
+      headers: { Authorization: `Bearer ${apiKey}`, Accept: "application/json" },
+      timeoutMs: 10_000,
+      maxBodyBytes: 256 * 1024,
+      allowPrivate: options.allowPrivate ?? false,
+      allowHttp: options.allowHttp ?? false,
+      maxRedirects: 0,
+    });
+  } catch {
+    throw new AppError("Workbox could not be reached. Check the endpoint and retry.", 502, "CONNECTION_UNAVAILABLE");
+  }
+  if (!response.ok) {
+    const auth = response.status === 401 || response.status === 403;
+    throw new AppError(
+      auth ? "Workbox rejected this scoped API key." : "Workbox readiness check failed. Retry the connection.",
+      auth ? 403 : 502,
+      auth ? "CONNECTION_ACCESS_DENIED" : "CONNECTION_REQUEST_FAILED",
     );
   }
 }

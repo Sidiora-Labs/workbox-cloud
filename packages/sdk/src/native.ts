@@ -31,6 +31,7 @@ import {
   type AnalyticsOperations,
   type JobOperations,
 } from "@repo/contracts";
+import type { ExternalDeploymentOperations } from "./external-deployment-client";
 import type {
   ExecutionContext,
   OperationResult,
@@ -89,6 +90,7 @@ export type CreateShipOptions<Assertion> =
 export interface ScopedShip {
   readonly organizationId: string;
   readonly deployments: DeploymentOperations;
+  readonly externalDeployments: ExternalDeploymentOperations;
   readonly projects: ProjectOperations;
   readonly sources: SourceOperations;
   readonly services: ServiceOperations;
@@ -382,6 +384,7 @@ function createAttachedShip<Assertion>({
       } satisfies DomainOperations);
       const dns = bindGroup(platform.dns) satisfies DnsOperations;
       const credentials = bindGroup(platform.credentials) satisfies CredentialOperations;
+      const externalDeployments = bindGroup(platform.externalDeployments) satisfies ExternalDeploymentOperations;
       const {
         openSecurityRunEvents,
         openInstallStream,
@@ -541,6 +544,7 @@ function createAttachedShip<Assertion>({
       return Object.freeze({
         organizationId,
         deployments,
+        externalDeployments,
         projects,
         sources,
         services,

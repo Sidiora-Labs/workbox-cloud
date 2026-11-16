@@ -91,6 +91,14 @@ export { billingPlanGrant } from "./billing-plan-grant";
 export { customAppTemplate } from "./custom-app-template";
 export { dnsCredential } from "./dns-credential";
 export { credential } from "./credential";
+export {
+  externalDeploymentTarget,
+  externalDeploymentOperation,
+  type ExternalDeploymentTarget,
+  type NewExternalDeploymentTarget,
+  type ExternalDeploymentOperation,
+  type NewExternalDeploymentOperation,
+} from "./external-deployment";
 
 export { computeCluster, computeClusterMember } from "./compute-cluster";
 export { clusterRuntime } from "./cluster-runtime";

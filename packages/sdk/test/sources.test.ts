@@ -130,6 +130,20 @@ describe("SDK source deployments", () => {
     });
   });
 
+  it("passes explicit external target, connection and workload bindings through the source workflow", async () => {
+    const s = server();
+    await s.client.deploy({
+      source: { type: "files", files: { "index.js": "" } },
+      targetId: "target-railway-sbx",
+      connectionId: "connection-railway",
+      workloadKind: "railway-sandbox",
+    });
+    expect(s.commands.find(command => command.path === "/api/projects/ensure")?.body)
+      .toMatchObject({ targetId: "target-railway-sbx", connectionId: "connection-railway", workloadKind: "railway-sandbox" });
+    expect(s.commands.find(command => command.path === "/api/deployments/build/access")?.body)
+      .toMatchObject({ targetId: "target-railway-sbx", connectionId: "connection-railway", workloadKind: "railway-sandbox" });
+  });
+
   it("includes existing build outputs while excluding dependencies and git metadata", async () => {
     const dir = await directory();
     for (const part of ["dist", "node_modules", ".git"]) await mkdir(join(dir, part));
