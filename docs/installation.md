@@ -1,20 +1,20 @@
-# Installing Openship
+# Installing Workbox Cloud
 
-Openship runs in three shapes. Pick by **who uses it** and **whether it must be reachable when your machine is off**.
+Workbox Cloud runs in three shapes. Pick by **who uses it** and **whether it must be reachable when your machine is off**.
 
-| Setup | Use when | How Openship runs |
+| Setup | Use when | How Workbox Cloud runs |
 |---|---|---|
-| **Desktop app** | It's just you. Private. | Control plane runs **on your machine**, drives your server(s) over SSH. Nothing about Openship is exposed to the internet. |
+| **Desktop app** | It's just you. Private. | Control plane runs **on your machine**, drives your server(s) over SSH. Nothing about Workbox Cloud is exposed to the internet. |
 | **Self-hosted on a server** | A team, always-on, remote access, CI / push-to-deploy | Control plane runs **on a Linux box** at a public URL, login required, invite-only. |
-| **Openship Cloud** | Zero ops | Managed for you. |
+| **Workbox Cloud** | Zero ops | Managed for you. |
 
 ---
 
 ## Solo / private → use the Desktop app (recommended)
 
-For a single operator this is the best model: the control plane lives **locally** and manages your servers end-to-end over SSH. Openship itself has **no public app and no open port** — the only thing that ever goes public is an app *you* give a domain to. Smallest attack surface, nothing to secure.
+For a single operator this is the best model: the control plane lives **locally** and manages your servers end-to-end over SSH. Workbox Cloud itself has **no public app and no open port** — the only thing that ever goes public is an app *you* give a domain to. Smallest attack surface, nothing to secure.
 
-**When this is the wrong choice:** the dashboard is only up while your machine is. No teammate access, no access from your phone, and push-to-deploy webhooks need a stable public endpoint your laptop isn't. If you need any of those, run Openship on a server (below).
+**When this is the wrong choice:** the dashboard is only up while your machine is. No teammate access, no access from your phone, and push-to-deploy webhooks need a stable public endpoint your laptop isn't. If you need any of those, run Workbox Cloud on a server (below).
 
 **Install:**
 - Download for your OS at [openship.io](https://openship.io), or run `openship install` (fetches the desktop build).
@@ -24,17 +24,17 @@ For a single operator this is the best model: the control plane lives **locally*
 
 ---
 
-## Team / always-on → install Openship on a server
+## Team / always-on → install Workbox Cloud on a server
 
 Two ways to stand up the control plane on a Linux box. Point your domain's **DNS A record at the server first**.
 
 ### A) From the Desktop app
 
-Add the server (SSH), then **install Openship onto it like any other app** — pick the server, install Openship, and it runs as an always-on app on that box with its own domain. Use this to promote from "local desktop control" to "always-on server" without touching a terminal.
+Add the server (SSH), then **install Workbox Cloud onto it like any other app** — pick the server, install Workbox Cloud, and it runs as an always-on app on that box with its own domain. Use this to promote from "local desktop control" to "always-on server" without touching a terminal.
 
 ### B) With the CLI (on the server)
 
-Install the CLI, then just run **`openship`** — an interactive wizard walks you through it: it creates the **first admin**, attaches your domain, and installs Openship as a boot service. Run `openship` again later to manage the running instance.
+Install the CLI, then just run **`openship`** — an interactive wizard walks you through it: it creates the **first admin**, attaches your domain, and installs Workbox Cloud as a boot service. Run `openship` again later to manage the running instance.
 
 ```bash
 curl -fsSL https://get.openship.io | sh      # install  (or: npm i -g openship)
@@ -52,7 +52,7 @@ openship up --public-url https://ops.example.com
 - `--managed-edge` also installs OpenResty + a free Let's Encrypt cert on the box and routes your domain to the dashboard — no separate reverse proxy needed. Omit it if you run your own proxy in front.
 - One-off attached run instead of a service: `openship up --foreground`.
 
-Once it's up, **Openship registers itself as an app** (dashboard → Apps → *Openship*): manage its domain, tail its logs, and see it *Live* like any other app.
+Once it's up, **Workbox Cloud registers itself as an app** (dashboard → Apps → *Workbox Cloud*): manage its domain, tail its logs, and see it *Live* like any other app.
 
 ---
 
@@ -105,7 +105,7 @@ Fix by moving Docker's data-root to a native `ext4`/`xfs` disk (`/etc/docker/dae
 ### Run & manage the instance
 | Command | Does |
 |---|---|
-| `openship up [--foreground]` | Start Openship as a service (boot + auto-restart); `--foreground` runs it attached |
+| `openship up [--foreground]` | Start Workbox Cloud as a service (boot + auto-restart); `--foreground` runs it attached |
 | `openship up --public-url <url> [--managed-edge]` | Serve the dashboard at a public domain (+ install OpenResty/TLS with `--managed-edge`) |
 | `openship stop` | Stop the service |
 | `openship status [--json]` | Is it running? Resolved ports + API health |
@@ -126,7 +126,7 @@ Fix by moving Docker's data-root to a native `ext4`/`xfs` disk (`/etc/docker/dae
 | `openship service` | Services within a stack |
 | `openship domain` | A project's domains |
 
-> Health + logs for the control plane itself: `openship status`, and `openship logs <openship-app-deployment-id>` streams the running instance's own logs (Openship is a real app — find its deployment id under Apps → Openship → Deployments).
+> Health + logs for the control plane itself: `openship status`, and `openship logs <openship-app-deployment-id>` streams the running instance's own logs (Workbox Cloud is a real app — find its deployment id under Apps → Workbox Cloud → Deployments).
 
 ### Infrastructure & admin
 | Command | Does |
@@ -155,4 +155,4 @@ see [Custom ACME certificate authorities](acme.md).
 
 - **Just you, private** → Desktop app.
 - **Team / always-on / public / CI** → `openship up --public-url https://… --managed-edge` on a server.
-- **No ops at all** → Openship Cloud.
+- **No ops at all** → Workbox Cloud.

@@ -43,9 +43,9 @@ beforeEach(() => {
   h.dep = { id: "dep", projectId: "project", organizationId: "org", commitSha: "a".repeat(40), status: "queued", createdAt: new Date(), updatedAt: new Date(), envVars: null } as Deployment;
   h.rows = [];
   h.root = {
-    id: "root", deploymentId: "dep", kind: "rollup", name: "Openship / app / production", checkRunId: null,
+    id: "root", deploymentId: "dep", kind: "rollup", name: "Workbox Cloud / app / production", checkRunId: null,
     publishedDigest: null, attempts: 0, createdAt: new Date(),
-    source: { owner: "acme", repo: "app", name: "Openship / app / production", checks: { ...DEFAULT_GITHUB_DEPLOYMENT_CHECKS }, services: [{ name: "web", targeted: true }, { name: "db", targeted: false }] },
+    source: { owner: "acme", repo: "app", name: "Workbox Cloud / app / production", checks: { ...DEFAULT_GITHUB_DEPLOYMENT_CHECKS }, services: [{ name: "web", targeted: true }, { name: "db", targeted: false }] },
   } as DeploymentCheck;
   h.mirrors = [h.root];
   h.owner.mockResolvedValue({ userId: "owner" });

@@ -98,7 +98,7 @@ async function authority(ctx: ExecutionContext, refs: Reference[]): Promise<"loc
   assertCloudProxyScope(ctx);
   if (authorities.some((value) => value !== "cloud"))
     throw new AppError(
-      "Choose projects, workflows and runners from the same Openship instance. Cloud Actions cannot use local destinations.",
+      "Choose projects, workflows and runners from the same Workbox Cloud instance. Cloud Actions cannot use local destinations.",
       409,
       "ACTIONS_MIXED_AUTHORITY",
     );
@@ -124,7 +124,7 @@ async function remote(
   });
   if (!response)
     throw new AppError(
-      "Could not reach Openship Cloud. Check your connection and try again.",
+      "Could not reach Workbox Cloud. Check your connection and try again.",
       503,
       CLOUD_UNREACHABLE_CODE,
     );
@@ -136,7 +136,7 @@ async function remote(
   const data = route.envelope && isRecord(body) ? body[route.envelope] : body;
   if (!isResourceOutput(spec, data))
     throw new AppError(
-      "Openship Cloud returned an invalid Actions response",
+      "Workbox Cloud returned an invalid Actions response",
       502,
       "INVALID_OPERATION_RESPONSE",
     );

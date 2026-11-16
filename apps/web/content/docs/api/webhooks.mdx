@@ -47,7 +47,7 @@ Job hooks require project-write, job-write, and administration access to every j
 
 ## Invoke an authorized action
 
-Use this operation when your integration is already authenticated with Openship:
+Use this operation when your integration is already authenticated with Workbox Cloud:
 
 <Tabs items={['SDK', 'REST API']} groupId="api-transport" persist>
 <Tab value="SDK">
@@ -88,7 +88,7 @@ before selecting the page.
 POST /api/webhooks/:provider
 ```
 
-There is no Openship-defined request body: the body is the provider's **raw event payload**, read verbatim
+There is no Workbox Cloud-defined request body: the body is the provider's **raw event payload**, read verbatim
 so the signature can be checked byte-for-byte. GitHub deliveries carry these headers, which the dispatcher
 relies on:
 
@@ -164,7 +164,7 @@ When a verified `push` event arrives, the handler maps it to deployments like th
 - **Idempotency.** The `X-GitHub-Delivery` id is claimed persistently, so an at-least-once redelivery of the
   same push is dropped instead of deploying twice.
 - **Cloud forwarding.** On a self-hosted box, if no local project matches but a linked **cloud** project owns
-  the repo/branch, the push is forwarded to Openship Cloud so the cloud copy redeploys.
+  the repo/branch, the push is forwarded to Workbox Cloud so the cloud copy redeploys.
 
 Deep dive on wiring and edge cases: [Auto-deploy on push](/docs/guides/auto-deploy).
 

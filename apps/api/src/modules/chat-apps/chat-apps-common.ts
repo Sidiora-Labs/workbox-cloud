@@ -10,7 +10,7 @@ export const fail = (message: string, status = 409) =>
   new AppError(message, status, "CHAT_APPS_ERROR");
 export function session(ctx: RequestContext, admin = false) {
   if (ctx.principalKind || ctx.tokenScope || ctx.sessionKind === "bearer")
-    throw fail("Use your OpenShip session to manage chat connections.", 403);
+    throw fail("Use your Workbox Cloud session to manage chat connections.", 403);
   if (admin && ctx.role !== "owner" && ctx.role !== "admin")
     throw fail("Only workspace admins can configure chat apps.", 403);
 }

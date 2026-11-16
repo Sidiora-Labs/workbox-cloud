@@ -1,6 +1,6 @@
 /**
  * `openship config init` / `openship config validate` — author and check the
- * repo-root `openship.json` (Openship's declarative deploy config).
+ * repo-root `openship.json` (Workbox Cloud's declarative deploy config).
  *
  * `validate` runs the SAME validator the deploy pipeline uses
  * (`parseOpenshipConfigJson` from @repo/core, over the same `parseOpenshipConfig`
@@ -66,7 +66,7 @@ const initCmd = new Command("init")
 
     const hints = detectHints(dir);
     // $schema first (editor autocomplete); then detected fields. Everything else
-    // is intentionally omitted — Openship auto-detects it, and openship.json only
+    // is intentionally omitted — Workbox Cloud auto-detects it, and openship.json only
     // needs to carry what you want to override.
     const scaffold: Record<string, unknown> = { $schema: SCHEMA_URL, ...hints };
     const text = JSON.stringify(scaffold, null, 2) + "\n";

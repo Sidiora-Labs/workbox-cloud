@@ -1,7 +1,7 @@
 /**
  * Readiness probing from a machine that is not this process.
  *
- * A containerized Openship API has its own network namespace, so the published
+ * A containerized Workbox Cloud API has its own network namespace, so the published
  * candidate at `127.0.0.1:<hostPort>` means nothing here — that address only resolves
  * to the deployment on the HOST. Two ways to borrow the host's namespace:
  *

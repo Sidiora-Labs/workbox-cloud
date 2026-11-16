@@ -3,7 +3,7 @@ title: Assistant
 description: Opt-in assistant controls, with product operations authorized through the normal MCP endpoint.
 ---
 
-These endpoints serve Desktop, self-hosted OpenShip, and Cloud. Private connection controls require the signed-in user's session. Personal access
+These endpoints serve Desktop, self-hosted Workbox Cloud, and Cloud. Private connection controls require the signed-in user's session. Personal access
 tokens and OAuth bearers cannot enable the assistant or manage native sign-ins.
 Scoped agent and automation operations are available through the normal authenticated
 API and MCP, with the same resource checks as the dashboard. Cloud runs Mindwire
@@ -27,7 +27,7 @@ access are checked again at use time. Authorization handshakes are sealed and
 short-lived in the database so callbacks can land on any API replica. A cancelled or expired flow does
 not grant access.
 
-OpenShip's normal OAuth store holds the token. Assistant uses it exclusively to
+Workbox Cloud's normal OAuth store holds the token. Assistant uses it exclusively to
 forward tool requests to `/api/mcp`, so discovery, validation, permission checks,
 resource ownership and audit behavior remain the same as other MCP clients.
 Private connection and general chat controls are excluded from the MCP catalog.
@@ -45,7 +45,7 @@ the normal sign-in methods once setup finishes. Reading status never installs a 
 Setup requires a signed-in session, current Assistant consent, administration
 access to the exact host, and current paid Cloud coverage. It reuses that instance;
 it does not purchase or provision another one. Installation has a separate private
-profile, while execution continues through OpenShip's scoped harness wrappers.
+profile, while execution continues through Workbox Cloud's scoped harness wrappers.
 This endpoint is excluded from MCP and rejects local or SSH hosts with
 `ASSISTANT_SETUP_UNAVAILABLE`.
 
@@ -121,7 +121,7 @@ expired worker is reconciled before another turn is admitted.
 Activity requests accept `runId`, `after` and optional `waitMs` (up to 25 seconds).
 Apply events in sequence. A `reset` response means the client should reload the
 conversation snapshot. History is paged with the returned `before` cursor.
-Transcripts remain in Mindwire's profile on the selected host; OpenShip stores ownership,
+Transcripts remain in Mindwire's profile on the selected host; Workbox Cloud stores ownership,
 authorization context and request receipts.
 
 Structured question responses contain `interactionId`, `requestId` and `answers`
@@ -132,7 +132,7 @@ These responses cannot approve native shell or filesystem access.
 Changed permissions require a new conversation. Disabling the assistant revokes
 its MCP connection and stops active turns. Stop and delete serialize with a turn
 that is still starting. None of these actions undo an operation already accepted
-by OpenShip's ordinary deployment or job flow.
+by Workbox Cloud's ordinary deployment or job flow.
 
 ## Custom API connections
 

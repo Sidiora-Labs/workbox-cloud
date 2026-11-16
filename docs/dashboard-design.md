@@ -94,7 +94,7 @@ Use 56–64 px artwork
 beside plan names and 80 px for onboarding and empty states, without an extra icon
 tile. Use the shared calendar for Jobs, snapshots for Backups, server racks for Servers and Clusters,
 the connected shield for Private networks, and `deploy-anywhere` for the disconnected
-Openship Cloud card. Projects, deployments, Actions, monitoring,
+Workbox Cloud card. Projects, deployments, Actions, monitoring,
 and repository/folder import use the same compact artwork and palette. Keep metrics,
 progress rings, navigation, controls and provider logos as utility icons or their original
 artwork. Monitoring uses the chart for an empty incident

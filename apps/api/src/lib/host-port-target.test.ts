@@ -29,7 +29,7 @@ const connection = {
 };
 
 describe("host-port target identity", () => {
-  it("validates OS and OpenShip target ids before trusting them", () => {
+  it("validates OS and Workbox Cloud target ids before trusting them", () => {
     expect(normalizeTargetMachineId("0123456789ABCDEF0123456789ABCDEF\n")).toBe(
       "0123456789abcdef0123456789abcdef",
     );
@@ -63,7 +63,7 @@ describe("host-port target identity", () => {
     expect(second.legacyTargetKeys).toEqual(["server:server-two"]);
   });
 
-  it("uses an existing OpenShip host id when machine-id is unavailable", async () => {
+  it("uses an existing Workbox Cloud host id when machine-id is unavailable", async () => {
     const result = await resolveHostPortTargetIdentity({
       localHost: false,
       serverId: "server-one",
@@ -108,7 +108,7 @@ describe("host-port target identity", () => {
     expect(second.stable).toBe(false);
   });
 
-  it("atomically creates a stable OpenShip host id before using the locator fallback", async () => {
+  it("atomically creates a stable Workbox Cloud host id before using the locator fallback", async () => {
     const executor = executorWithFiles({
       "/etc/machine-id": new Error("missing"),
       "/var/lib/openship/host-id": new Error("missing"),

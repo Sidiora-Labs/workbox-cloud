@@ -25,7 +25,7 @@ const SITE_URL = "https://openship.io";
 const softwareLd = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: "OpenShip",
+  name: "Workbox Cloud",
   applicationCategory: "DeveloperApplication",
   applicationSubCategory: "Deployment Platform",
   operatingSystem: "macOS, Windows, Linux, Web",
@@ -34,7 +34,7 @@ const softwareLd = {
   softwareVersion: "latest",
   publisher: {
     "@type": "Organization",
-    name: "OpenShip",
+    name: "Workbox Cloud",
     url: SITE_URL,
   },
   description:

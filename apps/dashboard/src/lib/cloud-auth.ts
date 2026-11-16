@@ -4,7 +4,7 @@ import { sha256 } from "@noble/hashes/sha2.js";
 import { isInvitationClaimPath } from "@repo/core";
 
 export const DESKTOP_CLOUD_FLOW = "desktop-cloud";
-const DEFAULT_APP_NAME = "OpenShip Desktop";
+const DEFAULT_APP_NAME = "Workbox Cloud Desktop";
 const DEFAULT_POLL_INTERVAL_MS = 2000;
 
 type SearchParamsLike = {

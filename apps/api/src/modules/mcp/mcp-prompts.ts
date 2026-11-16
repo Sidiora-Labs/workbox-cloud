@@ -39,7 +39,7 @@ function toolRef(method: string, path: string): string {
 /** Shared by initialize and every guided flow, before any creation steps. */
 export function workspaceInstructions(workspace?: { organizationId: string | null; boundOrganizationId: string | null }): string {
   return [
-    "Openship workspaces and workgroups are organizations in the API. Their workspace ID is organizationId. An Oblien runtime workspace and a project's groupId are different resources.",
+    "Workbox Cloud workspaces and workgroups are organizations in the API. Their workspace ID is organizationId. An Oblien runtime workspace and a project's groupId are different resources.",
     ...(workspace?.organizationId ? [`Current organizationId: ${workspace.organizationId}.`] : []),
     ...(workspace?.boundOrganizationId ? [`This credential is bound to organizationId ${workspace.boundOrganizationId}.`] : []),
     `Before installing an app, creating a project, or deploying Compose, call ${toolRef("GET", "/api/permissions/workspaces")} with no arguments. It lists permitted workspace names and organizationId values, including empty workspaces, and reports the current workspace and credential restrictions.`,
@@ -48,9 +48,9 @@ export function workspaceInstructions(workspace?: { organizationId: string | nul
     "If boundOrganizationId is set, this credential only accesses that workspace. To use another, the user must authorize a connection or create a token in that workspace; passing a different ID cannot widen access.",
     "Workspace grants cannot authorize instance-wide administration. If an operation returns INSTANCE_SCOPE_REQUIRED, do not request broader workspace permissions or retry it; use available workspace project and server tools for the task, and explain any information you cannot inspect.",
     `If a task requires unavailable permissions, call ${toolRef("GET", "/api/permissions/access-request")} once with query.reason and query.access explaining the minimum actions and resources needed, then wait for the user. It only presents a request, never grants access. Do not repeatedly retry denied actions, ask for credentials, or bypass the normal permission editor.`,
-    "organizationId selects the request's workspace; serverId selects where the app runs. Neither moves existing project records between Openship instances.",
+    "organizationId selects the request's workspace; serverId selects where the app runs. Neither moves existing project records between Workbox Cloud instances.",
     ...(env.CLOUD_MODE ? [
-      "This is Openship Cloud. Local filesystem paths are not accessible here; use uploaded source or a git repository. Managed servers build on the server (buildStrategy:'server').",
+      "This is Workbox Cloud. Local filesystem paths are not accessible here; use uploaded source or a git repository. Managed servers build on the server (buildStrategy:'server').",
     ] : [
       `To run a desktop/self-hosted project on Cloud, call ${toolRef("GET", "/api/system/servers/destinations")} and select an accessible managed server. Pass its local serverId when creating/importing the project, then deploy that project with buildStrategy:'server'. The project and source stay controlled by this instance; no transfer_to_cloud is needed. The credential must have project creation/write and destination server write permissions.`,
       `If the server is not connected here, an authorized administrator can select it from ${toolRef("GET", "/api/system/servers/managed/available")} and use ${toolRef("POST", "/api/system/servers/managed/connect")}. Use the returned LOCAL serverId, not the remote Cloud ID.`,
@@ -61,11 +61,11 @@ export function workspaceInstructions(workspace?: { organizationId: string | nul
 
 /**
  * Appended to every prompt: if the agent hits something that looks like an
- * Openship platform bug (not a user-input error), it should point the user at
+ * Workbox Cloud platform bug (not a user-input error), it should point the user at
  * the issue tracker rather than silently working around it.
  */
 const BUG_REPORT =
-  "If an Openship tool fails unexpectedly, report the tool name, error code and a redacted reproduction at https://github.com/oblien/openship/issues. Remove tokens, passwords, environment values and other secrets from arguments and logs before sharing them.";
+  "If a Workbox Cloud tool fails unexpectedly, report the tool name, error code and a redacted reproduction at https://github.com/oblien/openship/issues. Remove tokens, passwords, environment values and other secrets from arguments and logs before sharing them.";
 
 const PROMPTS: PromptDef[] = [
   {
@@ -73,7 +73,7 @@ const PROMPTS: PromptDef[] = [
     title: "Specialists, tasks and automations",
     description: "Create a scoped specialist, delegate a task, inspect and continue its conversation, or prepare an incident-triggered automation.",
     build: (_args, ref) => [
-      "The general OpenShip assistant manages the workspace. A saved agent is a specialist with instructions, an AI connection/model, and explicitly assigned resources. A task is one inspectable conversation. An automation is an event trigger that starts a fresh task, not another execution engine.",
+      "The general Workbox Cloud assistant manages the workspace. A saved agent is a specialist with instructions, an AI connection/model, and explicitly assigned resources. A task is one inspectable conversation. An automation is an event trigger that starts a fresh task, not another execution engine.",
       `First use ${ref("GET", "/api/assistant/agents/")} to reuse an appropriate specialist. Use ${ref("POST", "/api/assistant/agents/")} to create one when requested: name, purpose, instructions, provider/model, readOnly, and named project/server/github_repository grants. All grants must fit both your current access and the user's Assistant consent. Reuse requestId for retries. Prefer read-only for investigations; never grant unrelated resources. Creating an agent does not start work.`,
       `Before selecting a provider or model, call ${ref("GET", "/api/assistant/agents/models")}. Use a ready provider and its defaultModel or an exact listed ID; model="" uses that connected native provider's default. Never guess model names. ASSISTANT_MODEL_UNAVAILABLE means the selected model is invalid, not that the assistant is disconnected: refresh the catalog and retry the saved request with an available choice. ASSISTANT_PROVIDER_UNAVAILABLE means that provider is unavailable on the selected host; ASSISTANT_SIGN_IN means its credentials need attention. Another ready provider can still be used when the user has not required a specific one.`,
       `Assign work with ${ref("POST", "/api/assistant/agents/:id/tasks")}. Report acceptance accurately and return the task's conversation link. Use ${ref("GET", "/api/assistant/agents/:id/tasks/:chatId")} to inspect actual progress and results. Use ${ref("POST", "/api/assistant/agents/:id/tasks/:chatId/messages")} to send follow-up instructions to that same conversation, including during a running task. Do not busy-poll or create a second task for a follow-up.`,
@@ -84,25 +84,25 @@ const PROMPTS: PromptDef[] = [
   },
   {
     name: "chat-apps",
-    title: "Connect a chat app to OpenShip",
+    title: "Connect a chat app to Workbox Cloud",
     description: "Set up Slack, Discord, Telegram or Teams for deployment commands, assistant conversations, or both. These are interactive control-plane connections, separate from notification channels.",
     build: (_args, ref) => [
-      `OpenShip has built-in chat-app connectors in Settings → Chat apps. Read ${ref("GET", "/api/chat-apps")} to check the current workspace's connections and this user's linking status. Never propose building another backend for this feature.`,
+      `Workbox Cloud has built-in chat-app connectors in Settings → Chat apps. Read ${ref("GET", "/api/chat-apps")} to check the current workspace's connections and this user's linking status. Never propose building another backend for this feature.`,
       `For a new connection, call ${ref("GET", "/api/chat-apps/setup")} with query.provider and query.purpose ('commands' for the control plane, 'assistant' for AI conversations, or 'both'). It prepares the ordinary connection form and returns the exact fields and setup steps. This does not create or enable a bot. Present its inline Connect action, or setupPath in external clients, so the user can enter credentials privately. Never ask for bot tokens in conversation.`,
-      "Slack, Discord and Telegram support direct outbound connections without a public OpenShip URL. Teams uses public HTTPS webhooks. Deployment commands run through OpenShip and do not require AI or Mindwire. Assistant conversations use the sender's separately connected agent and approved access.",
-      "After saving, the connector starts paused. The user enables it in Settings → Chat apps. Each sender runs /openship link, opens the supplied URL, reviews the normal OpenShip permissions and sends the verification command back from their own chat account. Bot installation never grants a sender account access.",
+      "Slack, Discord and Telegram support direct outbound connections without a public Workbox Cloud URL. Teams uses public HTTPS webhooks. Deployment commands run through Workbox Cloud and do not require AI or Mindwire. Assistant conversations use the sender's separately connected agent and approved access.",
+      "After saving, the connector starts paused. The user enables it in Settings → Chat apps. Each sender runs /openship link, opens the supplied URL, reviews the normal Workbox Cloud permissions and sends the verification command back from their own chat account. Bot installation never grants a sender account access.",
       "Use /openship help for the shared command catalog, including projects, status, logs, redeploy and restart. Destructive changes use the normal confirmation flow. Account consent and changes to bot credentials, destinations or roles stay in the existing settings form.",
       `After the user finishes setup, call ${ref("GET", "/api/chat-apps")} again and report only the observed connection state. Connected is not proof that account linking or assistant setup is complete.`,
     ].join("\n\n"),
   },
   {
     name: "openship-overview",
-    title: "Openship: how to drive it via MCP",
+    title: "Workbox Cloud: how to drive it via MCP",
     description:
       "Orientation: the main tool groups, the entry points for each flow, and how permission scoping (incl. per-repo GitHub grants) affects what you can see and do.",
     build: (_args, ref) =>
       [
-        "Carry out the user’s requested work with these tools, then verify the result. Prepare any required review as an actionable handoff rather than a blanket refusal. You are driving Openship (deploy/host platform) through its MCP tools. Everything you call re-runs the real API's auth + permission checks, so you can only do what this token allows — `tools/list` already hides what you can't use.",
+        "Carry out the user’s requested work with these tools, then verify the result. Prepare any required review as an actionable handoff rather than a blanket refusal. You are driving Workbox Cloud (deploy/host platform) through its MCP tools. Everything you call re-runs the real API's auth + permission checks, so you can only do what this token allows — `tools/list` already hides what you can't use.",
         "",
         "Main tool groups:",
         `- Agents and automations — ${ref("GET", "/api/assistant/agents/")} and ${ref("GET", "/api/assistant/automations")}. Read the agents-and-automations guide to delegate scoped tasks or prepare incident flows.`,
@@ -163,10 +163,10 @@ const PROMPTS: PromptDef[] = [
     build: (_args, ref) =>
       [
         ...(env.CLOUD_MODE ? [] : [
-          "DESKTOP / SAME MACHINE — when the folder is readable by this Openship controller, no byte upload or bearer-token extraction is needed:",
+          "DESKTOP / SAME MACHINE — when the folder is readable by this Workbox Cloud controller, no byte upload or bearer-token extraction is needed:",
           `1. Choose an accessible destination with ${ref("GET", "/api/system/servers/destinations")} if deploying to a server or Cloud.`,
           `2. For a new project, call ${ref("POST", "/api/projects/import")} with name, localPath and the selected serverId. It detects the source and returns the created project. For an existing local project, use its projectId instead of creating a duplicate.`,
-          `3. Call ${ref("POST", "/api/deployments/build/access")} with that projectId and buildStrategy:'server' for a managed server. Openship reads the local source and transfers it to the selected server for the build. 'local' describes the source, not the build strategy. Do not transfer the project to Cloud.`,
+          `3. Call ${ref("POST", "/api/deployments/build/access")} with that projectId and buildStrategy:'server' for a managed server. Workbox Cloud reads the local source and transfers it to the selected server for the build. 'local' describes the source, not the build strategy. Do not transfer the project to Cloud.`,
           `4. Poll ${ref("GET", "/api/deployments/:id")} and ${ref("GET", "/api/deployments/:id/logs")}.`,
           "",
         ]),
@@ -191,11 +191,11 @@ const PROMPTS: PromptDef[] = [
     build: (args, ref) => {
       const app = args.app ? ` Target app: ${args.app}.` : "";
       return [
-        `Install an app from the Openship catalog.${app}`,
+        `Install an app from the Workbox Cloud catalog.${app}`,
         "",
         `1. Browse the catalog: ${ref("GET", "/api/apps/catalog")}. For one app's full template (services, config, endpoints): ${ref("GET", "/api/apps/catalog/:id")}.`,
         `2. Install it: ${ref("POST", "/api/apps")} with the app id and any required settings from the template.`,
-        "3. Read the response: a normal app installs as a project (you'll get a project id — watch it like any deployment). A 'flow' / wizard app instead returns { kind: 'flow', flowHref } — that multi-step wizard (e.g. mail provisioning) is finished in the Openship UI at flowHref, not through MCP.",
+        "3. Read the response: a normal app installs as a project (you'll get a project id — watch it like any deployment). A 'flow' / wizard app instead returns { kind: 'flow', flowHref } — that multi-step wizard (e.g. mail provisioning) is finished in the Workbox Cloud UI at flowHref, not through MCP.",
         `4. For an installed app, its resolved connection details and curated settings are available via the project's app-settings/connection tools once it's running.`,
       ].join("\n");
     },
@@ -206,7 +206,7 @@ const PROMPTS: PromptDef[] = [
     description: "Private networking, automated server setup, shared files, application deployment, guarded replica changes and recovery. Self-hosted only.",
     localOnly: true,
     build: (_args, ref) => [
-      "This workflow runs on the Openship controller and its registered servers, not the MCP client. Use tools/list inputSchema for exact fields. Manual replicas (1–100) are supported; metric-driven autoscaling, adding/draining live workers and Compose application scaling are not implemented.",
+      "This workflow runs on the Workbox Cloud controller and its registered servers, not the MCP client. Use tools/list inputSchema for exact fields. Manual replicas (1–100) are supported; metric-driven autoscaling, adding/draining live workers and Compose application scaling are not implemented.",
       `1. Discover infrastructure with ${ref("GET", "/api/system/networks/capabilities")}, ${ref("GET", "/api/system/servers")}, ${ref("GET", "/api/system/networks")} and ${ref("GET", "/api/system/compute-clusters")}. Reuse suitable resources. Network and runtime mutations require fleet administration and access to every selected server.`,
       `2. For existing native private networking, inspect each host with ${ref("POST", "/api/system/servers/:id/network/inspect")}, register its actual addresses with ${ref("POST", "/api/system/networks")}, then ${ref("POST", "/api/system/networks/:id/verify")} using the saved revision. Poll ${ref("GET", "/api/system/networks/:id")} and inspect the dated peer report. Registration does not create provider networks or open provider firewalls.`,
       `3. Alternatively, start managed WireGuard preparation with ${ref("POST", "/api/system/networks/preparations")}. Persist requestId and reuse it after a lost response. Poll ${ref("GET", "/api/system/networks/preparations/:preparationId")}; follow operationId to ${ref("GET", "/api/system/networks/operations/:operationId")}. Review host changes and firewall requirements, then apply the exact planHash with ${ref("POST", "/api/system/networks/operations/:operationId/apply")}. Poll the same operation to completion. Full bidirectional member access is required for k3s. Failed operations offer explicit resume/rollback; do not create competing plans.`,
@@ -248,12 +248,12 @@ const PROMPTS: PromptDef[] = [
   {
     name: "migrate-docker-project",
     title: "Migrate Docker workloads with verified cutover",
-    description: "Discover/adopt existing containers or move an Openship project, preserving environment/data and explicitly handling partial transfers and cutover.",
+    description: "Discover/adopt existing containers or move a Workbox Cloud project, preserving environment/data and explicitly handling partial transfers and cutover.",
     localOnly: true,
     build: (_args, ref) => [
       `1. Discover servers, then ${ref("POST", "/api/migration/scan")} on the source. Select container IDs from that scan to distinguish services with the same name in different Compose groups. Secrets are masked; the server rediscovers real source values. Never submit masked values as replacement secrets.`,
       `2. Inspect repository Compose configuration with ${ref("POST", "/api/migration/repo-compose")} if linking a repo. Review service mapping, environment overrides, volumes and routes, then ${ref("POST", "/api/migration/preview")} with the same selected services and destination.`,
-      `3. Start ${ref("POST", "/api/migration/migrate")} and keep migrationId and confirmationToken. Leave killOriginals:false to pause for explicit cutover; true authorizes automatic destruction of original containers after verification. Existing Openship projects use ${ref("POST", "/api/migration/project")} for move/copy instead. These tools move Docker workloads, not live k3s databases.`,
+      `3. Start ${ref("POST", "/api/migration/migrate")} and keep migrationId and confirmationToken. Leave killOriginals:false to pause for explicit cutover; true authorizes automatic destruction of original containers after verification. Existing Workbox Cloud projects use ${ref("POST", "/api/migration/project")} for move/copy instead. These tools move Docker workloads, not live k3s databases.`,
       `4. Poll ${ref("GET", "/api/migration/migrations/:id")}. Respond only to the returned pendingPrompt using ${ref("POST", "/api/migration/migrations/:id/respond")} and its prompt/action IDs. Partial transfers use ${ref("POST", "/api/migration/migrations/:id/resume")} after reviewing failed paths; skipping a path excludes its data.`,
       `5. At awaiting_cutover, verify target deployment, saved environment, volumes, routes and health. Confirm with ${ref("POST", "/api/migration/migrations/:id/cutover")} and the confirmationToken; kill:false retains originals stopped, while kill:true deletes them. Re-read status to confirm completion.`,
       `6. Before cutover, ${ref("POST", "/api/migration/migrations/:id/cancel")} requests rollback. For a failed migration, ${ref("POST", "/api/migration/migrations/:id/cleanup-target")} removes copied target data; inspect ownership and failure state first. Deleting a terminal migration record removes history only.`,

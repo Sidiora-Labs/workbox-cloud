@@ -33,13 +33,15 @@ const osxSigning = APPLE_IDENTITY
 
 module.exports = {
   packagerConfig: {
+    // Keep the internal packager name stable so existing bundle paths and
+    // updater replacements continue to resolve; productName is the display brand.
     name: "Openship",
     executableName: "openship",
     // Stable, owned bundle identifier — used by the code signature, notarization,
     // Keychain, and LaunchServices. Without it packager defaults to the generic
     // `com.electron.openship`, which collides with other Electron apps.
     appBundleId: "com.oblien.openship",
-    protocols: [{ name: "Openship instance", schemes: ["openship"] }],
+    protocols: [{ name: "Workbox Cloud instance", schemes: ["openship"] }],
     icon: ICON_BASE,
     asar: true,
     // The main/preload are bundled (build/bundle.mjs) into self-contained files,
@@ -143,7 +145,7 @@ module.exports = {
     postMake: async (_forgeConfig, makeResults) => {
       if (process.platform !== "darwin") return makeResults;
       // Forge builds one arch per `make` invocation; take it from the results
-      // so a cross-built x64 make produces Openship-x64.dmg (not the host arch).
+      // so a cross-built x64 make produces the legacy Openship-x64.dmg name (not the host arch).
       const arch = makeResults.find((r) => r.platform === "darwin")?.arch || process.arch;
       const appPath = path.join(__dirname, "out", `Openship-darwin-${arch}`, "Openship.app");
       if (!existsSync(appPath)) {
@@ -212,7 +214,7 @@ module.exports = {
       config: {
         options: {
           name: "openship",
-          productName: "Openship",
+          productName: "Workbox Cloud",
           bin: "openship",
           icon: `${ICON_BASE}.png`,
           categories: ["Development", "Utilities"],
@@ -229,7 +231,7 @@ module.exports = {
       config: {
         options: {
           name: "openship",
-          productName: "Openship",
+          productName: "Workbox Cloud",
           bin: "openship",
           icon: `${ICON_BASE}.png`,
           categories: ["Development", "Utilities"],

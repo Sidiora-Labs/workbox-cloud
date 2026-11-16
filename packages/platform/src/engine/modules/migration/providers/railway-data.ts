@@ -75,7 +75,7 @@ export async function openRailwayDataSource(
         "mutation($input: SshPublicKeyCreateInput!) { sshPublicKeyCreate(input: $input) { id } }",
         {
           input: {
-            name: `Openship import ${runId}`,
+            name: `Workbox Cloud import ${runId}`,
             publicKey: key.public,
             ...(access.publicFields.workspaceId
               ? { workspaceId: access.publicFields.workspaceId }

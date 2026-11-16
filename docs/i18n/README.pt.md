@@ -1,4 +1,4 @@
-<h1 align="center">Openship</h1>
+<h1 align="center">Workbox Cloud</h1>
 
 <p align="center">
   Plataforma de deploy open source e auto-hospedável com CI/CD integrado.<br>
@@ -26,7 +26,7 @@
 </p>
 
 <p align="center">
-  <img src="../../apps/web/public/screenshots/pt/deploy.webp" alt="Openship dashboard" width="800" />
+  <img src="../../apps/web/public/screenshots/pt/deploy.webp" alt="Workbox Cloud dashboard" width="800" />
 </p>
 
 ---
@@ -52,11 +52,11 @@ Ou baixe o app de desktop em [openship.io](https://openship.io).
 
 ## O que ele faz
 
-Aponte para um repositório. O Openship detecta sua stack, faz o build, configura tudo e publica — sem arquivos de configuração, sem pipelines, sem YAML.
+Aponte para um repositório. O Workbox Cloud detecta sua stack, faz o build, configura tudo e publica — sem arquivos de configuração, sem pipelines, sem YAML.
 
 Bancos de dados, domínios, SSL, CDN, e-mail, backups — tudo gerenciado em um só lugar.
 
-Funciona com o **Openship Cloud** (gerenciado) ou **qualquer servidor Linux** que você tenha. Desenvolvedores solo publicando projetos paralelos e times rodando produção usam a mesma ferramenta.
+Funciona com o **Workbox Cloud** (gerenciado) ou **qualquer servidor Linux** que você tenha. Desenvolvedores solo publicando projetos paralelos e times rodando produção usam a mesma ferramenta.
 
 ---
 
@@ -80,7 +80,7 @@ Funciona com o **Openship Cloud** (gerenciado) ou **qualquer servidor Linux** qu
 
 ## Faça deploy em qualquer lugar
 
-- **Openship Cloud** — gerenciado, autoescala, configuração zero
+- **Workbox Cloud** — gerenciado, autoescala, configuração zero
 - **Qualquer VPS** — Hetzner, DigitalOcean, Linode, OVH e outros
 - **Servidores dedicados** — bare metal, colocation, homelab
 - **Multiservidor** — distribua as cargas entre máquinas
@@ -118,6 +118,6 @@ Veja [CONTRIBUTING.md](../../CONTRIBUTING.md).
 
 ## Licença
 
-O Openship é software **open source**, licenciado sob a [Licença Apache 2.0](../../LICENSE).
+O Workbox Cloud é software **open source**, licenciado sob a [Licença Apache 2.0](../../LICENSE).
 
 Você pode usar, executar, modificar, auto-hospedar e distribuir — inclusive em produtos comerciais e de código fechado — sob os termos da licença Apache 2.0. Veja [LICENSE](../../LICENSE) para o texto completo.

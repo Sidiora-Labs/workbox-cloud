@@ -301,7 +301,7 @@ export async function protectRoleHandoverOutcome(ctx: LifecycleContext): Promise
       sessionManager.updateStatus(ctx.dep.id, "ready");
     } else {
       await onReconciling(ctx, {
-        warningMessage: "Role handover completion is pending. Openship will retry when the server is reachable.",
+        warningMessage: "Role handover completion is pending. Workbox Cloud will retry when the server is reachable.",
       });
     }
   } catch (error) {
@@ -1063,7 +1063,7 @@ export async function onSuccess(
     },
   );
 
-  // Webmail on Openship Cloud, routed on the mail server's own `mail.<domain>`:
+  // Webmail on Workbox Cloud, routed on the mail server's own `mail.<domain>`:
   // the mail VPS proxies that hostname to the cloud URL, which can only be
   // registered once the URL exists. Await it so the deployment execution lease
   // brackets this remote route/certificate write; otherwise project deletion

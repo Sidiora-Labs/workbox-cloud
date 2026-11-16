@@ -1,6 +1,6 @@
-# Openship server pricing
+# Workbox Cloud server pricing
 
-`pricing.json` defines Openship retail prices, supported Custom sizes and application
+`pricing.json` defines Workbox Cloud retail prices, supported Custom sizes and application
 limits. The API serves those terms through `GET /api/billing/plans`; dashboard,
 website and linked installations share the catalog. Oblien owns provider pricing,
 payment settlement, resource admission, metering and paid coverage.
@@ -21,7 +21,7 @@ Oblien's `resellerSubscriptionIntervals` capability to include `yearly`.
 
 New compute subscriptions start at Hobby. Existing subscriptions, including $5 Hobby and v12 monthly offers, keep
 their saved price and capacity through renewal; catalog changes do not migrate
-them. Openship Manage offers Basic at $5/month with email support and Priority at
+them. Workbox Cloud Manage offers Basic at $5/month with email support and Priority at
 $20/month with priority support. Both include two customer-owned servers, with
 additional servers at $3/month each and no included Cloud compute. Paid Cloud
 includes Basic; Priority retains its $15 support fee. New Manage v2 contracts bind
@@ -54,7 +54,7 @@ New purchases use the existing tracked `/billing/checkout` flow:
 - the versioned reference plus server-derived organization, namespace and limits.
 
 The subscription remains `tierId: "reseller"`; its entitlement is `tierId: "capacity"`.
-Openship checks the embedded capacity's namespace, provider, pool and paid period
+Workbox Cloud checks the embedded capacity's namespace, provider, pool and paid period
 against the saved subscription before exposing access. Billing admission uses the
 provider's `blocking` flag. Empty legacy quotas or an empty owner wallet cannot
 cancel confirmed monthly compute; manual suspension and expiry still apply.
@@ -67,9 +67,9 @@ Fully discounted, fulfilled purchases use the same checks. Pending, refunded,
 disputed or superseded payments never show a successful new subscription.
 
 `GET /billing/capacity/catalog` advertises deployed purchase capabilities and rates.
-Openship uses `oblien@2.10.0` and the existing SDK transport. Missing monthly Stripe
+Workbox Cloud uses `oblien@2.10.0` and the existing SDK transport. Missing monthly Stripe
 support stops new sales without hiding existing subscription management. Provider
-price admission stays at Oblien; Openship does not copy its affordability or
+price admission stays at Oblien; Workbox Cloud does not copy its affordability or
 proration calculation into another pricing engine.
 
 The published provider tariff currently exceeds Hobby, Starter and Pro retail
@@ -99,7 +99,7 @@ Existing subscriptions use the provider's plan-change preview and confirmation,
 never another replacement checkout. The UI shows its amount due, effective date
 and affected projects. Pure funded upgrades apply after payment. Resource
 reductions and billing-model changes wait for renewal, even when retail price
-increases. Openship uses the returned direction and date without local proration.
+increases. Workbox Cloud uses the returned direction and date without local proration.
 Annual upgrades use provider proration over the saved paid year and retain its
 original end date. Changing an existing subscription between monthly and annual
 billing is not supported. The durable worker applies the approved resize once. Changed project membership

@@ -10,11 +10,11 @@ without breaking the version real people are using. An **environment** lets you 
 like a rehearsal stage set up right next to the main one: same script, same props, but the audience only ever
 watches the main stage. You practice on the side, and only move things across when you're happy.
 
-In Openship, each environment is its own copy of the project. It follows its own git branch and gets its own
+In Workbox Cloud, each environment is its own copy of the project. It follows its own git branch and gets its own
 web address, so your `production` site and a `preview` copy never step on each other.
 
 <Callout title="What you need first">
-- A project that's already set up in Openship (see [Deploy from GitHub](/docs/guides/deploy-from-github) if you don't have one yet).
+- A project that's already set up in Workbox Cloud (see [Deploy from GitHub](/docs/guides/deploy-from-github) if you don't have one yet).
 - The project connected to **GitHub**, with more than one branch — an environment is built from a branch.
 - A branch to point it at (for example a `staging` or `preview` branch).
 </Callout>
@@ -29,14 +29,14 @@ Two words show up a lot here. In plain terms:
   have its own environment variables (its own secrets and settings). Break it all you like — production doesn't
   notice.
 
-Openship decides which type a new environment is by looking at its branch:
+Workbox Cloud decides which type a new environment is by looking at its branch:
 
 - A branch named `main` or `master` becomes a **production** environment.
 - Any other branch becomes a **preview** environment.
 - If you create one by hand without a branch, it's a **development** environment.
 
 Each environment is a full, independent copy: its own address, its own variables, its own deploy history. What
-they share is the build recipe — when you create one, Openship copies the original project's framework, build
+they share is the build recipe — when you create one, Workbox Cloud copies the original project's framework, build
 commands, and settings so you don't set them up again.
 
 ## Automatic pull request previews
@@ -58,7 +58,7 @@ On a server, supply a **Preview base domain** such as `preview.example.com` and 
 wildcard DNS record at that server. HTTPS verification must succeed before deployment.
 Leave the field empty to use managed domains when the deployment target supports them.
 
-New commits deploy their exact SHA. Openship publishes deployment checks through the existing
+New commits deploy their exact SHA. Workbox Cloud publishes deployment checks through the existing
 GitHub Checks integration and can maintain one comment with the preview URL and deployment
 link. The GitHub identity needs permission to read pull requests; comments also need write
 access. Existing GitHub App installations may need to accept updated permissions.
@@ -99,10 +99,10 @@ button for adding a branch.
 
 ### Press + and pick a branch
 
-Click the **+**. Openship reads your repository and lists its branches, with a **Search branches** box at the
+Click the **+**. Workbox Cloud reads your repository and lists its branches, with a **Search branches** box at the
 top to filter a long list. Click the branch you want to base the new environment on.
 
-Openship creates a fresh copy of the project tied to that branch and drops you onto its page. That's it — you're
+Workbox Cloud creates a fresh copy of the project tied to that branch and drops you onto its page. That's it — you're
 now looking at the new environment.
 
 <Callout title="Tip" type="info">
@@ -138,7 +138,7 @@ and press **Create**. This makes a *development* environment.
 
 ## CLI
 
-If you deploy from the CLI, the `deploy` command has an `--env` flag that tells Openship which environment a
+If you deploy from the CLI, the `deploy` command has an `--env` flag that tells Workbox Cloud which environment a
 deploy is for. It applies that environment's variables and records the deploy under it.
 
 ```bash
@@ -172,7 +172,7 @@ branches to show. If the list is empty, check that the project is linked to a re
 </Callout>
 
 <Callout title="“Branch … was not found”" type="error">
-Openship couldn't find that branch in the repository. Make sure the branch actually exists on GitHub (and that
+Workbox Cloud couldn't find that branch in the repository. Make sure the branch actually exists on GitHub (and that
 it's pushed, not just local), then try again.
 </Callout>
 

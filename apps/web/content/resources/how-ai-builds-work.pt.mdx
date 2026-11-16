@@ -1,27 +1,27 @@
 ---
-title: "Como funcionam os builds de IA em OpenShip"
-description: "Uma visão geral de como OpenShip usa IA para detectar estruturas, gerar configurações e otimizar compilações automaticamente."
+title: "Como funcionam os builds de IA em Workbox Cloud"
+description: "Uma visão geral de como Workbox Cloud usa IA para detectar estruturas, gerar configurações e otimizar compilações automaticamente."
 date: "2026-03-08"
 category: "Engineering"
-author: "OpenShip Team"
+author: "Workbox Cloud Team"
 ---
 
 Quando você executa `openship deploy`, muitas coisas acontecem antes de seu aplicativo ser lançado. Veja como funciona o sistema de construção de IA.
 
 ## Etapa 1: detecção de estrutura
 
-OpenShip verifica seu projeto em busca de sinais:
+Workbox Cloud verifica seu projeto em busca de sinais:
 
 - `package.json` scripts e dependências
 - Arquivos de configuração (`next.config.js`, `nuxt.config.ts`, `Cargo.toml`, etc.)
 - Dockerpresença de arquivo
 - Padrões de estrutura de diretório
 
-Isso produz uma correspondência de estrutura com pontuação de confiança. Se OpenShip detectar Next.js com 95% de confiança, ele usará o pipeline de compilação Next.js. Se houver um arquivo Docker, ele o usará diretamente.
+Isso produz uma correspondência de estrutura com pontuação de confiança. Se Workbox Cloud detectar Next.js com 95% de confiança, ele usará o pipeline de compilação Next.js. Se houver um arquivo Docker, ele o usará diretamente.
 
 ## Etapa 2: geração de configuração
 
-Com base na estrutura detectada, OpenShip gera:
+Com base na estrutura detectada, Workbox Cloud gera:
 
 - **Comando de construção** - `npm run build`, `go build`, etc.
 - **Comando de início** - `npm start`, `./server`, etc.
@@ -40,7 +40,7 @@ A camada AI otimiza a construção:
 
 ## Etapa 4: verificações de integridade
 
-Após a implantação, OpenShip verifica:
+Após a implantação, Workbox Cloud verifica:
 
 - O contêiner foi iniciado com sucesso
 - O endpoint da verificação de integridade responde
@@ -50,4 +50,4 @@ Se alguma verificação falhar, a implantação será revertida automaticamente.
 
 ## O que vem a seguir
 
-Estamos trabalhando em diagnósticos baseados em IA. Quando uma compilação falha, OpenShip analisará o erro e sugerirá correções. Fique atento.
+Estamos trabalhando em diagnósticos baseados em IA. Quando uma compilação falha, Workbox Cloud analisará o erro e sugerirá correções. Fique atento.

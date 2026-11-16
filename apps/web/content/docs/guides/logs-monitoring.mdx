@@ -9,7 +9,7 @@ Once your app is online, the next question is always the same: *what is it actua
 how you find out. Think of them like a diary the app keeps — every time it starts, prints a message, or handles
 a visitor, it writes a line. When something goes wrong, that diary is the first place to look.
 
-Openship gives you two kinds of diary and one big-picture view:
+Workbox Cloud gives you two kinds of diary and one big-picture view:
 
 - **Runtime logs** — what your app itself prints (startup messages, errors, `console.log`). This is what you
   want when the app is crashing or misbehaving.
@@ -72,7 +72,7 @@ picker appears above the terminal. Choose the project runtime or a specific serv
 
 <Callout title="Static sites don't have a Terminal tab" type="info">
 A static site is just files — there's no process running to print anything — so there are no runtime logs and
-the **Terminal** sub-tab is hidden. On **Openship Cloud**, a static site still gets request logs, shown on a
+the **Terminal** sub-tab is hidden. On **Workbox Cloud**, a static site still gets request logs, shown on a
 single sub-tab labelled **Requests**. On a **self-hosted** static deploy there's no runtime to stream, so the
 Logs tab simply reads *"No runtime logs."* That's expected, not a bug.
 </Callout>
@@ -133,7 +133,7 @@ This uses the existing continuous health monitor. The warning clears when that m
 or when the affected container leaves the active release. Paused projects, intentionally stopped services,
 and services with monitoring disabled do not create this attention state. A **Live** deployment label describes
 the deployed release; it does not guarantee a fresh workload health observation. This behavior does not add
-continuous container monitoring to Openship Cloud.
+continuous container monitoring to Workbox Cloud.
 
 ### Replaced service containers
 
@@ -145,14 +145,14 @@ history and saved image configuration stay intact. Managed edge recreation
 preserves these identity labels through image updates and rollback.
 
 An older edge replacement that already lost these labels cannot be linked safely
-from an arbitrary name or matching image. Redeploy the affected service through Openship, or have
-an administrator independently verify and correct its stored binding. Openship
+from an arbitrary name or matching image. Redeploy the affected service through Workbox Cloud, or have
+an administrator independently verify and correct its stored binding. Workbox Cloud
 cannot reconstruct missing ownership history.
 
 ## When monitoring cannot connect
 
-**Connection unavailable** means Openship could not observe the affected servers. Their current
-workload health is **unknown**. For example, `ENETUNREACH` means the machine running Openship has
+**Connection unavailable** means Workbox Cloud could not observe the affected servers. Their current
+workload health is **unknown**. For example, `ENETUNREACH` means the machine running Workbox Cloud has
 no usable network route to the target; it does not establish that the target's apps stopped.
 Monitoring combines these explicit network failures into one notice with the affected server names.
 Open **Technical details** for the original diagnostic.
@@ -162,8 +162,8 @@ Previously confirmed workload failures remain visible through either kind of con
 After restoring connectivity, press **Recheck**, or let the next enabled monitoring check run.
 A successful observation clears the connection notice. Checking status does not restart services.
 
-If your browser loses its connection to Openship, a shared connection notice warns that displayed
-status may be out of date. This is separate from the connection between Openship and your servers.
+If your browser loses its connection to Workbox Cloud, a shared connection notice warns that displayed
+status may be out of date. This is separate from the connection between Workbox Cloud and your servers.
 
 ## CLI
 
@@ -188,7 +188,7 @@ openship logs <deployment-id> -f       # stream until the deployment finishes
 ```
 
 <Callout title="Live request streaming is self-hosted only (for now)" type="info">
-`openship project server-logs -f` streams live on self-hosted projects. For Openship Cloud projects the CLI
+`openship project server-logs -f` streams live on self-hosted projects. For Workbox Cloud projects the CLI
 prints the recent entries instead and points you to the dashboard for the live tail — the **Server** sub-tab
 there streams cloud requests fine.
 </Callout>
@@ -205,7 +205,7 @@ that's already on `:80/:443` — see [The edge](/docs/guides/the-edge) guide (or
 <Callout title="The Terminal tab is empty or says “Press Start”" type="warn">
 Either the app hasn't printed anything yet, or it isn't running. Make sure the deployment is live (check the
 **Deployments** tab), then press **Start**. If the project is a **static site**, there's no Terminal at all —
-on Openship Cloud use the **Requests** sub-tab; a self-hosted static deploy has no runtime logs to show.
+on Workbox Cloud use the **Requests** sub-tab; a self-hosted static deploy has no runtime logs to show.
 </Callout>
 
 <Callout title="“Container exited with code …” pops up" type="error">

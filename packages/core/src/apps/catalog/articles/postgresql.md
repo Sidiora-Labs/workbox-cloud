@@ -1,6 +1,6 @@
 ## PostgreSQL with pgAdmin
 
-This stack includes PostgreSQL and the pgAdmin project's own container. PostgreSQL stays on the private project network; pgAdmin has a separate generated login and can use an Openship domain.
+This stack includes PostgreSQL and the pgAdmin project's own container. PostgreSQL stays on the private project network; pgAdmin has a separate generated login and can use a Workbox Cloud domain.
 
 ## Connect
 
@@ -10,7 +10,7 @@ The `app` role owns the application database and cannot administer roles or crea
 
 ## Access without a domain
 
-Choose **Port only (no domain)** for pgAdmin during installation to use server port 5050 without a hostname or Openship Cloud connection. This explicitly publishes the pgAdmin web UI on that port. PostgreSQL stays on the private project network. Domain routing remains the default and can be selected instead.
+Choose **Port only (no domain)** for pgAdmin during installation to use server port 5050 without a hostname or Workbox Cloud connection. This explicitly publishes the pgAdmin web UI on that port. PostgreSQL stays on the private project network. Domain routing remains the default and can be selected instead.
 
 ## Persistence and backups
 

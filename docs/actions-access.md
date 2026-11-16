@@ -14,7 +14,7 @@ saving, so renaming an account does not transfer permission. Repository collabor
 must have write, maintain or admin permission. Both the original actor and the actor
 requesting a retry must be eligible.
 
-Standalone workflows use the authenticated Openship account or authorized workspace
+Standalone workflows use the authenticated Workbox Cloud account or authorized workspace
 members. Existing organization, repository and destination permissions still apply.
 Only an Actions administrator who can administer the selected destinations may
 approve. The server checks permissions again when approval is submitted.

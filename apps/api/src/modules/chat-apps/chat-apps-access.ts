@@ -45,7 +45,7 @@ export async function beginPairing(ctx: RequestContext, token: string) {
     redirectUri = `${c.origin}/api/chat-apps/callback`;
   const prepared = await prepareMcpConsent(ctx, {
     origin: c.origin,
-    name: `OpenShip Chat · ${c.name}`,
+    name: `Workbox Cloud Chat · ${c.name}`,
     redirectUri,
     state,
   });
@@ -136,12 +136,12 @@ export async function verifyPairing(c: ChatAppConnection, sender: ChatSender, to
       clientId: p.clientId,
     });
     if (!linked) throw fail("This chat account is already linked.");
-    return "Your OpenShip account is connected. Try /openship projects. Commands use only your approved permissions.";
+    return "Your Workbox Cloud account is connected. Try /openship projects. Commands use only your approved permissions.";
   });
 }
 export async function chatCredential(c: ChatAppConnection, sender: ChatSender) {
   const identity = await repos.chatApps.identity(c.id, sender.workspaceId, sender.userId);
-  if (!identity) throw fail("Link your own OpenShip account first: /openship link", 403);
+  if (!identity) throw fail("Link your own Workbox Cloud account first: /openship link", 403);
   const token = await mcpClientToken({
     ...identity,
     organizationId: c.organizationId,

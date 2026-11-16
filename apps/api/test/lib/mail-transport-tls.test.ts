@@ -206,7 +206,7 @@ describe("authenticated SMTP submission", () => {
           SMTP_USER: "noreply@example.test",
           SMTP_PASS: "fixture-password",
           SMTP_PORT: 465,
-          SMTP_FROM: "OpenShip <noreply@example.test>",
+          SMTP_FROM: "Workbox Cloud <noreply@example.test>",
         });
         vi.resetModules();
         const { sendMail } = await import("@repo/platform/engine/lib/mail");
@@ -222,7 +222,7 @@ describe("authenticated SMTP submission", () => {
         ).resolves.toBe(true);
         await vi.waitFor(() => expect(smtp.deliveries).toHaveLength(1));
         expect(smtp.deliveries[0]).toMatchObject({ secure: true, from: "noreply@example.test" });
-        expect(smtp.deliveries[0]!.message).toContain("From: OpenShip <noreply@example.test>");
+        expect(smtp.deliveries[0]!.message).toContain("From: Workbox Cloud <noreply@example.test>");
         expect(smtp.deliveries[0]!.message).toContain("Reply-To: support@openship.io");
         expect(smtp.deliveries[0]!.message).toContain("Message-ID: <customer-test@openship.io>");
       } finally {

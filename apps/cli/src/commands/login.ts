@@ -32,14 +32,14 @@ export interface LoginOptions {
 
 export async function promptSelfHostedUrl(): Promise<string> {
   const answer = await text({
-    message: "Self-hosted Openship URL",
+    message: "Self-hosted Workbox Cloud URL",
     placeholder: "https://ship.example.com",
     validate: (value) => {
       try {
         new HttpClient({ baseUrl: value?.trim() ?? "" });
       } catch (diagnosticFailure) {
         observeCaughtError(diagnosticFailure, "cli/commands/login");
-        return "Enter the full HTTP(S) URL of your Openship instance.";
+        return "Enter the full HTTP(S) URL of your Workbox Cloud instance.";
       }
     },
   });
@@ -64,8 +64,8 @@ export async function runLogin(options: LoginOptions = {}): Promise<void> {
     const target = await select({
       message: "Connect to",
       options: [
-        { value: "cloud", label: "Openship Cloud" },
-        { value: "selfhosted", label: "Self-hosted Openship" },
+        { value: "cloud", label: "Workbox Cloud" },
+        { value: "selfhosted", label: "Self-hosted Workbox Cloud" },
       ],
     });
     if (isCancel(target)) exitCommand(0);
@@ -102,7 +102,7 @@ export async function runLogin(options: LoginOptions = {}): Promise<void> {
     }
     const settingsUrl = `${dashboardUrl}/settings`;
     info(
-      chalk.bold("\n  Openship login\n") +
+      chalk.bold("\n  Workbox Cloud login\n") +
         chalk.dim("  Create a Personal Access Token in Settings → Personal Access Tokens,\n") +
         chalk.dim("  then paste it here.\n"),
     );
@@ -126,7 +126,7 @@ export async function runLogin(options: LoginOptions = {}): Promise<void> {
     exitCommand(1);
   }
   if (!token.startsWith("opsh_pat_")) {
-    err(chalk.red("\n  That doesn't look like an Openship token (expected opsh_pat_…).\n"));
+    err(chalk.red("\n  That doesn't look like a Workbox Cloud token (expected opsh_pat_…).\n"));
     exitCommand(1);
   }
 
@@ -190,7 +190,7 @@ export async function runLogin(options: LoginOptions = {}): Promise<void> {
 }
 
 export const loginCommand = new Command("login")
-  .description("Connect to Cloud or self-hosted Openship with a Personal Access Token")
+  .description("Connect to Cloud or self-hosted Workbox Cloud with a Personal Access Token")
   .addOption(
     new Option("--token <token>", "Personal Access Token (opsh_pat_...)").conflicts("tokenFile"),
   )
@@ -199,7 +199,7 @@ export const loginCommand = new Command("login")
     "Token file, or - for stdin (keeps credentials out of process arguments)",
   )
   .addOption(
-    new Option("--cloud", "Connect directly to Openship Cloud").conflicts([
+    new Option("--cloud", "Connect directly to Workbox Cloud").conflicts([
       "apiUrl",
       "dashboardUrl",
     ]),

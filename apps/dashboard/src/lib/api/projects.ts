@@ -394,7 +394,7 @@ export const projectsApi = {
       wipeVolumes?: boolean;
       force?: boolean;
       forceOrphan?: boolean;
-      /** Record-only: drop the OpenShip row, keep the server workload (self-hosted). */
+      /** Record-only: drop the Workbox Cloud row, keep the server workload (self-hosted). */
       recordOnly?: boolean;
     } = {},
   ) => {

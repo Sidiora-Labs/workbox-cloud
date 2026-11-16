@@ -572,7 +572,7 @@ export const auth = betterAuth({
     }),
 
     // The provider owns JWT signing, resource binding and refresh rotation.
-    // Openship still requires its per-user organization/resource binding at consent.
+    // Workbox Cloud still requires its per-user organization/resource binding at consent.
     jwt({
       jwt: {
         get issuer() {
@@ -581,7 +581,7 @@ export const auth = betterAuth({
       },
       jwks: { keyPairConfig: { alg: "RS256" } },
     }),
-    // Openship owns MCP transport and discovery. Use
+    // Workbox Cloud owns MCP transport and discovery. Use
     // the provider directly so an HTTP public URL during setup cannot prevent
     // the entire authentication service from starting.
     oauthProvider({
@@ -589,7 +589,7 @@ export const auth = betterAuth({
       resourceSeedMode: "insertOnly",
       clientRegistrationDefaultResources: allowedMcpResources(new URL(resolveAuthBaseUrl()).origin),
       // Migrated 1.6 clients predate resource links. These resources name
-      // this same server; per-user permissions remain enforced by Openship.
+      // this same server; per-user permissions remain enforced by Workbox Cloud.
       enforcePerClientResources: false,
       // Resource APIs are SERVER_ONLY. The runtime reconciler may read/create
       // configured resources; it cannot change operator policy or client links.

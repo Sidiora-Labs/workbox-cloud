@@ -4,7 +4,7 @@ import { getRoutingBaseDomain } from "@repo/platform/engine/lib/routing-domains"
 
 // The Cloud gate must classify by the HOSTNAME's physical truth, not a bare
 // `domainType` string. Regression for: removing a migrated custom-domain route
-// wrongly demanded "Connect Openship Cloud to use a free subdomain" because the
+// wrongly demanded "Connect Workbox Cloud to use a free subdomain" because the
 // stale row's domainType wasn't stamped "custom".
 describe("storedPublicEndpointsNeedCloud", () => {
   const base = getRoutingBaseDomain();

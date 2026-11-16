@@ -136,7 +136,7 @@ vi.mock("@repo/db", () => ({
       findById: async () => ({
         id: "prj_1",
         slug: "openship",
-        name: "Openship",
+        name: "Workbox Cloud",
         organizationId: "org_1",
         activeDeploymentId: "dep_1",
       }),

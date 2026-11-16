@@ -12,10 +12,10 @@
     "language": "Language"
   },
   "choose": {
-    "title": "Welcome to OpenShip",
-    "subtitle": "Choose how you'd like to run OpenShip. Both options give you every feature - and you can switch anytime.",
+    "title": "Welcome to Workbox Cloud",
+    "subtitle": "Choose how you'd like to run Workbox Cloud. Both options give you every feature - and you can switch anytime.",
     "cloud": {
-      "name": "OpenShip Cloud",
+      "name": "Workbox Cloud",
       "desc": "We handle infrastructure, updates, and backups. Just sign in and start deploying.",
       "perk1": "No server needed",
       "perk2": "Free tier included",
@@ -25,7 +25,7 @@
     "or": "or",
     "selfhost": {
       "name": "Self-Hosted",
-      "desc": "Run OpenShip on your own hardware. Connect a remote server or use this machine.",
+      "desc": "Run Workbox Cloud on your own hardware. Connect a remote server or use this machine.",
       "perk1": "Full data ownership",
       "perk2": "Remote server or this Mac",
       "perk3": "We handle the rest",
@@ -35,15 +35,15 @@
     "skip": "Skip for now"
   },
   "selfhost": {
-    "title": "Where should OpenShip run?",
-    "subtitleLine1": "Pick where to install the OpenShip platform.",
+    "title": "Where should Workbox Cloud run?",
+    "subtitleLine1": "Pick where to install the Workbox Cloud platform.",
     "subtitleLine2": "Both options give you full control and data ownership.",
     "local": {
       "title": "This Machine",
       "badge": "Beta",
-      "desc": "Install OpenShip right here - no SSH, no remote setup needed",
+      "desc": "Install Workbox Cloud right here - no SSH, no remote setup needed",
       "comingSoon": "Coming soon",
-      "comingSoonDesc": "Running OpenShip directly on this machine isn't ready yet — connect a server for now."
+      "comingSoonDesc": "Running Workbox Cloud directly on this machine isn't ready yet — connect a server for now."
     },
     "remote": {
       "title": "Another Server",
@@ -61,7 +61,7 @@
     "methodPassword": "Password",
     "methodKey": "SSH Key",
     "methodAgent": "Agent",
-    "agentHint": "Connects using this machine's SSH agent — like VSCode, no password or key needed. The host running OpenShip must already have access to this server (a key loaded in its ssh-agent).",
+    "agentHint": "Connects using this machine's SSH agent — like VSCode, no password or key needed. The host running Workbox Cloud must already have access to this server (a key loaded in its ssh-agent).",
     "passwordLabel": "Password",
     "passwordPlaceholder": "Server password",
     "keyPathLabel": "Key Path",
@@ -85,7 +85,7 @@
     "subtitle": "Your server needs a way to be reachable from the internet for webhooks, SSL, and public access.",
     "providers": {
       "edge": {
-        "title": "OpenShip Edge",
+        "title": "Workbox Cloud Edge",
         "desc": "Zero config. Automatic SSL, high availability, and DDoS protection - all built in.",
         "badge": "Recommended"
       },
@@ -102,7 +102,7 @@
     "ngrokTokenLabel": "ngrok Auth Token",
     "cloudflarePlaceholder": "Paste your tunnel token",
     "ngrokPlaceholder": "Paste your ngrok auth token",
-    "edgeHint": "OpenShip Edge requires an OpenShip account. You'll sign in to continue.",
+    "edgeHint": "Workbox Cloud Edge requires a Workbox Cloud account. You'll sign in to continue.",
     "signInContinue": "Sign In & Continue"
   },
   "preferences": {
@@ -129,15 +129,15 @@
     "connecting": "Connecting…",
     "verifying": "Verifying your server",
     "retry": "Retry",
-    "openingCloud": "Opening OpenShip Cloud…",
+    "openingCloud": "Opening Workbox Cloud…",
     "waitingAuth": "Waiting for authentication to complete",
     "couldNotStartAuthTitle": "Could not start cloud authentication",
     "authFailedTitle": "Cloud authentication failed",
     "couldNotStartAuthMsg": "The desktop auth flow could not be started.",
     "authFailedMsg": "Please try again and finish sign-in in your browser.",
     "completingSignIn": "Completing sign-in…",
-    "returningToOpenship": "Returning to OpenShip",
-    "redirectingCloud": "Redirecting to OpenShip Cloud…",
+    "returningToOpenship": "Returning to Workbox Cloud",
+    "redirectingCloud": "Redirecting to Workbox Cloud…",
     "newTabSignIn": "You'll complete sign-in in a new tab",
     "couldNotSaveTitle": "Could not save configuration",
     "couldNotSaveMsg": "The API didn't respond. Make sure services are running.",

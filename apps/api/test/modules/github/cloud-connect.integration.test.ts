@@ -137,7 +137,7 @@ describe("Cloud GitHub installation through HTTP, shared engine, and database", 
     const actor = await seedOwner();
     const c = await startInstallLink(actor);
 
-    // GitHub already has the App, while Openship has no workspace binding.
+    // GitHub already has the App, while Workbox Cloud has no workspace binding.
     // The old URL goes to GitHub's settings page and never returns a callback.
     const page = await app.request(c.url);
     expect(page.status).toBe(200);
@@ -277,7 +277,7 @@ describe("Cloud GitHub installation through HTTP, shared engine, and database", 
       organizationId: actor.orgId,
     });
 
-    // GitHub returns here without Openship cookies or a bearer credential.
+    // GitHub returns here without Workbox Cloud cookies or a bearer credential.
     const response = await callback(c.state);
     expect(response.status).toBe(200);
     expect(await response.text()).toContain("GitHub App installed");

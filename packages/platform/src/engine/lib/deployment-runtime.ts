@@ -660,7 +660,7 @@ async function createPlatformForResolvedServer(
   const resolveRegistryAuth = organizationId ? registryAuthResolver(organizationId) : undefined;
   const { id, executor, isLocal, ssh } = resolved;
 
-  // The auto-registered "This Server" row IS the OpenShip host (VPS /
+  // The auto-registered "This Server" row IS the Workbox Cloud host (VPS /
   // server-host mode): local host executor, host docker socket (DooD),
   // everything on-box.
   if (isLocal) {
@@ -778,7 +778,7 @@ export async function resolveTargetPlatform(
 
 /**
  * Build a DockerRuntime pointed at an org server's Docker daemon over SSH, for
- * READ-ONLY inspection (migrating an existing Docker deployment into Openship).
+ * READ-ONLY inspection (migrating an existing Docker deployment into Workbox Cloud).
  *
  * Unlike `resolveTargetPlatform`, this skips routing/ssl/system managers and the
  * provision lock — inspection never provisions. The dockerode calls multiplex

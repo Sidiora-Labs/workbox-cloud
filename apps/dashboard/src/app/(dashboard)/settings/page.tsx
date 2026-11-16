@@ -93,7 +93,7 @@ function SettingsPageInner() {
     (searchParams.get("view") === "appearance" || searchParams.get("tab") === "appearance");
 
   /**
-   * Openship Mail drops the cards that only a deploy platform has a use for —
+   * Workbox Cloud Mail drops the cards that only a deploy platform has a use for —
    * GitHub, build preferences, clone credentials. An operator running this box as
    * a mail server has no repository in the picture.
    *
@@ -154,7 +154,7 @@ function SettingsPageInner() {
               {showBuildPreferences && <BuildPreferences />}
               {/* {showBuildPreferences && <RoutePreferences />} */}
               <LanguageSetting />
-              {/* Per-user shell: full platform vs Openship Mail's mail-only rail.
+              {/* Per-user shell: full platform vs Workbox Cloud Mail's mail-only rail.
                   Renders nothing on the SaaS. */}
               <ProductViewSetting />
               <PreferencesSetting />
@@ -178,7 +178,7 @@ function SettingsPageInner() {
             </>
           )}
 
-          {/* API tokens authenticate callers to Openship. Provider connections live
+          {/* API tokens authenticate callers to Workbox Cloud. Provider connections live
               in Connections; clone credentials stay with Git sources. */}
           {activeTab === "tokens" && <PersonalAccessTokens />}
 
@@ -219,7 +219,7 @@ function SettingsPageInner() {
           {activeTab === "infrastructure" && (selfHosted || deployMode === "desktop") && (
             <>
               <InfrastructureTab />
-              {/* Hostnames the local edge still serves with no Openship record —
+              {/* Hostnames the local edge still serves with no Workbox Cloud record —
                   the leftovers a record-only delete deliberately keeps running.
                   Owner-gated inside the component, renders nothing when clean.
                   Self-hosted only: on the SaaS the edge isn't the operator's. */}
@@ -244,7 +244,7 @@ function SettingsPageInner() {
                 />
               )}
               <InstanceInfo />
-              {/* Instance-wide default product mode (Openship Mail vs the full
+              {/* Instance-wide default product mode (Workbox Cloud Mail vs the full
                   platform). Owner-gated inside; self-hosted only. */}
               <MailModeSetting />
               {/* Updates to this install — not on the SaaS, where the managed

@@ -358,9 +358,9 @@ export async function sendInstanceTestEmail(to: string): Promise<void> {
   await active.transport.sendMail({
     from: active.from,
     to,
-    subject: "Openship SMTP test",
+    subject: "Workbox Cloud SMTP test",
     text:
-      "This is a test message from your Openship instance SMTP configuration. " +
+      "This is a test message from your Workbox Cloud instance SMTP configuration. " +
       "If you received it, outbound email (password resets, invites, notifications) works.",
   });
 }

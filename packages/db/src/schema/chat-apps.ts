@@ -121,7 +121,7 @@ export const chatAppCommand = pgTable(
   (t) => [index("chat_app_command_connection_idx").on(t.connectionId, t.createdAt)],
 );
 
-/** Bot transport is owned by OpenShip, independently of optional assistant execution. */
+/** Bot transport is owned by Workbox Cloud, independently of optional assistant execution. */
 export const chatAppTransportState = pgTable("chat_app_transport_state", {
   connectionId: text("connection_id")
     .primaryKey()

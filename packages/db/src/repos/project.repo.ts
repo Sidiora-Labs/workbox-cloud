@@ -427,7 +427,7 @@ export function createProjectRepo(db: Database, encryption: ConfigurationEncrypt
     },
 
     async create(data: Omit<NewProject, "id"> & { id?: string }, access?: { tokenId: string }) {
-      // `id` is normally generated, but re-import (recovering an Openship project
+      // `id` is normally generated, but re-import (recovering a Workbox Cloud project
       // from a server's `.openship/manifest.json`) passes the ORIGINAL id so the
       // still-running containers' `openship.project` labels re-attach immediately.
       const { id: providedId, ...rest } = data;

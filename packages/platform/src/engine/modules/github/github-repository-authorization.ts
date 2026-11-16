@@ -1,5 +1,5 @@
-/** Repository grants are independent of Openship sign-in identities. One GitHub
- * user may authorize several Openship accounts without transferring a login. */
+/** Repository grants are independent of Workbox Cloud sign-in identities. One GitHub
+ * user may authorize several Workbox Cloud accounts without transferring a login. */
 import { reportCaughtError as observeCaughtError } from "@repo/core/diagnostics";
 import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 import { repos } from "@repo/db";
@@ -202,7 +202,7 @@ export async function assertRepositoryConnectionActor(
     );
   if (!member)
     throw new AppError(
-      "You no longer have access to the Openship workspace that started this install.",
+      "You no longer have access to the Workbox Cloud workspace that started this install.",
       403,
       "GITHUB_WORKSPACE_ACCESS_CHANGED",
     );

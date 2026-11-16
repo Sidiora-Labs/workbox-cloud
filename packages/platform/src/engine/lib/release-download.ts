@@ -1,5 +1,5 @@
 /**
- * Fetch and extract a published Openship release tarball into a local
+ * Fetch and extract a published Workbox Cloud release tarball into a local
  * cache directory. Used by `openship-dist.ts` and the webmail dist
  * resolver to fill the third resolution slot (cache miss → download
  * from GitHub releases) after the env override and repo-local dev

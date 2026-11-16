@@ -46,7 +46,7 @@ export interface MailServerRouteInput {
    *   - A Cloudflare Workers URL
    *   - A static-asset CDN URL
    *
-   * Openship's routing layer proxies `mail.<userDomain>` here.
+   * Workbox Cloud's routing layer proxies `mail.<userDomain>` here.
    */
   zeroClientOrigin: string;
 

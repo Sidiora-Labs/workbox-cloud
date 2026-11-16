@@ -98,7 +98,7 @@ export async function claimPairingCode(value: string, origin: string): Promise<I
 
 export async function connectInstance(value: string): Promise<void> {
   if (env.DEPLOY_MODE !== "desktop")
-    throw new AppError("Open Openship Desktop to connect to another instance.", 409);
+    throw new AppError("Open Workbox Cloud Desktop to connect to another instance.", 409);
   const code = pairingSchema.parse(JSON.parse(Buffer.from(value, "base64url").toString("utf8")));
   const response = await fetch(`${code.origin}/api/system/instance/pair/claim`, {
     method: "POST",
@@ -121,7 +121,7 @@ export async function connectInstance(value: string): Promise<void> {
  * endpoints. A public identity document is never an authenticated session. */
 export async function connectInstanceAddress(value: string): Promise<void> {
   if (env.DEPLOY_MODE !== "desktop")
-    throw new AppError("Open Openship Desktop to connect to another instance.", 409);
+    throw new AppError("Open Workbox Cloud Desktop to connect to another instance.", 409);
   const { origin, installationId } = await discoverInstance(value);
   await attachConnection({ origin, installationId, cookies: {} }, true);
 }

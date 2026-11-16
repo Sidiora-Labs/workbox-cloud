@@ -214,7 +214,7 @@ describe("remote server prerequisite checks", () => {
     await checkServer(c);
     expect(sent.body).toMatchObject({
       ready: false,
-      components: [expect.objectContaining({ message: expect.stringContaining("Restart Openship") })],
+      components: [expect.objectContaining({ message: expect.stringContaining("Restart Workbox Cloud") })],
     });
     expect(h.checkComponents).toHaveBeenCalledTimes(1);
   });

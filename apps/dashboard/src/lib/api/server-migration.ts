@@ -184,7 +184,7 @@ export const dockerMigrationApi = {
       input,
     ),
 
-  /** Create an Openship project from the selected discovered services (records only). */
+  /** Create a Workbox Cloud project from the selected discovered services (records only). */
   adopt: (input: {
     serverId: string;
     projectName: string;
@@ -195,7 +195,7 @@ export const dockerMigrationApi = {
   }) =>
     api.post<AdoptResult>(endpoints.dockerMigration.adopt, input),
 
-  /** Re-import an orphaned Openship project (DR / cross-instance), preserving its id.
+  /** Re-import an orphaned Workbox Cloud project (DR / cross-instance), preserving its id.
    *  Records only — the user redeploys from the project to finalize live state. */
   reimport: (input: {
     serverId: string;
@@ -264,7 +264,7 @@ export const dockerMigrationApi = {
     routesByServiceName?: MigrationServiceRoutes;
     /** serviceName → target-volume conflict resolution (override/clone/keep). */
     conflictResolution?: Record<string, ConflictAction>;
-    /** Adopt Openship-managed containers too (raw Docker) — must match the scan. */
+    /** Adopt Workbox Cloud-managed containers too (raw Docker) — must match the scan. */
     flatDocker?: boolean;
   }) =>
     api.post<{ success: boolean; migrationId: string; confirmationToken: string }>(

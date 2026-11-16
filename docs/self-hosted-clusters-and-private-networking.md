@@ -83,13 +83,13 @@ Private networking comes first. Cross-server service connections follow, then co
 
 **Scaling belongs to customer-managed infrastructure.**
 
-“Self-hosted” describes management authority here. An AWS VM or Hetzner Cloud server controlled by the customer qualifies. An OpenShip Cloud workload managed by Oblien follows the cloud platform's controls, including when the dashboard accessing it is self-hosted.
+“Self-hosted” describes management authority here. An AWS VM or Hetzner Cloud server controlled by the customer qualifies. A Workbox Cloud workload managed by Oblien follows the cloud platform's controls, including when the dashboard accessing it is self-hosted.
 
 | Context                                                | Cluster and private-network controls                        | Project scaling behavior                                       |
 | ------------------------------------------------------ | ----------------------------------------------------------- | -------------------------------------------------------------- |
 | Self-hosted OpenShip, customer-managed Linux servers   | Available according to permissions and runtime capabilities | OpenShip manages placement, resources, and eventually replicas |
-| Self-hosted OpenShip, project targeting OpenShip Cloud | No infrastructure controls for that workload                | Existing Oblien-supported resource and deployment controls     |
-| OpenShip Cloud installation                            | Self-hosted infrastructure module unavailable               | Oblien manages the underlying infrastructure                   |
+| Self-hosted OpenShip, project targeting Workbox Cloud | No infrastructure controls for that workload                | Existing Oblien-supported resource and deployment controls     |
+| Workbox Cloud installation                            | Self-hosted infrastructure module unavailable               | Oblien manages the underlying infrastructure                   |
 | Project without a deployment target                    | Infrastructure can be prepared separately                   | Use the existing target-selection flow before enabling scaling |
 
 The backend must derive this authority from canonical platform and deployment state. Frontend `selfHosted` state, presentation preferences, a submitted server ID, and stale deployment metadata cannot grant it. Intended placement and the location of the active release must remain distinct during migration.

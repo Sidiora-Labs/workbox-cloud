@@ -34,7 +34,7 @@ export function resolveCloudflaredExecutable(options: CloudflaredOptions = {}): 
     const candidate = path.join(directory, platform === "win32" ? "cloudflared.exe" : "cloudflared");
     if (isFile(candidate)) return candidate;
   }
-  throw new Error("Cloudflare Access requires cloudflared on the machine running OpenShip. Install it or set OPENSHIP_CLOUDFLARED_PATH, then retry.");
+  throw new Error("Cloudflare Access requires cloudflared on the machine running Workbox Cloud. Install it or set OPENSHIP_CLOUDFLARED_PATH, then retry.");
 }
 
 /** Generated from a fixed command and validated hostname, never raw SSH options. */

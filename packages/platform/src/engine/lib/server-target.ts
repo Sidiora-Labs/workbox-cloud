@@ -105,7 +105,7 @@ export function isLoopbackHost(host: string | null | undefined): boolean {
 /**
  * Public IP echo endpoints, most white-label first. These return a BARE IP with
  * no branding page (unlike a product like ipify), and we try them in order for
- * redundancy. When Openship Cloud gains its own `/ip` echo we should prepend it.
+ * redundancy. When Workbox Cloud gains its own `/ip` echo we should prepend it.
  */
 const IP_ECHO_PROVIDERS = [
   "https://checkip.amazonaws.com",

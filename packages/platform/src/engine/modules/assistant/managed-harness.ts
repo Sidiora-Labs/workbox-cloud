@@ -5,7 +5,7 @@ import { HARNESS } from "./harness-policy";
 
 /** Mindwire owns the approved versions and installation job. Its installation
  * profile is separate from the execution profile: managed CLI selections must
- * never bypass OpenShip's scoped harness wrappers. No sign-in is imported. */
+ * never bypass Workbox Cloud's scoped harness wrappers. No sign-in is imported. */
 export function managedHarness(input: {
   directory: string;
   executor: CommandExecutor;

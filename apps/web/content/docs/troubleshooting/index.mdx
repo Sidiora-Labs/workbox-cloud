@@ -1,14 +1,14 @@
 ---
 title: Troubleshooting
-description: Where Openship shows you what went wrong — the build screen, the Logs tab, and the CLI — and how to read an error before you try to fix it.
+description: Where Workbox Cloud shows you what went wrong — the build screen, the Logs tab, and the CLI — and how to read an error before you try to fix it.
 ---
 
-When something breaks, Openship has almost always already told you why — the trick is knowing where it
+When something breaks, Workbox Cloud has almost always already told you why — the trick is knowing where it
 wrote it down. This page is the starting point: it shows you the handful of places the real answer lives,
 and one habit that solves most problems on its own.
 
 <Callout title="The one habit that fixes most things" type="info">
-Whatever went wrong, scroll to the **bottom** of the output and read the **last red lines**. Openship (and
+Whatever went wrong, scroll to the **bottom** of the output and read the **last red lines**. Workbox Cloud (and
 the tools it runs — npm, Docker, your framework) print the actual cause right before they give up.
 Everything above the red is usually just normal progress.
 </Callout>
@@ -81,9 +81,9 @@ openship status
 **context**, **api**, **node**, and **bun** — so a red line tells you exactly which part is wrong. Full
 command details live in the [CLI reference](/docs/cli).
 
-## How to read an Openship error
+## How to read a Workbox Cloud error
 
-Openship errors are short and structured on purpose — they're not meant to be scary.
+Workbox Cloud errors are short and structured on purpose — they're not meant to be scary.
 
 **In the dashboard**, failures show up as a toast (a small popup) with a message, and — for anything that
 was streaming — as a red line in the build screen or Logs terminal. Read the message; it's the same text the
@@ -177,12 +177,12 @@ would refuse — so you can check what a re-run will do before it touches the bo
 pointing at a file you've never heard of (`string-width`, `commander`) or isn't on your `PATH` at all.
 </Callout>
 
-**What it means** — a package-manager install runs on **your** Node, and Openship needs **Node 22+**.
+**What it means** — a package-manager install runs on **your** Node, and Workbox Cloud needs **Node 22+**.
 On Node 18 the install genuinely succeeds and the binary is linked; it's the first dependency it loads
 that can't be parsed by that Node.
 
 Current CLI versions handle this for you: instead of the `SyntaxError` they offer to download an
-official Node 22 into `~/.openship/runtime` and use it for Openship only. So a raw `SyntaxError` means
+official Node 22 into `~/.openship/runtime` and use it for Workbox Cloud only. So a raw `SyntaxError` means
 you're on an older release — reinstall the CLI and it will offer the fix.
 
 The `command not found` variant usually follows *fixing* the first one: nvm, fnm and volta keep global

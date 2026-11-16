@@ -4,14 +4,14 @@ description: Run commands on connected or managed servers, with schedules, retri
 ---
 
 Jobs run commands or saved Actions workflows on a **schedule**, once, on demand,
-or after an event. Find them under **Jobs** in self-hosted Openship and Openship Cloud.
+or after an event. Find them under **Jobs** in self-hosted Workbox Cloud and Workbox Cloud.
 
 Every run is recorded — when it last ran, whether it succeeded, how long it took,
 and its output.
 
 ## Built-in jobs
 
-Self-hosted installations also show the system jobs Openship runs for you.
+Self-hosted installations also show the system jobs Workbox Cloud runs for you.
 Cloud maintenance is managed privately by the platform; Cloud customers see
 their own command jobs and authorized backup schedules.
 
@@ -25,7 +25,7 @@ their own command jobs and authorized backup schedules.
 
 An instance administrator can **change the schedule**, **enable/disable** it,
 **Run now**, and see its **run history**. You can't delete a built-in job (it's
-part of Openship) — disable it instead.
+part of Workbox Cloud) — disable it instead.
 
 ## Your own jobs
 
@@ -53,12 +53,12 @@ fire after the workflow completes and its worker cleanup finishes. Replayed time
 or dependency deliveries reuse their execution identity. Disabling or revoking
 access to the workflow prevents new authorized execution.
 
-See [Openship Actions](/docs/guides/actions) for runner setup, triggers and project
+See [Workbox Cloud Actions](/docs/guides/actions) for runner setup, triggers and project
 deployment rules.
 
-### Choosing a server in hosted Openship
+### Choosing a server in hosted Workbox Cloud
 
-Select a managed Cloud server or a server you own connected through Openship Manage.
+Select a managed Cloud server or a server you own connected through Workbox Cloud Manage.
 Use **Add server** to connect your own server or create a dedicated Cloud server.
 You can select several servers in the same organization to run the command on each one.
 
@@ -70,7 +70,7 @@ in run history. Provision or resume a paid server from **Servers** when needed.
 
 On Manage servers, commands run over the saved SSH connection and use your server's resources.
 Manage access must be active for each target. Every attempt and retry checks access again.
-An SSH failure fails the run without executing the command on Openship's control plane.
+An SSH failure fails the run without executing the command on Workbox Cloud's control plane.
 If Manage access expires, you can still view, disable or delete the saved job.
 
 Commands execute on the server itself. To run a temporary container task, use
@@ -99,7 +99,7 @@ A schedule is a standard 5-field cron string:
 | `0 2 * * 0` | every Sunday at 02:00 |
 | `30 4 1 * *` | 04:30 on the 1st of each month |
 
-Openship validates the cron when you save and shows the **next run time**.
+Workbox Cloud validates the cron when you save and shows the **next run time**.
 
 <Callout title="Run now is recorded too">
 Triggering a job manually with **Run now** is saved in history just like a

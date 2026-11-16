@@ -41,7 +41,7 @@ export function IngressConnectForm({
     [credentialId, setCredentialId] = useState(""),
     [accountId, setAccountId] = useState(""),
     [tunnelId, setTunnelId] = useState(""),
-    [name, setName] = useState("OpenShip"),
+    [name, setName] = useState("Workbox Cloud"),
     [connector, setConnector] = useState<"existing" | "managed">("existing"),
     [defaultForDomains, setDefault] = useState(true),
     [protect, setProtect] = useState(false),

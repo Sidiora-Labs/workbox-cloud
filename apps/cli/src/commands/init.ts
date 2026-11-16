@@ -1,6 +1,6 @@
 import { exitCommand, rethrowCommandExit } from "../lib/command-exit";
 /**
- * `openship init` — link the current directory to an Openship project by
+ * `openship init` — link the current directory to a Workbox Cloud project by
  * writing .openship/project.json. Later commands (e.g. deploy) read this file
  * to know which project to act on without a flag.
  *
@@ -34,7 +34,7 @@ interface ProjectRow {
 }
 
 export const initCommand = new Command("init")
-  .description("Link the current directory to an Openship project (.openship/project.json)")
+  .description("Link the current directory to a Workbox Cloud project (.openship/project.json)")
   .option("--project <id>", "Project id to link (skips the picker)")
   .option("--environment <name>", "Default deploy variable set: production | preview", "production")
   .option("--destination <id>", "Default external deployment target ID")

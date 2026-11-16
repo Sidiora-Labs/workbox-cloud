@@ -284,7 +284,7 @@ it("does not label loading or an uninstalled local agent as an outdated runtime"
 
 it("reserves the update hint for an available agent that lacks custom API support", async () => {
   await renderCustom({ ...info, available: true, customApiAvailable: false });
-  expect(customPanel().textContent).toContain("Update OpenShip and reconnect");
+  expect(customPanel().textContent).toContain("Update Workbox Cloud and reconnect");
   expect(customButton("Save connection").disabled).toBe(true);
   expect(setup).not.toHaveBeenCalled();
 });

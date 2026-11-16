@@ -1,6 +1,6 @@
 /**
  * Database dump / restore primitives — power team-mode migration AND
- * per-project transfer between local and Openship Cloud.
+ * per-project transfer between local and Workbox Cloud.
  *
  * A subgraph is a coherent, FK-closed slice of the DB. Three flavors today:
  *
@@ -120,7 +120,7 @@ export class RestoreSchemaError extends Error {
   readonly code = "DESTINATION_SCHEMA_MISMATCH" as const;
   constructor(cause: unknown) {
     super(
-      "The destination database is missing required fields. Update and restart Openship to apply its database migrations, then retry the import.",
+      "The destination database is missing required fields. Update and restart Workbox Cloud to apply its database migrations, then retry the import.",
       { cause },
     );
     this.name = "RestoreSchemaError";

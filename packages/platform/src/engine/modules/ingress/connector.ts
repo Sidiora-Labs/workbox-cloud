@@ -81,14 +81,14 @@ export async function manageConnector(
       )
     ).trim() === name;
 
-  const expectedUnit = `[Unit]\nDescription=Openship Cloudflare connector ${connection.id}\nAfter=network-online.target\nWants=network-online.target\n[Service]\nExecStart=${BIN} tunnel --no-autoupdate run --token-file /run/credentials/${name}.service/token\nLoadCredential=token:${dir}/token\nDynamicUser=yes\nRestart=on-failure\nRestartSec=5\nNoNewPrivileges=yes\nProtectSystem=strict\nProtectHome=yes\nPrivateTmp=yes\n[Install]\nWantedBy=multi-user.target\n`;
+  const expectedUnit = `[Unit]\nDescription=Workbox Cloudflare connector ${connection.id}\nAfter=network-online.target\nWants=network-online.target\n[Service]\nExecStart=${BIN} tunnel --no-autoupdate run --token-file /run/credentials/${name}.service/token\nLoadCredential=token:${dir}/token\nDynamicUser=yes\nRestart=on-failure\nRestartSec=5\nNoNewPrivileges=yes\nProtectSystem=strict\nProtectHome=yes\nPrivateTmp=yes\n[Install]\nWantedBy=multi-user.target\n`;
   if (remove) {
     if (!present) return;
     if (
       (await executor.exec(`${sudo}test -e ${q(unit)} && echo yes || echo no`)).trim() === "yes"
     ) {
       if ((await read(unit)).trim() !== expectedUnit.trim())
-        fail("The connector service was edited outside Openship. It has been retained for review.");
+        fail("The connector service was edited outside Workbox Cloud. It has been retained for review.");
       await executor.exec(`${sudo}systemctl disable --now ${q(name + ".service")}`);
       await executor.exec(`${sudo}rm -f ${q(unit)} && ${sudo}systemctl daemon-reload`);
     } else if (kind === "systemd") {
@@ -163,7 +163,7 @@ export async function manageConnector(
         await executor.exec(`${sudo}sha256sum ${q(BIN)} | cut -d ' ' -f 1`).then((sha) => {
           if (sha.trim() !== release.sha)
             fail(
-              "The managed cloudflared binary changed outside Openship. Review it before retrying.",
+              "The managed cloudflared binary changed outside Workbox Cloud. Review it before retrying.",
             );
         });
       if (
@@ -171,7 +171,7 @@ export async function manageConnector(
           "yes" &&
         (await read(unit)).trim() !== expectedUnit.trim()
       )
-        fail("The connector service was edited outside Openship. Review it before retrying.");
+        fail("The connector service was edited outside Workbox Cloud. Review it before retrying.");
       const active =
         (
           await executor.exec(`${sudo}systemctl is-active ${q(name + ".service")} || true`)
@@ -191,7 +191,7 @@ export async function manageConnector(
           )
         ).trim();
         if (owner !== connection.id)
-          fail("A container already uses this connector name. Openship will not replace it.");
+          fail("A container already uses this connector name. Workbox Cloud will not replace it.");
         if (sameToken) {
           await executor.exec(`${sudo}docker start ${q(name)}`);
           return;

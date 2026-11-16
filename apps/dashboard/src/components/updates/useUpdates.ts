@@ -465,7 +465,7 @@ export function useUpdates(): UseUpdates {
     });
     const overview = remote?.overview ?? EMPTY_OVERVIEW;
     // Runtime matches are already evaluated by the shared backend matcher;
-    // comparing them against the Openship version would hide affected apps.
+    // comparing them against the Workbox Cloud version would hide affected apps.
     const advisories = [
       ...base.advisories,
       ...matchAdvisories(current, notices, mode),

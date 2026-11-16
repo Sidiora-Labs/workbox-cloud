@@ -211,7 +211,7 @@ describe("platform import flow", () => {
       rows.find((row) => row.textContent?.includes("shop.up.railway.app"))?.textContent,
     ).toContain("Replace URL");
     expect(host.textContent).toContain("Importing does not change DNS or move traffic");
-    expect(host.textContent).toContain("Provider-owned URLs cannot move to OpenShip");
+    expect(host.textContent).toContain("Provider-owned URLs cannot move to Workbox Cloud");
     expect(host.textContent).toContain("OAuth callbacks and webhooks");
     expect(h.start).not.toHaveBeenCalled();
     expect(host.querySelector('a[href$="/domains"]')).toBeNull();

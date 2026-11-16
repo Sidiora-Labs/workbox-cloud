@@ -1,4 +1,4 @@
-# Openship Cloud release gate
+# Workbox Cloud release gate
 
 ## Current contract — monthly servers, 2026-10-04
 

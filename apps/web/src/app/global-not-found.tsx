@@ -10,8 +10,8 @@ export default function NotFound() {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <title>Page not found — OpenShip</title>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <title>Page not found — Workbox Cloud</title>
+        <link rel="icon" href="/brand/wb_cloud_dark.webp" type="image/webp" />
       </head>
       <body className="min-h-screen antialiased">
         <NextIntlClientProvider locale="en" messages={{ Copy: messages.Copy }} timeZone="UTC">

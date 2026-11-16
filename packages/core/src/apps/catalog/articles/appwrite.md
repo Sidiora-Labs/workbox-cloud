@@ -3,11 +3,11 @@
 Deploy an Appwrite 2.7.0 backend with the Console, API, combined worker, scheduler,
 and Realtime service. PostgreSQL, MongoDB, Redis, and ClickHouse stay private on
 the project network. Storage and database state use project-scoped named volumes.
-The gateway serves the Console and `/v1` API on one OpenShip domain.
+The gateway serves the Console and `/v1` API on one Workbox Cloud domain.
 
 ## First login
 
-Choose the owner's email during installation. OpenShip generates the initial
+Choose the owner's email during installation. Workbox Cloud generates the initial
 password and creates that owner before the public gateway starts. Sign in using
 the connection panel, then create your organization and project in the Console.
 Only the first Console owner can register; invite additional team members through

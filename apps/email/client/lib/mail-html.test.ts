@@ -40,7 +40,7 @@ describe("message colors are independent of the surrounding webmail theme", () =
   for (const theme of ["light", "dark"] as const) {
     it(`keeps inherited headings readable on a white card in ${theme} webmail`, () => {
       const { root, style } = render(
-        '<table style="background:#fff"><tr><td><h1>Openship Support</h1>' +
+        '<table style="background:#fff"><tr><td><h1>Workbox Cloud Support</h1>' +
           '<p style="color:#374151">New support request</p></td></tr></table>',
         theme,
       );

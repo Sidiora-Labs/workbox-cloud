@@ -1,9 +1,9 @@
 ---
 title: "Kendi Kendini Barındırma ve Yönetilen Platformlar: Gerçek Maliyet Dağılımı"
-description: "Bir üretim Next.js uygulamasını Vercel, AWS üzerinde ve şirket içinde barındırılan OpenShip kurulumunda çalıştırmanın gerçek maliyetini karşılaştırdık. Rakamlar sizi şaşırtabilir."
+description: "Bir üretim Next.js uygulamasını Vercel, AWS üzerinde ve şirket içinde barındırıla Workbox Cloud kurulumunda çalıştırmanın gerçek maliyetini karşılaştırdık. Rakamlar sizi şaşırtabilir."
 date: "2026-03-05"
 category: "Guide"
-author: "OpenShip Team"
+author: "Workbox Cloud Team"
 ---
 
 Faturanız gelene kadar "Sadece Vercel kullanın" iyi bir tavsiyedir. Aynı Next.js uygulamayı üç kurulumda çalıştırdık ve 30 gün boyunca her maliyeti takip ettik.
@@ -19,7 +19,7 @@ Aşağıdakileri içeren bir üretim Next.js 15 uygulaması:
 
 ## Sonuçlar
 
-| | Vercel Profesyonel | AWS (ECS + RDS) | OpenShip (kendi kendine barındırılan) |
+| | Vercel Profesyonel | AWS (ECS + RDS) | Workbox Cloud (kendi kendine barındırılan) |
 |---|---|---|---|
 | Hesapla | 150$/ay | 85$/ay | 24$/ay |
 | Veritabanı | $50/ay (Neon) | 45$/ay | Dahil |
@@ -27,13 +27,13 @@ Aşağıdakileri içeren bir üretim Next.js 15 uygulaması:
 | SSL/Etki Alanları | Dahil | 1$/ay | Dahil |
 | **Toplam** | **320$/ay** | **176$/ay** | **24$/ay** |
 
-Şirket içinde barındırılan OpenShip kurulumu, tek bir Hetzner VPS'de (CPX31: 4 vCPU, 8 GB RAM, 160 GB SSD) çalışır.
+Şirket içinde barındırıla Workbox Cloud kurulumu, tek bir Hetzner VPS'de (CPX31: 4 vCPU, 8 GB RAM, 160 GB SSD) çalışır.
 
 ## Takaslar
 
 Yönetilen platformlar size sıfır işlem sağlar. Kodu basarsınız, devreye girer. Bu gerçek değer.
 
-Ancak OpenShip aradaki farkı önemli ölçüde kapatıyor:
+Ancak Workbox Cloud aradaki farkı önemli ölçüde kapatıyor:
 - **Yapılandırmayı yapay zeka yönetir** - Derleme algılama, Dockerdosya oluşturma ve SSL otomatiktir.
 - **Tek komutla dağıtımlar** - `openship deploy` da aynı derecede hızlı.
 - **Yerleşik izleme** - Kullanıma hazır günlükler, ölçümler ve uyarılar.

@@ -1248,7 +1248,7 @@ async function executeBuildAndDeploy(
           "the server has no GitHub identity of its own, no App/PAT token is available, and no git " +
           "identity could be forwarded. Falling back to cloning on the API host and transferring the " +
           "build context. To clone directly on the server, connect it under Servers → GitHub " +
-          "(a read-only per-repo deploy key is the narrowest option), or install the Openship App / " +
+          "(a read-only per-repo deploy key is the narrowest option), or install the Workbox Cloud GitHub App / " +
           "add a per-project clone token.",
         "warn",
       );
@@ -2003,7 +2003,7 @@ function buildDeployEnvironment(
               if (plannedDomains.some((d) => d.requiresSslTooling)) {
                 await system.ensureFeature("ssl", systemLog);
               }
-              // Same idea for Openship Cloud's target check: make the box able to
+              // Same idea for Workbox Cloud's target check: make the box able to
               // answer it now, so a free domain added later doesn't need a redeploy
               // first. Cheap and idempotent (a couple of stats once written).
               if (plannedDomains.length > 0) {
@@ -2507,7 +2507,7 @@ async function executeServerDeploy(phase: DeployPhaseInputs, deployConfig: Deplo
               logger.log(
                 `Couldn't read live port occupancy on the target, so ${pinnedHostPort} avoids only ` +
                   `database-pinned ports. If publishing it fails as "already allocated", ` +
-                  `check that Openship can reach this host (Servers → this box).\n`,
+                  `check that Workbox Cloud can reach this host (Servers → this box).\n`,
                 "warn",
               );
             }

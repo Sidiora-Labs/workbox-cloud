@@ -1,14 +1,14 @@
 ---
 title: Assistant
-description: Work with your OpenShip apps using your own agent and the same permissions as any MCP connection.
+description: Work with your Workbox Cloud apps using your own agent and the same permissions as any MCP connection.
 ---
 
 The built-in Assistant uses Mindwire with your installed **Claude Code** or **Codex**
 agent, displaying each harness’s native name and icon. It is off by default for every account and
-workspace in Desktop, self-hosted OpenShip, and Cloud.
+workspace in Desktop, self-hosted Workbox Cloud, and Cloud.
 
 Desktop runs Mindwire on your computer and can reuse your local agent sign-in.
-Self-hosted installations use a private profile on the OpenShip host. Cloud uses
+Self-hosted installations use a private profile on the Workbox Cloud host. Cloud uses
 your existing paid Cloud instance, or a connected server you choose. A single paid
 instance is selected by default; no separate SSH server or additional instance is
 needed. Mindwire runs there, never on the shared Cloud control plane. Installing
@@ -31,7 +31,7 @@ profiles do not import an operator's native agent credentials.
    You can also manage connections from **Settings → Assistant**.
    Mindwire can reuse a compatible local sign-in or show the agent's available
    sign-in methods. Agent credentials stay in Mindwire's private profile on the
-   selected host. OpenShip installs the matching Mindwire daemon after opt-in.
+   selected host. Workbox Cloud installs the matching Mindwire daemon after opt-in.
    On a managed Cloud instance, select **Set up Codex** or **Set up Claude Code**
    to prepare the agent, then connect your account. Installation progress appears
    here, with a retry action if it fails. On Desktop, self-hosted or connected SSH
@@ -73,7 +73,7 @@ stale data or access limits. It is a read-only request and starts when you send 
 
 ## Agents for scoped work
 
-Open **AI Agents** in the platform sidebar. The general OpenShip assistant is pinned
+Open **AI Agents** in the platform sidebar. The general Workbox Cloud assistant is pinned
 first in the 340px right-hand switcher, followed by specialists and an expandable
 Automations group. Agents use the same selected host,
 AI connections and MCP permissions as the assistant.
@@ -101,7 +101,7 @@ instructions, model and permissions. Close it or press Escape to return.
    Read-only is the default; instructions cannot expand these permissions.
 4. Save, then select **Open chat** to work with it in the main assistant. Opening
    a chat starts no work until you send a message. The header shows the agent's
-   name and an **Agent** label. General chats show **OpenShip assistant · General**.
+   name and an **Agent** label. General chats show **Workbox Cloud assistant · General**.
 
 Each task gets one conversation. Open it from the agent's recent chats to inspect tool
 calls, results and progress. You can send a follow-up while it works, stop it, or
@@ -132,7 +132,7 @@ scheduling or filesystem tools. Existing native sign-ins remain unchanged.
 Responses stream into the conversation. Tool activity appears beside the answer;
 open an activity item to inspect the result and request. Repeated calls stay grouped;
 use the call selector to inspect each one. Apps, servers, deployments, services and
-repositories can appear as inline cards with links to their existing OpenShip pages.
+repositories can appear as inline cards with links to their existing Workbox Cloud pages.
 **Import** on a repository opens the regular setup flow; review its configuration
 before deploying. These cards show the result when the tool ran, not a live monitor.
 Each action shows whether its tool call is running, completed, failed or stopped.
@@ -195,7 +195,7 @@ conversation stops its turn and removes its history on the selected host.
 
 Requests and authorized tool results are sent to the provider behind your agent
 connection. Your provider's account, billing, and data policies apply. Mindwire
-stores transcripts on the selected host; OpenShip stores conversation ownership and request
+stores transcripts on the selected host; Workbox Cloud stores conversation ownership and request
 receipts so interrupted browser requests do not repeat work.
 
 ## Use your assistant in chat apps
@@ -209,7 +209,7 @@ for Slack, Discord, Telegram and Teams setup.
 Send `/openship ask <message>`, `/openship new` or `/openship stop`. Plain bot
 messages also work where the provider setup supports them. Conversations remain
 private to their sender and separate for each channel/thread. Replies include an
-OpenShip link for full history, structured questions and permission review.
+Workbox Cloud link for full history, structured questions and permission review.
 Continue these conversations from their originating chat app; start a new dashboard
 chat to work here instead.
 
@@ -226,7 +226,7 @@ its tool discovery, authentication, workspace scope, permissions, deployment
 flows, and audit rules. Assistant cannot grant itself access, create another
 assistant connection, or call its own control endpoints through MCP.
 
-The private agent profile excludes OpenShip's service credentials, SSH agent,
+The private agent profile excludes Workbox Cloud's service credentials, SSH agent,
 preload hooks, and global agent settings. Native shell, file, browser, plugin,
 and additional MCP tools are restricted. Unsupported installed agents fail
 closed until their required controls are available. This restricts the agent's
@@ -242,9 +242,9 @@ to stop the current turn and open the shared editor with your current access.
 Choose what to allow and save, or cancel to keep your existing permissions.
 The request itself grants nothing and never preselects broader permissions.
 After changing access, start a new conversation and ask the agent to continue
-your task; OpenShip does not automatically replay the previous request.
+your task; Workbox Cloud does not automatically replay the previous request.
 
-This works in Desktop, self-hosted OpenShip and Cloud, using the normal
+This works in Desktop, self-hosted Workbox Cloud and Cloud, using the normal
 `get_permissions_access_request` tool. External MCP clients can use the same
 read-only tool and direct you to **Settings → MCP** to review their connection.
 Clients using a personal access token are directed to **Settings → API tokens**
@@ -257,7 +257,7 @@ access request is marked as changed. Choose **Continue in new chat** to keep you
 last request as an editable draft with your current permissions, then send it when
 ready. Saving access does not retry an operation automatically. Returning from
 another tab refreshes the conversation's access state. Revocation blocks subsequent tool
-calls and stops the active turn. An operation already accepted by OpenShip, such
+calls and stops the active turn. An operation already accepted by Workbox Cloud, such
 as a queued deployment, follows its ordinary lifecycle and is not rolled back by
 stopping the assistant.
 
@@ -288,7 +288,7 @@ start paused; automatic actions require a separate, explicit approval.
 You can also ask the assistant to prepare and enable flows. It offers **Review &
 enable** directly in the conversation, including multiple flows together. Expand
 the review to see the saved apps, triggers, response permissions and run limits,
-then select **Enable & continue**. OpenShip enables those exact saved versions
+then select **Enable & continue**. Workbox Cloud enables those exact saved versions
 using your current access and continues the conversation automatically. You do not
 need to switch to each editor or send a separate confirmation message.
 If a flow changes during review, refresh and review it again. Automatic fixes still
@@ -308,7 +308,7 @@ Cancel leaves the saved configuration unchanged.
 *Example flow using a sample app. All four steps use the same saved configuration.*
 
 1. **Trigger:** choose an app and either **Deployment failed** or **Service
-   unhealthy**. Health triggers use confirmed incidents from OpenShip's existing
+   unhealthy**. Health triggers use confirmed incidents from Workbox Cloud's existing
    monitor, including outages and crash loops. Intentional stops and normal
    deployment transitions do not create an automation incident. If the workspace has
    no apps, choose **Create an app** from the dropdown. Setup opens in a new tab,
@@ -323,13 +323,13 @@ Cancel leaves the saved configuration unchanged.
    subset of both your workspace access and the existing Assistant authorization.
    **Review Assistant access** opens the same permission editor used by Assistant.
 4. **Notify:** results appear in the **agent conversation**. Optionally select your
-   existing notification channels, including the OpenShip inbox, and set run limits.
+   existing notification channels, including the Workbox Cloud inbox, and set run limits.
    Enable the flow when you are ready, or save it paused.
 
 | Mode | What happens |
 | --- | --- |
 | Investigate & notify | The agent investigates and reports its findings. No deployment action is allowed. |
-| Ask before fixing | If evidence supports an allowed action, OpenShip asks you to review and approve it in the agent conversation or Run history. Approval expires after one hour. |
+| Ask before fixing | If evidence supports an allowed action, Workbox Cloud asks you to review and approve it in the agent conversation or Run history. Approval expires after one hour. |
 | Fix automatically | You choose a set of allowed actions for the app. A run may apply one supported action only when the investigation recommends it and the incident is still current. |
 
 Choose the permissions that match the flow:
@@ -360,7 +360,7 @@ environment-variable changes.
 
 The **agent conversation** shows findings, run progress and the proposed action.
 Review and approve from there or from **Run history** using the same review screen. An accepted restart or
-redeploy enters **Verifying health**. OpenShip reports **Healthy** only after
+redeploy enters **Verifying health**. Workbox Cloud reports **Healthy** only after
 fresh runtime observations confirm that deployment's workloads are healthy.
 Missing evidence, timeouts and failed actions show **Needs attention**; a failed
 action pauses its flow rather than repeatedly trying to repair the app.
@@ -417,14 +417,14 @@ Automatic repair is optional; leave it off until you have reviewed those results
 ## Availability and troubleshooting
 
 - If **AI connections** says an agent is unavailable, install or update its native CLI
-  on the selected host, then select **Refresh** in that dialog. OpenShip checks the
+  on the selected host, then select **Refresh** in that dialog. Workbox Cloud checks the
   required tool restrictions before making it available.
 - Reconnect in **AI connections** if the provider rejects a saved sign-in.
-- If the local API or agent restarts mid-turn, OpenShip checks the prior run and
+- If the local API or agent restarts mid-turn, Workbox Cloud checks the prior run and
   settles it before accepting another message. It does not automatically replay
   the prompt with new permissions.
 - Cloud requires an existing running server; enabling Assistant does not buy,
-  resume or resize a server. Remote agents call the normal OpenShip MCP endpoint
+  resume or resize a server. Remote agents call the normal Workbox Cloud MCP endpoint
   over HTTPS. The daemon itself listens on loopback and is reached through the
   existing SSH tunnel or managed VM proxy, not a new public port.
 - Remote daemons remain on the selected host when a control-plane connection

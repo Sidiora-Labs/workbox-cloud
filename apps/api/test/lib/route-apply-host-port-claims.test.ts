@@ -370,7 +370,7 @@ describe("control-plane dashboard route recovery (#1019)", () => {
     await db.insert(schema.project).values({
       ...selfApp,
       groupId: group.id,
-      name: "Openship",
+      name: "Workbox Cloud",
       appTemplateId: "openship",
     });
   });

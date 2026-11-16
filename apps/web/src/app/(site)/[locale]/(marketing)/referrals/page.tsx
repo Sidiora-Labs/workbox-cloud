@@ -21,9 +21,9 @@ import { REFERRAL_PROGRAM as program } from "@/lib/referral-program";
 import { CommissionPreview } from "./commission-preview";
 import styles from "./referrals.module.css";
 
-const title = "OpenShip Referral — Good tools are worth sharing.";
+const title = "Workbox Cloud Referral — Good tools are worth sharing.";
 const description =
-  "Introduce someone to OpenShip. Share a useful tool, offer an optional discount, " +
+  "Introduce someone to Workbox Cloud. Share a useful tool, offer an optional discount, " +
   `and receive up to ${program.commissionPercent}% commission on eligible Cloud payments for ${program.rewardMonths} months.`;
 
 const pageMetadata: Metadata = {
@@ -34,7 +34,7 @@ const pageMetadata: Metadata = {
     title,
     description,
     url: "/referrals",
-    siteName: "OpenShip",
+    siteName: "Workbox Cloud",
     type: "website",
   },
   twitter: {
@@ -55,7 +55,7 @@ const steps = [
   {
     icon: Repeat2,
     title: "Make an introduction",
-    copy: "A guide, a project, a conversation. Share OpenShip where it helps. People can see their eligible plans and discount before checking out.",
+    copy: "A guide, a project, a conversation. Share Workbox Cloud where it helps. People can see their eligible plans and discount before checking out.",
   },
   {
     icon: BarChart3,
@@ -69,7 +69,7 @@ function getQuestions(copy: Copy) {
     {
       question: copy("How do I join?"),
       answer: copy(
-        "Sign in or create an OpenShip Cloud account, open Referral in your account and choose Join the program. Review your program terms, then create your first referral link. You can share a link or its referral code.",
+        "Sign in or create a Workbox Cloud account, open Referral in your account and choose Join the program. Review your program terms, then create your first referral link. You can share a link or its referral code.",
       ),
     },
     {
@@ -106,7 +106,7 @@ function getQuestions(copy: Copy) {
     {
       question: copy("How and when do I receive a payout?"),
       answer: copy(
-        "Save a payout destination, then request a payout once your available earnings reach your minimum. The default is ${value0}; your dashboard shows any individually approved terms. OpenShip manually reviews and pays requests. PayPal, bank transfer, Wise and Payoneer are supported destinations, subject to country and provider availability. Earnings are not an automatic cash transfer.",
+        "Save a payout destination, then request a payout once your available earnings reach your minimum. The default is ${value0}; your dashboard shows any individually approved terms. Workbox Cloud manually reviews and pays requests. PayPal, bank transfer, Wise and Payoneer are supported destinations, subject to country and provider availability. Earnings are not an automatic cash transfer.",
         { value0: String(program.minimumPayoutUsd) },
       ),
     },
@@ -131,7 +131,7 @@ export default function ReferralsPage() {
           <div className={styles.container}>
             <div className={styles.heroGrid}>
               <div>
-                <p className={styles.eyebrow}>{copy("OpenShip Referral")}</p>
+                <p className={styles.eyebrow}>{copy("Workbox Cloud Referral")}</p>
                 <h1 id="referral-title" className={styles.heroTitle}>
                   {copy("Good tools are")}
                   <br />
@@ -182,7 +182,7 @@ export default function ReferralsPage() {
                   </span>
                   <div>
                     <strong>{copy("Their next deployment")}</strong>
-                    <span>{copy("A new home on OpenShip Cloud.")}</span>
+                    <span>{copy("A new home on Workbox Cloud.")}</span>
                   </div>
                   <ArrowRight size={16} />
                 </div>
@@ -394,10 +394,10 @@ export default function ReferralsPage() {
 
         <section className={`${styles.container} ${styles.finalCta}`} aria-labelledby="join-title">
           <div>
-            <p className={styles.eyebrow}>{copy("OpenShip Referral")}</p>
+            <p className={styles.eyebrow}>{copy("Workbox Cloud Referral")}</p>
             <h2 id="join-title">{copy("Have someone in mind?")}</h2>
             <p className={styles.finalCopy}>
-              {copy("Share OpenShip when it feels like the right fit.")}
+              {copy("Share Workbox Cloud when it feels like the right fit.")}
             </p>
           </div>
           <a href={program.joinUrl} className={styles.primaryButton}>
@@ -414,7 +414,7 @@ export default function ReferralsPage() {
 export async function generateMetadata() {
   const copy = await getCopy();
   const description = copy(
-    "Introduce someone to OpenShip. Share a useful tool, offer an optional discount, and receive up to {commission}% commission on eligible Cloud payments for {months} months.",
+    "Introduce someone to Workbox Cloud. Share a useful tool, offer an optional discount, and receive up to {commission}% commission on eligible Cloud payments for {months} months.",
     {
       commission: program.commissionPercent,
       months: program.rewardMonths,

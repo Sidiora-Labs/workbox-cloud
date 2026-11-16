@@ -69,7 +69,7 @@ function correlation(context: ErrorContext): TraceContext | undefined {
   );
 }
 
-/** OpenShip policy and diagnostics mapping; BytesMap owns every telemetry provider and transport. */
+/** Workbox Cloud policy and diagnostics mapping; BytesMap owns every telemetry provider and transport. */
 export function createBytesMapTelemetry(
   config: BytesMapTelemetryConfig,
   version: string,

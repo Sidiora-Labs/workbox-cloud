@@ -47,7 +47,7 @@ export function createProjectClusterOperations(
     const result: ProjectCluster = {
       unavailableReason:
         project.appTemplateId === "openship"
-          ? "The OpenShip control plane cannot be replicated through application scaling."
+          ? "The Workbox Cloud control plane cannot be replicated through application scaling."
           : clusterWorkloadUnsupportedReason({
               provider: selectedRuntime?.provider,
               workload: projectToClass(project).workload,
@@ -144,7 +144,7 @@ export function createProjectClusterOperations(
           await assertProjectStorageEmpty(ctx.organizationId, id, project.clusterId);
         if (project.appTemplateId === "openship")
           throw new AppError(
-            "The OpenShip control plane cannot be moved through workload scaling.",
+            "The Workbox Cloud control plane cannot be moved through workload scaling.",
             409,
             "CLUSTER_WORKLOAD_UNSUPPORTED",
           );

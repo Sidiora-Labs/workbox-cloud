@@ -62,7 +62,7 @@ export function ReferralLanding({ code }: { code: string }) {
           href="/"
           className="inline-flex items-center gap-3 text-lg font-medium text-foreground"
         >
-          <Logo size={32} /> OpenShip
+          <Logo size={32} /> Workbox Cloud
         </Link>
         {ready ? (
           <Button variant="secondary" asChild>

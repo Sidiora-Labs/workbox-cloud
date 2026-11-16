@@ -208,12 +208,12 @@ describe("edgeProxyFor", () => {
     expect((await api.listSites()).sites).toEqual([]);
   });
 
-  it("refuses to treat a host with no Openship edge as an empty inventory", async () => {
+  it("refuses to treat a host with no Workbox Cloud edge as an empty inventory", async () => {
     const emptyHost = { exec: vi.fn(async () => "") } as unknown as CommandExecutor;
     const api = edgeProxyFor(emptyHost, "openresty", { ours: true });
 
     await expect(api.listLoopbackUpstreamPortsStrict()).rejects.toThrow(
-      "no running Openship edge or bare OpenResty inventory",
+      "no running Workbox Cloud edge or bare OpenResty inventory",
     );
     expect(
       (emptyHost.exec as ReturnType<typeof vi.fn>).mock.calls.some(([cmd]) =>
@@ -222,7 +222,7 @@ describe("edgeProxyFor", () => {
     ).toBe(true);
   });
 
-  it("does not trust leftover Openship vhosts when no Openship edge is running", async () => {
+  it("does not trust leftover Workbox Cloud vhosts when no Workbox Cloud edge is running", async () => {
     const staleFiles = {
       exec: vi.fn(async (cmd: string) => {
         if (cmd.includes("if [ -e")) return NGINX_CONF("/c.pem", "/k.pem");
@@ -233,7 +233,7 @@ describe("edgeProxyFor", () => {
     const api = edgeProxyFor(staleFiles, "openresty", { ours: true });
 
     await expect(api.listLoopbackUpstreamPortsStrict()).rejects.toThrow(
-      "no running Openship edge or bare OpenResty inventory",
+      "no running Workbox Cloud edge or bare OpenResty inventory",
     );
   });
 

@@ -66,7 +66,7 @@ export function bakedEdgeNginxConf(): string {
   const dicts = EDGE_SHARED_DICTS.map((d) => `    lua_shared_dict ${d.name} ${d.size};`).join("\n");
 
   return `\
-# Openship edge — baked, complete config for the CONTAINERIZED edge.
+# Workbox Cloud edge — baked, complete config for the CONTAINERIZED edge.
 #
 # GENERATED FILE — DO NOT EDIT. Source: packages/adapters/src/infra/edge-baked-conf.ts
 # Regenerate with \`bun run edge:conf\` in packages/adapters. A test asserts this
@@ -138,7 +138,7 @@ ${indent(edgeRealIpConf().trimEnd(), 4)}
         # issuing, LE hits :80 → here → certbot. No port-80 fight, no webroot.
 ${indent(ACME_CHALLENGE_LOCATION, 4)}
 
-        # Openship Cloud's shared edge proves this box controls a routing target by
+        # Workbox Cloud's shared edge proves this box controls a routing target by
         # fetching a token from here. Serves FILES — only tokens we were actually
         # issued. An echo handler would let a third party register THIS box as
         # THEIR target and prove control with our own reply.

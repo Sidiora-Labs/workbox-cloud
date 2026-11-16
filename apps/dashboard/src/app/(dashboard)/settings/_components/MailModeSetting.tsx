@@ -2,7 +2,7 @@
 
 /**
  * Settings → Instance → Product mode. Instance-wide default: does this box
- * present itself as Openship Mail (mail control plane in the sidebar, "OpenShip
+ * present itself as Workbox Cloud Mail (mail control plane in the sidebar, "Workbox Cloud
  * Mail" in the chrome and the browser tab) or as the full platform?
  *
  * Two cards, not a toggle — the same control `ProductViewSetting` uses one tab

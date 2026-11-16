@@ -29,7 +29,7 @@ export { getActionsBudget, getActionsPurchase, createActionsCheckout, resumeActi
 /* ---------- Plans (public) ---------- */
 
 /** Public on every installation: a linked local dashboard must show Cloud's
- * actual prices too. Outside SaaS, read Openship's public catalog without credentials. */
+ * actual prices too. Outside SaaS, read Workbox Cloud's public catalog without credentials. */
 export async function listPlans(input: NonNullable<Parameters<BillingOperations["listPlans"]>[0]>) {
   if (env.CLOUD_MODE) return presentCloudPlans(input.locale, await getOblienBillingApi().assertMonthlyCapacitySupport());
   const url = new URL("/api/billing/plans", cloudRuntimeTarget.api);
@@ -46,7 +46,7 @@ export async function listPlans(input: NonNullable<Parameters<BillingOperations[
   } catch (diagnosticFailure) {
     observeCaughtError(diagnosticFailure, "platform/engine/modules/billing/billing-application.service");
     throw new AppError(
-      "Openship Cloud prices are temporarily unavailable. Please retry.",
+      "Workbox Cloud prices are temporarily unavailable. Please retry.",
       503,
       "BILLING_CATALOG_UNAVAILABLE",
     );
@@ -120,7 +120,7 @@ export async function createTopup(ctx: ExecutionContext, input: NonNullable<Para
   return { checkoutUrl };
 }
 
-/** Openship's credit packs; prices and credits come from the same server catalog. */
+/** Workbox Cloud's credit packs; prices and credits come from the same server catalog. */
 export async function listTopupPacks(_ctx: ExecutionContext) {
   return normalizeBillingCreditPacks(await billingService.listActiveCreditPacks());
 }

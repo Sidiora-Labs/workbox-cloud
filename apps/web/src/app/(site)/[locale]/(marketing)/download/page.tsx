@@ -76,7 +76,7 @@ export default function DownloadPage() {
           <div className="site-container dl-hero-content">
             <FeatureIllustration name="dashboard-cli-desktop" className="marketing-illustration dl-hero-art" />
             <h1 id="download-title" className="dl-title">
-              {copy("Install OpenShip.")}
+              {copy("Install Workbox Cloud.")}
               <span className="hero-headline-second">{copy("Deploy in seconds.")}</span>
             </h1>
             <p className="dl-hero-description">
@@ -105,7 +105,7 @@ export default function DownloadPage() {
             <div className="dl-shot">
               <Image
                 src={localizedScreenshot("/screen.png", locale)}
-                alt={copy("The OpenShip desktop app - deployments, logs, and services in one native window")}
+                alt={copy("The Workbox Cloud desktop app - deployments, logs, and services in one native window")}
                 {...DEPLOY_SCREEN_SIZE}
                 sizes="(max-width: 768px) 92vw, 86vw"
                 priority
@@ -196,7 +196,7 @@ export default function DownloadPage() {
                 href="/docs/getting-started/installation"
                 illustration="server-management"
                 title="Run on your own server"
-                description="Set up OpenShip on a server with Docker or the CLI."
+                description="Set up Workbox Cloud on a server with Docker or the CLI."
               />
             </div>
           </MarketingSection>

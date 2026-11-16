@@ -26,7 +26,7 @@ export function record(value: unknown): Record<string, unknown> {
 export const ACTIONS_YAML_ALIAS_LIMIT = 50;
 function unsupported(field: string): never {
   throw new ValidationError(
-    `${field} requires a repository workflow in .github/workflows. Connect that file to use it with your Openship runners; standalone workflows do not support this feature.`,
+    `${field} requires a repository workflow in .github/workflows. Connect that file to use it with your Workbox Cloud runners; standalone workflows do not support this feature.`,
   );
 }
 
@@ -257,7 +257,7 @@ export function actionConcurrency(
   };
 }
 
-// OIDC is issued separately by Openship; it is never sent to GitHub's token API.
+// OIDC is issued separately by Workbox Cloud; it is never sent to GitHub's token API.
 const permissionNames = [
   "actions",
   "checks",

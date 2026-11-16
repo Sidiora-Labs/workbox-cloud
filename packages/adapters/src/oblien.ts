@@ -13,11 +13,11 @@ export { OblienError } from "oblien";
 const capacityErrors = new Map([
   [
     "plan_limit_exceeded",
-    "The configured Cloud limits exceed the provider account's resource capacity. Contact Openship support.",
+    "The configured Cloud limits exceed the provider account's resource capacity. Contact Workbox Cloud support.",
   ],
   [
     "namespace_limit_exceeded",
-    "The Cloud provider account has reached its namespace limit. Contact Openship support.",
+    "The Cloud provider account has reached its namespace limit. Contact Workbox Cloud support.",
   ],
   [
     "namespace_limit_reached",
@@ -25,11 +25,11 @@ const capacityErrors = new Map([
   ],
   [
     "sandbox_limit_reached",
-    "The Cloud provider account has reached its workspace limit. Contact Openship support.",
+    "The Cloud provider account has reached its workspace limit. Contact Workbox Cloud support.",
   ],
   [
     "pool_limit_reached",
-    "The Cloud provider's resource pool is at capacity. Try again later or contact Openship support.",
+    "The Cloud provider's resource pool is at capacity. Try again later or contact Workbox Cloud support.",
   ],
 ]);
 

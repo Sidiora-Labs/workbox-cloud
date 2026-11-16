@@ -18,13 +18,13 @@ export const STARTING_POINTS: IllustratedLinkProps[] = [
   {
     illustration: "migration-import",
     title: "An existing Docker server",
-    description: "Scan running services, review their data, and import them into OpenShip.",
+    description: "Scan running services, review their data, and import them into Workbox Cloud.",
     href: "/docs/guides/server-to-server-migration",
     note: "Includes apps running on Coolify, Dokploy, or Dokku",
   },
   {
     illustration: "instance-transfer",
-    title: "An OpenShip instance",
+    title: "A Workbox Cloud instance",
     description:
       "Move your control plane from Desktop to an always-on host. Keep your workspaces together.",
     href: "/docs/guides/migrate-control-plane",
@@ -93,7 +93,7 @@ export const REASONS: IllustratedLinkProps[] = [
     illustration: "deploy-anywhere",
     title: "Keep your hosting options open",
     description:
-      "Use standard containers on OpenShip Cloud or your own infrastructure. The platform is open source.",
+      "Use standard containers on Workbox Cloud or your own infrastructure. The platform is open source.",
     href: "/features/deploy-anywhere",
   },
 ];
@@ -115,7 +115,7 @@ export function faq(from: string | null, copy: Copy) {
     {
       q: copy("Can I import a running Docker application?"),
       a: copy(
-        "Yes. OpenShip scans the source and lets you review services, volumes, environment settings, and routes before importing. You can import into Cloud or a self-hosted installation. The migration guide covers access and destination requirements.",
+        "Yes. Workbox Cloud scans the source and lets you review services, volumes, environment settings, and routes before importing. You can import into Cloud or a self-hosted installation. The migration guide covers access and destination requirements.",
       ),
     },
     {
@@ -125,7 +125,7 @@ export function faq(from: string | null, copy: Copy) {
       ),
     },
     {
-      q: copy("How is OpenShip Cloud priced?"),
+      q: copy("How is Workbox Cloud priced?"),
       a: copy(
         "{value0}Each plan provides a resource pool and project allowance. Apps, builds, and data share that capacity. Review the pricing page for plan limits and separately billed services such as managed proxy transfer and backups.",
         {
@@ -138,7 +138,7 @@ export function faq(from: string | null, copy: Copy) {
     {
       q: copy("Can I keep my domain and DNS provider?"),
       a: copy(
-        "Yes. Add your custom domain in OpenShip and follow the routing instructions for the destination. Keep the old deployment until you have verified DNS, HTTPS, and the application.",
+        "Yes. Add your custom domain in Workbox Cloud and follow the routing instructions for the destination. Keep the old deployment until you have verified DNS, HTTPS, and the application.",
       ),
     },
   ];

@@ -618,7 +618,7 @@ export function buildProjectTopology({
       id: edgeId,
       kind: "edge",
       projectId: project.id,
-      name: "OpenShip Edge",
+      name: "Workbox Cloud Edge",
       tone: "edge",
       state: "configured",
       description: "Public routing",

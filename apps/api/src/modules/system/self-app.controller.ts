@@ -3,17 +3,17 @@
  *
  * The CLI setup wizard calls these AFTER bootstrap-admin (internal-token gated,
  * self-hosted only). They reuse the ordinary app + domain pipes so that, once
- * setup finishes, Openship itself shows up under the dashboard's **Apps** tab
+ * setup finishes, Workbox Cloud itself shows up under the dashboard's **Apps** tab
  * with a real domain:
  *   - createProject({ isApp:true, appTemplateId:"openship" })  → the Apps row
  *   - free  domain → Cloud edge proxy (slug.opsh.io → this box) through
  *     ensureManagedEdgeProxy, the same funnel a deployed app's free subdomain uses
  *     (which is also what proves this box controls the target) — needs the owner
- *     connected to Openship Cloud
+ *     connected to Workbox Cloud
  *   - custom domain → OpenResty + Let's Encrypt via provisionSelfEdge, streamed
  *     live through a setup-session for the wizard's spinner
  *
- * No new routing/SSL machinery — Openship deploys itself with its own tools.
+ * No new routing/SSL machinery — Workbox Cloud deploys itself with its own tools.
  */
 
 import { reportCaughtError as observeCaughtError, diagnostics as errorDiagnostics } from "@repo/core/diagnostics";
@@ -46,7 +46,7 @@ const APP_SLUG = "openship";
 const APP_TEMPLATE_ID = "openship";
 
 /**
- * The org that OWNS this box. Once connected to Openship Cloud, the mirrored
+ * The org that OWNS this box. Once connected to Workbox Cloud, the mirrored
  * cloud user is the admin and its personal org `org_<id>` carries the cloud
  * link — prefer that. Otherwise fall back to the deterministic local owner
  * (fresh / self-hosted-only box). Single source of truth so cloud-status and
@@ -84,7 +84,7 @@ async function ensureControlPlaneApp(organizationId: string, port?: number): Pro
   if (existing) return existing.id;
   const created = await createProject(
     {
-      name: "Openship",
+      name: "Workbox Cloud",
       isApp: true,
       appTemplateId: APP_TEMPLATE_ID,
       hasBuild: false,
@@ -98,7 +98,7 @@ async function ensureControlPlaneApp(organizationId: string, port?: number): Pro
 }
 
 /**
- * GET /api/system/cloud-status — is the org's owner connected to Openship Cloud?
+ * GET /api/system/cloud-status — is the org's owner connected to Workbox Cloud?
  * The wizard checks this before offering / after driving the free-domain path.
  */
 export async function cloudStatus(c: Context) {
@@ -110,7 +110,7 @@ export async function cloudStatus(c: Context) {
 
 /**
  * POST /api/system/cloud-connect — finalize the browser PKCE handshake AND make
- * the Openship Cloud account this box's admin, reusing the EXACT desktop
+ * the Workbox Cloud account this box's admin, reusing the EXACT desktop
  * identity pipe (no duplication): `mirrorCloudUser` provisions a local user from
  * the cloud identity (+ its personal org + owner membership), we store the cloud
  * session against it, and switch the box to `authMode="cloud"` so the local
@@ -130,10 +130,10 @@ export async function cloudConnect(c: Context) {
     );
     const { clearAuthModeCache, isAuthModePinned } = await import("@repo/platform/engine/lib/auth-mode");
     const data = await exchangeCodeWithCloud(body.code, body.codeVerifier);
-    if (!data) return c.json({ error: "Could not verify with Openship Cloud" }, 401);
+    if (!data) return c.json({ error: "Could not verify with Workbox Cloud" }, 401);
     const email = (data.user as { email?: string | null }).email ?? null;
 
-    // If this box ALREADY has a real local admin account, Openship Cloud is linked
+    // If this box ALREADY has a real local admin account, Workbox Cloud is linked
     // for SERVICES ONLY — the free .opsh.io domain and managed mail. Store the cloud
     // session against the existing owner so the edge-proxy has a token, and DO NOT
     // change the login method. Only a fresh box with NO local admin (the free-domain
@@ -172,7 +172,7 @@ export async function cloudConnect(c: Context) {
     // Skipped when the launcher DECLARED the mode (OPENSHIP_AUTH_MODE). This line
     // is where the desktop bug came from: desktop has no local admin by design
     // (zero-auth auto-provisions), so foundingAdminId() returns null and every
-    // "connect Openship Cloud" from Settings fell through to here and converted a
+    // "connect Workbox Cloud" from Settings fell through to here and converted a
     // loopback-only app to remote login — with no way back short of wiping the
     // local DB. Linking a cloud account must not change how you log in to a box
     // whose login method was declared at launch.
@@ -234,7 +234,7 @@ export async function selfRegister(c: Context) {
     // THE shared funnel — `ensureManagedEdgeProxy`, the same call a deployed app's
     // free subdomain goes through, with the operator's `--public-url` host passed as
     // a target candidate. This path used to resolve the target and post to the SaaS
-    // itself; that bypass is now load-bearing to close, because Openship Cloud
+    // itself; that bypass is now load-bearing to close, because Workbox Cloud
     // refuses to route to an unproven target and the verify-and-retry lives in the
     // funnel. A wizard with its own copy would 403 with nothing to explain it.
     //
@@ -288,7 +288,7 @@ export async function selfRegister(c: Context) {
       const session = createSetupSession(
         [
           { name: "edge", label: "Install the edge (80/443)" },
-          { name: "route", label: "Route domain to Openship" },
+          { name: "route", label: "Route domain to Workbox Cloud" },
         ],
         "self",
       );
@@ -387,7 +387,7 @@ export async function selfRegister(c: Context) {
     const session = createSetupSession(
       [
         { name: "edge", label: "Install the edge" },
-        { name: "route", label: "Route domain to Openship" },
+        { name: "route", label: "Route domain to Workbox Cloud" },
         { name: "ssl", label: "Issue SSL certificate" },
       ],
       "self",

@@ -636,7 +636,7 @@ export async function createService(
   await assertServiceRedirects(project, [{ ...data, ...routing, name }]);
 
   // Atomic gate, same rule and placement as updateService: a free (*.opsh.io)
-  // route only resolves behind the Openship Cloud edge, so refuse BEFORE the
+  // route only resolves behind the Workbox Cloud edge, so refuse BEFORE the
   // insert. Without this a create could PERSIST a route that is dead by
   // construction — reachable through the app installer, which seeds every
   // template service's routes here.
@@ -965,7 +965,7 @@ export async function updateService(
         .map((endpoint) => publicEndpointHostname(endpoint)?.toLowerCase())
         .filter((hostname): hostname is string => !!hostname),
     );
-    // Atomic gate: a free (*.opsh.io) route only resolves behind the Openship
+    // Atomic gate: a free (*.opsh.io) route only resolves behind the Workbox Cloud
     // Cloud edge. Refuse before the DB write so a disconnected instance can't
     // persist a dead "Pending" route. Only NET-NEW free routes gate — same rule
     // as the project path: re-validating the whole set made a service that
@@ -1330,7 +1330,7 @@ async function deleteLiveService(project: Project, svc: Service): Promise<void> 
 
 export async function deleteService(ctx: RequestContext, projectId: string, serviceId: string) {
   const { project } = await assertServiceAccess(ctx, projectId, serviceId);
-  // The self-app project's services ARE the Openship stack (api, dashboard, edge,
+  // The self-app project's services ARE the Workbox Cloud stack (api, dashboard, edge,
   // postgres, redis), linked so the dashboard can show their state, logs and shell.
   assertNotControlPlane(project);
 

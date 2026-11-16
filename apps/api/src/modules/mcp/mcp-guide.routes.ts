@@ -22,7 +22,7 @@ r.get(
     query: guideQuery,
     mcp: {
       description:
-        "Discover how OpenShip features work and the tools for each workflow. With no arguments, list available guides; with query.name, read that guide. Start with openship-overview or chat-apps for Slack/Discord/Telegram/Teams control-plane setup. Reuses the MCP prompt catalog; guidance does not grant permissions. Read one relevant guide, then discover only the tools needed and carry out the user's authorized task.",
+        "Discover how Workbox Cloud features work and the tools for each workflow. With no arguments, list available guides; with query.name, read that guide. Start with openship-overview or chat-apps for Slack/Discord/Telegram/Teams control-plane setup. Reuses the MCP prompt catalog; guidance does not grant permissions. Read one relevant guide, then discover only the tools needed and carry out the user's authorized task.",
     },
   },
   async (c) => {

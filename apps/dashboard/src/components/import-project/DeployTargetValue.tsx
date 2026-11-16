@@ -10,7 +10,7 @@ import { describeBuildTarget } from "./deploy-target-label";
  * WHERE this deploy lands, as a value for a details row — and a LINK to the machine when it is
  * one of yours. Shared by deployment details and deployment configuration.
  *
- * Only a server target links. Openship Cloud has no per-instance page to open, and `local` is the
+ * Only a server target links. Workbox Cloud has no per-instance page to open, and `local` is the
  * box the dashboard is already running on — a link to "here" is a dead end dressed as an action.
  */
 export function DeployTargetValue({

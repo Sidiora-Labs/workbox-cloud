@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://openship.io/app.schema.json",
-  "title": "Openship App definition",
-  "description": "An Openship App catalog entry — the JSON that turns a set of containers into a one-click install, with generated secrets, a curated settings form, and a connection card. Full reference: https://openship.io/docs/reference/app-catalog",
+  "title": "Workbox Cloud App definition",
+  "description": "A Workbox Cloud App catalog entry — the JSON that turns a set of containers into a one-click install, with generated secrets, a curated settings form, and a connection card. Full reference: https://openship.io/docs/reference/app-catalog",
   "type": "object",
   "required": ["id", "name", "description", "kind", "logo", "category"],
   "properties": {
@@ -166,7 +166,7 @@
       "type": "number"
     },
     "minEngine": {
-      "description": "Minimum Openship version required to install this app. Set it to the release that introduced whatever capability the definition uses.",
+      "description": "Minimum Workbox Cloud version required to install this app. Set it to the release that introduced whatever capability the definition uses.",
       "type": "string"
     },
     "updatedAt": { "description": "Informational last-updated stamp.", "type": "string" },
@@ -282,7 +282,7 @@
           "items": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
         },
         "entrypointArgv": {
-          "description": "Exact image entrypoint override. Requires Openship 0.9.2 or newer. An empty array clears the image default.",
+          "description": "Exact image entrypoint override. Requires Workbox Cloud 0.9.2 or newer. An empty array clears the image default.",
           "type": "array",
           "items": { "type": "string" }
         },

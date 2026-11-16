@@ -111,6 +111,6 @@ export const ASSISTANT_AGENT_TEMPLATES = [
     name: "Deployment assistant",
     purpose: "Handle scoped deployment and recovery tasks.",
     instructions:
-      "Inspect the assigned apps and their recent deployments. Carry out the user's authorized deployment or recovery task through normal OpenShip tools, then verify the resulting status. Report the actual outcome and any remaining issue.",
+      "Inspect the assigned apps and their recent deployments. Carry out the user's authorized deployment or recovery task through normal Workbox Cloud tools, then verify the resulting status. Report the actual outcome and any remaining issue.",
   },
 ] as const;

@@ -73,7 +73,7 @@ export async function connectFinalize(c: Context) {
     const data = await exchangeCodeWithCloud(body.code, body.codeVerifier);
     if (!data) {
       return c.json(
-        { error: "Could not verify with Openship Cloud" },
+        { error: "Could not verify with Workbox Cloud" },
         401,
       );
     }

@@ -18,7 +18,7 @@ export interface CloudConnectFinalizeResponse {
 }
 
 export const cloudApi = {
-  /** Disconnect from Openship Cloud */
+  /** Disconnect from Workbox Cloud */
   disconnect: () => api.post<CloudStatus>(endpoints.cloud.disconnect),
 
   /** Check current cloud connection status */

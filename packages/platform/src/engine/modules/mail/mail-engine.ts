@@ -597,7 +597,7 @@ export function mailDaemonReloadCommand(flavor: MailEngineFlavor): string {
  * legacy RHEL-family box, whose amavis has no `conf.d` include dir at all; that one path
  * is resolved by probing the box instead — see {@link HOST_AMAVIS_CONF_CANDIDATES}. The
  * postfix paths need no such treatment: `/etc/postfix` is postfix's config dir on every
- * family Openship supports.
+ * family Workbox Cloud supports.
  */
 const MAIL_ENGINE_PATHS = {
   saslPasswd: "/etc/postfix/sasl_passwd",

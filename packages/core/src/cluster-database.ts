@@ -196,7 +196,7 @@ export function validateClusterDatabase(config: ClusterDatabaseConfig): void {
     config.version !== undefined &&
     (config.engine !== "postgres" || !["17", "18"].includes(config.version))
   )
-    invalid("Choose PostgreSQL 17 or 18. Redis uses the supported version supplied by OpenShip.");
+    invalid("Choose PostgreSQL 17 or 18. Redis uses the supported version supplied by Workbox Cloud.");
   if (
     !["standalone", "cluster", ...(config.engine === "redis" ? ["replication"] : [])].includes(
       config.mode,
@@ -308,7 +308,7 @@ export function validateClusterDatabaseUpdate(
       );
     if (!before.backup || !after.backup)
       throw new AppError(
-        "Save a backup destination before changing Redis data partitions. OpenShip will verify a backup before moving data.",
+        "Save a backup destination before changing Redis data partitions. Workbox Cloud will verify a backup before moving data.",
         422,
         "CLUSTER_DATABASE_BACKUP_REQUIRED",
       );

@@ -89,7 +89,7 @@ function offerForTerms(organizationId: string, namespace: string, terms: Terms) 
     );
   const offer: OblienOffer = {
     reference: reference(terms),
-    name: `Openship Manage ${managementPlan(terms) === "priority" ? "Priority" : "Basic"}`,
+    name: `Workbox Cloud Manage ${managementPlan(terms) === "priority" ? "Priority" : "Basic"}`,
     description: `Hosted management for ${servers} customer-owned servers with ${managementPlan(terms) === "priority" ? "priority" : "email"} support. Compute and storage are provided by you.`,
     currency: "usd",
     unitAmount,

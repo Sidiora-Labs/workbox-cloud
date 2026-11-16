@@ -142,7 +142,7 @@ function managedHostnameSuffix(): string {
 }
 
 /**
- * True when `hostname` sits under the ACTUAL Openship Cloud domain — the only
+ * True when `hostname` sits under the ACTUAL Workbox Cloud domain — the only
  * suffix whose DNS and edge we operate, and therefore the only one that needs a
  * Cloud connection to resolve.
  *

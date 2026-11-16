@@ -8,13 +8,13 @@ import { AppDirectory } from "@/components/apps/app-directory";
 import { MarketingIntro } from "@/components/marketing/marketing-intro";
 
 const description =
-  "Find your next backend, database, CMS, or developer tool. Explore ready-to-deploy app templates for OpenShip Cloud and your own infrastructure.";
+  "Find your next backend, database, CMS, or developer tool. Explore ready-to-deploy app templates for Workbox Cloud and your own infrastructure.";
 const metadata: Metadata = {
   title: "Apps",
   description,
   alternates: { canonical: "/apps" },
-  openGraph: { title: "Apps — OpenShip", description, url: "/apps", type: "website" },
-  twitter: { card: "summary_large_image", title: "Apps — OpenShip", description },
+  openGraph: { title: "Apps — Workbox Cloud", description, url: "/apps", type: "website" },
+  twitter: { card: "summary_large_image", title: "Apps — Workbox Cloud", description },
 };
 
 export async function generateMetadata(

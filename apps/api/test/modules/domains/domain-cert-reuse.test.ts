@@ -2,7 +2,7 @@ import "../mail/_setup-env";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { CommandExecutor } from "@repo/adapters";
 
-// reuseServerCertForDomain adopts an SSL cert the box ALREADY serves (Openship
+// reuseServerCertForDomain adopts an SSL cert the box ALREADY serves (Workbox Cloud
 // re-migration, or a foreign proxy we're taking over) instead of re-issuing via ACME.
 // Each source is read on the executor that can actually see it: certbot's store is a
 // 1:1 bind mount in the api container, so on the LOCAL box it is read there with no

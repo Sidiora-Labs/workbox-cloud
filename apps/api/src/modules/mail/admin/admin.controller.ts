@@ -612,7 +612,7 @@ export async function updateMailboxHandler(c: Context) {
 }
 
 /**
- * Explicit repair surface for the protected Openship sender. This is the only
+ * Explicit repair surface for the protected Workbox Cloud sender. This is the only
  * admin endpoint allowed to rotate it; ordinary mailbox CRUD rejects the same
  * address so state-file credentials and the Dovecot hash cannot drift again.
  */

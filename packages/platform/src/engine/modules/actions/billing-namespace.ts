@@ -11,7 +11,7 @@ import { saveCloudActionRunner } from "./cloud-runner";
 export async function ensureActionsBillingNamespace(organizationId: string): Promise<void> {
   if (!env.CLOUD_MODE)
     throw new AppError(
-      "Actions funding is managed by Openship Cloud",
+      "Actions funding is managed by Workbox Cloud",
       409,
       "ACTIONS_BILLING_CLOUD_ONLY",
     );
@@ -25,7 +25,7 @@ export async function ensureActionsBillingNamespace(organizationId: string): Pro
     );
 
   await ensureCloudNamespace({
-    name: "Openship Actions",
+    name: "Workbox Cloud Actions",
     slug: namespace,
     // Preparing checkout must not permit compute before paid runner setup.
     // These initial caps do not replace an existing namespace's limits.

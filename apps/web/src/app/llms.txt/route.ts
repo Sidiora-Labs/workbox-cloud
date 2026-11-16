@@ -2,20 +2,20 @@ import { docEntries } from "@/lib/llms";
 import { SITE_URL } from "@/lib/sitemap-builder";
 
 /**
- * `/llms.txt` — the catalog of OpenShip docs for LLMs/agents, per the
+ * `/llms.txt` — the catalog of Workbox Cloud docs for LLMs/agents, per the
  * https://llmstxt.org convention. Every entry links to the raw-markdown (`.md`)
  * variant of the doc so an agent can fetch clean source, no HTML.
  */
 export const dynamic = "force-static";
 
 const SUMMARY =
-  "OpenShip is an open-source platform to build, deploy, and run apps on your own servers or OpenShip Cloud, managed from a dashboard, REST API, CLI, and MCP.";
+  "Workbox Cloud is an open-source platform to build, deploy, and run apps on your own servers or Workbox Cloud, managed from a dashboard, REST API, CLI, and MCP.";
 
 export function GET() {
   const docs = docEntries();
 
   const lines = [
-    "# OpenShip",
+    "# Workbox Cloud",
     "",
     `> ${SUMMARY}`,
     "",

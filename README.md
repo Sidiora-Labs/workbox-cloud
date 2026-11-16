@@ -1,4 +1,4 @@
-<h1 align="center">Openship</h1>
+<h1 align="center">Workbox Cloud</h1>
 
 <p align="center">
   Open-source, self-hostable deployment platform with built-in CI/CD.<br>
@@ -40,23 +40,23 @@
 </p>
 
 <p align="center">
-  <img src="docs/screenshots/screen.png" alt="Openship dashboard" width="800" />
+  <img src="docs/screenshots/screen.png" alt="Workbox Cloud dashboard" width="800" />
 </p>
 
 ---
 
 ## Quick Start
 
-There's one decision to make first: **how you run Openship itself** (the control plane). Everything else is the same afterwards.
+There's one decision to make first: **how you run Workbox Cloud itself** (the control plane). Everything else is the same afterwards.
 
-| If you're… | Run Openship as | Where your apps run |
+| If you're… | Run Workbox Cloud as | Where your apps run |
 |---|---|---|
-| **Solo, one machine, no ops** | **Desktop app** | A server you connect over SSH, or Openship Cloud |
+| **Solo, one machine, no ops** | **Desktop app** | A server you connect over SSH, or Workbox Cloud |
 | **A team — or you want push-to-deploy / to host apps on your own box** | **Self-hosted server** (`openship up`) | On that box (Compose mode) — or out to another server / Cloud (bare mode) |
-| **Not interested in running anything** | **Openship Cloud** | Managed sandboxes, zero setup |
+| **Not interested in running anything** | **Workbox Cloud** | Managed sandboxes, zero setup |
 
 > [!TIP]
-> **Solo? Use the desktop app.** It runs Openship's control plane on your own machine *only while the app is open* — nothing is left running on an always-on server, nothing is exposed publicly. You only need an always-on server install once you want **push-to-deploy (CI/CD)**, **team access**, or to **host apps on that box** — the things that need a public, always-on endpoint.
+> **Solo? Use the desktop app.** It runs Workbox Cloud's control plane on your own machine *only while the app is open* — nothing is left running on an always-on server, nothing is exposed publicly. You only need an always-on server install once you want **push-to-deploy (CI/CD)**, **team access**, or to **host apps on that box** — the things that need a public, always-on endpoint.
 
 ### Solo — desktop app
 
@@ -71,11 +71,11 @@ The control plane runs locally and drives your servers over SSH. No login, no te
 
 Linux: `chmod +x Openship.AppImage && ./Openship.AppImage`. Already have the CLI? `openship install` fetches and launches it. Links always point at the newest release.
 
-From the desktop app you connect a server (SSH) or Openship Cloud and deploy to it — the app itself doesn't host public apps on your laptop.
+From the desktop app you connect a server (SSH) or Workbox Cloud and deploy to it — the app itself doesn't host public apps on your laptop.
 
 ### Team / always-on — self-hosted server
 
-Install the CLI (it bundles the API + dashboard), then run **`openship`** — an interactive wizard creates the first admin, wires your domain, and installs Openship as a boot service. Run it again anytime to manage the instance.
+Install the CLI (it bundles the API + dashboard), then run **`openship`** — an interactive wizard creates the first admin, wires your domain, and installs Workbox Cloud as a boot service. Run it again anytime to manage the instance.
 
 ```bash
 curl -fsSL https://get.openship.io | sh          # install  (or: npm i -g openship — needs Node 22+)
@@ -120,8 +120,8 @@ openship deploy
 
 Full server guide + complete CLI reference: **[openship.io/docs](https://openship.io/docs)**.
 
-**Codex and Claude Code plugin:** install the [Openship plugin](plugins/openship/README.md) to deploy and manage apps
-through the existing MCP server, with OAuth and bundled workflow guidance. Supports Openship Cloud
+**Codex and Claude Code plugin:** install the [Workbox Cloud plugin](plugins/openship/README.md) to deploy and manage apps
+through the existing MCP server, with OAuth and bundled workflow guidance. Supports Workbox Cloud
 and configurable desktop/self-hosted endpoints.
 
 <details>
@@ -174,7 +174,7 @@ The stack is **postgres + redis + api + dashboard + edge**. The `edge` is OpenRe
 
 ## How It Works
 
-Point Openship at a source — a **GitHub repo**, a **local folder**, or a **prebuilt artifact** — and it runs one pipeline end to end:
+Point Workbox Cloud at a source — a **GitHub repo**, a **local folder**, or a **prebuilt artifact** — and it runs one pipeline end to end:
 
 1. **Detect.** It reads your `package.json`, framework config, lockfiles, and any `docker-compose.yml` / `openship.json` to work out the stack, package manager, build/start commands, and port. Zero config files required; an `openship.json` overrides the guesses if you want control.
 2. **Build.** On the target server or locally on the orchestrator, into a Docker image or a bare release. The resolved config is frozen into a snapshot, so redeploys and rollbacks re-run *exactly* what shipped.
@@ -188,7 +188,7 @@ Databases, domains, SSL, CDN, mail, and backups are managed from the same place.
 
 ## Interfaces
 
-Choose how to work with OpenShip:
+Choose how to work with Workbox Cloud:
 
 - **Desktop app** — full GUI, real-time logs, one-click everything. Best for solo.
 - **Web dashboard** — the same UI in the browser, built for teams.
@@ -222,7 +222,7 @@ An **MCP** endpoint (for AI agents) and a **REST API** round it out for automati
 
 ## Deploy Anywhere
 
-- **Openship Cloud** — managed, auto-scaling, zero setup
+- **Workbox Cloud** — managed, auto-scaling, zero setup
 - **Any VPS** — Hetzner, DigitalOcean, Linode, OVH, and the rest
 - **Dedicated servers** — bare metal, colo, homelab
 - **Multi-server** — spread workloads across machines
@@ -259,7 +259,7 @@ first reports.
 
 ## License
 
-Openship-authored code is licensed under the [Apache License 2.0](LICENSE).
+Workbox Cloud-authored code is licensed under the [Apache License 2.0](LICENSE).
 Bundled third-party components retain their own licenses. In particular,
 the [iRedMail engine](apps/email/engine/LICENSE) is GPL-licensed and is included
 in several control-plane distributions even when mail setup is not used.

@@ -38,7 +38,7 @@ export async function ensureOblienWebhook(): Promise<void> {
   if (existing) {
     await client.webhooks.update(existing.id, { events, secret, active: true, namespace: null });
   } else {
-    await client.webhooks.create({ url, events, secret, description: "Openship cloud billing and entitlements" });
+    await client.webhooks.create({ url, events, secret, description: "Workbox Cloud cloud billing and entitlements" });
   }
 }
 
@@ -57,7 +57,7 @@ export async function ensureNamespace(organizationId: string, workspaceId?: Clou
     if (existing.namespace) return existing.namespace;
     const slug = `os-w-${createHash("sha256").update(selected).digest("hex").slice(0, 40)}`;
     await ensureCloudNamespace({
-      name: `Openship ${existing.workspace.name}`, slug,
+      name: `Workbox Cloud ${existing.workspace.name}`, slug,
       resource_limits: await initialCloudNamespaceLimits(),
     });
     await repos.cloudWorkspace.setNamespace(selected, organizationId, slug);

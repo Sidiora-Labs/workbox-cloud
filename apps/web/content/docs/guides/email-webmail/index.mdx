@@ -1,17 +1,17 @@
 ---
 title: Email & webmail
-description: Connect existing IMAP/SMTP mailboxes through webmail on Cloud, or run and manage your own mail server with Desktop and self-hosted Openship.
+description: Connect existing IMAP/SMTP mailboxes through webmail on Cloud, or run and manage your own mail server with Desktop and self-hosted Workbox Cloud.
 ---
 
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-Most people rent their email from someone else — Gmail, Outlook, and the like. Openship lets you run the
+Most people rent their email from someone else — Gmail, Outlook, and the like. Workbox Cloud lets you run the
 whole post office yourself: a real mail server on your own machine, with your own domain, that sends and
 receives mail and even gives you a webmail inbox in the browser. Think of it as the difference between renting
 a PO box and owning the building.
 
 You're not limited to one, either. Each mail server runs on its own host (one mail setup per server), and
-Openship keeps them all in a single **Mail servers** list — provision as many as you like and switch between
+Workbox Cloud keeps them all in a single **Mail servers** list — provision as many as you like and switch between
 them from one place. A lone server opens straight into its admin panel; once you have more than one, you land
 on the list first.
 
@@ -20,10 +20,10 @@ go through them. The fiddly bits — the exact DNS records and the reverse-DNS s
 happen, because the wizard walks you through those live.
 
 <Callout title="Cloud webmail and self-hosted mail servers">
-**Emails** is available on Cloud, Desktop and self-hosted Openship. On Cloud, it connects your existing
+**Emails** is available on Cloud, Desktop and self-hosted Workbox Cloud. On Cloud, it connects your existing
 IMAP/SMTP mailboxes through the webmail app. **Managed email is coming soon**: Cloud application plans
 do not provision SMTP/IMAP servers or mailboxes. Mail-server setup and administration remain available
-through Desktop and self-hosted Openship. See [Installation](/docs/getting-started/installation).
+through Desktop and self-hosted Workbox Cloud. See [Installation](/docs/getting-started/installation).
 </Callout>
 
 ## Connect existing mailboxes on Cloud
@@ -34,14 +34,14 @@ ports in the backend's advanced fields; IMAP and SMTP connections require TLS. C
 deploys the webmail app through the normal application pipeline.
 
 Sign in to the deployed webmail with your mailbox email address and password. Your existing provider
-keeps the mailboxes and mail delivery; Openship hosts the browser client. Manage that client through
+keeps the mailboxes and mail delivery; Workbox Cloud hosts the browser client. Manage that client through
 **Apps** or its project page, including domains, settings, logs and redeployment. This flow does not
 install a new mail server, change MX records or create a mailbox at your provider.
 
 The remaining steps in this guide apply to mail-server setup on Desktop and self-hosted instances.
 
 <Callout title="What you need first">
-- Openship running self-hosted, with at least one **connected server** (a clean Ubuntu or Debian machine is
+- Workbox Cloud running self-hosted, with at least one **connected server** (a clean Ubuntu or Debian machine is
   recommended). See [Connect your own server](/docs/guides/custom-servers) if you don't have one yet.
 - A **domain name** you control, where you can edit DNS records.
 - **Port 25 open** for outbound mail — some hosting providers block it by default, so check before you start.
@@ -50,7 +50,7 @@ The remaining steps in this guide apply to mail-server setup on Desktop and self
 
 A few words you'll see a lot:
 
-- **Mail server** — the software that actually sends and receives email. Openship installs a well-known stack
+- **Mail server** — the software that actually sends and receives email. Workbox Cloud installs a well-known stack
   (Postfix, Dovecot, and anti-spam tools) for you.
 - **Mailbox** — one email account, like `you@yourdomain.com`, with its own password and inbox.
 - **DNS records** — public settings for your domain that tell the rest of the internet where your mail lives.
@@ -66,7 +66,7 @@ A few words you'll see a lot:
 
 In the sidebar, click **Emails**. With no mail server set up yet, you land straight on the **Mail Server
 Setup** form. If you already run **several** mail servers, you'll see a list of them first — click **Add mail
-server** to start another. (With a single existing server, Openship opens it straight to its admin panel; use
+server** to start another. (With a single existing server, Workbox Cloud opens it straight to its admin panel; use
 the **Add mail server** button there to set up another.)
 
 </Step>
@@ -75,12 +75,12 @@ the **Add mail server** button there to set up another.)
 
 ### Pick a server and a domain
 
-Choose which of your connected servers the mail stack should run on. If you only have one, Openship picks it
+Choose which of your connected servers the mail stack should run on. If you only have one, Workbox Cloud picks it
 for you.
 
 Then fill in two things:
 
-- **Domain** — your bare domain, like `example.com` (no `https://`, no path). Openship shows you that your
+- **Domain** — your bare domain, like `example.com` (no `https://`, no path). Workbox Cloud shows you that your
   mail server will live at `mail.example.com`.
 - **Admin Password** — the password for the first mailbox, `postmaster@yourdomain`. You'll use it to log in
   after setup. Don't want to think one up? Click **Generate** for a strong random one, then copy it somewhere
@@ -96,7 +96,7 @@ access, port 25 open, a clean server).
 
 ### Press Start Setup and watch it run
 
-Click **Start Setup**. Openship connects to your server and works through the install one step at a time
+Click **Start Setup**. Workbox Cloud connects to your server and works through the install one step at a time
 (system update, mail stack, SSL, and so on), streaming the logs live — like watching the oven through the
 glass door. You don't have to do anything while it runs.
 
@@ -143,15 +143,15 @@ mail providers reject mail from servers whose reverse DNS doesn't match — so t
 
 ### Done
 
-Openship finishes the SSL step and the page flips to the **admin panel**. Your mail server is live. It also
+Workbox Cloud finishes the SSL step and the page flips to the **admin panel**. Your mail server is live. It also
 offers to send a quick welcome test email so you can confirm mail is flowing.
 
 </Step>
 
 </Steps>
 
-<Callout title="Already have a mail server from Openship?" type="info">
-If you set one up before and Openship lost track of it (for example, you moved to a new computer), you don't
+<Callout title="Already have a mail server from Workbox Cloud?" type="info">
+If you set one up before and Workbox Cloud lost track of it (for example, you moved to a new computer), you don't
 have to reinstall. On the setup form, click **Already have a mail server? Adopt it**, pick the server, and
 click **Scan server**. If a mail stack is found, click **Adopt** — it's brought back into the dashboard with
 your mailboxes and data left untouched.
@@ -180,14 +180,14 @@ server. It's organized into tabs:
   like restarting the stack or re-running the wizard.
 
 <Callout title="Adding a second domain" type="info">
-When you add a domain under the **Domains** tab, Openship generates its DNS records (including a fresh DKIM
+When you add a domain under the **Domains** tab, Workbox Cloud generates its DNS records (including a fresh DKIM
 key). Publish those at your DNS provider — the **DNS** tab shows them and can verify them — before you rely on
 that domain for mail.
 </Callout>
 
 ## Step 3 — Deploy the webmail app
 
-A mail server on its own has no web page — you'd point a mail app at it. Openship can also deploy **Zero**, a
+A mail server on its own has no web page — you'd point a mail app at it. Workbox Cloud can also deploy **Workbox Cloud Mail**, a
 webmail app, so you (and your users) get an inbox in the browser instead.
 
 <Steps>
@@ -208,7 +208,7 @@ On the admin panel's **Overview** tab, find the mail server card and click **Dep
 Two choices:
 
 - **Deploy to** — where the webmail app should run. You can put it on **this mail server**, on **another one of
-  your servers**, or on one of your managed **Openship Cloud servers**. The shared server picker connects a
+  your servers**, or on one of your managed **Workbox Cloud servers**. The shared server picker connects a
   selected Cloud server when needed. Redeploying an existing webmail starts with its saved destination.
 - **Domain** — the web address people will open to reach the inbox. It defaults to `mail.yourdomain`. Whatever
   you pick, its DNS must point at the deploy target — the on-screen hint tells you what's expected for the
@@ -222,7 +222,7 @@ The summary panel on the right shows the webmail address and the mail server it 
 
 ### Press Deploy webmail
 
-Click **Deploy webmail**. Openship creates a project and a deployment for you and drops you on the standard
+Click **Deploy webmail**. Workbox Cloud creates a project and a deployment for you and drops you on the standard
 **build screen**, which streams the logs live — the same screen you'd see [deploying any app](/docs/guides/deploy-from-github).
 When it's done, the Overview card's button changes to **Open webmail**, which opens your inbox in a new tab.
 
@@ -230,7 +230,7 @@ When it's done, the Overview card's button changes to **Open webmail**, which op
 
 </Steps>
 
-<Callout title="Upgrading a webmail from Openship 0.6.1 or earlier" type="warn">
+<Callout title="Upgrading a webmail from Workbox Cloud 0.6.1 or earlier" type="warn">
 Webmail used to ship as a prebuilt bundle instead of an app, and those older installs can't be redeployed —
 they're replaced. The Overview card shows a **Replace webmail** link, and the deploy screen explains what goes
 before the button does anything: the old webmail's project, container and sign-in sessions. Your mailboxes,
@@ -241,7 +241,7 @@ domains and every message stay on the mail server, untouched — everyone just s
 
 The provisioning flow works from the CLI too. `openship mail webmail` exposes the same deployment workflow;
 see the [mail command reference](/docs/cli/reference/mail#openship-mail-webmail) for its options. Every `mail`
-command addresses a self-hosted Openship instance, which can deploy the webmail app to a connected Cloud server.
+command addresses a self-hosted Workbox Cloud instance, which can deploy the webmail app to a connected Cloud server.
 
 ```bash
 # Start the install on a server for your domain (streams live)
@@ -272,11 +272,11 @@ When the install pauses, the CLI prints the exact `--start-step` number to resum
 
 <Callout title="Webmail opens, but sign-in cannot reach the mail server" type="warn">
 Webmail connects to IMAP from the server running the webmail app. A mailbox working in Gmail or another
-client does not prove that this server can reach it. For an Openship-managed mail server, the app settings
+client does not prove that this server can reach it. For a Workbox Cloud-managed mail server, the app settings
 should use `mail.<install-domain>` on IMAP port **993** and SMTP port **465**, even for mailboxes on additional
 domains or when outgoing mail uses a relay. The webmail address may be different from this backend hostname.
 
-When webmail runs on the mail server itself, Openship maps this backend hostname to Docker's
+When webmail runs on the mail server itself, Workbox Cloud maps this backend hostname to Docker's
 `host-gateway` in the service configuration. This avoids a host DNS resolver returning a loopback
 address inside the container while preserving the hostname used to verify the mail certificate.
 The mapping is saved for redeploy and rollback. Cloud and other-server webmail use the mail server's
@@ -294,7 +294,7 @@ connection stalls, the form shows “Sign in timed out” and allows another att
 </Callout>
 
 <Callout title="I don't see an “Emails” item in the sidebar" type="warn">
-Email is self-hosted only. It appears when Openship is running on your own infrastructure. On a managed/cloud
+Email is self-hosted only. It appears when Workbox Cloud is running on your own infrastructure. On a managed/cloud
 plan it's hidden on purpose.
 </Callout>
 

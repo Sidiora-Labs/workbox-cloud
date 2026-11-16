@@ -27,7 +27,7 @@ import { isValidEnvKey } from "./utils";
 
 const asIs = (s: string) => s;
 
-/** A Compose `build:` declaration Openship cannot honor faithfully. Values are
+/** A Compose `build:` declaration Workbox Cloud cannot honor faithfully. Values are
  * deliberately never included: build args and SSH/secret configuration may be
  * sensitive even though Docker ARG itself is not a secret channel. */
 export type ComposeBuildIssue = {
@@ -51,7 +51,7 @@ function composeOptionRequestsSomething(value: unknown): boolean {
 /**
  * Validate the Compose build subsection shared by both importers.
  *
- * Openship currently models exactly `context`, `dockerfile`, and `args`. Every
+ * Workbox Cloud currently models exactly `context`, `dockerfile`, and `args`. Every
  * other requested key fails closed: ignoring `target`, `additional_contexts`,
  * `ssh`, `secrets`, architecture, network, cache/provenance, or a future Compose
  * key can produce a different artifact or silently omit a security contract.
@@ -74,12 +74,12 @@ export function composeBuildIssues(
     } else if (REMOTE_BUILD_CONTEXT_RE.test(resolved)) {
       block(
         "build.context",
-        "build.context uses a remote URL, which Openship cannot build as a repository-relative context.",
+        "build.context uses a remote URL, which Workbox Cloud cannot build as a repository-relative context.",
       );
     } else if (!options.allowAbsoluteContext && ABSOLUTE_BUILD_CONTEXT_RE.test(resolved)) {
       block(
         "build.context",
-        "build.context is absolute or home-relative; Openship requires a path inside the linked repository.",
+        "build.context is absolute or home-relative; Workbox Cloud requires a path inside the linked repository.",
       );
     }
   };
@@ -247,7 +247,7 @@ export function composeMountIssues(mount: Record<string, unknown>): ComposeMount
       {
         field: "volumes[].type=tmpfs",
         reason:
-          `the tmpfs mount at ${target} is not modeled. Openship mounts volumes and ` +
+          `the tmpfs mount at ${target} is not modeled. Workbox Cloud mounts volumes and ` +
           `host paths only, so this would be created as a persistent volume on disk ` +
           `rather than in memory — remove it or make it a named volume deliberately.`,
         blocking: true,

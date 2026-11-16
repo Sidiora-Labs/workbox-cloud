@@ -77,7 +77,7 @@ const CONF_PATH = `${OPENRESTY_DEFAULT_PATHS.confDir}/nginx.conf`;
 
 /**
  * A stock `http {}` envelope for the BARE edge's files. A bare box's own
- * `nginx.conf` is its distribution's; what Openship writes there is
+ * `nginx.conf` is its distribution's; what Workbox Cloud writes there is
  * `sites-enabled/*.conf`, and that is what this test is for.
  */
 const BARE_ENVELOPE = `

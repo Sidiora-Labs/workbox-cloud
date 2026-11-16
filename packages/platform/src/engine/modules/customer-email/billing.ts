@@ -71,8 +71,8 @@ export async function prepareCustomerBillingEmails(input: {
     ...(input.workspaceId ? { workspaceId: input.workspaceId } : {}),
     productName:
       input.scope === "management"
-        ? "OpenShip managed service"
-        : `OpenShip Cloud${workspace?.name ? ` — ${workspace.name}` : ""}`,
+        ? "Workbox Cloud managed service"
+        : `Workbox Cloud${workspace?.name ? ` — ${workspace.name}` : ""}`,
   };
   if (cancellation) {
     const payload: CustomerCancellationEmail = { ...scope, ...cancellation };

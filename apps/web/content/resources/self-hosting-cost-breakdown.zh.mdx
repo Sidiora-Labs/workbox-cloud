@@ -1,9 +1,9 @@
 ---
 title: "自托管与托管平台：实际成本细分"
-description: "我们比较了在 Vercel、AWS 和自托管 OpenShip 设置上运行生产 Next.js 应用的实际成本。这些数字可能会让你感到惊讶。"
+description: "我们比较了在 Vercel、AWS 和自托管 Workbox Cloud 设置上运行生产 Next.js 应用的实际成本。这些数字可能会让你感到惊讶。"
 date: "2026-03-05"
 category: "Guide"
-author: "OpenShip Team"
+author: "Workbox Cloud Team"
 ---
 
 “只需使用 Vercel”是个好建议 - 直到您收到帐单为止。我们在三种设置中运行相同的 Next.js 应用，并跟踪 30 天内的每项费用。
@@ -19,7 +19,7 @@ author: "OpenShip Team"
 
 ## 结果
 
-| | Vercel 专业版 | AWS（ECS + RDS）| OpenShip（自托管）|
+| | Vercel 专业版 | AWS（ECS + RDS）| Workbox Cloud（自托管）|
 |---|---|---|---|
 |计算| $150/月 | $85/月 | $24/月 |
 |数据库| $50/月（霓虹灯）| $45/月 |包含 |
@@ -27,13 +27,13 @@ author: "OpenShip Team"
 | SSL/域名 |包含 | $1/月 |包含 |
 | **总计** | **$320/月** | **176 美元/月** | **24 美元/月** |
 
-自托管 OpenShip 设置在单个 Hetzner VPS（CPX31：4 个 vCPU、8GB RAM、160GB SSD）上运行。
+自托管 Workbox Cloud 设置在单个 Hetzner VPS（CPX31：4 个 vCPU、8GB RAM、160GB SSD）上运行。
 
 ## 权衡
 
 托管平台为您提供零操作。您推送代码，它就会部署。这才是真正的价值。
 
-但 OpenShip 显着缩小了差距：
+但 Workbox Cloud 显着缩小了差距：
 - **AI 处理配置** - 构建检测、Docker文件生成和 SSL 都是自动的。
 - **单命令部署** - `openship deploy` 同样快。
 - **内置监控** - 开箱即用的日志、指标和警报。

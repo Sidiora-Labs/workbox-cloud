@@ -48,7 +48,7 @@ export default function MailFooter() {
                 className="hidden flex-col items-center justify-start md:flex"
               >
                 <div className="justify-start text-center text-lg font-normal leading-7 text-white lg:text-2xl">
-                  {copy("Self-host OpenShip and run your own mail server in minutes.")}
+                  {copy("Self-host Workbox Cloud and run your own mail server in minutes.")}
                 </div>
               </motion.div>
               <motion.div
@@ -59,7 +59,7 @@ export default function MailFooter() {
               >
                 <Link href="/docs/getting-started/quickstart">
                   <Button className="h-8 bg-white text-black cursor-pointer">
-                    {copy("Install OpenShip")}
+                    {copy("Install Workbox Cloud")}
                   </Button>
                 </Link>
               </motion.div>

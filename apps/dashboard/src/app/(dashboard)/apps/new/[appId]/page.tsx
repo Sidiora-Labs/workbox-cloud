@@ -417,7 +417,7 @@ export default function AppInstallPage() {
     return () => ro.disconnect();
   }, [descExpanded, localizedDescription]);
 
-  // Project name shown in Openship. Editable for a fresh install (a second
+  // Project name shown in Workbox Cloud. Editable for a fresh install (a second
   // install of the same app auto-suffixes server-side, e.g. "Convex 2"); hidden
   // when reopening an existing draft, which already has its name.
   const [appName, setAppName] = useState(() => template?.name ?? "");
@@ -1212,7 +1212,7 @@ export default function AppInstallPage() {
       );
       return;
     }
-    // Installing TO Openship Cloud needs a cloud connection — the same hard gate
+    // Installing TO Workbox Cloud needs a cloud connection — the same hard gate
     // the deploy wizard applies at Continue. Without it the pick was a dead end:
     // the install failed deep in preflight with no way to act on it.
     if (destination?.deployTarget === "cloud" && !cloudConnected) {

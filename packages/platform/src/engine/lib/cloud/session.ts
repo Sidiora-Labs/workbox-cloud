@@ -27,7 +27,7 @@ export async function storeCloudSession(userId: string, token: string): Promise<
   const response = await request("/api/cloud/account");
   const account = response.ok ? await readVerifiedCloudAccount(response, request) : null;
   if (!account)
-    throw new AppError("Could not verify the Cloud account and organization. Reconnect to Openship Cloud.", 401, "CLOUD_IDENTITY_UNVERIFIED");
+    throw new AppError("Could not verify the Cloud account and organization. Reconnect to Workbox Cloud.", 401, "CLOUD_IDENTITY_UNVERIFIED");
   const session: StoredCloudSession = {
     token, apiUrl: cloudRuntimeTarget.api,
     userId: account.id, organizationId: account.organizationId,
@@ -87,7 +87,7 @@ export async function clearCloudSession(userId: string, expected?: StoredCloudSe
 // ─── Connection truth (live, single-flight) ──────────────────────────────────
 
 /**
- * THE source of truth for "is this user connected to Openship Cloud":
+ * THE source of truth for "is this user connected to Workbox Cloud":
  *
  *   - no stored token        → not connected (can't even ask)
  *   - SaaS 200               → connected (+ profile when present)
@@ -167,7 +167,7 @@ export async function isCloudConnected(userId: string): Promise<boolean> {
 }
 
 /**
- * THE source of truth for "is this ORG connected to Openship Cloud".
+ * THE source of truth for "is this ORG connected to Workbox Cloud".
  *
  * Connection is owned by the org OWNER — only the owner can link cloud, and
  * their session is the org's single cloud identity that every org-scoped

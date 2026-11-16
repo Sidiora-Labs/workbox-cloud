@@ -1,8 +1,8 @@
 /**
- * The catalogue of third-party credentials Openship can hold, and the rules that make
+ * The catalogue of third-party credentials Workbox Cloud can hold, and the rules that make
  * ONE table and ONE settings screen serve all of them.
  *
- * Openship needs other people's secrets for several unrelated jobs — write a DNS record,
+ * Workbox Cloud needs other people's secrets for several unrelated jobs — write a DNS record,
  * pull a private image, push a backup — and each one grew its own storage, its own
  * verify flow and its own form. `dns_credential` holds a single token column; a backup
  * destination inlines FIVE encrypted columns; a notification channel keeps its own. Same
@@ -17,7 +17,7 @@
  * smaller number of screens.
  *
  * ALSO NOT HERE: `personal_access_token`. Those are INBOUND — somebody authenticating to
- * Openship — with different scoping and revocation. Same word "token", opposite
+ * Workbox Cloud — with different scoping and revocation. Same word "token", opposite
  * direction; one screen for both would be the confusing kind of tidy.
  *
  * HOW A PROVIDER IS ADDED: an entry below. The field list drives the storage split
@@ -84,7 +84,7 @@ export interface CredentialProvider {
   readonly icon: string;
   readonly selector: CredentialSelector | null;
   readonly fields: readonly CredentialField[];
-  /** One sentence in the picker: what holding this lets Openship do. */
+  /** One sentence in the picker: what holding this lets Workbox Cloud do. */
   readonly summary: string;
 /** Advertised by the instance only when its OAuth application is configured. */
   readonly authorization?: { readonly available: boolean };
@@ -292,7 +292,7 @@ export const CREDENTIAL_PROVIDERS = [
     label: "Cloudflare",
     capability: "dns",
     icon: "cloudflare",
-    summary: "Let Openship write the DNS records a custom domain needs, instead of printing them to paste.",
+    summary: "Let Workbox Cloud write the DNS records a custom domain needs, instead of printing them to paste.",
     // Org-wide: the token addresses every zone it can see, so there is nothing to scope
     // it to. See CredentialSelector.
     selector: null,
@@ -304,7 +304,7 @@ export const CREDENTIAL_PROVIDERS = [
         inputType: "text",
         required: true,
         placeholder: "cfut_…",
-        help: "A token with Zone:Read and DNS:Edit on the zones you want Openship to manage. Create it under My Profile → API Tokens.",
+        help: "A token with Zone:Read and DNS:Edit on the zones you want Workbox Cloud to manage. Create it under My Profile → API Tokens.",
       },
     ],
   },
@@ -313,7 +313,7 @@ export const CREDENTIAL_PROVIDERS = [
     label: "DigitalOcean",
     capability: "dns",
     icon: "digitalocean",
-    summary: "Let Openship write the DNS records a custom domain needs on DigitalOcean DNS.",
+    summary: "Let Workbox Cloud write the DNS records a custom domain needs on DigitalOcean DNS.",
     // Org-wide, like Cloudflare: the token addresses every domain the account hosts.
     selector: null,
     fields: [

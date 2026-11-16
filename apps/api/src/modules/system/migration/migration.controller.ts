@@ -3,7 +3,7 @@
  *
  *   POST /api/system/migration/preflight    — read-only readiness check
  *   POST /api/system/migration/start        — kick off the migration
- *   POST /api/system/migration/start-cloud  — migrate to Openship Cloud
+ *   POST /api/system/migration/start-cloud  — migrate to Workbox Cloud
  *   POST /api/system/migration/start-tunnel — migrate behind a tunnel
  *   POST /api/system/migration/switch-back  — reverse migration
  *
@@ -174,7 +174,7 @@ export async function start(c: Context) {
 /**
  * POST /api/system/migration/start-cloud
  *
- * Path B — migrate to Openship Cloud. Body: { allowNonEmptyTarget? }.
+ * Path B — migrate to Workbox Cloud. Body: { allowNonEmptyTarget? }.
  *
  * Dumps the local DB, uploads it to api.openship.io/api/cloud/ingest-subgraph
  * (authenticated as the org owner via the stored cloud session token),

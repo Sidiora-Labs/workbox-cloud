@@ -597,7 +597,7 @@ describe("ensureContainerEdge", () => {
     expect(commands.some((c) => c.startsWith("writeFile"))).toBe(false);
   });
 
-  // A bare host OpenResty is DEPRECATED — including one an older Openship
+  // A bare host OpenResty is DEPRECATED — including one an older Workbox Cloud
   // apt-installed. It goes through the ordinary foreign-proxy gate (prompt, site
   // import, journaled stop) like a distro nginx, and there is deliberately no second
   // "decommission the legacy edge" path: a second path is exactly how the first one

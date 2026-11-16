@@ -15,7 +15,7 @@ import { cloudWorkspace } from "./cloud-workspace";
  * pipeline writes, not from a schema column.
  *
  * The lone exception is `isLocal`: exactly one row (auto-created on boot when
- * OpenShip runs ON a server) represents the host OpenShip itself sits on. It is
+ * Workbox Cloud runs ON a server) represents the host Workbox Cloud itself sits on. It is
  * resolved to the LOCAL host executor (createHostExecutor) instead of SSH, so
  * its ssh* fields are display placeholders and never dialed.
  */
@@ -37,7 +37,7 @@ export const servers = pgTable("servers", {
   name: text("name"),
 
   /**
-   * True for the single auto-registered row that IS the OpenShip host (VPS /
+   * True for the single auto-registered row that IS the Workbox Cloud host (VPS /
    * server-host mode). Deploys to it run on the local host executor, not SSH.
    */
   isLocal: boolean("is_local").notNull().default(false),

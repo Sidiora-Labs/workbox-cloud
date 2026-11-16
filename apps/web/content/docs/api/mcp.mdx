@@ -1,16 +1,16 @@
 ---
 title: MCP
-description: Call Openship tools through Model Context Protocol.
+description: Call Workbox Cloud tools through Model Context Protocol.
 ---
 
 import { TypeTable } from 'fumadocs-ui/components/type-table';
 
 The MCP API is a single **Model Context Protocol** endpoint that lets AI agents (Claude, Cursor, and any
-MCP-compatible client) drive Openship as a set of tools. Each tool maps onto a permission-tagged REST route,
+MCP-compatible client) drive Workbox Cloud as a set of tools. Each tool maps onto a permission-tagged REST route,
 and every call re-runs the full auth and permission stack — so an agent only ever sees and does what its
 token allows. For client setup (OAuth flow, config snippets), see the [MCP overview](/docs/mcp).
 
-Available on both self-hosted and Openship Cloud (mounted in the shared route set).
+Available on both self-hosted and Workbox Cloud (mounted in the shared route set).
 
 ## How authentication works
 
@@ -74,12 +74,12 @@ curl -s "$OPENSHIP_URL/api/mcp" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
 ```
 
-The tool set is derived from Openship's permission-tagged routes that opt in with an `mcp` block; the
+The tool set is derived from Workbox Cloud's permission-tagged routes that opt in with an `mcp` block; the
 credential/auth surfaces (`tokens`, `auth`, `mcp` itself) are never exposed.
 
 ## Discover and select a workspace
 
-An Openship workspace or workgroup is an **organization** in the API. Call
+A Workbox Cloud workspace or workgroup is an **organization** in the API. Call
 `get_permissions_workspaces` with `{}` to discover workspace names and IDs before creating an app or a
 Compose project. This tool is available to read-only and restricted credentials too.
 
@@ -128,7 +128,7 @@ instead of falling back to the default workspace.
 This ID selects a request scope; it does **not** transfer an existing app between organizations.
 `get_system_servers_destinations` lists authorized execution servers, a separate concept. Select a
 `serverId` when creating or importing a project; changing where it runs does not move its records to
-another Openship instance. Cross-organization app transfer is not currently exposed.
+another Workbox Cloud instance. Cross-organization app transfer is not currently exposed.
 
 ## Deploy a desktop folder on Cloud
 
@@ -169,7 +169,7 @@ Cloud API without the promotion endpoint rejects the request before importing.
 
 `params.name` is the tool name from `tools/list`; `params.arguments` carries any path parameters, a
 `query` object and/or JSON `body` when declared by the tool’s schema (including guarded `DELETE` operations), and an optional
-`organizationId` (sent as `X-Organization-Id` together with `X-Openship-Scope: fixed`).
+`organizationId` (sent as `X-Organization-Id` together with `X-Workbox Cloud-Scope: fixed`).
 
 ```bash
 curl -s "$OPENSHIP_URL/api/mcp" \

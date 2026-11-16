@@ -74,7 +74,7 @@ export function CustomApiConnection({
         <AgentSetup info={agent} onRefresh={onRefresh} />
       ) : !agent.customApiAvailable ? (
         <p className="text-sm text-warning">
-          Update OpenShip and reconnect the assistant to use custom API connections.
+          Update Workbox Cloud and reconnect the assistant to use custom API connections.
         </p>
       ) : null}
       {action.error && (

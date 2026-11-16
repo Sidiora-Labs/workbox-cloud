@@ -336,7 +336,7 @@ describe("NginxProvider path-only routes", () => {
 });
 
 /**
- * Openship Cloud's shared edge proves this box controls a routing target by fetching
+ * Workbox Cloud's shared edge proves this box controls a routing target by fetching
  * a token over plain HTTP from the target. Every `:80` shape must answer it, because
  * any of them can be the vhost the probe lands on — and a `:443` block must NOT,
  * since the target is always schemed `http://`. The 443 catch-all is not an
@@ -390,7 +390,7 @@ describe("NginxProvider edge-target challenge location", () => {
 });
 
 /**
- * A free `<slug>.opsh.io` host is served by Openship Cloud's edge, which proxies here on
+ * A free `<slug>.opsh.io` host is served by Workbox Cloud's edge, which proxies here on
  * plain :80 — so the peer is the edge and the visitor is named in `X-Real-IP`. The
  * http-scope realip block reads CF-Connecting-IP (for Cloudflare-fronted custom
  * domains), a header this front does not send, so inheriting it left `remote_addr` as
@@ -795,7 +795,7 @@ describe("NginxProvider.serveEdgeChallenge", () => {
 
 /**
  * #556 — a routed host whose app is not answering used to get OpenResty's stock 502. That
- * matters beyond looks: Openship Cloud's shared edge forwards to the box and relays the
+ * matters beyond looks: Workbox Cloud's shared edge forwards to the box and relays the
  * box's response, so the stock page is what a visitor to the operator's OWN domain reads,
  * branded for a third party. The page only belongs in vhosts where something can 502.
  */
@@ -1507,11 +1507,11 @@ describe("NginxProvider config generation", () => {
       failReload: true,
       reloadListener: "foreign-nginx",
     });
-    files.set(`${SITES}/app-example-com.conf`, "# legacy Openship route");
+    files.set(`${SITES}/app-example-com.conf`, "# legacy Workbox Cloud route");
 
     await expect(nginx.removeRoute("app.example.com")).rejects.toThrow(/foreign listener owns/);
 
-    expect(files.get(`${SITES}/app-example-com.conf`)).toBe("# legacy Openship route");
+    expect(files.get(`${SITES}/app-example-com.conf`)).toBe("# legacy Workbox Cloud route");
     expect(calls.some((command) => command === "kill -HUP 333")).toBe(false);
     expect(calls.some((command) => command.startsWith("systemctl reload"))).toBe(false);
   });
@@ -1523,13 +1523,13 @@ describe("NginxProvider config generation", () => {
         compiledConfPath: "/etc/openresty/compiled/nginx.conf",
       },
     });
-    files.set(`${SITES}/app-example-com.conf`, "# legacy Openship route");
+    files.set(`${SITES}/app-example-com.conf`, "# legacy Workbox Cloud route");
 
     await expect(nginx.removeRoute("app.example.com")).rejects.toThrow(
       /executable and configuration could not be verified/,
     );
 
-    expect(files.get(`${SITES}/app-example-com.conf`)).toBe("# legacy Openship route");
+    expect(files.get(`${SITES}/app-example-com.conf`)).toBe("# legacy Workbox Cloud route");
     expect(calls.some((command) => command.includes("kill -HUP 321"))).toBe(false);
   });
 
@@ -1564,13 +1564,13 @@ describe("NginxProvider config generation", () => {
       failReload: true,
       reloadListener: "foreign-nginx-config",
     });
-    files.set(`${SITES}/app-example-com.conf`, "# legacy Openship route");
+    files.set(`${SITES}/app-example-com.conf`, "# legacy Workbox Cloud route");
 
     await expect(nginx.removeRoute("app.example.com")).rejects.toThrow(
       /executable and configuration could not be verified/,
     );
 
-    expect(files.get(`${SITES}/app-example-com.conf`)).toBe("# legacy Openship route");
+    expect(files.get(`${SITES}/app-example-com.conf`)).toBe("# legacy Workbox Cloud route");
     expect(calls.some((command) => command.includes("kill -HUP 334"))).toBe(false);
     expect(calls.some((command) => command.startsWith("systemctl reload"))).toBe(false);
   });
@@ -1580,11 +1580,11 @@ describe("NginxProvider config generation", () => {
       failReload: true,
       reloadListener: "container-nginx",
     });
-    files.set(`${SITES}/app-example-com.conf`, "# legacy Openship route");
+    files.set(`${SITES}/app-example-com.conf`, "# legacy Workbox Cloud route");
 
     await expect(nginx.removeRoute("app.example.com")).rejects.toThrow(/container-backed/);
 
-    expect(files.get(`${SITES}/app-example-com.conf`)).toBe("# legacy Openship route");
+    expect(files.get(`${SITES}/app-example-com.conf`)).toBe("# legacy Workbox Cloud route");
     expect(calls.some((command) => command.includes("kill -HUP 336"))).toBe(false);
     expect(calls.some((command) => command.startsWith("systemctl reload"))).toBe(false);
   });
@@ -1594,13 +1594,13 @@ describe("NginxProvider config generation", () => {
       failReload: true,
       unreadableMasterCgroup: true,
     });
-    files.set(`${SITES}/app-example-com.conf`, "# legacy Openship route");
+    files.set(`${SITES}/app-example-com.conf`, "# legacy Workbox Cloud route");
 
     await expect(nginx.removeRoute("app.example.com")).rejects.toThrow(
       /host ownership could not be proven/,
     );
 
-    expect(files.get(`${SITES}/app-example-com.conf`)).toBe("# legacy Openship route");
+    expect(files.get(`${SITES}/app-example-com.conf`)).toBe("# legacy Workbox Cloud route");
     expect(calls.some((command) => command.includes("kill -HUP 321"))).toBe(false);
   });
 
@@ -1609,13 +1609,13 @@ describe("NginxProvider config generation", () => {
       failReload: true,
       reloadListener: "unclassified",
     });
-    files.set(`${SITES}/app-example-com.conf`, "# legacy Openship route");
+    files.set(`${SITES}/app-example-com.conf`, "# legacy Workbox Cloud route");
 
     await expect(nginx.removeRoute("app.example.com")).rejects.toThrow(
       /executable and configuration could not be verified/,
     );
 
-    expect(files.get(`${SITES}/app-example-com.conf`)).toBe("# legacy Openship route");
+    expect(files.get(`${SITES}/app-example-com.conf`)).toBe("# legacy Workbox Cloud route");
     expect(calls.some((command) => command.includes("kill -HUP 335"))).toBe(false);
   });
 
@@ -2463,7 +2463,7 @@ describe("re-registering a route leaves no stale rules", () => {
     const c = conf("app-example-com")!;
     expect(c).not.toContain("map $request_uri");
     expect(c).not.toContain("osh_hdr_");
-    expect(c.startsWith("# Auto-generated by Openship")).toBe(true);
+    expect(c.startsWith("# Auto-generated by Workbox Cloud")).toBe(true);
   });
 
   test("is idempotent — the same rules twice produce the same file", async () => {
@@ -3299,7 +3299,7 @@ describe("canonical host redirect", () => {
     // Same reasoning as ACME above, and the same mechanism: both are interpolated in
     // their own slot OUTSIDE sharedBody, so the canonical-redirect suppression can't
     // reach them, and both out-prefix `location /` so the 301 inside it never runs
-    // for the challenge path. Openship Cloud's edge can therefore verify a target
+    // for the challenge path. Workbox Cloud's edge can therefore verify a target
     // whose vhost redirects — which `hostnameTargetWarning` warns breaks the free
     // URL, but does NOT break verification.
     const { nginx, conf } = setup({ certDomains: ["www.example.com"] });

@@ -1,10 +1,10 @@
 ---
 title: Migrate from Railway or Vercel
-description: Connect a platform, review its services and data, and import through Openship's normal deployment workflow.
+description: Connect a platform, review its services and data, and import through Workbox Cloud's normal deployment workflow.
 ---
 
 Open **New project → Import existing project** and choose **Railway** or **Vercel**.
-Railway imports the complete selected environment into one Openship project containing its
+Railway imports the complete selected environment into one Workbox Cloud project containing its
 services. Importing another source project creates a separate project. Repository access, deployments, private service
 connections, data transfer and destination selection use the same workflows as other projects.
 
@@ -21,7 +21,7 @@ how many projects are available; an empty account and a failed access check are 
 - **Railway:** choose the token's account, workspace or project scope. Workspace tokens also
   require the workspace ID. Project tokens are limited to their project and environment.
 - **Vercel:** enter the team ID when using a team-scoped token. Choose the project and its
-  production or preview environment. Openship reads the latest ready deployment in that environment.
+  production or preview environment. Workbox Cloud reads the latest ready deployment in that environment.
 
 Railway imports require permission to stop and deploy services, update their configuration,
 register a temporary SSH key and read the attached storage. A metadata-only token is insufficient.
@@ -31,13 +31,13 @@ register a temporary SSH key and read the attached storage. A metadata-only toke
 Select the source project and environment. Railway keeps all services in the import so their
 writers, dependencies and storage move together. Name the destination project once. Open **Configure** to inspect each service's repository or image, service name,
 variables, storage and domains. Missing secrets open automatically. Private repositories
-also need [GitHub access](/docs/guides/git-authentication) in Openship.
+also need [GitHub access](/docs/guides/git-authentication) in Workbox Cloud.
 
 GitHub applications import the deployed commit. Automatic deployment on push stays off until
 you enable it. Image services use the normal registry pull flow; add a registry connection
-when an image is private. Openship pins the running image digest when Railway supplies it;
+when an image is private. Workbox Cloud pins the running image digest when Railway supplies it;
 otherwise review warns that the image tag may have changed. Custom Dockerfile paths, HTTP
-health checks and restart policies are preserved when they can be represented in Openship.
+health checks and restart policies are preserved when they can be represented in Workbox Cloud.
 
 Exportable variables stay on the server. Railway sealed values and Vercel Secret/Sensitive
 values need to be entered again. Optional variables can be excluded. Railway private addresses
@@ -52,7 +52,7 @@ review listing the import's data choices. Changing a selection or destination re
 
 ## Choose what happens to data
 
-- **Railway persistent volumes:** Openship stops the complete source project, temporarily runs
+- **Railway persistent volumes:** Workbox Cloud stops the complete source project, temporarily runs
   export-only containers on its existing mounts, and streams every selected volume into new
   destination volumes. Databases, queues, SQLite and arbitrary file stores use the same copy
   path. Files, database directories, persisted accounts, ownership, permissions and symlinks
@@ -65,7 +65,7 @@ review listing the import's data choices. Changing a selection or destination re
 - **Empty storage:** explicitly starts the destination without copying source data.
 
 Allow downtime for the Railway project and pause external deployment automation or jobs that
-could restart or modify it. Openship stops the selected environment's services automatically.
+could restart or modify it. Workbox Cloud stops the selected environment's services automatically.
 It restores their original configuration after copying and leaves them stopped for cutover.
 For an external PostgreSQL copy, pause writers yourself and keep them paused through cutover.
 
@@ -95,7 +95,7 @@ migration page lists each discovered hostname alongside its service and the requ
 
 - **Update DNS:** a custom domain you can keep, such as `app.example.com`.
 - **Replace URL:** a provider-owned address, such as `my-app.up.railway.app` or `my-app.vercel.app`.
-  These addresses cannot be transferred to OpenShip. Choose a new address and update application
+  These addresses cannot be transferred to Workbox Cloud. Choose a new address and update application
   URLs, OAuth callback URLs, webhook destinations and other clients that use the old address.
 
 After the import reaches **Verify apps and move traffic**:
@@ -104,15 +104,15 @@ After the import reaches **Verify apps and move traffic**:
    Custom domains and aliases are already assigned to their matching services using the same
    routing flow as server/Docker migration. They start unverified; importing never marks them
    verified on your behalf. Add a test domain if needed and verify the app and its copied data.
-2. Open the DNS settings for each imported custom domain. OpenShip shows the exact DNS
+2. Open the DNS settings for each imported custom domain. Workbox Cloud shows the exact DNS
    records for that destination, including any ownership verification records. Apply those
    records at your DNS provider, replacing the old routing records for that hostname.
    Keep unrelated records, including email records. If you have a supported DNS connection,
    you can review and apply the changes through **Auto-configure DNS** in the same flow.
-3. Use OpenShip's domain verification, wait for DNS propagation and HTTPS readiness, and test
+3. Use Workbox Cloud's domain verification, wait for DNS propagation and HTTPS readiness, and test
    the public URLs. Only then choose **Confirm cutover complete** on the migration page.
 
-The destination can be OpenShip Cloud or your server; use the records shown for that destination
+The destination can be Workbox Cloud or your server; use the records shown for that destination
 instead of copying the old Railway or Vercel target. See the
 [custom-domain guide](/docs/guides/custom-domains) for DNS setup and verification.
 Keep databases and other internal services private unless they explicitly need public access.
@@ -128,7 +128,7 @@ Review retained destination projects before retrying; partial volumes are not ov
 ## Configure OAuth on your installation
 
 API tokens work without a registered OAuth application. To offer account authorization, configure
-these variables on the Openship API server:
+these variables on the Workbox Cloud API server:
 
 | Provider | Variables                                                                                                                         |
 | -------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -146,7 +146,7 @@ with PKCE and the requested workspace scope. Keep client secrets out of public d
   <Card
     title="Server-to-server migration"
     href="/docs/guides/server-to-server-migration"
-    description="Import Docker workloads from a server or move existing Openship projects."
+    description="Import Docker workloads from a server or move existing Workbox Cloud projects."
   />
   <Card
     title="Custom domains"

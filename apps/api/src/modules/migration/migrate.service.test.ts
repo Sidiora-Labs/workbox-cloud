@@ -144,7 +144,7 @@ describe("buildAdoptedServiceRows — adoption never host-publishes an adopted p
   it("strips a pinned host mapping to the container port only — the #388 collision fix", () => {
     // A discovered "5432:5432" (e.g. carried over from a Coolify migration) would
     // bind host 5432 at deploy and collide with whatever already holds it —
-    // Openship's OWN Postgres, or a second project's — aborting the whole deploy.
+    // Workbox Cloud's OWN Postgres, or a second project's — aborting the whole deploy.
     // Adoption keeps only the container side; the service is reached by name and
     // re-exposed later from the Domains tab.
     const { rows } = buildAdoptedServiceRows(

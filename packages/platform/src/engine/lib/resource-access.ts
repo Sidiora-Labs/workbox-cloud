@@ -14,7 +14,7 @@ export function assertResourceInOrg<T extends { organizationId?: string | null }
 }
 
 /**
- * Refuse a runtime action on the Openship control-plane self-app.
+ * Refuse a runtime action on the Workbox Cloud control-plane self-app.
  *
  * The self-app IS the process serving the request, so "stop it" is a request to
  * kill the thing that would report the result. Every mutating surface needs the
@@ -31,7 +31,7 @@ export function assertResourceInOrg<T extends { organizationId?: string | null }
  * only under `deployment` and `service`).
  */
 /**
- * Is this project Openship itself?
+ * Is this project Workbox Cloud itself?
  *
  * The boolean behind {@link assertNotControlPlane}, split out because not every
  * caller wants a throw: the migration adopt path needs to RECOGNIZE the control
@@ -49,8 +49,8 @@ export function isControlPlaneProject(
 
 export function controlPlaneManagementMessage(): string {
   return process.env.OPENSHIP_INSTANCE_PROJECT_ID
-    ? "This is your active Openship API. Use Settings → Instance → Move back to Desktop before changing its runtime or updating its service images."
-    : "The Openship control plane manages its own runtime — manage it with the CLI on the host (`openship up`, `openship stop`, `openship update`), not from the dashboard.";
+    ? "This is your active Workbox Cloud API. Use Settings → Instance → Move back to Desktop before changing its runtime or updating its service images."
+    : "The Workbox Cloud control plane manages its own runtime — manage it with the CLI on the host (`openship up`, `openship stop`, `openship update`), not from the dashboard.";
 }
 
 export function assertNotControlPlane(

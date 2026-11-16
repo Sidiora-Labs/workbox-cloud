@@ -2,7 +2,7 @@
  * Steady-state container health watch — the loop that notices a workload broke
  * at 3am instead of when a user complains.
  *
- * Openship checks a container's health exactly once today: the ~15s post-deploy
+ * Workbox Cloud checks a container's health exactly once today: the ~15s post-deploy
  * stabilization window. After that nobody looks again. The project page's status
  * pill *is* live, but only while a human is staring at it. This closes that gap by
  * asking every server's Docker daemon the same question once a minute and routing

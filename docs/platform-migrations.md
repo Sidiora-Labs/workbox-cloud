@@ -109,7 +109,7 @@ project, so simultaneous two-project isolation is covered by the repeatable Dock
 suite above. Sanitized live evidence is
 `/tmp/openship-railway-grouping-live-evidence.json`.
 
-The grouped flow then passed a separate **live Railway → OpenShip Cloud** run on
+The grouped flow then passed a separate **live Railway → Workbox Cloud** run on
 a real managed VM (2 vCPUs, 4 GB RAM). This used the current engine in Cloud mode,
 the normal saved-credential verification, namespace token issuance, managed host
 provisioning, volume transfer, deployment admission/queue and runtime. One source

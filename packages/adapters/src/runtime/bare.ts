@@ -796,7 +796,7 @@ export class BareRuntime implements RuntimeAdapter {
     this.assertProject(config.projectId);
     await this.options.beforeWork?.();
     // Adopt mode: attach to an already-running, externally-supervised process
-    // (e.g. the Openship control plane launched by `openship up`). We never
+    // (e.g. the Workbox Cloud control plane launched by `openship up`). We never
     // promote a build artifact or start a supervisor unit — that would bind a
     // second process to the port. We only health-probe and return a running
     // result so the routing/SSL pipeline can own this deployment. containerId is

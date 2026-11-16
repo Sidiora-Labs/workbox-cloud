@@ -130,8 +130,8 @@ export async function recoverOldNode(opts: {
     // The message the caller prints names OPENSHIP_VENDOR_NODE=1 for that case.
     if (!process.stdin.isTTY) return { handled: false };
     const yes = await ask(
-      `\nOpenship can download its own Node ${NODE_MAJOR} (~50 MB) into ${OS_DIR}/runtime\n` +
-        `and use it for Openship only — your system Node is left exactly as it is.\n\n` +
+      `\nWorkbox Cloud can download its own Node ${NODE_MAJOR} (~50 MB) into ${OS_DIR}/runtime\n` +
+        `and use it for Workbox Cloud only — your system Node is left exactly as it is.\n\n` +
         `Download it now? [Y/n] `,
     );
     if (!yes) return { handled: false };

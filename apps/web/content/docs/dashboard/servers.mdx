@@ -1,24 +1,24 @@
 ---
 title: Servers
-description: Manage your deployment servers, with automatic setup on Openship Cloud and SSH connections for your own machines.
+description: Manage your deployment servers, with automatic setup on Workbox Cloud and SSH connections for your own machines.
 ---
 
-The **Servers** section shows where your projects run. On **Openship Cloud**, choose a plan and deploy:
-Openship prepares a managed server automatically. You can open Servers later to inspect usage or change
-supported settings. On **self-hosted Openship**, connect a machine you own over SSH and Openship installs
+The **Servers** section shows where your projects run. On **Workbox Cloud**, choose a plan and deploy:
+Workbox Cloud prepares a managed server automatically. You can open Servers later to inspect usage or change
+supported settings. On **self-hosted Workbox Cloud**, connect a machine you own over SSH and Workbox Cloud installs
 and checks the software your deployments need.
 
-Connecting a Cloud account from self-hosted Openship also lists that account's managed servers here,
+Connecting a Cloud account from self-hosted Workbox Cloud also lists that account's managed servers here,
 alongside your own machines. Existing execution links appear once. Cloud server settings, terminal
 sessions and billing use their Cloud operations; browsing the list does not create another server.
 
 <Callout title="Where this lives">
 The list is at **`/servers`**, adding a server is **`/servers/new`**, and each server's detail screen is
-**`/servers/<serverId>`**. Every project uses the same server destination, whether Openship manages the
+**`/servers/<serverId>`**. Every project uses the same server destination, whether Workbox Cloud manages the
 host or you connect it yourself.
 </Callout>
 
-## Managed servers on Openship Cloud
+## Managed servers on Workbox Cloud
 
 Your first subscription prepares a **Production** server. Repository deployments, uploaded source, and
 catalog apps automatically use that server when it is the only compatible destination. You do not need
@@ -48,11 +48,11 @@ The list shows each server's state, placement, and project count. Open one for:
   stopped manual background process and explicitly start it. Project and system processes link to their
   owning controls; they cannot be deleted or stopped from this view. Docker containers remain in projects.
 - **Settings → Runtime API** — reveal a server-only automation token or rotate it with confirmation. This API
-  remains enabled because Openship uses it for deployments and terminals. Rotation invalidates older
+  remains enabled because Workbox Cloud uses it for deployments and terminals. Rotation invalidates older
   tokens and connections; let active work finish first.
 - **Settings** — inspect the managed image, operating system, persistent lifecycle and allocated
   resources, read recent boot logs, and open the existing capacity-change review. Application images
-  belong to project deployment settings; the shared server image is maintained by Openship.
+  belong to project deployment settings; the shared server image is maintained by Workbox Cloud.
 
 Only supported tabs appear. These are the shared server overview, health, listener and terminal
 components, with provider controls and the plan card for managed servers. Host package installation
@@ -68,11 +68,11 @@ external services that allowlist the server's outgoing address; it does not chan
 
 Custom proxies require a **public IPv4 address**, port and HTTP or HTTPS protocol. Hostnames and
 private addresses are rejected. Enter both username and password if authentication is enabled;
-credentials are never returned by Openship or included in its audit events. Re-enter them when
+credentials are never returned by Workbox Cloud or included in its audit events. Re-enter them when
 replacing an authenticated proxy. The provider performs its own connection preflight and enforces
 proxy availability on the underlying Cloud account.
 
-Openship applies one outbound change under the existing server activity lock, then reads the result
+Workbox Cloud applies one outbound change under the existing server activity lock, then reads the result
 before confirming success. It does not combine that change with internet-policy or routing writes.
 If a response is lost, **Refresh status** reads the current settings; it does not repeat the mutation.
 A changed provider revision rejects an outdated proxy form, including a password-only replacement.
@@ -110,9 +110,9 @@ subscription, followed by explicit confirmation.
 See the [managed Cloud server guide](/docs/guides/cloud-workspaces) for lifecycle details and the
 [Servers API and SDK](/docs/api/servers) for automation.
 
-## Connected servers on self-hosted Openship
+## Connected servers on self-hosted Workbox Cloud
 
-The remaining setup and infrastructure controls apply to machines you connect yourself. Give Openship
+The remaining setup and infrastructure controls apply to machines you connect yourself. Give Workbox Cloud
 SSH access to a VPS, bare-metal server, or VM, then select it in the
 [deploy flow](/docs/guides/deploy-from-github). See [Deploy to your own server](/docs/guides/custom-servers)
 for a walkthrough.
@@ -132,7 +132,7 @@ In the desktop app, a server card can also show a **\{n} forwarding** badge — 
 [port forwards](#ports-tab-port-forwarding) for that server. This badge does not appear on hosted instances.
 </Callout>
 
-If you have no servers yet, the empty state briefly explains that OpenShip handles Docker,
+If you have no servers yet, the empty state briefly explains that Workbox Cloud handles Docker,
 routing, SSL, and deployments after you connect via SSH. Use **Add Your First Server** to begin.
 
 ## Adding a server
@@ -157,7 +157,7 @@ The **Authentication** control is a three-way toggle:
 - **Password** — enter the server password.
 - **SSH Key** — give a **Key Path** (e.g. `~/.ssh/id_rsa`) and an optional **Passphrase**.
 - **Agent** — connects using the host machine's `ssh-agent` (like VS Code); no password or key is entered
-  here. The machine running Openship must already have access to the server.
+  here. The machine running Workbox Cloud must already have access to the server.
 
 Under **Advanced** you can add a **Jump Host** (e.g. `user@bastion.example.com`) and **Extra SSH Arguments**
 (e.g. `-o ConnectTimeout=30`). Only connection tuning options are accepted.
@@ -165,7 +165,7 @@ Under **Advanced** you can add a **Jump Host** (e.g. `user@bastion.example.com`)
 For an existing Cloudflare Access SSH application, choose **Cloudflare Access** and enter its hostname,
 such as `ssh.example.com`. Password, encrypted private key, and agent authentication are supported.
 The SSH origin port is configured in Cloudflare Tunnel. Complete Cloudflare sign-in on the machine
-running OpenShip before testing the connection. Windows desktop bundles the verified `cloudflared`
+running Workbox Cloud before testing the connection. Windows desktop bundles the verified `cloudflared`
 client; other installations need it on their PATH or configured through `OPENSHIP_CLOUDFLARED_PATH`.
 The saved connection is reused for setup, deployments, health checks, Docker, source transfers, terminals,
 and port forwarding. The server's **Open Cloudflare Access** link opens its Access application;
@@ -180,14 +180,14 @@ Two buttons finish the form:
 
 ### The setup flow
 
-After you save a new server, Openship walks you through installing its prerequisites. You first choose how to
+After you save a new server, Workbox Cloud walks you through installing its prerequisites. You first choose how to
 run it:
 
-- **Automatic Setup** — "Check requirements and install everything automatically. One click — Openship handles
+- **Automatic Setup** — "Check requirements and install everything automatically. One click — Workbox Cloud handles
   Docker, OpenResty, and Git."
 - **Step-by-Step Setup** — review each component and its detailed status before installing.
 
-The flow then moves through **Connect → Check → Install**: Openship opens the SSH connection, runs health
+The flow then moves through **Connect → Check → Install**: Workbox Cloud opens the SSH connection, runs health
 checks, and installs whatever's missing. Progress streams live, per component (Waiting → Installing → Installed,
 or Failed), with an expandable **Install Logs** panel. When it finishes you can jump to the server's detail
 screen; if anything failed, **Retry Failed** re-runs just those components.
@@ -203,11 +203,11 @@ Opening a server (**`/servers/<serverId>`**) shows its name with a **Healthy** o
 `user@host:port` beneath it. Top-right are three controls:
 
 - **Migrate Docker** — opens the migration wizard to bring a running Docker or Compose deployment on that
-  server into Openship.
+  server into Workbox Cloud.
 - **Edit** — reopens the SSH Connection form (at `?edit=true`) so you can change connection details.
 - The **⋯** menu — holds **Remove Server**, which clears the stored SSH credentials and connection settings.
 
-If Openship can't reach the server, a banner appears above the tabs explaining whether the box is unreachable,
+If Workbox Cloud can't reach the server, a banner appears above the tabs explaining whether the box is unreachable,
 the credentials were rejected, or the config is incomplete — with a **Retry** and an **Edit** shortcut. A
 **Connection** panel on the right always shows the current **Host**, **User**, and **Auth** method.
 
@@ -224,7 +224,7 @@ header summary reads "All systems operational" or "\{n} of \{m} unhealthy". See
 
 ### Components tab
 
-Manage the software Openship relies on. The **System Health** card lists every required component and, under a
+Manage the software Workbox Cloud relies on. The **System Health** card lists every required component and, under a
 **Detected Infrastructure** divider, any optional ones it found. Each row shows health, version, and a status
 message, with per-component actions:
 
@@ -247,7 +247,7 @@ to refresh its scripts or settings.
 ### Security tab (rate limiting)
 
 This tab configures **OpenResty request rate limiting** for the server. The core control is **Requests /
-second**; Openship derives a **burst** allowance automatically (about 40% of the rate). Open **Advanced** to
+second**; Workbox Cloud derives a **burst** allowance automatically (about 40% of the rate). Open **Advanced** to
 switch **Burst mode** to manual and set a custom **Burst allowance**.
 
 **Whitelisted IPs** let you list addresses or CIDR ranges that bypass the limit (loopback `127.0.0.1` and
@@ -287,7 +287,7 @@ The action is enabled when the service is running and its address is known. For 
 connect your database client to the assigned localhost port using the database's normal credentials.
 
 <Callout title="Desktop only" type="info">
-This tab is hidden on hosted instances — port forwarding only makes sense when the Openship orchestrator is
+This tab is hidden on hosted instances — port forwarding only makes sense when the Workbox Cloud orchestrator is
 your own machine.
 </Callout>
 

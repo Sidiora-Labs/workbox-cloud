@@ -14,7 +14,7 @@ const digest = (value: unknown) => createHash("sha256").update(JSON.stringify(va
  * monorepo deployment, even when application sources have not changed. */
 export function generatedBuildIgnore(contents: string): string {
   if (contents.split(/\r?\n/).includes("Dockerfile.openship*")) return contents;
-  return `${contents}${contents.endsWith("\n") || !contents ? "" : "\n"}# OpenShip generated build files\nDockerfile.openship*\n`;
+  return `${contents}${contents.endsWith("\n") || !contents ? "" : "\n"}# Workbox Cloud generated build files\nDockerfile.openship*\n`;
 }
 
 export function cachedRunPrefix(

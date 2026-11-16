@@ -3,9 +3,11 @@
 import themeTokens from "../../../dashboard/src/styles/theme-tokens.css";
 import regularFont from "../../assets/fonts/Gellix-Regular.woff2";
 import mediumFont from "../../assets/fonts/Gellix-Medium.woff2";
+import logoLight from "../../assets/wb_cloud.webp";
+import logoDark from "../../assets/wb_cloud_dark.webp";
 
 const loadingStages = {
-  launch: { label: "Launch", message: "Launching OpenShip" },
+  launch: { label: "Launch", message: "Launching Workbox Cloud" },
   services: { label: "Workspace", message: "Preparing your workspace" },
   dashboard: { label: "Dashboard", message: "Opening your dashboard" },
 };
@@ -30,7 +32,7 @@ export function buildLoadingScreen(options: {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; font-src data:; img-src data:">
-  <title>Starting OpenShip</title>
+  <title>Starting Workbox Cloud</title>
   <style>${themeTokens}</style>
   <style>
     @font-face{font-family:Gellix;src:url("${regularFont}") format("woff2");font-weight:400;font-display:swap}
@@ -56,7 +58,8 @@ export function buildLoadingScreen(options: {
     .startup{display:grid;grid-template-columns:minmax(0,300px) minmax(0,400px);align-items:center;
       gap:64px;width:min(100%,764px);animation:enter .55s ease-out both}
     .brand{display:flex;align-items:center;gap:13px;margin-bottom:18px}
-    .brand-mark{width:28px;height:28px;border:3px solid currentColor;border-radius:50%;flex-shrink:0}
+    .brand-mark{width:36px;height:36px;border-radius:10px;flex-shrink:0;background:url("${logoLight}") center/cover no-repeat}
+    [data-theme="dim"] .brand-mark,[data-theme="dark"] .brand-mark{background-image:url("${logoDark}")}
     h1{font-size:36px;line-height:1.15;font-weight:500;letter-spacing:-1.1px;margin:0}
     .intro{margin:0;color:var(--th-text-secondary);font-size:17px;line-height:1.55;max-width:260px}
     .loading{margin-top:38px}
@@ -108,7 +111,7 @@ export function buildLoadingScreen(options: {
   <main>
     <section class="startup" aria-labelledby="title">
       <div class="copy">
-        <div class="brand"><span class="brand-mark" aria-hidden="true"></span><h1 id="title">OpenShip</h1></div>
+        <div class="brand"><span class="brand-mark" aria-hidden="true"></span><h1 id="title">Workbox Cloud</h1></div>
         <p class="intro">Deploy anything.<br>Own everything.</p>
         <div class="loading">
           <div class="status" role="status" aria-live="polite" aria-atomic="true"><span class="spinner" aria-hidden="true"></span><span id="stage">${loadingStages.launch.message}</span></div>
@@ -158,7 +161,7 @@ export function buildLoadingScreen(options: {
       </div>
     </section>
   </main>
-  <footer><span>OpenShip Desktop</span><span class="footer-separator" aria-hidden="true"></span><span id="version"></span></footer>
+  <footer><span>Workbox Cloud Desktop</span><span class="footer-separator" aria-hidden="true"></span><span id="version"></span></footer>
   <script>
     (function () {
       var metadata = ${metadata};

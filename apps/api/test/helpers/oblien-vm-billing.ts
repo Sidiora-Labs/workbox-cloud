@@ -1,4 +1,4 @@
-/** Build provider HTTP fixtures from OpenShip's saved billing model. This helper
+/** Build provider HTTP fixtures from Workbox Cloud's saved billing model. This helper
  * is only for fixture construction; production must read native SDK 3 payloads.
  * Customer metadata and other opaque dictionaries are deliberately untouched. */
 export function providerBillingFixture(value: unknown): unknown {

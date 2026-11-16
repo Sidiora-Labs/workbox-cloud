@@ -1,5 +1,5 @@
 /**
- * Locate the prebuilt Openship source release used by installation preflight.
+ * Locate the prebuilt Workbox Cloud source release used by installation preflight.
  * Thin wrapper over the shared platform release resolver — this file only pins the
  * openship-specific spec (repo, asset name, repo-local dev path) and preserves
  * the typed OpenshipReleaseDistMissingError the wizard controller catches.
@@ -54,7 +54,7 @@ export class OpenshipReleaseDistMissingError extends Error {
   }
 }
 
-/** Resolve (download on miss) the Openship release dist directory. */
+/** Resolve (download on miss) the Workbox Cloud release dist directory. */
 export async function resolveOpenshipDistDir(): Promise<string> {
   try {
     return (await resolveReleaseDist(openshipDistSpec())).dir;

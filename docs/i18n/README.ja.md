@@ -1,4 +1,4 @@
-<h1 align="center">Openship</h1>
+<h1 align="center">Workbox Cloud</h1>
 
 <p align="center">
   CI/CD を内蔵した、オープンソースでセルフホスト可能なデプロイプラットフォーム。<br>
@@ -26,7 +26,7 @@
 </p>
 
 <p align="center">
-  <img src="../../apps/web/public/screenshots/ja/deploy.webp" alt="Openship dashboard" width="800" />
+  <img src="../../apps/web/public/screenshots/ja/deploy.webp" alt="Workbox Cloud dashboard" width="800" />
 </p>
 
 ---
@@ -52,11 +52,11 @@ docker compose up -d
 
 ## できること
 
-リポジトリを指定するだけ。Openship がスタックを検出し、ビルドし、すべてを設定してデプロイします — 設定ファイルなし、パイプラインなし、YAML なし。
+リポジトリを指定するだけ。Workbox Cloud がスタックを検出し、ビルドし、すべてを設定してデプロイします — 設定ファイルなし、パイプラインなし、YAML なし。
 
 データベース、ドメイン、SSL、CDN、メール、バックアップ — すべてを一元管理。
 
-**Openship Cloud**（マネージド）でも、あなたが所有する**任意の Linux サーバー**でも動作します。個人開発者のサイドプロジェクトも、本番環境を運用するチームも、同じツールを使います。
+**Workbox Cloud**（マネージド）でも、あなたが所有する**任意の Linux サーバー**でも動作します。個人開発者のサイドプロジェクトも、本番環境を運用するチームも、同じツールを使います。
 
 ---
 
@@ -80,7 +80,7 @@ docker compose up -d
 
 ## どこにでもデプロイ
 
-- **Openship Cloud** — マネージド、自動スケール、設定不要
+- **Workbox Cloud** — マネージド、自動スケール、設定不要
 - **任意の VPS** — Hetzner、DigitalOcean、Linode、OVH など
 - **専用サーバー** — ベアメタル、コロケーション、ホームラボ
 - **マルチサーバー** — 複数のマシンに負荷を分散
@@ -118,6 +118,6 @@ docker compose up -d
 
 ## ライセンス
 
-Openship は **オープンソース** ソフトウェアで、[Apache License 2.0](../../LICENSE) の下でライセンスされています。
+Workbox Cloud は **オープンソース** ソフトウェアで、[Apache License 2.0](../../LICENSE) の下でライセンスされています。
 
 Apache 2.0 ライセンスの条件の下で、商用・クローズドソース製品を含め、使用・実行・改変・セルフホスト・配布ができます。全文は [LICENSE](../../LICENSE) を参照してください。

@@ -10,7 +10,7 @@ describe("passkey relying party", () => {
     expect(resolvePasskeyConfig(url)).toMatchObject({
       rpID,
       origin,
-      rpName: "Openship",
+      rpName: "Workbox Cloud",
       authenticatorSelection: { residentKey: "required" },
     });
   });

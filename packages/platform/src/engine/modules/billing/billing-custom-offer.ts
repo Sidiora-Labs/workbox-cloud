@@ -23,7 +23,7 @@ function customOfferReference(tier: PlanTierId, limits: PlanLimits, offer: Oblie
 export function customSubscriptionOffer(resources: CustomServerResources, interval: "monthly" | "annual" = "monthly") {
   const terms = quoteCustomResources(resources, undefined, interval);
   const offer: OblienOffer = {
-    name: "Openship Custom",
+    name: "Workbox Cloud Custom",
     description: `${resources.cpuCores} vCPU · ${resources.memoryMb / 1024} GB RAM · ${resources.diskGb} GB disk. CPU, RAM and storage are covered for the paid ${interval === "annual" ? "year" : "month"}.`,
     unitAmount: terms.priceCents,
     currency: "usd",

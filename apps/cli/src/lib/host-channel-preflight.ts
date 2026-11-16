@@ -515,7 +515,7 @@ export async function verifyHostChannel(
   if (!manager.supported) return offerOnly(manager.reason);
   if (!firewallPersists(firewall)) {
     return offerOnly(
-      `Openship won't add this ${firewall} rule for you: it lives in the running ruleset ` +
+      `Workbox Cloud won't add this ${firewall} rule for you: it lives in the running ruleset ` +
         `only, so it would not survive a reboot unless something saves it — and where that ` +
         `is depends on this box. A rule that quietly disappears is worse than one you ` +
         `installed knowing where it lives.`,

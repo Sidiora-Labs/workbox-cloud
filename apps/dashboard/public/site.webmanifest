@@ -1,16 +1,17 @@
 {
-    "name": "",
-    "short_name": "",
+    "name": "Workbox Cloud",
+    "short_name": "Workbox",
+    "description": "Deploy and manage applications, services, and infrastructure.",
     "icons": [
         {
-            "src": "/android-chrome-192x192.png",
+            "src": "/brand/wb_cloud_dark.webp",
             "sizes": "192x192",
-            "type": "image/png"
+            "type": "image/webp"
         },
         {
-            "src": "/android-chrome-512x512.png",
+            "src": "/brand/wb_cloud_dark.webp",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/webp"
         }
     ],
     "theme_color": "#ffffff",

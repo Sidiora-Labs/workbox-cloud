@@ -127,7 +127,7 @@
           "required": true,
           "installStep": true,
           "pattern": "^[a-zA-Z0-9_.-]+$",
-          "help": "Username for the authentication proxy. Change access credentials in Openship configuration."
+          "help": "Username for the authentication proxy. Change access credentials in Workbox Cloud configuration."
         }
       ]
     }
@@ -164,7 +164,7 @@
       "defaultMode": "public"
     },
     "firstLogin": {
-      "note": "Homepage has no built-in login. Openship adds password protection to every public request. Change these credentials in Openship configuration."
+      "note": "Homepage has no built-in login. Workbox Cloud adds password protection to every public request. Change these credentials in Workbox Cloud configuration."
     }
   },
   "files": [

@@ -298,7 +298,7 @@ for (const path of MCP_RESOURCE_PATHS) {
 }
 
 /* ---------- OAuth callback landing pages ---------- */
-const authCallbackHtml = `<!DOCTYPE html><html><head><title>Success</title></head><body><script>window.close();</script><p>Authentication successful. You can close this window.</p></body></html>`;
+const authCallbackHtml = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Workbox Cloud</title></head><body><script>window.close();</script><p>Authentication successful. You can close this Workbox Cloud window.</p></body></html>`;
 
 app.get("/auth/callback/install", (c) => {
   if (githubAuth.getGitHubAuthMode() === "app") {
@@ -384,7 +384,7 @@ if (env.CLOUD_MODE) {
   const { mailRoutes } = await import("./modules/mail/mail.routes");
   app.route("/api/mail", mailRoutes);
 
-  /** Cloud account management - connect/disconnect to Openship Cloud */
+  /** Cloud account management - connect/disconnect to Workbox Cloud */
   const { cloudLocalRoutes } = await import("./modules/cloud/cloud-local.routes");
   app.route("/api/cloud", cloudLocalRoutes);
 

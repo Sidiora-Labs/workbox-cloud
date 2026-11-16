@@ -43,8 +43,29 @@ import support from "./locales/en/support.json";
 import actions from "./locales/en/actions.json";
 import ingress from "./locales/en/ingress.json";
 
+function applyBrand<T>(value: T): T {
+  if (typeof value === "string") {
+    return value
+      .replace(/\bOpenShip Cloud\b/gi, "Workbox Cloud")
+      .replace(/\bOpenship Cloud\b/gi, "Workbox Cloud")
+      .replace(/\bOpenShip Mail\b/gi, "Workbox Cloud Mail")
+      .replace(/\bOpenship Mail\b/gi, "Workbox Cloud Mail")
+      .replace(/\bOpenShip Desktop\b/gi, "Workbox Cloud Desktop")
+      .replace(/\bOpenship Desktop\b/gi, "Workbox Cloud Desktop")
+      .replace(/\bOpenShip\b/gi, "Workbox Cloud")
+      .replace(/\bOpenship\b/gi, "Workbox Cloud") as T;
+  }
+  if (Array.isArray(value)) return value.map((entry) => applyBrand(entry)) as T;
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, entry]) => [key, applyBrand(entry)]),
+    ) as T;
+  }
+  return value;
+}
+
 /** The base (English) dictionary — bundled, used as the type + fallback. */
-export const baseDictionary = { brand, auth, dashboard, settings, servers, billing, referrals, library, onboarding, deploy, deployments, importProject, projects, projectSettings, projectDetail, emails, emailsAdmin, chrome, overview, widgets, misc, migration, jobs, issues, autoDns, support, actions, ingress };
+export const baseDictionary = applyBrand({ brand, auth, dashboard, settings, servers, billing, referrals, library, onboarding, deploy, deployments, importProject, projects, projectSettings, projectDetail, emails, emailsAdmin, chrome, overview, widgets, misc, migration, jobs, issues, autoDns, support, actions, ingress });
 export type Dictionary = typeof baseDictionary;
 
 export { APP_LOCALES as locales } from "@repo/core";
@@ -97,5 +118,5 @@ export async function loadDictionary(locale: Locale): Promise<Dictionary> {
     }),
   );
   const loaded = Object.fromEntries(parts.filter(([, v]) => v !== undefined));
-  return deepMerge(baseDictionary, loaded);
+  return applyBrand(deepMerge(baseDictionary, loaded));
 }

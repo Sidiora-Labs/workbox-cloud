@@ -352,7 +352,7 @@ export interface DeploymentModeSnapshots {
 }
 
 /**
- * Resource tier IDs for Openship Cloud deploys — DERIVED from the one tier union
+ * Resource tier IDs for Workbox Cloud deploys — DERIVED from the one tier union
  * in @repo/core. A managed server already has its purchased allocation, so
  * `unlimited` lets a container use the host's available capacity, as on self-hosted.
  */

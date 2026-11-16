@@ -224,7 +224,7 @@ export function createGitInstallationRepo(db: Database) {
       });
     },
 
-    /** List installations explicitly connected to one Openship workspace. */
+    /** List installations explicitly connected to one Workbox Cloud workspace. */
     async listByOrganization(organizationId: string) {
       const rows = await db
         .select({ installation: gitInstallation })

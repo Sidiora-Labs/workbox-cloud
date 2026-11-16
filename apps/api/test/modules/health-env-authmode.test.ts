@@ -13,7 +13,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 // reads matches what the API actually enforces. Keeping a second copy of the
 // rules here is what let the two drift: the endpoint ignored
 // OPENSHIP_REQUIRE_AUTH / OPENSHIP_PUBLIC_URL and kept reporting a stale desktop
-// "cloud", rendering the Openship Cloud sign-in on an API that wanted no login.
+// "cloud", rendering the Workbox Cloud sign-in on an API that wanted no login.
 //
 // DEPLOY_MODE defaults to "docker" under vitest (see vitest.config.ts), so
 // these exercise the non-desktop path.

@@ -33,7 +33,7 @@ const LOCAL_ROOT_DENY_PREFIX = [
 ];
 
 /**
- * Roots too broad to be a backup sandbox, plus Openship's own state directory.
+ * Roots too broad to be a backup sandbox, plus Workbox Cloud's own state directory.
  * Exact match only — the DEFAULT root lives *inside* /var/lib/openship, so a
  * prefix rule here would reject every install.
  */

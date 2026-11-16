@@ -186,7 +186,7 @@ async function mintAndPersist(args: MintArgs): Promise<PlatformMailboxCreds> {
     buildUpsertMailboxSql({
       username: email,
       passwordHash: hash,
-      name: "Openship Test",
+      name: "Workbox Cloud Test",
       domain,
       storagebasedirectory: layout.storagebasedirectory,
       storagenode: layout.storagenode,

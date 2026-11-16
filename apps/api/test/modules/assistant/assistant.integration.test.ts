@@ -1361,7 +1361,7 @@ describe("Private custom API connections", () => {
       fixture.customCapability = false;
       const unsupported = await request(owner, "POST", "/custom-api", input);
       expect(unsupported.status).toBe(409);
-      expect(await unsupported.text()).toContain("Update OpenShip and reconnect");
+      expect(await unsupported.text()).toContain("Update Workbox Cloud and reconnect");
       const providers = await data(owner, "GET", "/providers");
       expect(providers.find((p: any) => p.id === "codex").customProviders).toEqual([]);
     } finally {

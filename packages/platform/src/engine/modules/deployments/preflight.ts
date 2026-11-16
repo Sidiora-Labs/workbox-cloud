@@ -245,7 +245,7 @@ async function checkGitHubAppInstallation(
     status: "fail",
     code: PREFLIGHT_ERROR_CODES.GITHUB_APP_INSTALLATION_REQUIRED,
     message:
-      `The Openship GitHub App is not installed on "${owner}". ` +
+      `The Workbox Cloud GitHub App is not installed on "${owner}". ` +
       `Deploys need it to mint a scoped token for cloning the repo. ` +
       `Install it at ${install.url} and deploy again.`,
   };
@@ -335,7 +335,7 @@ async function checkRemoteBuildTokenLeak(
       code: PREFLIGHT_ERROR_CODES.GITHUB_CLI_REMOTE_BUILD_REJECTED,
       message:
         `gh CLI auth only works for local builds. ` +
-        `Connect the Openship App in Settings → GitHub, or set a per-project ` +
+        `Connect the Workbox Cloud GitHub App in Settings → GitHub, or set a per-project ` +
         `clone token, then deploy again.`,
     };
   }
@@ -414,7 +414,7 @@ async function checkRemoteCloneToken(
     code: PREFLIGHT_ERROR_CODES.GITHUB_REMOTE_TOKEN_REQUIRED,
     message:
       `No GitHub credential available to clone "${owner}" onto the build worker. ` +
-      `Install the Openship App on this owner, add a per-project clone token, ` +
+      `Install the Workbox Cloud GitHub App on this owner, add a per-project clone token, ` +
       `or switch to "Build on this machine" so the credential stays on the API host.`,
   };
 }
@@ -473,12 +473,12 @@ async function checkCloneOnServerCredential(
     ...baseCheck,
     status: "warn",
     message:
-      `"Clone on the server" is selected, but Openship holds no GitHub credential for the build host. ` +
+      `"Clone on the server" is selected, but Workbox Cloud holds no GitHub credential for the build host. ` +
       `The deploy will check whether the server already reaches this repo with its own git credentials ` +
       `(a \`gh\` login, a credential helper, or its ssh key) and clone there if it does — otherwise it ` +
       `falls back to cloning on the API host and transferring the context. To make the on-server clone ` +
       `deterministic, connect the server under Servers → GitHub (a read-only per-repo deploy key is the ` +
-      `narrowest option), install the Openship App on "${owner}", or add a per-project clone token.`,
+      `narrowest option), install the Workbox Cloud GitHub App on "${owner}", or add a per-project clone token.`,
   };
 }
 
@@ -1364,11 +1364,11 @@ async function checkCloudRuntime(
     if (connected) {
       return {
         id: "runtime",
-        label: requirement === "cloud-runtime" ? "Openship Cloud" : "Free domain routing",
+        label: requirement === "cloud-runtime" ? "Workbox Cloud" : "Free domain routing",
         status: "fail",
         code: PREFLIGHT_ERROR_CODES.CLOUD_UNREACHABLE,
         message:
-          "Openship Cloud is connected, but the cloud API didn't respond just now. This is usually transient — retry the deploy in a moment.",
+          "Workbox Cloud is connected, but the cloud API didn't respond just now. This is usually transient — retry the deploy in a moment.",
       };
     }
 
@@ -1378,7 +1378,7 @@ async function checkCloudRuntime(
         label: "Free domain routing",
         status: "fail",
         code: PREFLIGHT_ERROR_CODES.CLOUD_REQUIRED_MANAGED_PROJECT_DOMAIN,
-        message: `Free .${getRoutingBaseDomain()} domains require Openship Cloud for routing. To deploy to your own server, either connect Openship Cloud or switch this project to a custom domain.`,
+        message: `Free .${getRoutingBaseDomain()} domains require Workbox Cloud for routing. To deploy to your own server, either connect Workbox Cloud or switch this project to a custom domain.`,
       };
     }
 
@@ -1388,31 +1388,31 @@ async function checkCloudRuntime(
         label: "Free domain routing",
         status: "fail",
         code: PREFLIGHT_ERROR_CODES.CLOUD_REQUIRED_MANAGED_COMPOSE_DOMAINS,
-        message: `One or more exposed services use free .${getRoutingBaseDomain()} domains. Connect Openship Cloud or switch those services to custom domains before deploying to your own server.`,
+        message: `One or more exposed services use free .${getRoutingBaseDomain()} domains. Connect Workbox Cloud or switch those services to custom domains before deploying to your own server.`,
       };
     }
 
     return {
       id: "runtime",
-      label: "Openship Cloud",
+      label: "Workbox Cloud",
       status: "fail",
       code: PREFLIGHT_ERROR_CODES.CLOUD_REQUIRED_TARGET,
       message:
-        "This deployment target runs on Openship Cloud, but no cloud account is connected. Connect your account first.",
+        "This deployment target runs on Workbox Cloud, but no cloud account is connected. Connect your account first.",
     };
   }
 
   if (cloud.runtime.ok) {
     return {
       id: "runtime",
-      label: requirement === "cloud-runtime" ? "Openship Cloud" : "Free domain routing",
+      label: requirement === "cloud-runtime" ? "Workbox Cloud" : "Free domain routing",
       status: "pass",
     };
   }
 
   return {
     id: "runtime",
-    label: requirement === "cloud-runtime" ? "Openship Cloud" : "Free domain routing",
+    label: requirement === "cloud-runtime" ? "Workbox Cloud" : "Free domain routing",
     status: "fail",
     message: cloud.runtime.message,
   };
@@ -1525,7 +1525,7 @@ export async function runPreflightChecks(
       if (message) checks.push({ id: `command-env-${index}-${field}`, label: "Command environment", status: "warn", message });
     }
     if (owner.framework === "nextjs" && owner.rootDirectory && /(?:^|\s)node\s+\.next\/standalone\/server\.js(?:$|\s)/.test(owner.startCommand ?? "")) {
-      checks.push({ id: `standalone-start-${index}`, label: "Application output", status: "warn", message: `${owner.name} hardcodes a standalone server path. Monorepo output can nest the server under the app directory. Clear the Start override to let Openship locate the server and copy its static/public assets.` });
+      checks.push({ id: `standalone-start-${index}`, label: "Application output", status: "warn", message: `${owner.name} hardcodes a standalone server path. Monorepo output can nest the server under the app directory. Clear the Start override to let Workbox Cloud locate the server and copy its static/public assets.` });
     }
     const caches = manualBuildCaches(owner);
     if (caches.length) checks.push({ id: `manual-cache-${index}`, label: "Build caches", status: "warn", message: `${owner.name} has manual mounts for managed build-cache paths: ${caches.map(cache => cache.target).join(", ")}. Use the managed-cache migration after a successful deployment.` });
@@ -1749,7 +1749,7 @@ export async function runPreflightChecks(
       label: "Public URL",
       status: "warn",
       message:
-        "This deploy has no public domain attached. It will build and start but nothing will route to it. Add a custom domain on the Domains tab or connect Openship Cloud to get a free .opsh.io subdomain.",
+        "This deploy has no public domain attached. It will build and start but nothing will route to it. Add a custom domain on the Domains tab or connect Workbox Cloud to get a free .opsh.io subdomain.",
     });
   }
 

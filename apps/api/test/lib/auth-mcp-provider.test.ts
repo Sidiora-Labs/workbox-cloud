@@ -262,7 +262,7 @@ describe("Better Auth 1.7 MCP compatibility and grant boundaries", () => {
     },
   );
 
-  it("keeps provider consent and Openship permissions independent on a silent authorization", async () => {
+  it("keeps provider consent and Workbox Cloud permissions independent on a silent authorization", async () => {
     const flow = await prepare();
     await tokens(flow);
     const query = new URLSearchParams(flow.query);
@@ -458,7 +458,7 @@ describe("Better Auth 1.7 MCP compatibility and grant boundaries", () => {
     ).toBe(400);
   });
 
-  it("serves verifiable JWTs through legacy URLs, keeps credentials encrypted, and requires the Openship binding", async () => {
+  it("serves verifiable JWTs through legacy URLs, keeps credentials encrypted, and requires the Workbox Cloud binding", async () => {
     const flow = await prepare(),
       issued = await tokens(flow);
     const jwks = await (await app.request(`${ORIGIN}/api/auth/mcp/jwks`)).json();

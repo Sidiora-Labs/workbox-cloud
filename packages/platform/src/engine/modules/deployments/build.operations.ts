@@ -127,7 +127,7 @@ export const buildDependencies: BuildDependencies = {
     if (source === "cloud") {
       assertCloudProxyScope(ctx);
       const response = await cloudFetchAsOrgOwner(ctx.organizationId, "/api/deployments/build/access", { method: "POST", body: JSON.stringify(input) });
-      if (!response) throw new AppError("Openship Cloud is unreachable", 503, CLOUD_UNREACHABLE_CODE);
+      if (!response) throw new AppError("Workbox Cloud is unreachable", 503, CLOUD_UNREACHABLE_CODE);
       const body = await response.json().catch((diagnosticFailure) => { observeCaughtError(diagnosticFailure, "platform/engine/modules/deployments/build.operations"); return null; }) as Record<string, unknown> | null;
       if (!response.ok) throw new AppError(typeof body?.error === "string" ? body.error : typeof body?.message === "string" ? body.message : "Cloud deployment failed", response.status, typeof body?.code === "string" ? body.code : undefined);
       if (!isAcceptedDeploymentResult(body)) throw new AppError("Invalid cloud build response", 502, "INVALID_CLOUD_RESPONSE");

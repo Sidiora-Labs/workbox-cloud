@@ -195,7 +195,7 @@ export const oauthClientAssertion = pgTable("oauth_client_assertion", {
 });
 
 /**
- * Openship's receipt for tokens returned by the provider. The provider owns the
+ * Workbox Cloud's receipt for tokens returned by the provider. The provider owns the
  * grant and refresh rotation; this receipt preserves immediate disconnects and
  * host-side assistant/chat connections. Bearer lookups use a SHA-256 digest.
  * Recoverable client credentials are encrypted with the installation key.

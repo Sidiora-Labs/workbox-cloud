@@ -1,21 +1,21 @@
 ---
 title: openship.json
-description: The declarative deploy config for Openship — like vercel.json or railway.toml. Declare framework, build, runtime, env, domains, routes, resources, services and monorepo layout, and Openship deploys the same way every time.
+description: The declarative deploy config for Workbox Cloud — like vercel.json or railway.toml. Declare framework, build, runtime, env, domains, routes, resources, services and monorepo layout, and Workbox Cloud deploys the same way every time.
 ---
 
 import { TypeTable } from "fumadocs-ui/components/type-table";
 
-`openship.json` is a repo-root file that tells Openship how to build, run, route, and scale a
+`openship.json` is a repo-root file that tells Workbox Cloud how to build, run, route, and scale a
 project. It mirrors what you'd otherwise set in the [deploy wizard](/docs/guides/deploy-from-github),
-so a repo becomes "ready to ship on Openship" and [auto-deploy on push](/docs/guides/auto-deploy)
+so a repo becomes "ready to ship on Workbox Cloud" and [auto-deploy on push](/docs/guides/auto-deploy)
 and `openship deploy` become deterministic — no wizard needed.
 
-When refreshing services for a project with a saved subfolder, Openship uses that subfolder's
+When refreshing services for a project with a saved subfolder, Workbox Cloud uses that subfolder's
 `openship.json` when present. Otherwise, it uses the repository-root manifest, preserving existing
 service definitions and environment defaults. The saved build directory still applies.
 
 <Callout title="Authoritative overlay">
-  Openship **auto-detects** your stack first, then applies every field present in `openship.json` on
+  Workbox Cloud **auto-detects** your stack first, then applies every field present in `openship.json` on
   top. Fields you omit keep their detected value. So a good `openship.json` is **small** — declare
   only what you want to override or pin, not the whole detected config.
 </Callout>
@@ -144,7 +144,7 @@ The API and SDK accept `runtimeVersion` in project creation, ensure/update and b
 and `openship deploy --folder` preserve repository declarations. The CLI validates this field with
 `openship config validate`. Version and resolved image references are frozen in each deployment
 snapshot; rollback reuses that release's retained application image rather than the latest project
-setting. Openship Edge, TLS, routing and resource monitoring continue through the existing deployment path.
+setting. Workbox Cloud Edge, TLS, routing and resource monitoring continue through the existing deployment path.
 
 ## Runtime
 
@@ -188,7 +188,7 @@ gain little, so leave them unwarmed.
 present when it runs. After that, every `env()` call outside `config/*.php`
 returns `null`.
 
-Warm the cache at startup, after Openship injects the runtime environment. Do
+Warm the cache at startup, after Workbox Cloud injects the runtime environment. Do
 not warm it in `buildCommand`, which freezes build-time values. Do not warm it
 in `releaseCommands`, which runs in a throwaway container whose
 `bootstrap/cache` is discarded. Read configuration through `config()` and keep
@@ -324,7 +324,7 @@ cancellation stops activation and leaves the previous application running.
 
 On Docker, each command runs in a temporary container using the candidate image, the
 project's persistent mounts, and its connected-service networks. It publishes no ports
-and does not restart. Openship removes the container and its anonymous scratch volumes
+and does not restart. Workbox Cloud removes the container and its anonymous scratch volumes
 afterwards. On Bare, commands run in the staged release directory **after persistent
 paths are linked**, before the supervisor changes the running app. When a forward deploy
 reuses a retained Bare release, the command gets a temporary copy so it cannot edit the
@@ -341,7 +341,7 @@ release command and app use the same database on both Docker and Bare.
 Release commands run on single-app Docker or Bare deployments, including portless
 workers. On self-hosted Docker and Desktop, one inherited source app can also have
 private image-based infrastructure in the same project, such as PostgreSQL or Redis.
-Openship prepares those services first, waits for their declared health checks and
+Workbox Cloud prepares those services first, waits for their declared health checks and
 startup stability, then runs the candidate image's commands on the shared project
 network before starting its roles and activating web. Configure meaningful service
 health checks; container readiness does not prove your application credentials work.
@@ -375,7 +375,7 @@ run the commands saved on that deployment, even when they reuse an existing imag
 
 Use idempotent commands and schema changes compatible with the previous application.
 **Rolling code back does not undo database changes**, and a command may have made partial
-changes before failing. Openship does not promise a transaction across multiple commands.
+changes before failing. Workbox Cloud does not promise a transaction across multiple commands.
 </Callout>
 
 ## Runtime roles
@@ -437,7 +437,7 @@ one-source-app plus private image-infrastructure arrangement described above. A 
 roles is refused **before the build starts**, with no build, release command or container
 run, on:
 
-- Openship Cloud
+- Workbox Cloud
 - direct (bare) hosts
 - Kubernetes
 - general multi-service projects (Compose or multiple source apps)
@@ -479,11 +479,11 @@ unchanged command.
 
 A previous singleton that no new role continues is outgoing. A rename, a command change, a
 name swap or a change to a scalable worker each make a singleton outgoing. When the deploy
-also adds or changes a role, Openship stops and retains each outgoing singleton after the
+also adds or changes a role, Workbox Cloud stops and retains each outgoing singleton after the
 unchanged workers pass their startup check, and before any added or changed role starts.
 Otherwise an outgoing singleton keeps running until the new web container is live.
 
-When unwinding a failed deploy, Openship attempts to remove the new containers and restore
+When unwinding a failed deploy, Workbox Cloud attempts to remove the new containers and restore
 retained singletons. A continued singleton is restored only after its replacement is
 confirmed removed. An outgoing singleton is restored only after every added or changed role
 is confirmed removed.
@@ -543,7 +543,7 @@ untouched; deleting that cancelled deployment discards its replacements safely.
 
 Older releases have no handover journal. If an earlier untracked role process is
 still present, a new role rollout stops with the container IDs requiring review.
-Openship does not delete them solely because their labels name another release.
+Workbox Cloud does not delete them solely because their labels name another release.
 
 ### Status and logs
 
@@ -603,7 +603,7 @@ different from omitting it.
 
 Named volumes are scoped per project, so two projects that both declare `storage` never
 share one. On a bare (non-container) deploy the same paths are kept outside the release
-directory and symlinked in. Openship Cloud has no volume primitive: a declared mount is
+directory and symlinked in. Workbox Cloud has no volume primitive: a declared mount is
 reported and skipped there, so use object storage for uploads instead.
 
 Compose services declare their own mounts under [`services[].volumes`](#services-compose).
@@ -801,12 +801,12 @@ which Dockerfile arguments it consumes. A service's own `env` is runtime-only an
 with sibling builds. Keep runtime-only credentials in service `env` where possible: Docker build
 arguments are not a secret-storage mechanism and can be retained in image metadata or build cache.
 
-A compose file's own limits are honored too — Openship reads `mem_limit` / `cpus` and
+A compose file's own limits are honored too — Workbox Cloud reads `mem_limit` / `cpus` and
 `deploy.resources.limits.{memory,cpus}` off each service and applies them over the project-wide
 setting.
 
 Set a service's `resources.swapDisabled` to `true` to disable swap for its Docker container.
-It needs a positive `memoryMb` on that service or inherited from the project. Openship
+It needs a positive `memoryMb` on that service or inherited from the project. Workbox Cloud
 rejects edits that remove a required memory limit and refuses hosts whose swap-limit
 support cannot be verified before replacing the running container. This does not change
 the host's swap configuration or build-container limits. An explicit `false` enables
@@ -816,7 +816,7 @@ saved service override during Compose sync.
 
 ## Monorepo
 
-`monorepo` overrides Openship's detected sub-apps. Entries in `apps[]` are matched to detected
+`monorepo` overrides Workbox Cloud's detected sub-apps. Entries in `apps[]` are matched to detected
 sub-apps by `rootDirectory` and override their build settings — they don't declare apps from
 scratch (the detector finds the apps).
 

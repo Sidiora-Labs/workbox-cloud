@@ -75,8 +75,8 @@ describe("Cloud customer mail sender identities", () => {
     });
   });
   it("uses explicitly configured customer aliases without changing system mail", async () => {
-    h.supportFrom = "OpenShip Support <support@example.test>";
-    h.billingFrom = "OpenShip Billing <billing@example.test>";
+    h.supportFrom = "Workbox Cloud Support <support@example.test>";
+    h.billingFrom = "Workbox Cloud Billing <billing@example.test>";
     for (const [customerSender, from] of [
       ["support", h.supportFrom],
       ["billing", h.billingFrom],

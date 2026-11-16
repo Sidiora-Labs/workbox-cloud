@@ -49,7 +49,7 @@ const examples = {
     result: "An incident report, delivered to you.",
     detail: "Give it a scope, choose a trigger, and enable the automation.",
     resultIcon: "message",
-    caption: "Automations run while OpenShip and your agent host are online.",
+    caption: "Automations run while Workbox Cloud and your agent host are online.",
   },
 } satisfies Record<
   string,

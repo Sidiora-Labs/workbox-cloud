@@ -101,7 +101,7 @@ export interface CleanupManifest {
   /** Explicit data-removal choice for project-owned storage on a shared host. */
   wipeVolumes?: boolean;
   /**
-   * Owning org — needed to release a managed (`*.opsh.io`) route on Openship
+   * Owning org — needed to release a managed (`*.opsh.io`) route on Workbox Cloud
    * Cloud's edge, which is namespace-scoped upstream. Optional so an older
    * manifest (or a caller that only destroys runtime resources) still type-checks;
    * a route release is simply skipped without it.
@@ -495,7 +495,7 @@ export async function collectProjectManifest(
     // Registry/adopted images are shared daemon cache, not deployment-owned
     // artifacts. This is the same structural ownership rule Docker purge and
     // image GC use; project deletion must not turn a pulled release image (or a
-    // service image such as postgres:17) into something Openship may untag.
+    // service image such as postgres:17) into something Workbox Cloud may untag.
     if (!ownsBuiltImage(ref)) return;
     resources.push({ type: "image", ref, label: tagLabel, runtime, ...targetFields(target) });
   };
@@ -921,7 +921,7 @@ export async function previewProjectDeletion(project: Project): Promise<Deletion
   // Self-hosted is a STATIC fact of the project (anything not cloud-managed), not
   // something to infer from a live runtime probe: an imported/migrated project on
   // an unreachable server would otherwise resolve to `false` and hide the
-  // record-only ("Remove from Openship") delete — exactly when it's most useful.
+  // record-only ("Remove from Workbox Cloud") delete — exactly when it's most useful.
   // The loop below only strengthens (never un-sets) this.
   let selfHosted = !project.workspaceId;
 

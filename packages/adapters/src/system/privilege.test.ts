@@ -139,7 +139,7 @@ describe("privilegedExecutor", () => {
   it("still elevates on a host it won't provision — sudo doesn't depend on the distro", async () => {
     on(HOSTS.opensuseSudo);
 
-    const grant = await privilegedExecutor(PLAIN, "Writing Openship server state", {
+    const grant = await privilegedExecutor(PLAIN, "Writing Workbox Cloud server state", {
       onRefusedHost: "proceed",
     });
 
@@ -152,7 +152,7 @@ describe("privilegedExecutor", () => {
   it("proceeds unelevated only when there is genuinely no route to root", async () => {
     on(HOSTS.opensuseStuck);
 
-    const grant = await privilegedExecutor(PLAIN, "Writing Openship server state", {
+    const grant = await privilegedExecutor(PLAIN, "Writing Workbox Cloud server state", {
       onRefusedHost: "proceed",
     });
 

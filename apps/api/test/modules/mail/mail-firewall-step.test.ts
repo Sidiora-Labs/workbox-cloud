@@ -165,7 +165,7 @@ describe("stepOpenMailFirewall", () => {
   });
 
   test("unsupported host → no commands, and the refusal names the distro", async () => {
-    // ufw is present and drivable; the host is not one Openship provisions. `firewallAllow`
+    // ufw is present and drivable; the host is not one Workbox Cloud provisions. `firewallAllow`
     // is gated on that, so the reason has to reach the operator instead of eight silent
     // no-ops that read as success.
     h.host = {

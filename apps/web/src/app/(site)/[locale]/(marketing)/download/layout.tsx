@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 
 const TITLE = "Download";
 const DESCRIPTION =
-  "Install OpenShip on macOS, Windows, Linux, or grab the CLI. Native desktop app and command-line - same backend, same deploys, your choice of surface.";
+  "Install Workbox Cloud on macOS, Windows, Linux, or grab the CLI. Native desktop app and command-line - same backend, same deploys, your choice of surface.";
 
 const pageMetadata: Metadata = {
   title: TITLE,
@@ -22,16 +22,16 @@ const pageMetadata: Metadata = {
     "self host CLI",
   ],
   openGraph: {
-    title: `${TITLE} - OpenShip`,
+    title: `${TITLE} - Workbox Cloud`,
     description: DESCRIPTION,
     url: "/download",
     type: "website",
-    siteName: "OpenShip",
+    siteName: "Workbox Cloud",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${TITLE} - OpenShip`,
+    title: `${TITLE} - Workbox Cloud`,
     description: DESCRIPTION,
   },
 };
@@ -39,7 +39,7 @@ const pageMetadata: Metadata = {
 const softwareLd = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: "OpenShip",
+  name: "Workbox Cloud",
   applicationCategory: "DeveloperApplication",
   applicationSubCategory: "Deployment Platform",
   operatingSystem: "macOS, Windows, Linux",
@@ -53,7 +53,7 @@ const softwareLd = {
   },
   publisher: {
     "@type": "Organization",
-    name: "OpenShip",
+    name: "Workbox Cloud",
     url: "https://openship.io",
   },
   description: DESCRIPTION,

@@ -127,7 +127,7 @@ export async function writeAppConfigFile(
     throw new Error(
       `Service "${serviceName}": couldn't write its generated config file ${containerPath} to ` +
         `${hostPath} on the deploy target. Docker mounts this file by HOST path, so it has to ` +
-        `be written on the machine running the containers — the usual causes are that Openship ` +
+        `be written on the machine running the containers — the usual causes are that Workbox Cloud ` +
         `can't reach that machine, or can't write that path. Underlying error: ${detail}`,
     );
   } finally {

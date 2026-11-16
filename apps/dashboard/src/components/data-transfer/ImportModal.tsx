@@ -226,7 +226,7 @@ export function ImportModal({ open, onClose }: { open: boolean; onClose: () => v
                   {file ? "Change file" : "Choose file"}
                 </Button>
                 <p className="min-w-0 flex-1 break-all text-xs text-muted-foreground">
-                  {file ? `${file.name} · ${formatBytes(file.size)}` : "OpenShip export · JSON · Up to 500 MB"}
+                  {file ? `${file.name} · ${formatBytes(file.size)}` : "Workbox Cloud export · JSON · Up to 500 MB"}
                   {progress && busy ? ` · Uploaded ${progress.done}/${progress.total} parts` : ""}
                 </p>
               </div>

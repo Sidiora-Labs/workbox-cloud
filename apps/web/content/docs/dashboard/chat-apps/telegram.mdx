@@ -7,7 +7,7 @@ Telegram replies are visible in the conversation. Start with a private conversat
 
 ## Before you start
 
-You need a bot token and the exact chat IDs you want to allow. The default direct connection uses **long polling** and works from Desktop or a private server without a public URL. Keep OpenShip running. Use a dedicated bot with no webhook or other poller; Telegram does not allow polling while a webhook is set.
+You need a bot token and the exact chat IDs you want to allow. The default direct connection uses **long polling** and works from Desktop or a private server without a public URL. Keep Workbox Cloud running. Use a dedicated bot with no webhook or other poller; Telegram does not allow polling while a webhook is set.
 
 ## 1. Create the bot and collect chat IDs
 
@@ -32,15 +32,15 @@ In **Settings → Chat apps → Telegram**, choose a name and bot role, keep **D
 | Bot token from BotFather | Your bot token. |
 | Allowed chat IDs | Exact private/group chat IDs, separated by commas. |
 
-Select **Save connector**, then **Enable bot**. Wait for **Connected**. OpenShip polls Telegram and saves the update cursor after each accepted update, so restarts do not repeat commands. No webhook secret, URL or inbound port is needed. Stop any manual `getUpdates` calls once the connector is enabled.
+Select **Save connector**, then **Enable bot**. Wait for **Connected**. Workbox Cloud polls Telegram and saves the update cursor after each accepted update, so restarts do not repeat commands. No webhook secret, URL or inbound port is needed. Stop any manual `getUpdates` calls once the connector is enabled.
 
 ## 3. Check the connection
 
-If OpenShip reports an existing webhook, it will leave it untouched. Use a new bot, or intentionally retire the old integration and call Telegram’s `deleteWebhook` without `drop_pending_updates`. Then pause and enable the connector again. Two pollers using the same token also conflict; run only one connector per bot.
+If Workbox Cloud reports an existing webhook, it will leave it untouched. Use a new bot, or intentionally retire the old integration and call Telegram’s `deleteWebhook` without `drop_pending_updates`. Then pause and enable the connector again. Two pollers using the same token also conflict; run only one connector per bot.
 
 ### Optional webhook connection
 
-For a public HTTPS installation, choose **Webhook**, enter a random webhook secret (16–256 letters, digits, underscores or hyphens), save and enable the connector. Set `OPENSHIP_WEBHOOK_URL` to its **Bot webhook URL** and `TELEGRAM_WEBHOOK_SECRET` to the exact secret entered in OpenShip. With these and `TELEGRAM_BOT_TOKEN` in your private terminal environment, run:
+For a public HTTPS installation, choose **Webhook**, enter a random webhook secret (16–256 letters, digits, underscores or hyphens), save and enable the connector. Set `OPENSHIP_WEBHOOK_URL` to its **Bot webhook URL** and `TELEGRAM_WEBHOOK_SECRET` to the exact secret entered in Workbox Cloud. With these and `TELEGRAM_BOT_TOKEN` in your private terminal environment, run:
 
 ```bash
 curl --fail-with-body --request POST \
@@ -58,15 +58,15 @@ Send `/start` in an allowed conversation and tap **Connect account**, or send `/
 
 Project buttons open status and actions. **Restart** and **Redeploy** show what will happen and require a separate **Confirm** button or `/openship confirm <code>` within five minutes. Buttons cannot be used by another person and become invalid if the connection or linked account changes. `/help` shows the full command reference.
 
-You can also send `/status`, `/logs`, `/restart` or `/redeploy` without an ID to choose a project. Commands and buttons use the same permission checks. Replies follow the language selected in OpenShip; the bot owner’s language is used before account linking.
+You can also send `/status`, `/logs`, `/restart` or `/redeploy` without an ID to choose a project. Commands and buttons use the same permission checks. Replies follow the language selected in Workbox Cloud; the bot owner’s language is used before account linking.
 
-OpenShip registers the command menu when you enable or save the bot and refreshes it when the owner’s language changes. Type `/` or open **Menu** to choose commands such as `/projects`, `/status` or `/ask`, with descriptions and argument hints. In a group, address the bot: `/projects@YourBot` or `/status@YourBot <project-id>`. The existing `/openship projects` syntax still works.
+Workbox Cloud registers the command menu when you enable or save the bot and refreshes it when the owner’s language changes. Type `/` or open **Menu** to choose commands such as `/projects`, `/status` or `/ask`, with descriptions and argument hints. In a group, address the bot: `/projects@YourBot` or `/status@YourBot <project-id>`. The existing `/openship projects` syntax still works.
 
-For an existing bot, choose **Native commands → Refresh command menu** from its actions menu in OpenShip. This updates the default menu of your dedicated bot using Telegram's [setMyCommands API](https://core.telegram.org/bots/api#setmycommands). The menu reflects the bot's selected roles; project controls still check the sender's own OpenShip permissions. Commands addressed to another bot are ignored.
+For an existing bot, choose **Native commands → Refresh command menu** from its actions menu in Workbox Cloud. This updates the default menu of your dedicated bot using Telegram's [setMyCommands API](https://core.telegram.org/bots/api#setmycommands). The menu reflects the bot's selected roles; project controls still check the sender's own Workbox Cloud permissions. Commands addressed to another bot are ignored.
 
 ## Talk to your assistant
 
-Select **Assistant** for conversations. Also select **Control plane** to use the same bot for deployment commands. Use a separate provider bot/application if you also want a dedicated deployment-command bot. After opt-in, `/openship chats` lists your earlier conversations here, `/openship resume <conversation-id>` continues one, and `/openship chat` opens the same conversation in OpenShip. You can continue it in either place.
+Select **Assistant** for conversations. Also select **Control plane** to use the same bot for deployment commands. Use a separate provider bot/application if you also want a dedicated deployment-command bot. After opt-in, `/openship chats` lists your earlier conversations here, `/openship resume <conversation-id>` continues one, and `/openship chat` opens the same conversation in Workbox Cloud. You can continue it in either place.
 
 Complete the [assistant opt-in](/docs/dashboard/chat-apps#talk-to-your-assistant). In a private bot chat, send a plain message such as `Check my latest deployment`, or `/openship ask Check my latest deployment`. Continue with another message, use `/openship new` for a fresh conversation and `/openship stop` to stop your turn.
 

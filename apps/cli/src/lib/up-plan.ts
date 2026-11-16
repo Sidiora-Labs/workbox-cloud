@@ -56,7 +56,7 @@ export interface UpPlanOpts {
   hostSshHost?: string;
   hostSshPort?: string;
   hostSshUser?: string;
-  /** Openship Mail install (OPENSHIP_PRODUCT=mail / `--mail` in the unit's argv). */
+  /** Workbox Cloud Mail install (OPENSHIP_PRODUCT=mail / `--mail` in the unit's argv). */
   mail?: boolean;
   /** Already normalized + merged with the install's saved URL by the caller. */
   publicUrl?: string;
@@ -332,13 +332,13 @@ export function renderUpPlan(plan: UpPlan): string {
     head("Ports 80/443");
     if (!plan.edge.blocked) {
       // `blocked` is false exactly when nothing FOREIGN holds them, so this covers
-      // both "free" and "already Openship's edge" — neither needs a decision.
-      item("free (or already Openship's edge) — the edge container binds them.");
+      // both "free" and "already Workbox Cloud's edge" — neither needs a decision.
+      item("free (or already Workbox Cloud's edge) — the edge container binds them.");
     } else {
       item(chalk.yellow(`held by ${plan.edge.owner}.`));
       item(
         plan.edge.sites.length
-          ? `A real run would ask before touching it: migrate its ${plan.edge.sites.length} site(s) into Openship's edge, take over (its sites stop serving), or cancel.`
+          ? `A real run would ask before touching it: migrate its ${plan.edge.sites.length} site(s) into Workbox Cloud's edge, take over (its sites stop serving), or cancel.`
           : "A real run would ask before stopping it (--edge=migrate|takeover|cancel).",
       );
       for (const site of plan.edge.sites.slice(0, 8)) {

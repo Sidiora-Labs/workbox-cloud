@@ -12,7 +12,7 @@ export function MarketingCta() {
       <div className="marketing-start-inner">
         <div>
           <h2>{copy("Put it to work.")}</h2>
-          <p>{copy("Start on OpenShip Cloud or deploy on your own infrastructure.")}</p>
+          <p>{copy("Start on Workbox Cloud or deploy on your own infrastructure.")}</p>
         </div>
         <div className="marketing-start-actions">
           <a href={cloudPlanHref()} className="th-btn rounded-full px-6 py-3 text-[14px]">

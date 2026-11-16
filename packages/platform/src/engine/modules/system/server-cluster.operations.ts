@@ -52,7 +52,7 @@ import { assertNetworkSetupAcceptingWork, deferNetworkSetupWork } from "./networ
 
 function infrastructureUnavailable(): string | null {
   if (isOblienConfigured())
-    return "Server clusters are managed by self-hosted OpenShip. Oblien manages Cloud infrastructure.";
+    return "Server clusters are managed by self-hosted Workbox Cloud. Oblien manages Cloud infrastructure.";
   // Manual adoption and bounded verification work from a local/desktop controller
   // too. Always-on reconciliation is a separate, future capability.
   return null;

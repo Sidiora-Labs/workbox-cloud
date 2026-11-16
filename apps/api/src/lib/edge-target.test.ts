@@ -3,7 +3,7 @@ import { canonicalEdgeTarget, isCloudEdgeHost, isNonPublicHost } from "@repo/pla
 
 /**
  * `isNonPublicHost` is the guard that stops a free `.opsh.io` route from being
- * wired at a host Openship Cloud can't reach (the root cause of the 404: an
+ * wired at a host Workbox Cloud can't reach (the root cause of the 404: an
  * `isLocal` box's display `sshHost` is `127.0.0.1`, which Oblien would proxy to
  * its OWN loopback). A false negative here re-introduces the dead route, so the
  * ranges are pinned explicitly.
@@ -121,7 +121,7 @@ describe("isCloudEdgeHost", () => {
 });
 
 /**
- * Openship Cloud keys a target's verification row on a NORMALIZED
+ * Workbox Cloud keys a target's verification row on a NORMALIZED
  * `scheme://host:port` and matches on it exactly, so verifying one string and
  * routing another is a permanent `target_unverified` that reads as a broken
  * feature. This is the single normalizer both sides call for that reason.

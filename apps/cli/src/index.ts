@@ -88,7 +88,7 @@ const remoteCommands = new Set([...sdkCommands, apiCommand, edgeCommand, mailCom
 
 program
   .name("openship")
-  .description("Openship CLI — install, run, and manage Openship from your terminal")
+  .description("Workbox Cloud CLI — install, run, and manage Workbox Cloud from your terminal")
   .version(__CLI_VERSION__)
   .exitOverride()
   .enablePositionalOptions()

@@ -1,10 +1,10 @@
 ---
-title: Openship CLI
-description: Deploy applications and manage Openship from your terminal.
+title: Workbox Cloud CLI
+description: Deploy applications and manage Workbox Cloud from your terminal.
 ---
 
-Use the CLI to deploy code, inspect releases, and manage Openship Cloud or a remote self-hosted installation
-from any machine with Node.js and access to that API. A local Openship server or Docker installation is
+Use the CLI to deploy code, inspect releases, and manage Workbox Cloud or a remote self-hosted installation
+from any machine with Node.js and access to that API. A local Workbox Cloud server or Docker installation is
 not required for remote commands.
 
 ## Install
@@ -35,7 +35,7 @@ openship deploy --watch
 
 `login` opens the token settings page and asks for a personal access token. `init` links the current
 directory to a project. `deploy --watch` submits a deployment and follows its progress.
-Use `openship login --cloud` for Openship Cloud. On the server that runs Openship, the installation
+Use `openship login --cloud` for Workbox Cloud. On the server that runs Workbox Cloud, the installation
 owner can use `openship --local project list` with automatic local authentication.
 
 ## Choose a workflow
@@ -44,7 +44,7 @@ Use `openship job` (alias `jobs`) to manage [scheduled jobs](/docs/guides/jobs),
 
 <Cards>
   <Card title="Connect and authenticate" href="/docs/cli/access" description="Manage contexts, tokens, and direct HTTP requests." />
-  <Card title="Manage Openship Cloud" href="/docs/cli/cloud" description="Deploy from any machine, choose managed servers, and manage subscriptions." />
+  <Card title="Manage Workbox Cloud" href="/docs/cli/cloud" description="Deploy from any machine, choose managed servers, and manage subscriptions." />
   <Card title="Deploy and inspect releases" href="/docs/cli/deploy" description="Deploy folders or Git projects, read logs, and roll back." />
   <Card title="Manage applications" href="/docs/cli/projects" description="Work with projects, services, domains, and catalog apps." />
   <Card title="Monitor and automate" href="/docs/cli/operations" description="Inspect health and issues, configure notifications, and manage webhooks and audit events." />

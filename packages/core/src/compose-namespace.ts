@@ -59,7 +59,7 @@ export function parseComposeNamespace(
       reason:
         `${field}: host is not supported. A host-namespace container bypasses the ` +
         `edge (its ports bind host interfaces directly) and can reach every ` +
-        `loopback service on the machine, including Openship's own API. Share a ` +
+        `loopback service on the machine, including Workbox Cloud's own API. Share a ` +
         `sibling's namespace instead (${field}: service:<name>), or run this ` +
         `workload outside the stack.`,
     };
@@ -91,7 +91,7 @@ export function parseComposeNamespace(
   return {
     ok: false,
     reason:
-      `${field}: "${value}" is not supported. Openship accepts ` +
+      `${field}: "${value}" is not supported. Workbox Cloud accepts ` +
       (field === "network_mode" ? `"none", ` : "") +
       `"service:<name>" (a service in this stack).`,
   };

@@ -19,14 +19,28 @@ import { Label } from '@/components/ui/label';
 import { useTRPC } from '@/providers/query-provider';
 import { runtimeBranding } from '@/lib/runtime-branding';
 
-/** OpenShip mark - a hollow ring. Matches packages/dashboard's `<Logo>`. */
-function OpenshipLogo({ size = 44 }: { size?: number }) {
+/** Workbox Cloud mark, using the supplied light/dark artwork. */
+function WorkboxLogo({ size = 44 }: { size?: number }) {
+  const scale = 1.244;
   return (
-    <div
+    <span
       aria-hidden
-      className="shrink-0 rounded-full border-[3px] border-foreground"
+      className="relative inline-block shrink-0 overflow-hidden"
       style={{ width: size, height: size }}
-    />
+    >
+      <img
+        src="/brand/wb_cloud.webp"
+        alt=""
+        className="absolute block max-w-none object-contain dark:hidden"
+        style={{ width: size * scale, height: size * scale, inset: -size * ((scale - 1) / 2) }}
+      />
+      <img
+        src="/brand/wb_cloud_dark.webp"
+        alt=""
+        className="absolute hidden max-w-none object-contain dark:block"
+        style={{ width: size * scale, height: size * scale, inset: -size * ((scale - 1) / 2) }}
+      />
+    </span>
   );
 }
 
@@ -40,9 +54,9 @@ function GitHubMark(props: React.SVGProps<SVGSVGElement>) {
 }
 
 const FALLBACK_BRANDING = {
-  loginHeading: 'OpenShip Mail',
+  loginHeading: 'Workbox Cloud Mail',
   loginSubtext: 'Sign in with your mailbox credentials',
-  loginFooter: 'Self-hosted on your own mail server. No third parties.',
+  loginFooter: 'Self-hosted on your own mail server. Powered by Workbox Cloud.',
 };
 
 export function LoginClient() {
@@ -114,9 +128,9 @@ export function LoginClient() {
       {/* Main */}
       <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 py-12">
         <div className="w-full max-w-[440px]">
-          {/* Brand mark - OpenShip ring above the heading. */}
+          {/* Workbox Cloud mark above the heading. */}
           <div className="mb-10 flex flex-col items-center text-center">
-            <OpenshipLogo size={44} />
+            <WorkboxLogo size={44} />
             <h1 className="mt-5 text-3xl font-semibold tracking-tight text-foreground sm:text-[34px]">
               {heading}
             </h1>
@@ -238,7 +252,7 @@ export function LoginClient() {
                 rel="noopener noreferrer"
                 className="font-medium text-foreground transition-colors hover:text-foreground/70"
               >
-                OpenShip
+                Workbox Cloud
               </a>
             </div>
             <nav className="flex items-center gap-6 text-[13px] text-muted-foreground">

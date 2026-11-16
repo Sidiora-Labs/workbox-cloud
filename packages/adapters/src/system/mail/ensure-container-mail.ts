@@ -280,8 +280,8 @@ const DB_ENV_FILE = `${MAIL_HOST_STATE_DIR}/db.env`;
  * Confidentiality is unchanged, and provably so from two directions: the account gaining
  * ownership already held the plaintext, because `elevatedExecutor.writeFile` stages the
  * content unelevated as that same login before publishing it; and it provably has arbitrary
- * root, because the chown only lands if `sudo -n sh -c` does. It is the account Openship
- * drives THIS SERVER as — a remote box's SSH login, not necessarily the one Openship itself
+ * root, because the chown only lands if `sudo -n sh -c` does. It is the account Workbox Cloud
+ * drives THIS SERVER as — a remote box's SSH login, not necessarily the one Workbox Cloud itself
  * runs under.
  *
  * `canSudo` is the exact condition, and it is a property of the writer rather than a guess: a

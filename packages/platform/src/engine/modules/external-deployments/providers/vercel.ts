@@ -3,7 +3,7 @@ import { safeFetch, type SafeFetchResponse } from "../../../lib/safe-fetch";
 
 /** The credential/account scope selected by the caller. */
 export interface VercelAccountScope {
-  /** The Openship connection row. Required so two accounts cannot be conflated. */
+  /** The Workbox Cloud connection row. Required so two accounts cannot be conflated. */
   connectionId: string;
   /** Provider-reported user/account identity captured when the connection was verified. */
   accountId: string;

@@ -364,7 +364,7 @@ function NativeClusterStoragePanel({
               <summary className="cursor-pointer text-muted-foreground">Disk options</summary>
               <div className="mt-4 space-y-4">
                 <p className="text-sm text-muted-foreground">
-                  OpenShip uses a dedicated folder on each selected server. A mounted data disk can
+                  Workbox Cloud uses a dedicated folder on each selected server. A mounted data disk can
                   be used here. Disks are never formatted during setup.
                 </p>
                 {config.disks.map((disk) => (
@@ -536,7 +536,7 @@ function NativeClusterStoragePanel({
             <div className="mt-3 space-y-2 text-xs leading-relaxed text-muted-foreground">
               <p>
                 Longhorn provides replicated disks and shared file access inside this cluster.
-                OpenShip manages the installation, disk selection and checks.
+                Workbox Cloud manages the installation, disk selection and checks.
               </p>
               <p>
                 File volumes use shared access. Each database instance keeps its own separate disk.

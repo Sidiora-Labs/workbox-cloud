@@ -85,7 +85,7 @@ input:focus{outline:2px solid #c9ee89;outline-offset:2px}button{margin-top:16px;
     ngx.print('<form method="post" action="', endpoint, '"><input type="hidden" name="return" value="', escape(path),
         '"><input type="hidden" name="csrf" value="', csrf,
         '"><label for="password">Site password</label><input id="password" name="password" type="password" autocomplete="current-password" required maxlength="256" autofocus>',
-        '<button type="submit">Continue</button></form><small>Protected by Openship</small></main></html>')
+        '<button type="submit">Continue</button></form><small>Protected by Workbox Cloud</small></main></html>')
     return ngx.exit(401)
 end
 

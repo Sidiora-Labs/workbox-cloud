@@ -238,7 +238,7 @@ payment and runtime status in their existing labeled status components.
 
 Empty-state placements reuse existing subjects: Jobs uses `jobs-triggers`, Backups
 uses `backups-restore`, Servers and Clusters use `server-management`, and Private networks uses
-`private-networking`. The disconnected Openship Cloud card uses `deploy-anywhere`
+`private-networking`. The disconnected Workbox Cloud card uses `deploy-anywhere`
 at the same 80 px size. Connections keeps the standard Settings key icon in its header
 and the original provider logos in its rows. Replace the old oversized panel drawings rather than keeping
 a second illustration implementation beside the shared catalog. Filters and compact

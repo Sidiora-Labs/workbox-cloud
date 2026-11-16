@@ -1,9 +1,9 @@
 {
   "name": "@repo/desktop",
-  "productName": "Openship",
+  "productName": "Workbox Cloud",
   "version": "0.9.12",
   "private": true,
-  "description": "Openship Desktop - Electron wrapper for the deployment dashboard",
+  "description": "Workbox Cloud Desktop - Electron wrapper for the deployment dashboard",
   "author": "Oblien",
   "license": "Apache-2.0",
   "main": "dist/main/index.js",

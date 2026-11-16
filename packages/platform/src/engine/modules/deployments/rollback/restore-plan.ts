@@ -207,7 +207,7 @@ export function planRestore(input: RestorePlanInput): RestorePlan {
       mode: "ineligible",
       code: ROLLBACK_ERROR_CODES.CONFIGURATION_REDACTED,
       message:
-        "This release's saved configuration may contain credentials removed by an older Openship version. " +
+        "This release's saved configuration may contain credentials removed by an older Workbox Cloud version. " +
         "Rollback was not started and the active release was left unchanged. " +
         "Choose an intact release, or redeploy the original source with the required credentials to create a new restore point.",
     };

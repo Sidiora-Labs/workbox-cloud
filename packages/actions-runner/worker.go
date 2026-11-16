@@ -1,5 +1,5 @@
 // Package main is the execution-only bridge to act. Workflow scheduling and
-// authorization belong to Openship; one invocation runs one concrete job.
+// authorization belong to Workbox Cloud; one invocation runs one concrete job.
 package main
 
 import (

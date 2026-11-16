@@ -75,7 +75,7 @@ export interface PlatformMailboxCreds {
   /** Implicit-TLS submission. */
   smtpPort: 465;
   secure: true;
-  /** `Openship <openship@<domain>>` */
+  /** `Workbox Cloud <openship@<domain>>` */
   from: string;
   /** True if this call rotated/created creds, false if reused. */
   rotated: boolean;
@@ -131,7 +131,7 @@ export async function ensureOpenshipPlatformMailbox(
 
     // Fast path: cached creds match target identity, no rotation was requested,
     // and both vmail rows required by Dovecot/Postfix still exist and are active.
-    // A mailbox can be removed outside Openship (or by an older UI), so trusting
+    // A mailbox can be removed outside Workbox Cloud (or by an older UI), so trusting
     // only mail-state.json permanently strands outbound SMTP with a stale secret.
     // The stored password is an encrypted blob (see slow-path comment below).
     // Backward-compat: if decrypt() throws, the cached value is legacy
@@ -238,7 +238,7 @@ async function mintAndPersist(args: MintArgs): Promise<PlatformMailboxCreds> {
     buildUpsertMailboxSql({
       username: email,
       passwordHash: hash,
-      name: "Openship Platform",
+      name: "Workbox Cloud Platform",
       domain,
       storagebasedirectory: layout.storagebasedirectory,
       storagenode: layout.storagenode,
@@ -342,7 +342,7 @@ export function buildCreds(args: {
     smtpHost: args.smtpHost,
     smtpPort: 465,
     secure: true,
-    from: `Openship <${args.email}>`,
+    from: `Workbox Cloud <${args.email}>`,
     rotated: args.rotated,
   };
 }

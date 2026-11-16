@@ -232,12 +232,12 @@
   },
   "cloud": {
     "connectionGate": {
-      "reconnect": "OpenShip Cloud erneut verbinden",
-      "deployedOn": "Dieses Projekt ist auf OpenShip Cloud bereitgestellt",
-      "sessionMissing": "Deine OpenShip Cloud-Sitzung fehlt. Verbinde dich, um Deployments zu verwalten, Logs anzusehen und auf Laufzeit-Steuerungen für {name} zuzugreifen.",
+      "reconnect": "Workbox Cloud erneut verbinden",
+      "deployedOn": "Dieses Projekt ist auf Workbox Cloud bereitgestellt",
+      "sessionMissing": "Deine Workbox Cloud-Sitzung fehlt. Verbinde dich, um Deployments zu verwalten, Logs anzusehen und auf Laufzeit-Steuerungen für {name} zuzugreifen.",
       "thisProject": "dieses Projekt",
       "connecting": "Wird verbunden…",
-      "connect": "Mit OpenShip Cloud verbinden",
+      "connect": "Mit Workbox Cloud verbinden",
       "readOnlyNote": "Du kannst diese Seite weiterhin im schreibgeschützten Modus durchsuchen, während du getrennt bist."
     }
   },
@@ -245,7 +245,7 @@
     "githubPermission": {
       "title": "Mit GitHub verbinden",
       "subtitle": "Wähle die Zugriffsebene für Repositories",
-      "intro": "Wähle aus, auf welche Repositories OpenShip zugreifen kann. Du kannst dies später in deinen GitHub-Einstellungen ändern.",
+      "intro": "Wähle aus, auf welche Repositories Workbox Cloud zugreifen kann. Du kannst dies später in deinen GitHub-Einstellungen ändern.",
       "publicTitle": "Nur öffentliche Repositories",
       "publicDesc": "Zugriff auf deine öffentlichen Repositories. Perfekt für Open-Source-Projekte.",
       "publicItem1": "Öffentliche Repository-Daten lesen",
@@ -542,12 +542,12 @@
     "youreOn": "· du nutzt {version}",
     "rerunInstall": "Führe deine Installation erneut aus, um deinen selbstgehosteten Server zu aktualisieren.",
     "updateNow": "Jetzt aktualisieren",
-    "downloading": "OpenShip {version} wird heruntergeladen",
-    "installing": "Wird installiert — OpenShip wird neu gestartet",
+    "downloading": "Workbox Cloud {version} wird heruntergeladen",
+    "installing": "Wird installiert — Workbox Cloud wird neu gestartet",
     "updateFailed": "Update fehlgeschlagen",
     "retry": "Erneut versuchen",
     "changelog": "Changelog",
-    "updatedTo": "Auf OpenShip {version} aktualisiert",
+    "updatedTo": "Auf Workbox Cloud {version} aktualisiert",
     "seeChanges": "Sieh, was sich in diesem Release geändert hat.",
     "onLatest": "Du nutzt die neueste Version.",
     "whatsNew": "Neuigkeiten",

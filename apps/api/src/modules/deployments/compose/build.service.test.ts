@@ -826,7 +826,7 @@ describe("Compose image interpolation lifecycle (#809)", () => {
     expect(result.buildFailures.get("svc-image")).toMatch(/missing variable: MY_VERSION/);
   });
 
-  it("does not resolve images from Openship's internal build-only variables", async () => {
+  it("does not resolve images from Workbox Cloud's internal build-only variables", async () => {
     const service = {
       ...repoService({ id: "svc-image", name: "api", build: null, dockerfile: null }),
       image: "ghcr.io/acme/api:",

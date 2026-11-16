@@ -394,14 +394,14 @@ export async function provisionInstanceDomain(opts: {
     }
     if (!res.ok) {
       // Say what actually went wrong. This used to append "needs the box connected
-      // to Openship Cloud first" to EVERY failure, which flatly contradicts the
-      // "Connected to Openship Cloud as …" line printed seconds earlier when the
+      // to Workbox Cloud first" to EVERY failure, which flatly contradicts the
+      // "Connected to Workbox Cloud as …" line printed seconds earlier when the
       // real cause was a taken slug.
       warnings.push(
         isSlugTaken(res.data)
           ? `Free domain not created: "${slug}.opsh.io" is already taken. Re-run and choose a different subdomain, or add one later in Settings → Domains.`
           : `Free .opsh.io domain not registered: ${res.data?.error || "failed"}. ` +
-              `A free domain needs the box connected to Openship Cloud — connect it in Settings → Cloud, or use --domain-kind byo/custom.`,
+              `A free domain needs the box connected to Workbox Cloud — connect it in Settings → Cloud, or use --domain-kind byo/custom.`,
       );
     }
   }

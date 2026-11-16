@@ -250,7 +250,7 @@ export async function reconcileServerModule(
               ok: false,
               error:
                 `step ${step.id} is gated to ${step.distroFamily.join("/")}, but this host's ` +
-                `distro family is not one Openship recognizes ` +
+                `distro family is not one Workbox Cloud recognizes ` +
                 `(${JSON.stringify(String(hostFamily))}, os-release ID ` +
                 `${JSON.stringify(opts.profile.distroId ?? "")}) — refusing to guess`,
             };

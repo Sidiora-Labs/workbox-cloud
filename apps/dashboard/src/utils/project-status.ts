@@ -99,7 +99,7 @@ export type ProjectStatusSource = {
    *  makes this awaiting retry; successful teardown hard-deletes the row. */
   deletionInProgress?: boolean | null;
   lifecycleOperation?: ProjectLifecycleOperation | null;
-  /** Marks the Openship control-plane self-app. It IS the running host service and
+  /** Marks the Workbox Cloud control-plane self-app. It IS the running host service and
    *  has no deployment behind it, so it must never fall through to "draft". */
   appTemplateId?: string | null;
   isApp?: boolean | null;
@@ -225,7 +225,7 @@ export function getProjectStatus(project: ProjectStatusSource): ProjectStatus {
     return "deleting";
   }
 
-  // The Openship control-plane self-app IS the running host process; it has no
+  // The Workbox Cloud control-plane self-app IS the running host process; it has no
   // deployment record, so it must never render as "draft" with a "Deploy now"
   // CTA. If you can see the dashboard, it's live.
   if (project.appTemplateId === "openship") {

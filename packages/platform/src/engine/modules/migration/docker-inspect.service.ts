@@ -31,7 +31,7 @@ import { scanProxyRoutes } from "./proxy-route-scan";
 import { findOwnStack } from "../../lib/startup/self-services";
 import { mapWithLimit } from "../../lib/map-with-limit";
 
-/** Openship project-id shape — used to reject crafted `openship.project` labels
+/** Workbox Cloud project-id shape — used to reject crafted `openship.project` labels
  *  before they reach the remote snapshot probe (same shape migrate.service uses). */
 const OPENSHIP_PROJECT_ID_RE = /^proj_[A-Za-z0-9]+$/;
 
@@ -67,7 +67,7 @@ async function readComposeDeclarations(
   // Resolve absolute compose paths (relative ones join the project working dir),
   // remembering which COMPOSE PROJECT each file belongs to. A service name is unique
   // only within its project, so a flat name→declaration map let the first stack read
-  // win for every stack: on a host running Openship plus anything with a `postgres`,
+  // win for every stack: on a host running Workbox Cloud plus anything with a `postgres`,
   // the user's container was reconciled against OUR declaration — importing our
   // depends_on, build and env provenance onto their service (same root cause as #584).
   const paths = new Map<string, string>(); // absolute path → compose project key
@@ -201,7 +201,7 @@ export async function discoverServerStack(
           : allContainers;
         // Swarm owns the desired service and replaces its tasks. Adopting a task as a
         // standalone container would leave two controllers managing the same workload.
-        // This applies to flat imports and containers carrying Openship labels too.
+        // This applies to flat imports and containers carrying Workbox Cloud labels too.
         const containers = selected.filter(c => !swarmTaskOwner(c.labels));
         if (containers.length !== selected.length)
           step(`Excluding ${selected.length - containers.length} Swarm task container(s). Review their stacks from a connected Swarm manager.`);
@@ -211,7 +211,7 @@ export async function discoverServerStack(
         //
         // `openship up` runs the control plane as a compose stack (api, dashboard,
         // edge, postgres, redis) and its template sets NO labels, so the label split
-        // below cannot see it and offered Openship's own database as adoptable. The
+        // below cannot see it and offered Workbox Cloud's own database as adoptable. The
         // only thing that kept it out of a user's project was a service_deployment row
         // written best-effort at boot by `linkSelfAppServices` — absent if Docker was
         // unreachable then, or the box was never self-registered — and a name-based
@@ -228,7 +228,7 @@ export async function discoverServerStack(
         const self = await repos.server.get(serverId).catch((diagnosticFailure) => { observeCaughtError(diagnosticFailure, "platform/engine/modules/migration/docker-inspect.service"); return undefined; });
         const ownIds =
           self?.isLocal === true ? new Set(findOwnStack(containers).map((c) => c.id)) : new Set<string>();
-        if (ownIds.size > 0) step(`Excluding Openship's own ${ownIds.size} container(s)…`);
+        if (ownIds.size > 0) step(`Excluding Workbox Cloud's own ${ownIds.size} container(s)…`);
         const adoptable = ownIds.size > 0 ? containers.filter((c) => !ownIds.has(c.id)) : containers;
 
         // Split by ownership. GENERIC candidates (no openship.* label) feed the
@@ -301,7 +301,7 @@ export async function discoverServerStack(
         const imageEnv = new Map(imageInfoPairs.map(([ref, v]) => [ref, v.env]));
         const imageCmds = new Map(imageInfoPairs.map(([ref, v]) => [ref, v.cmd]));
 
-        // Recover Openship projects: read the on-server manifest (rich, faithful
+        // Recover Workbox Cloud projects: read the on-server manifest (rich, faithful
         // recipe) and cross-reference each openship.project id against THIS org's DB.
         // Present here = genuinely managed → counted; absent = orphaned → re-importable.
         let openshipProjects: DiscoveredStack["openshipProjects"] = [];
@@ -358,7 +358,7 @@ export async function discoverServerStack(
         }
 
         if (projectIds.length > 0) {
-          step("Recovering Openship projects…");
+          step("Recovering Workbox Cloud projects…");
           // One SSH session: read the manifest AND check which projects have a full
           // recovery snapshot (cheap `test -f`, no read — the dump is read only at
           // re-import time, for one project).

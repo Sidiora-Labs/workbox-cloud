@@ -559,7 +559,7 @@ async function reconcile(row: PullRequestPreview, token: string) {
     const details = row.deploymentId
       ? `${runtimeTarget.dashboard.replace(/\/$/, "")}/build/${encodeURIComponent(row.deploymentId)}`
       : null;
-    const body = `${marker}\n**Openship preview**\n\n${message}${url ? `\n\n[Open preview](${url})` : ""}${details ? `\n\n[Deployment details](${details})` : ""}`;
+    const body = `${marker}\n**Workbox Cloud preview**\n\n${message}${url ? `\n\n[Open preview](${url})` : ""}${details ? `\n\n[Deployment details](${details})` : ""}`;
     const digest = createHash("sha256").update(body).digest("hex");
     if (digest === row.publishedDigest) return;
     await assertLease();

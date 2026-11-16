@@ -8,13 +8,13 @@ import { Icon as UiIcon } from "@repo/ui/icons";
  *
  * Shown whenever a deploy needs the user to pick HOW the repo gets cloned
  * onto the build worker — same decision for self-hosted server and
- * OpenShip Cloud, so one modal handles both. Replaces the previous split
+ * Workbox Cloud, so one modal handles both. Replaces the previous split
  * between `CloneStrategyModalContent` (preemptive gate) and
  * `CloneCredentialMissingModal` (post-failure recovery).
  *
  * Up to four options are surfaced, conditionally:
  *
- *   1. Install OpenShip App on {owner}             — recommended, short-lived
+ *   1. Install Workbox Cloud App on {owner}             — recommended, short-lived
  *                                                    repo-scoped tokens. Works
  *                                                    for buildStrategy=local
  *                                                    AND remote. Shown when
@@ -90,7 +90,7 @@ export interface DeployCredentialModalProps {
 
   /** Repo owner. Used in copy + as the App install target. */
   owner: string;
-  /** URL to install the OpenShip App on this owner. Null if unavailable
+  /** URL to install the Workbox Cloud App on this owner. Null if unavailable
    *  (e.g. no cloud connection yet on self-hosted). */
   installUrl: string | null;
   /** Project id — required for the "add a project clone token" option. */
@@ -166,7 +166,7 @@ export function DeployCredentialModal({
   const handleInstallApp = useCallback(() => {
     if (!installUrl) {
       showToast(
-        "Install URL is not available — connect OpenShip Cloud first.",
+        "Install URL is not available — connect Workbox Cloud first.",
         "error",
         "GitHub App",
       );
@@ -238,7 +238,7 @@ export function DeployCredentialModal({
 
   // ── Copy ───────────────────────────────────────────────────────────
   const targetLabel =
-    deployTarget === "cloud" ? "OpenShip Cloud" : "your server";
+    deployTarget === "cloud" ? "Workbox Cloud" : "your server";
   const headline =
     trigger === "preflight-gate"
       ? `How should we clone ${owner} on the build worker?`
@@ -281,7 +281,7 @@ export function DeployCredentialModal({
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <p className="text-sm font-semibold text-foreground">
-                    Install the OpenShip GitHub App on {owner}
+                    Install the Workbox Cloud GitHub App on {owner}
                   </p>
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">
                     Recommended
@@ -351,7 +351,7 @@ export function DeployCredentialModal({
                 <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
                   {hasGlobalToken
                     ? "Use the global PAT you've already saved — scoped narrower than your GitHub session."
-                    : "Paste a fine-grained PAT scoped to this repo. You control the scope and expiry — OpenShip just uses it for clones."}
+                    : "Paste a fine-grained PAT scoped to this repo. You control the scope and expiry — Workbox Cloud just uses it for clones."}
                 </p>
               </div>
             </div>

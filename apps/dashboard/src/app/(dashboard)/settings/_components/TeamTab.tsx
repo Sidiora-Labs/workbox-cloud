@@ -404,9 +404,9 @@ export function TeamTab() {
   // so a teammate couldn't reach it. There we hide the button and show the
   // reachability setup instead of a dead action.
   // Smart gate: invites are allowed once the instance is actually REACHABLE
-  // (a real public URL — env `--public-url` or the Openship app's verified
+  // (a real public URL — env `--public-url` or the Workbox Cloud app's verified
   // domain), not gated on the migration-wizard flag. So adding a domain to the
-  // Openship app turns invites on directly.
+  // Workbox Cloud app turns invites on directly.
   const canInvite = isAdminOrOwner && (!selfHosted || !!reachability?.configured);
 
   // One notice offers the shared move flow or finishes this instance's domain.

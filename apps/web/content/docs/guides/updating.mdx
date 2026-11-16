@@ -1,24 +1,24 @@
 ---
-title: Updating Openship
-description: Keep your Openship up to date — the one-click desktop updater, the CLI update command, and how the always-on service picks up a new release.
+title: Updating Workbox Cloud
+description: Keep your Workbox Cloud up to date — the one-click desktop updater, the CLI update command, and how the always-on service picks up a new release.
 ---
 
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-New versions of Openship come out from time to time — bug fixes, new features, the occasional security
-patch. Updating is how you get them. Think of it like the update button on your phone: Openship checks
+New versions of Workbox Cloud come out from time to time — bug fixes, new features, the occasional security
+patch. Updating is how you get them. Think of it like the update button on your phone: Workbox Cloud checks
 whether there's a newer version, and if there is, it swaps the old one out for the new one.
 
-Openship gets these updates in one place only: the project's **public GitHub releases**. It **pulls** that
+Workbox Cloud gets these updates in one place only: the project's **public GitHub releases**. It **pulls** that
 information — it asks GitHub "is there anything newer?" Nothing is ever pushed to your install, and no
-Openship-run server can reach in and change your app. You stay in control of when (and whether) you update.
+Workbox Cloud-run server can reach in and change your app. You stay in control of when (and whether) you update.
 
 <Callout title="Good to know">
-- **Automatic updates are off by default.** Openship tells you when an update exists; it doesn't install
+- **Automatic updates are off by default.** Workbox Cloud tells you when an update exists; it doesn't install
   it behind your back (the desktop app can, if you turn that on).
 - **Where it all lives:** the dashboard shows update status under **Settings → Instance → Updates**.
-- This only appears for people who run their own Openship — the **desktop app** and **self-hosted servers**.
-  On Openship Cloud there's nothing for you to update; we handle it.
+- This only appears for people who run their own Workbox Cloud — the **desktop app** and **self-hosted servers**.
+  On Workbox Cloud there's nothing for you to update; we handle it.
 </Callout>
 
 ## Where updates live
@@ -26,14 +26,14 @@ Openship-run server can reach in and change your app. You stay in control of whe
 Open **Settings** and choose the **Instance** tab. Scroll to the **Updates** section. It shows:
 
 - Which version you're on now, and whether a newer one exists — either **"You're on the latest version"**
-  or **"Openship _x.y.z_ is available"**.
-- A **Check now** button to ask GitHub again right away (Openship also checks on its own).
-- A **View changelog & releases** link that opens the product changelog on the Openship website.
+  or **"Workbox Cloud _x.y.z_ is available"**.
+- A **Check now** button to ask GitHub again right away (Workbox Cloud also checks on its own).
+- A **View changelog & releases** link that opens the product changelog on the Workbox Cloud website.
 - Toggles for **Automatic updates** (desktop only) and **Update & security notifications**.
 
 ## Updating
 
-How you update depends on how you run Openship. Pick your case.
+How you update depends on how you run Workbox Cloud. Pick your case.
 
 <Tabs items={["Desktop app", "Self-hosted server (CLI)"]}>
 
@@ -44,7 +44,7 @@ The desktop app updates itself — you just say yes.
 <Callout title="Desktop 0.8.0 and 0.8.1: manual update required once" type="warn">
 If the updater reports **"Redirect was cancelled"**, download the fixed **0.8.2 or
 newer** installer from [GitHub releases](https://github.com/oblien/openship/releases).
-Quit Openship and replace the application without deleting its application data.
+Quit Workbox Cloud and replace the application without deleting its application data.
 Your local projects, servers and settings are preserved. Critical advisories use
 the same downloader, so marking an update critical does not repair these older
 installed versions. Server/CLI updates are unaffected by this desktop bug.
@@ -56,7 +56,7 @@ installed versions. Server/CLI updates are unaffected by this desktop bug.
 
 ### Wait for the update notice
 
-When a new version is out, a notice slides in at the **top of the dashboard**: *"Openship _x.y.z_ is
+When a new version is out, a notice slides in at the **top of the dashboard**: *"Workbox Cloud _x.y.z_ is
 available."* It sits just above the page, so you don't have to go looking for it.
 
 </Step>
@@ -65,7 +65,7 @@ available."* It sits just above the page, so you don't have to go looking for it
 
 ### Press Update now
 
-Click **Update now**. The notice turns into a progress bar and shows **"Downloading Openship _x.y.z_"**
+Click **Update now**. The notice turns into a progress bar and shows **"Downloading Workbox Cloud _x.y.z_"**
 with a percentage as it pulls the new version down.
 
 </Step>
@@ -74,7 +74,7 @@ with a percentage as it pulls the new version down.
 
 ### Let it restart
 
-When the download finishes, the bar reads **"Installing — Openship will restart"**. The app replaces itself
+When the download finishes, the bar reads **"Installing — Workbox Cloud will restart"**. The app replaces itself
 with the new version and reopens on its own. That's it — you're on the new release. 🎉
 
 </Step>
@@ -104,7 +104,7 @@ updates the CLI — which bundles the API server — to the latest release.
 openship update
 ```
 
-Openship checks GitHub, and if there's a newer version it updates itself in place. If you used the
+Workbox Cloud checks GitHub, and if there's a newer version it updates itself in place. If you used the
 **install script** (the default), it re-downloads the checksum-verified release bundle and swaps it in —
 refreshing the Node runtime first if a release ever needs a newer one. If you installed the **npm package**
 instead, it reinstalls with your package manager (**bun** if you have it, otherwise **npm**). If you're
@@ -153,7 +153,7 @@ openship update --via npm    # or: --via bun
 
 ## About the always-on service
 
-If you started Openship with `openship up`, it runs as a **persistent service**: it starts again when the
+If you started Workbox Cloud with `openship up`, it runs as a **persistent service**: it starts again when the
 machine reboots and restarts itself if it ever crashes. That keeps your apps online.
 
 What it does **not** do is change versions on its own. It keeps running whatever version it started with, so
@@ -163,7 +163,7 @@ take it down). See [Installation](/docs/getting-started/installation) for the fu
 ## Troubleshooting
 
 <Callout title="“Could not reach GitHub to check for updates”" type="warn">
-Openship pulls updates straight from GitHub, so the check needs internet access — and GitHub limits how
+Workbox Cloud pulls updates straight from GitHub, so the check needs internet access — and GitHub limits how
 often an address can ask. Wait a moment and press **Check now** again, or run `openship update` later. If it
 keeps failing, reinstall by hand with the same install method you used originally (see
 [Installation](/docs/getting-started/installation)).
@@ -191,7 +191,7 @@ the new version. On the desktop app, fully quit and reopen it if it didn't relau
 ## Related guides
 
 <Cards>
-  <Card title="Installation" href="/docs/getting-started/installation" description="Every way to install Openship — and the full openship up / stop service commands." />
-  <Card title="How Openship runs your apps" href="/docs/architecture/runtime-model" description="What the persistent service actually does behind the scenes." />
+  <Card title="Installation" href="/docs/getting-started/installation" description="Every way to install Workbox Cloud — and the full openship up / stop service commands." />
+  <Card title="How Workbox Cloud runs your apps" href="/docs/architecture/runtime-model" description="What the persistent service actually does behind the scenes." />
   <Card title="Roll back or redeploy" href="/docs/guides/rollback-redeploy" description="Undo a bad deploy or ship the same code again." />
 </Cards>

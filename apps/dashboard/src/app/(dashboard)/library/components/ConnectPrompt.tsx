@@ -26,7 +26,7 @@ export function ConnectPrompt({
   selfHosted,
 }: {
   connecting: boolean;
-  /** source: "oauth" → Openship App (OAuth+install), "cli" → GitHub device sign-in. */
+  /** source: "oauth" → Workbox Cloud App (OAuth+install), "cli" → GitHub device sign-in. */
   onConnect: (source?: "oauth" | "cli") => void;
   cliAction: CliAction | null;
   onRefresh: () => void;
@@ -38,7 +38,7 @@ export function ConnectPrompt({
   const router = useRouter();
   // Which methods to offer is the BACKEND's call (github.capabilities.ts). This
   // component used to branch on `selfHosted` and hardcode the pair of cards, which
-  // is how the empty state ended up advertising Openship Cloud on installs that
+  // is how the empty state ended up advertising Workbox Cloud on installs that
   // had no use for it. `selfHosted` remains only as the pre-load fallback.
   const { capabilities } = useGitHub();
   const { deployMode } = usePlatform();
@@ -194,7 +194,7 @@ export function ConnectPrompt({
           ) : showCredentialChoices ? (
             // Desktop: sign in with GitHub (device code, nothing to register), or
             // bring your own credential. A single card centers; two go side by side.
-            // Openship Cloud is deliberately absent here — reachable in Settings.
+            // Workbox Cloud is deliberately absent here — reachable in Settings.
             <div
               className={`grid w-full gap-3 mx-auto text-start ${
                 cardCount <= 1 ? "max-w-sm sm:grid-cols-1" : "max-w-xl sm:grid-cols-2"

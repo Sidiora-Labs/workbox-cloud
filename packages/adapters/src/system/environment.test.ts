@@ -237,7 +237,7 @@ describe("resolveEnvironment refusals", () => {
   });
 
   it("refuses a host whose sshd runs a forced command, quoting what it said", async () => {
-    // The AWS AMI ships this on root's key and exits 142, so every command Openship
+    // The AWS AMI ships this on root's key and exits 142, so every command Workbox Cloud
     // sends runs it instead — the box looks reachable and answers nothing, which is the
     // shape the Amazon Linux `socket hang up` arrived in.
     const profile = await resolveEnvironment(
@@ -480,7 +480,7 @@ describe("profile lifetime", () => {
 
       expect((await resolveEnvironment(executor)).canSudo).toBe(false);
 
-      // The whole reason for a lifetime: this is what an operator does *because* Openship
+      // The whole reason for a lifetime: this is what an operator does *because* Workbox Cloud
       // told them their login needs root, and then they retry. With no expiry the retry
       // reads the same refusal until the API restarts.
       sudo = "y";
@@ -508,7 +508,7 @@ describe("profile lifetime", () => {
 
       // Expiry may let a good answer improve; it may not let a non-answer arrive. A
       // `probeError` renders as `supported: false`, so without this one slow moment turns
-      // an hour of successful deploys into "Openship cannot provision this machine".
+      // an hour of successful deploys into "Workbox Cloud cannot provision this machine".
       expect(second.supported).toBe(true);
       expect(second.distroFamily).toBe("rhel");
       expect(second.probeError).toBeNull();

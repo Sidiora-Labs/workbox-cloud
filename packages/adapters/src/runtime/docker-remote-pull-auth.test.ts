@@ -14,7 +14,7 @@ import { BuildLogger } from "./build-pipeline";
  *     in `ps` to every user on that box for the life of the command);
  *   - the directory is 0700 and the file 0600;
  *   - the config is removed even when the pull fails or times out;
- *   - a host with no Openship credential keeps its existing behaviour exactly.
+ *   - a host with no Workbox Cloud credential keeps its existing behaviour exactly.
  */
 
 const h = vi.hoisted(() => ({
@@ -158,7 +158,7 @@ describe("remote image preparation progress", () => {
   });
 });
 
-describe("remote pull — no Openship credential", () => {
+describe("remote pull — no Workbox Cloud credential", () => {
   it("pulls exactly as before, writing no config", async () => {
     await (await (await runtimeWith(undefined))).pullImage("ghcr.io/o/img:1", { force: true });
     expect(h.execs).toEqual(["docker pull 'ghcr.io/o/img:1'"]);
@@ -180,7 +180,7 @@ describe("remote pull — no Openship credential", () => {
   });
 });
 
-describe("remote pull — with an Openship credential", () => {
+describe("remote pull — with a Workbox Cloud credential", () => {
   const auth = async () => ({ username: "bob", password: SECRET, serveraddress: "ghcr.io" });
 
   it("never puts the secret in a command argument", async () => {

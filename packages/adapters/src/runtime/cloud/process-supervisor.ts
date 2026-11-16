@@ -130,7 +130,7 @@ export class CloudProcessSupervisor implements ProcessSupervisor {
       throw new Error("Invalid managed process port");
     const params = {
       id: this.id(options.deploymentId),
-      name: `Openship ${options.projectId} ${options.deploymentId}`,
+      name: `Workbox Cloud ${options.projectId} ${options.deploymentId}`,
       // Record PID + start time before exec. A recycled PID must never report
       // another application's resource usage as this deployment's usage.
       cmd: [

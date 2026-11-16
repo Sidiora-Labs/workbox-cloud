@@ -138,7 +138,7 @@ export async function importMigratedSites(
     if (sites.length > 0 && registered.length === 0) {
       spinner.fail(
         `Migrated NONE of the ${sites.length} site${sites.length === 1 ? "" : "s"} — ` +
-          `Openship holds :80/:443 and ${sites.length === 1 ? "that hostname is" : "those hostnames are"} NOT being served.`,
+          `Workbox Cloud holds :80/:443 and ${sites.length === 1 ? "that hostname is" : "those hostnames are"} NOT being served.`,
       );
       for (const w of warnings.slice(0, 8)) console.log(chalk.red(`    • ${w}`));
       // Every per-site error being "container is restarting" means ONE thing: the
@@ -175,7 +175,7 @@ export async function importMigratedSites(
     }
 
     spinner.succeed(
-      `Migrated ${registered.length} site${registered.length === 1 ? "" : "s"} into Openship's edge.`,
+      `Migrated ${registered.length} site${registered.length === 1 ? "" : "s"} into Workbox Cloud's edge.`,
     );
     for (const w of warnings.slice(0, 8)) console.log(chalk.dim(`    • ${w}`));
     return { ok: true, registered };

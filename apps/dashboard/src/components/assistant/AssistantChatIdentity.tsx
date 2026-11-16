@@ -26,7 +26,7 @@ export function AssistantChatIdentity({
       </div>
     );
   const agentId = conversation?.agentId;
-  const name = agentId ? (agent?.name ?? "Agent") : "OpenShip assistant";
+  const name = agentId ? (agent?.name ?? "Agent") : "Workbox Cloud assistant";
   const kind = conversation?.automationRunId ? "Automation" : agentId ? "Agent" : "General";
   const title = conversation?.title ?? "New chat";
 

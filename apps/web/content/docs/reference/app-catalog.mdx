@@ -1,6 +1,6 @@
 ---
 title: App catalog JSON
-description: The complete field reference for an Openship App definition — the JSON that turns a set of containers into a one-click install, with generated secrets, a curated settings form, and a connection card.
+description: The complete field reference for a Workbox Cloud App definition — the JSON that turns a set of containers into a one-click install, with generated secrets, a curated settings form, and a connection card.
 ---
 
 import { TypeTable } from 'fumadocs-ui/components/type-table';
@@ -33,7 +33,7 @@ It is **JSON, not JSONC** — no comments, no trailing commas.
 
 <Callout title="Unknown keys are ignored, not rejected">
 The validator strips keys it does not recognize instead of failing. That is deliberate: it is what
-lets a newer app definition stay installable on an older Openship, and it is why growth is always
+lets a newer app definition stay installable on an older Workbox Cloud, and it is why growth is always
 additive. The trade-off is that a **misspelled field name fails silently** — it is dropped, not
 reported, by both the published schema and the server. So keep the `$schema` line and let your editor
 autocomplete field names rather than typing them from memory.
@@ -79,7 +79,7 @@ autocomplete field names rather than typing them from memory.
     hosting: { type: '"self-hosted" | "experimental"', description: 'experimental → an ⚗ badge on the card and a heads-up in the wizard: it runs, but it is heavy or not production-grade upstream.' },
     minResources: { type: '{ memoryMb?, cpuCores? }', description: 'What the app needs from the machine. Shown against the chosen self-hosted destination as an advisory recommendation. See Host requirements.' },
     schemaVersion: { type: 'number', description: 'JSON shape revision. Defaults to 1. See Stability and versioning.' },
-    minEngine: { type: 'string (semver)', description: 'Minimum Openship version required to install this app.' },
+    minEngine: { type: 'string (semver)', description: 'Minimum Workbox Cloud version required to install this app.' },
     updatedAt: { type: 'string', description: 'Informational last-updated stamp.' },
     repository: { type: 'string (URL)', description: 'Upstream source repository. Must be a valid URL.' },
   }}
@@ -140,7 +140,7 @@ name, never an IP or a localhost address.
     shmSize: { type: 'number', description: 'Private container /dev/shm size in bytes (1 byte–1 TiB). No host IPC or privileged mode. Requires schemaVersion 2.' },
     replacesBuilds: { type: 'string[]', description: 'SHA-256 fingerprints of exact retired inline recipes eligible for explicit operator-reviewed conversion to this image. The repair tool requires the same official base and preserves custom recipes.' },
     resources: { type: '{ cpuCores, memoryMb, diskMb }', description: 'Advisory sizing recommendation: CPU at least 0.25, whole MB of RAM at least 128, and whole MB of disk at least 64. All three fields are required when supplied. Never copied into installed container limits.' },
-    build: { type: 'ServiceBuild', description: 'Inline Docker build context — for a service Openship must BUILD rather than pull. Mutually exclusive with image. See Building an image.' },
+    build: { type: 'ServiceBuild', description: 'Inline Docker build context — for a service Workbox Cloud must BUILD rather than pull. Mutually exclusive with image. See Building an image.' },
     ports: { type: 'string[]', description: 'Compose-style port strings, e.g. ["2368:2368"].' },
     exposedPort: { type: 'number', description: 'The container port that receives the public route.' },
     exposed: { type: 'boolean', description: 'Marks this service as the one that gets a public route.' },
@@ -183,11 +183,11 @@ starts, so the customer does not need an image build. Initial account creation m
 before exposing a public installer, and redeployment must preserve existing accounts and data.
 
 Use `build` when the image actually needs additional software or compiled assets, as with
-PocketBase's binary installation. It is an inline Docker build context that Openship
+PocketBase's binary installation. It is an inline Docker build context that Workbox Cloud
 materializes at deploy time and builds on the deploy host through the normal compose build pipeline.
 Use `entrypointArgv` with a read-only startup file when a published image has an executable
 entrypoint that cannot invoke the helper. Keep its native initialization behavior and gate
-the template to Openship 0.9.2 or newer. A build can also set its own `ENTRYPOINT`.
+the template to Workbox Cloud 0.9.2 or newer. A build can also set its own `ENTRYPOINT`.
 
 Set **exactly one** of `image` or `build` per service. Neither (nothing to run) and both (ambiguous)
 are rejected — `service "<name>" must set exactly one of image|build`.
@@ -225,7 +225,7 @@ a `configField`) and reference it with `ARG` in the Dockerfile.
 
 <Callout title="Building happens on the deploy host">
 A large base image builds where it deploys. On a small host a heavy build — Neon's compute node pulls a
-multi-hundred-MB base — can be slow or memory-bound. That cost is inherent to the app, not to Openship.
+multi-hundred-MB base — can be slow or memory-bound. That cost is inherent to the app, not to Workbox Cloud.
 </Callout>
 
 ## Two field systems
@@ -440,7 +440,7 @@ pre-run database initialization use [`files`](#files) to write into
 ## Endpoints
 
 What the install wizard asks you about — how to reach each port. Omit `endpoints` entirely and
-Openship derives one public `http` endpoint per declared route of each exposed service.
+Workbox Cloud derives one public `http` endpoint per declared route of each exposed service.
 
 Defaults follow the app's intended use on every deployment target:
 
@@ -531,7 +531,7 @@ not just env (an init `.sql`, for example). Supports [placeholders](#placeholder
 />
 
 <Callout title="Self-hosted and desktop only" type="info">
-`files` are not applied on Openship Cloud.
+`files` are not applied on Workbox Cloud.
 </Callout>
 
 ## Management
@@ -543,7 +543,7 @@ Overrides how the installed app is managed.
 | `{ "kind": "schema" }` | Render the curated settings form from `settings`. |
 | `{ "kind": "custom", "href": "/emails" }` | Send the user to a bespoke surface instead. |
 
-Omit it and Openship derives the behavior: `schema` when `settings` exist, otherwise the raw project
+Omit it and Workbox Cloud derives the behavior: `schema` when `settings` exist, otherwise the raw project
 tabs.
 
 ## Placeholders
@@ -589,7 +589,7 @@ is never repurposed or removed within a schema version.
 
 <TypeTable
   type={{
-    minEngine: { type: 'string (semver)', description: 'THE version knob. Minimum Openship version required to install this app. Set it to the release that introduced whatever capability the definition now uses.' },
+    minEngine: { type: 'string (semver)', description: 'THE version knob. Minimum Workbox Cloud version required to install this app. Set it to the release that introduced whatever capability the definition now uses.' },
     schemaVersion: { type: 'number', description: 'The JSON shape revision, default 1. An instance refuses a shape newer than it understands. Bump only on a genuinely breaking shape change.' },
   }}
 />
@@ -600,7 +600,7 @@ app `minEngine`:
 
 - the app **is bundled** there → it keeps serving the bundled copy, and may note that an update is
   available;
-- the app **is brand new** → the catalog shows a guided *Requires Openship ≥ X* card and install is
+- the app **is brand new** → the catalog shows a guided *Requires Workbox Cloud ≥ X* card and install is
   refused, client and server. Never a silent disappearance.
 
 ## See also

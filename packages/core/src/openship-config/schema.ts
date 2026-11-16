@@ -1,6 +1,6 @@
 /**
  * `openship.json` — the native, declarative deploy config (à la vercel.json /
- * railway.toml). A repo-root file that tells Openship how to build, run, route,
+ * railway.toml). A repo-root file that tells Workbox Cloud how to build, run, route,
  * and scale a project, covering the deploy wizard's options. It's an
  * AUTHORITATIVE OVERLAY: auto-detection runs first, then each field present here
  * overrides it (absent fields keep the detected value). It seeds the wizard and
@@ -233,7 +233,7 @@ export interface OpenshipConfig {
    * Warming must run at startup, never at build or in `releaseCommands`:
    * `config:cache` (inside `optimize`) freezes the env present when it runs and
    * makes every `env()` call outside `config/*.php` return `null`, so it is only
-   * correct after Openship injects the runtime env. See `resolveWebCommand` in
+   * correct after Workbox Cloud injects the runtime env. See `resolveWebCommand` in
    * `../stack-roles`.
    */
   optimize?: boolean;

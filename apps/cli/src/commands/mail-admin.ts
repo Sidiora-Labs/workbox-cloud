@@ -168,7 +168,7 @@ export function registerMailAdminCommands(parent: Command): void {
 
   const cert = parent
     .command("certificate")
-    .description("Inspect and renew mail TLS through Openship's shared edge");
+    .description("Inspect and renew mail TLS through Workbox Cloud's shared edge");
   for (const [name, method] of [
     ["get", "getCertificate"],
     ["check", "checkCertificate"],
@@ -320,7 +320,7 @@ export function registerMailAdminCommands(parent: Command): void {
     .command("rotate-platform-mailbox")
     .argument("<server>")
     .option("-y, --yes", "Confirm rotation")
-    .description("Rotate Openship's private delivery credential; never prints its password")
+    .description("Rotate Workbox Cloud's private delivery credential; never prints its password")
     .action((id: string, opts) =>
       printResult(async () => {
         await confirmOrExit(opts.yes, `Rotate the platform delivery credential on ${id}?`);

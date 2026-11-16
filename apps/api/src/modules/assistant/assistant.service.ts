@@ -401,7 +401,7 @@ export function createAssistantRuntime(
           // No native approval UI: tools are authorized exclusively by the MCP connection.
           // Stop unknown approval kinds too, rather than guessing a provider's "deny" action.
           state.error =
-            "The agent requested access outside its OpenShip connection. This turn was stopped.";
+            "The agent requested access outside its Workbox Cloud connection. This turn was stopped.";
           await stopLive(state);
           break;
         }
@@ -687,7 +687,7 @@ export function createAssistantRuntime(
         );
       if (!info.customApiAvailable)
         throw assistantError(
-          "Update OpenShip and reconnect the assistant to use custom API connections.",
+          "Update Workbox Cloud and reconnect the assistant to use custom API connections.",
           409,
         );
       let url: URL;
@@ -819,7 +819,7 @@ export function createAssistantRuntime(
       return history(ctx, row, before);
     },
     /** Internal delivery reads exactly the requested native turn, never the latest chat history.
-     * The shared native snapshot survives process restarts; OpenShip stores no transcript copy. */
+     * The shared native snapshot survives process restarts; Workbox Cloud stores no transcript copy. */
     async turnSnapshot(
       ctx: RequestContext,
       id: string,

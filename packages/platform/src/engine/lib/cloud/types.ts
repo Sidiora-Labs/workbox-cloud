@@ -59,7 +59,7 @@ export interface CloudGithubUserStatus {
   id?: number;
 }
 
-// ─── Edge-target verification (Openship Cloud proves control of a target) ────
+// ─── Edge-target verification (Workbox Cloud proves control of a target) ────
 //
 // Mirrors Oblien's `EdgeProxyVerification*` shapes, restated here rather than
 // re-exported: the SDK is a SaaS-side dependency, and a self-hosted box must be
@@ -132,7 +132,7 @@ export interface CloudClient {
     }): Promise<{ ok: true; hostname: string } | null>;
     deregister(slug: string): Promise<{ ok: true; removed: boolean } | null>;
     /**
-     * Ask Openship Cloud for a challenge proving we control `target`.
+     * Ask Workbox Cloud for a challenge proving we control `target`.
      *
      * `target` MUST be `canonicalEdgeTarget(host)` — the row is keyed on the
      * normalized string, so a target verified in one spelling and routed in
@@ -142,7 +142,7 @@ export interface CloudClient {
      * previous one (see the retired-token rule on the persistence side).
      */
     requestVerification(target: string): Promise<CloudEdgeVerificationChallenge | null>;
-    /** Run the probe. Openship Cloud fetches the token from the target itself; we
+    /** Run the probe. Workbox Cloud fetches the token from the target itself; we
      *  only report the outcome. One call per attempt — never a poll loop. */
     checkVerification(verificationId: number): Promise<CloudEdgeVerificationResult | null>;
   };

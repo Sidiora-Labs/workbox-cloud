@@ -44,7 +44,7 @@ vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 vi.mock("@/hooks/useCloudDeployPricing", () => ({ useCloudDeployPricing: () => () => false }));
 
 const HINT =
-  "If the target is already deployed, OpenShip tries to redeploy it right away. Save other environment changes first.";
+  "If the target is already deployed, Workbox Cloud tries to redeploy it right away. Save other environment changes first.";
 
 const outputs: AppConnectionOutput[] = [
   {

@@ -22,7 +22,7 @@ import {
  * `.openship` is 0700 root-owned by design, so on a host we log in to as a non-root user
  * EVERY operation here needs elevation — including the reads, which is the half that hid:
  * a `cat` of a file the login user could never have written returns "" and is
- * indistinguishable from "this server has no Openship state", which is exactly what
+ * indistinguishable from "this server has no Workbox Cloud state", which is exactly what
  * `scan` reads to re-import our own projects.
  *
  * A fresh executor object per case on purpose: the profile is cached per executor
@@ -116,7 +116,7 @@ describe("openship-server-store privilege", () => {
     // the unmeasurable box, `isRoot`/`canSudo` here are facts — /root is 0700, the read
     // cannot work, and the shell cannot say so: `cat … || echo ""` exits 0 either way, so
     // "forbidden" came back as a successful empty answer and `scan` read it as a server
-    // with no Openship projects. The distinction is only visible before the command is sent.
+    // with no Workbox Cloud projects. The distinction is only visible before the command is sent.
     const warn = vi.spyOn(errorDiagnostics, "warn").mockImplementation(() => {});
     try {
       const { executor, stored } = fakeHost(
@@ -155,7 +155,7 @@ describe("openship-server-store privilege", () => {
   it("reports a refused read instead of silently calling it absent", async () => {
     // The compromise the line above makes is that the VALUE is ambiguous. The log
     // must not be: a host that merely denies elevation otherwise reads as a host
-    // with no Openship state, and `scan` re-imports our own projects off that.
+    // with no Workbox Cloud state, and `scan` re-imports our own projects off that.
     const warn = vi.spyOn(errorDiagnostics, "warn").mockImplementation(() => {});
     try {
       const read = fakeHost(NON_ROOT_NO_SUDO);

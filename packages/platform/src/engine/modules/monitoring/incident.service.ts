@@ -365,7 +365,7 @@ export async function recordServerUnreachable(opts: {
   });
   if (!incident) return "unchanged";
   // Keep the existing durable observation record for recovery and aggregation,
-  // without claiming that each server failed when Openship lost its network.
+  // without claiming that each server failed when Workbox Cloud lost its network.
   if (networkUnavailable) return "opened";
 
   const projects =

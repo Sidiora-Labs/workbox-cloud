@@ -112,7 +112,7 @@ export const getSession = cache(async (): Promise<SessionData | null> => {
 export type DeploymentInfo = {
   selfHosted: boolean;
   deployMode: string;
-  /** True when OpenShip runs ON a server (self-hosted, non-desktop) — the host
+  /** True when Workbox Cloud runs ON a server (self-hosted, non-desktop) — the host
    *  is itself a deployable target, auto-registered as an isLocal server. */
   isServerHost?: boolean;
   /** Whether the box is currently a deploy target for itself (host control on).
@@ -125,7 +125,7 @@ export type DeploymentInfo = {
   version?: string;
   /**
    * Which product this instance presents itself as — "platform" (the full deploy
-   * platform) or "mail" (Openship Mail). Resolved by the API's single
+   * platform) or "mail" (Workbox Cloud Mail). Resolved by the API's single
    * product-mode resolver, so it already accounts for CLOUD_MODE and the
    * operator's instance_settings toggle. Optional because an older API won't
    * send it; `resolveProductView` treats a missing value as "platform".

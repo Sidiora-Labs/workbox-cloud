@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { repos } from "@repo/db";
 
 /**
- * Record-only ("Remove from Openship only") delete contract.
+ * Record-only ("Remove from Workbox Cloud only") delete contract.
  *
  * The UI promises "Nothing on the server is touched — the app keeps running with
  * its data". That is a HARD guarantee, so this pins every destructive door shut:

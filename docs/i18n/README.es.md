@@ -1,4 +1,4 @@
-<h1 align="center">Openship</h1>
+<h1 align="center">Workbox Cloud</h1>
 
 <p align="center">
   Plataforma de despliegue de código abierto y autoalojable con CI/CD integrado.<br>
@@ -26,7 +26,7 @@
 </p>
 
 <p align="center">
-  <img src="../../apps/web/public/screenshots/es/deploy.webp" alt="Openship dashboard" width="800" />
+  <img src="../../apps/web/public/screenshots/es/deploy.webp" alt="Workbox Cloud dashboard" width="800" />
 </p>
 
 ---
@@ -52,11 +52,11 @@ O descarga la app de escritorio desde [openship.io](https://openship.io).
 
 ## Qué hace
 
-Apúntalo a un repositorio. Openship detecta tu stack, lo compila, lo configura todo y lo despliega — sin archivos de configuración, sin pipelines, sin YAML.
+Apúntalo a un repositorio. Workbox Cloud detecta tu stack, lo compila, lo configura todo y lo despliega — sin archivos de configuración, sin pipelines, sin YAML.
 
 Bases de datos, dominios, SSL, CDN, correo, copias de seguridad — todo gestionado desde un solo lugar.
 
-Funciona con **Openship Cloud** (gestionado) o **cualquier servidor Linux** que tengas. Tanto los desarrolladores en solitario con proyectos personales como los equipos en producción usan la misma herramienta.
+Funciona con **Workbox Cloud** (gestionado) o **cualquier servidor Linux** que tengas. Tanto los desarrolladores en solitario con proyectos personales como los equipos en producción usan la misma herramienta.
 
 ---
 
@@ -80,7 +80,7 @@ Funciona con **Openship Cloud** (gestionado) o **cualquier servidor Linux** que 
 
 ## Despliega donde sea
 
-- **Openship Cloud** — gestionado, autoescalado, sin configuración
+- **Workbox Cloud** — gestionado, autoescalado, sin configuración
 - **Cualquier VPS** — Hetzner, DigitalOcean, Linode, OVH y demás
 - **Servidores dedicados** — bare metal, colocation, homelab
 - **Multiservidor** — reparte las cargas entre varias máquinas
@@ -118,6 +118,6 @@ Consulta [CONTRIBUTING.md](../../CONTRIBUTING.md).
 
 ## Licencia
 
-Openship es software de **código abierto**, licenciado bajo la [Licencia Apache 2.0](../../LICENSE).
+Workbox Cloud es software de **código abierto**, licenciado bajo la [Licencia Apache 2.0](../../LICENSE).
 
 Puedes usarlo, ejecutarlo, modificarlo, autoalojarlo y distribuirlo — incluso en productos comerciales y de código cerrado — según los términos de la licencia Apache 2.0. Consulta [LICENSE](../../LICENSE) para el texto completo.

@@ -99,7 +99,7 @@ export function assertValidEnvelope(file: DataTransferFile): void {
     !file ||
     (file.kind !== "openship-instance-export" && file.kind !== "openship-project-export")
   ) {
-    throw new InvalidTransferFileError("Not an Openship export file.");
+    throw new InvalidTransferFileError("Not a Workbox Cloud export file.");
   }
   if (![1, 2, 3, 4].includes(file.envelopeVersion)) {
     throw new InvalidTransferFileError(

@@ -30,7 +30,7 @@ const repo = {
   avatar_url: "https://untrusted.test/tracker",
 };
 
-describe("OpenShip tool result presentation", () => {
+describe("Workbox Cloud tool result presentation", () => {
   it("keeps routine lookups compact without empty sections or automatic resource lists", () => {
     const apps = Array.from({ length: 8 }, (_, index) => ({
       id: `app-${index}`,

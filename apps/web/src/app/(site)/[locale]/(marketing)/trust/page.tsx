@@ -12,9 +12,9 @@ import {
 } from "@/components/marketing/illustrated-link";
 
 const pageMetadata: Metadata = {
-  title: "Trust & Security – OpenShip",
+  title: "Trust & Security – Workbox Cloud",
   description:
-    "How OpenShip handles your data, permissions, and the boundary between self-hosted instances and OpenShip Cloud.",
+    "How Workbox Cloud handles your data, permissions, and the boundary between self-hosted instances and Workbox Cloud.",
   alternates: { canonical: "/trust" },
 };
 
@@ -50,14 +50,14 @@ const PILLARS: IllustratedLinkProps[] = [
   {
     title: "Your hosting choice",
     description:
-      "Run OpenShip on your own infrastructure or use Cloud. Choose the operating model that meets your requirements.",
+      "Run Workbox Cloud on your own infrastructure or use Cloud. Choose the operating model that meets your requirements.",
     illustration: "server-management",
     href: "/docs/architecture/overview",
   },
   {
     title: "Open for review",
     description:
-      "Inspect the platform’s code, permissions, and Cloud gateway. OpenShip is open source under Apache 2.0.",
+      "Inspect the platform’s code, permissions, and Cloud gateway. Workbox Cloud is open source under Apache 2.0.",
     illustration: "configuration-as-code",
     href: "https://github.com/oblien/openship",
   },
@@ -109,7 +109,7 @@ export default function TrustPage() {
                 )}
               </p>
               <p>
-                {copy("Evaluating OpenShip for your organization? ")}
+                {copy("Evaluating Workbox Cloud for your organization? ")}
                 <Link href="/contact">{copy("Contact us")}</Link>{" "}
                 {copy(
                   " with your security or compliance requirements. Review the linked documentation for implementation details.",

@@ -111,7 +111,7 @@ export class SystemdSupervisor implements ProcessSupervisor {
     const userLine = this.user ? `\nUser=${this.user.replaceAll("%", "%%")}` : "";
 
     return `[Unit]
-Description=Openship deployment ${opts.deploymentId}
+Description=Workbox Cloud deployment ${opts.deploymentId}
 After=network.target
 
 [Service]

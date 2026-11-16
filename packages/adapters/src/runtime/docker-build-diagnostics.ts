@@ -33,7 +33,7 @@ export function getDockerBuildIdleTimeoutMs(
 }
 
 export interface DockerBuildDiagnosticContext {
-  /** The limit selected in OpenShip, when one was selected. */
+  /** The limit selected in Workbox Cloud, when one was selected. */
   configuredMemoryMb?: number;
   /** True only when this particular builder actually received that limit. */
   memoryLimitApplied?: boolean;

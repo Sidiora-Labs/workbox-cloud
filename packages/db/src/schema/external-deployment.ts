@@ -9,7 +9,7 @@ import { deployment } from "./deployment";
  * An organization-scoped binding to an external provider resource.
  *
  * This table deliberately does not replace project.serverId/workspaceId. Those
- * columns remain authoritative for Openship host runtimes. External targets use
+ * columns remain authoritative for Workbox Cloud host runtimes. External targets use
  * this record so provider accounts, sandboxes and service resources have an
  * explicit identity and cannot be inferred from a credential's recency.
  */

@@ -12,10 +12,10 @@
     "language": "言語"
   },
   "choose": {
-    "title": "OpenShip へようこそ",
-    "subtitle": "OpenShip の実行方法を選択してください。どちらを選んでもすべての機能をご利用いただけます。いつでも切り替え可能です。",
+    "title": "Workbox Cloud へようこそ",
+    "subtitle": "Workbox Cloud の実行方法を選択してください。どちらを選んでもすべての機能をご利用いただけます。いつでも切り替え可能です。",
     "cloud": {
-      "name": "OpenShip Cloud",
+      "name": "Workbox Cloud",
       "desc": "インフラ、アップデート、バックアップはすべて当社が管理します。サインインするだけですぐにデプロイを開始できます。",
       "perk1": "サーバー不要",
       "perk2": "無料プランを含む",
@@ -25,7 +25,7 @@
     "or": "または",
     "selfhost": {
       "name": "セルフホスト",
-      "desc": "OpenShip をご自身のハードウェアで実行します。リモートサーバーに接続するか、このマシンを利用できます。",
+      "desc": "Workbox Cloud をご自身のハードウェアで実行します。リモートサーバーに接続するか、このマシンを利用できます。",
       "perk1": "データを完全に自己管理",
       "perk2": "リモートサーバーまたはこの Mac",
       "perk3": "残りは当社にお任せ",
@@ -35,13 +35,13 @@
     "skip": "今はスキップ"
   },
   "selfhost": {
-    "title": "OpenShip をどこで実行しますか？",
-    "subtitleLine1": "OpenShip プラットフォームをインストールする場所を選択してください。",
+    "title": "Workbox Cloud をどこで実行しますか？",
+    "subtitleLine1": "Workbox Cloud プラットフォームをインストールする場所を選択してください。",
     "subtitleLine2": "どちらを選んでも、完全なコントロールとデータの自己管理が可能です。",
     "local": {
       "title": "このマシン",
       "badge": "ベータ",
-      "desc": "OpenShip をここに直接インストールします。SSH やリモート設定は不要です",
+      "desc": "Workbox Cloud をここに直接インストールします。SSH やリモート設定は不要です",
       "comingSoon": "ローカルインストールは近日公開予定です。",
       "comingSoonDesc": "現時点では、Docker がインストールされた任意の Linux サーバーでセルフホストできます。"
     },
@@ -61,7 +61,7 @@
     "methodPassword": "パスワード",
     "methodKey": "SSH キー",
     "methodAgent": "エージェント",
-    "agentHint": "VSCode のように、このマシンの SSH エージェントを使用して接続します。パスワードやキーは不要です。OpenShip を実行しているホストが、すでにこのサーバーへのアクセス権（ssh-agent に読み込まれたキー）を持っている必要があります。",
+    "agentHint": "VSCode のように、このマシンの SSH エージェントを使用して接続します。パスワードやキーは不要です。Workbox Cloud を実行しているホストが、すでにこのサーバーへのアクセス権（ssh-agent に読み込まれたキー）を持っている必要があります。",
     "passwordLabel": "パスワード",
     "passwordPlaceholder": "サーバーのパスワード",
     "keyPathLabel": "キーのパス",
@@ -85,7 +85,7 @@
     "subtitle": "Webhook、SSL、公開アクセスのために、サーバーがインターネットから到達可能である必要があります。",
     "providers": {
       "edge": {
-        "title": "OpenShip Edge",
+        "title": "Workbox Cloud Edge",
         "desc": "設定不要。自動 SSL、高可用性、DDoS 保護をすべて標準搭載しています。",
         "badge": "推奨"
       },
@@ -102,7 +102,7 @@
     "ngrokTokenLabel": "ngrok 認証トークン",
     "cloudflarePlaceholder": "トンネルトークンを貼り付けてください",
     "ngrokPlaceholder": "ngrok 認証トークンを貼り付けてください",
-    "edgeHint": "OpenShip Edge を利用するには OpenShip アカウントが必要です。続行するにはサインインしてください。",
+    "edgeHint": "Workbox Cloud Edge を利用するには Workbox Cloud アカウントが必要です。続行するにはサインインしてください。",
     "signInContinue": "サインインして続ける"
   },
   "preferences": {
@@ -129,15 +129,15 @@
     "connecting": "接続中…",
     "verifying": "サーバーを検証しています",
     "retry": "再試行",
-    "openingCloud": "OpenShip Cloud を開いています…",
+    "openingCloud": "Workbox Cloud を開いています…",
     "waitingAuth": "認証の完了を待っています",
     "couldNotStartAuthTitle": "クラウド認証を開始できませんでした",
     "authFailedTitle": "クラウド認証に失敗しました",
     "couldNotStartAuthMsg": "デスクトップ認証フローを開始できませんでした。",
     "authFailedMsg": "もう一度お試しいただき、ブラウザでサインインを完了してください。",
     "completingSignIn": "サインインを完了しています…",
-    "returningToOpenship": "OpenShip に戻っています",
-    "redirectingCloud": "OpenShip Cloud にリダイレクトしています…",
+    "returningToOpenship": "Workbox Cloud に戻っています",
+    "redirectingCloud": "Workbox Cloud にリダイレクトしています…",
     "newTabSignIn": "新しいタブでサインインを完了します",
     "couldNotSaveTitle": "設定を保存できませんでした",
     "couldNotSaveMsg": "API が応答しませんでした。サービスが実行中であることを確認してください。",

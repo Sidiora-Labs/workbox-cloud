@@ -1,6 +1,6 @@
 ---
 title: Connect to an API
-description: Configure a remote SDK client for a self-hosted or Cloud Openship API.
+description: Configure a remote SDK client for a self-hosted or Cloud Workbox Cloud API.
 ---
 
 Use `OpenshipClient` when the installation already exists. It needs an API URL, a bearer token, and the
@@ -51,7 +51,7 @@ already have access to that organization. A token bound to one organization cann
 An explicit organization requires a compatible server. See [fixed scopes](/docs/api/sdk/compatibility#fixed-organization-scopes).
 Omitting it uses the API's default/resource-derived scope; it does not provide the same tenant pinning.
 
-## Openship Cloud
+## Workbox Cloud
 
 Use `https://api.openship.io` as `baseUrl`, your Cloud token, and the Cloud organization's ID.
 The deployed Cloud API must support the SDK protocol. A self-hosted Cloud account link does not

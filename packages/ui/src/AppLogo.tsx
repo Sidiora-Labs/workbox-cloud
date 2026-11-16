@@ -115,9 +115,9 @@ const BRAND_LOGO: Record<
   radicale: {
     src: "https://raw.githubusercontent.com/Kozea/Radicale/v3.9.0/radicale/web/internal_data/css/logo.svg",
   },
-  // The control plane self-registered as an app (CLI self-deploy) — Openship's
-  // own brand mark, a full-bleed square icon.
-  openship: { src: "/apple-touch-icon.png", fill: true },
+  // The control plane self-registered as an app (CLI self-deploy) — Workbox
+  // Cloud's supplied brand mark, a full-bleed square icon.
+  openship: { src: "/brand/wb_cloud_dark.webp", fill: true },
   // MindWire's own monochrome mark is vendored so the catalog works offline and
   // the brand stays legible on both dashboard themes.
   mindwire: { src: "/app-logos/mindwire.svg", fill: true },

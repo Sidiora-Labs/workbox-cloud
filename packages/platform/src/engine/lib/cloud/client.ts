@@ -52,7 +52,7 @@ export function cloudClient(scope: CloudClientScope, expectedIdentity?: CloudIde
       : cloudFetchAsOrgOwner(scope.organizationId, path, init, expectedIdentity);
 
   /** Resolve the underlying cloud-linked user id for cache keys. Returns
-   *  null when org scope is used and no member has linked Openship Cloud. */
+   *  null when org scope is used and no member has linked Workbox Cloud. */
   const resolveUserId = async (): Promise<string | null> => {
     if (isUserScope) return scope.userId;
     return resolveOrgCloudUserId(scope.organizationId);
@@ -83,7 +83,7 @@ export function cloudClient(scope: CloudClientScope, expectedIdentity?: CloudIde
       ...(opts.body !== undefined ? { body: JSON.stringify(opts.body) } : {}),
     });
     if (!res) {
-      return { ok: false, error: "Not connected to Openship Cloud" };
+      return { ok: false, error: "Not connected to Workbox Cloud" };
     }
     if (!res.ok) {
       const err = await readCloudJson<{
@@ -137,7 +137,7 @@ export function cloudClient(scope: CloudClientScope, expectedIdentity?: CloudIde
         const res = await fetchScoped("/api/cloud/github/installations", {
           method: "GET",
         });
-        if (!res) throw new Error("Openship Cloud is unavailable. Reconnect Cloud and try again.");
+        if (!res) throw new Error("Workbox Cloud is unavailable. Reconnect Cloud and try again.");
         if (!res.ok) throw await cloudRequestError(res, "Cloud GitHub installation discovery");
         const json = await readCloudJson<{ data: CloudGithubInstallation[] }>(res);
         if (!Array.isArray(json?.data)) throw new Error("Cloud returned an invalid GitHub installation list. Try again.");
@@ -162,7 +162,7 @@ export function cloudClient(scope: CloudClientScope, expectedIdentity?: CloudIde
         });
         if (!res) {
           throw new Error(
-            "Not connected to Openship Cloud — connect your account in Settings.",
+            "Not connected to Workbox Cloud — connect your account in Settings.",
           );
         }
         if (!res.ok) {
@@ -186,7 +186,7 @@ export function cloudClient(scope: CloudClientScope, expectedIdentity?: CloudIde
         });
         if (!res) {
           throw new Error(
-            "Not connected to Openship Cloud — connect your account in Settings.",
+            "Not connected to Workbox Cloud — connect your account in Settings.",
           );
         }
         if (!res.ok) {
@@ -203,7 +203,7 @@ export function cloudClient(scope: CloudClientScope, expectedIdentity?: CloudIde
         });
         if (!res) {
           throw new Error(
-            "Not connected to Openship Cloud — connect your account in Settings.",
+            "Not connected to Workbox Cloud — connect your account in Settings.",
           );
         }
         if (!res.ok) {
@@ -220,7 +220,7 @@ export function cloudClient(scope: CloudClientScope, expectedIdentity?: CloudIde
         });
         if (!res) {
           throw new Error(
-            "Not connected to Openship Cloud — connect your account in Settings.",
+            "Not connected to Workbox Cloud — connect your account in Settings.",
           );
         }
         if (!res.ok) {
@@ -440,7 +440,7 @@ export function cloudClient(scope: CloudClientScope, expectedIdentity?: CloudIde
 
 /**
  * Org-scoped cloud-token lookup. Returns the owner's cloud token — only the
- * owner can link Openship Cloud, and their connection is the org's cloud
+ * owner can link Workbox Cloud, and their connection is the org's cloud
  * identity for every member to use under the hood.
  */
 export async function getOrgCloudToken(

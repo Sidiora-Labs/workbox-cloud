@@ -9,7 +9,7 @@ export async function nativeAgents(native: AssistantNativeClient) {
   const health = await mw.health();
   if ((health.botsVersion ?? 0) < 9)
     throw new AppError(
-      "Update OpenShip and its assistant host runtime to use scoped agents (Mindwire bot protocol 9 required).",
+      "Update Workbox Cloud and its assistant host runtime to use scoped agents (Mindwire bot protocol 9 required).",
       409,
       "ASSISTANT_HOST_UPDATE",
     );
@@ -23,7 +23,7 @@ export async function nativeAgents(native: AssistantNativeClient) {
       const cwd = await native.workspace(projectId);
       const snapshot = await mw.workspace.snapshot();
       if (!snapshot.projects.some((p) => p.id === projectId))
-        await mw.workspace.projects.put(projectId, { name: "OpenShip agent", path: cwd });
+        await mw.workspace.projects.put(projectId, { name: "Workbox Cloud agent", path: cwd });
       const { agentId } = await mw.workspace.ensureAgent({ agentType: HARNESS[provider].agent });
       const config = {
         id,
@@ -39,7 +39,7 @@ export async function nativeAgents(native: AssistantNativeClient) {
       const bot = await mw.bots.get(id);
       if (!bot.externalTools || bot.isMaster || bot.raw)
         throw new AppError(
-          "This native agent is not managed by OpenShip.",
+          "This native agent is not managed by Workbox Cloud.",
           409,
           "ASSISTANT_AGENT_POLICY",
         );

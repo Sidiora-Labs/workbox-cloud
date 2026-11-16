@@ -175,7 +175,7 @@ const envSchema = z.object({
   OPENSHIP_BYTESMAP_SAMPLE_RATE: z.string().optional(),
   OPENSHIP_BYTESMAP_ENVIRONMENT: z.string().optional(),
   /**
-   * MASTER switch for the whole Openship Cloud billing feature (subscriptions,
+   * MASTER switch for the whole Workbox Cloud billing feature (subscriptions,
    * top-ups). OFF by default → the billing state reports
    * `billing.status = "coming_soon"` and every purchase endpoint fails
    * closed with a `BILLING_NOT_ENABLED` 403. Flip to `true` on the SaaS to make
@@ -195,7 +195,7 @@ const envSchema = z.object({
    */
   BILLING_TOPUPS_ENABLED: envBool("false"),
   /**
-   * Openship Cloud only: hard cap on projects per user (a cloud org maps 1:1
+   * Workbox Cloud only: hard cap on projects per user (a cloud org maps 1:1
    * to its owning SaaS user, so per-org == per-user here). Enforced at project
    * create + ensure. Self-hosted ignores this and uses the high
    * SYSTEM.PROJECTS.MAX_PER_USER safety cap instead. Default 2 for now.
@@ -215,7 +215,7 @@ const envSchema = z.object({
    * from the dashboard without editing env and restarting).
    *
    *   - "platform" (default) → the full deploy platform
-   *   - "mail"               → Openship Mail: the dashboard's left rail becomes
+   *   - "mail"               → Workbox Cloud Mail: the dashboard's left rail becomes
    *                            the mail control plane, the platform nav is hidden
    *
    * Orthogonal to DEPLOY_MODE: mail mode says what the UI presents, DEPLOY_MODE
@@ -289,7 +289,7 @@ const envSchema = z.object({
   /**
    * Controls how the API authenticates with GitHub:
    *   - "auto"  (default) → local GitHub App when fully configured, then
-   *                          Openship Cloud App, then the local identity
+   *                          Workbox Cloud App, then the local identity
    *   - "app"             → GitHub App installation tokens (SaaS or a
    *                          self-hosted operator-owned App)
    *   - "oauth"           → Better Auth OAuth flow only (self-hosted with OAuth)
@@ -321,7 +321,7 @@ const envSchema = z.object({
   SMTP_PORT: z.coerce.number().optional(),
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
-  SMTP_FROM: z.string().default("Openship <noreply@openship.io>"),
+  SMTP_FROM: z.string().default("Workbox Cloud <noreply@openship.io>"),
   /** Optional Cloud customer aliases authorized by the same SMTP credentials.
    * Unset/blank aliases use the transport's configured sender. */
   SMTP_SUPPORT_FROM: z.string().trim().optional(),
@@ -348,7 +348,7 @@ const envSchema = z.object({
    * Trust an upstream edge/proxy to enforce rate limiting, and skip the
    * app-level pre-auth flood guard (middleware/rate-limiter.ts `floodGuard`)
    * as redundant. Set true when this API sits behind something that already
-   * rate-limits — the Openship Edge, or your own reverse proxy with limits.
+   * rate-limits — the Workbox Cloud Edge, or your own reverse proxy with limits.
    * Auto-implied under CLOUD_MODE (the cloud Edge has default limits). Leave
    * false on a standalone self-hosted API so the flood guard still protects
    * the pre-auth session lookup.
@@ -425,7 +425,7 @@ const envSchema = z.object({
   /**
    * Base URL of the Zero webmail server reachable from openship's API.
    * The Zero server owns its branding storage and exposes
-   * `/branding.json` (public) + `/admin/branding` (token-auth). Openship
+   * `/branding.json` (public) + `/admin/branding` (token-auth). Workbox Cloud
    * proxies dashboard branding writes here. Can be on the same VPS as
    * iRedMail, on a separate host, or even cross-region - wherever the
    * operator runs Zero.
@@ -678,7 +678,7 @@ if (env.DEPLOY_MODE === "desktop" && !env.OPENSHIP_AUTH_MODE && env.NODE_ENV !==
 // The CLI used to claim it on a bare VPS install purely to get an in-process job
 // runner. The result: a server-host install that identified as a laptop — no
 // "This Server" row (its startup hook is gated on modes:["selfhosted"]), a deploy
-// wizard offering only Openship Cloud, and a relaxed auth posture on a networked
+// wizard offering only Workbox Cloud, and a relaxed auth posture on a networked
 // box. The job runner never needed it (Redis reachability decides that).
 //
 // Electron declares BOTH DEPLOY_MODE=desktop and OPENSHIP_LOCAL_DASHBOARD_URL (it
@@ -702,7 +702,7 @@ if (
 
 // ─── non-App auth modes are forbidden on the SaaS host ────────────────────
 //
-// Multi-tenant Cloud has one GitHub integration: the Openship App. CLI, static
+// Multi-tenant Cloud has one GitHub integration: the Workbox Cloud GitHub App. CLI, static
 // PAT, and OAuth-only modes either use shared host credentials or bypass the
 // installation/workspace boundary. Runtime resolvers also hard-floor Cloud to
 // `app`; refusing invalid configuration at boot makes the mistake visible.

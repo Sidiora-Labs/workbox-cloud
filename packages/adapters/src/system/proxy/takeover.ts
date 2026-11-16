@@ -4,7 +4,7 @@
  * Given the foreign proxy owning 80/443 and the sites parsed from its config,
  * this: snapshots what it's about to stop (rollback journal on disk) → stops &
  * disables the foreign proxy → installs OpenResty → re-registers the imported
- * sites as Openship routes → reuses/issues their certs → verifies. Any failure
+ * sites as Workbox Cloud routes → reuses/issues their certs → verifies. Any failure
  * rolls back (re-enable the foreign proxy) so the box is never left dark.
  *
  * The on-disk journal lets a crash mid-run be rolled back on the next boot
@@ -94,7 +94,7 @@ export interface RegisterImportedSitesOptions {
 }
 
 /**
- * Register a set of sites parsed from a foreign proxy as Openship routes on the
+ * Register a set of sites parsed from a foreign proxy as Workbox Cloud routes on the
  * given routing/SSL provider — the executor-generic core shared by the HOST
  * takeover (`runEdgeTakeover`, NginxProvider on a LocalExecutor) and the
  * CONTAINER edge (the api's DockerEdgeExecutor provider, via the
@@ -336,7 +336,7 @@ export async function runEdgeTakeover(
       // holder, an operator retries the same unprivileged takeover forever. "Stopped
       // the existing proxy" is also untrue on that arm — the stop is what was refused.
       elevationDegraded
-        ? `The ${ports} Openship could not run the stop as root on this host (see the privilege ` +
+        ? `The ${ports} Workbox Cloud could not run the stop as root on this host (see the privilege ` +
           "warning above), so stopping the existing proxy was almost certainly refused — retrying " +
           "as this user will fail the same way. Reconnect as root, or as a user with passwordless sudo."
         : `Stopped the existing proxy, but ${ports} Find what else is holding the port and retry.`,
@@ -424,7 +424,7 @@ export async function runEdgeTakeover(
     journal.completed = true;
     await writeJournal(executor, journal);
     await clearJournal(executor);
-    onLog(log(`Takeover complete — ${registered.length} route(s) now served by Openship.`));
+    onLog(log(`Takeover complete — ${registered.length} route(s) now served by Workbox Cloud.`));
     return { ok: true, rolledBack: false, registered, warnings };
   } catch (err) {
     observeCaughtError(err, "adapters/system/proxy/takeover");

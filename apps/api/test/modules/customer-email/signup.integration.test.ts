@@ -74,7 +74,7 @@ it("welcomes a real SaaS email signup only after the real OTP verification flow"
   expect(h.send).toHaveBeenCalledExactlyOnceWith(
     expect.objectContaining({
       to: email,
-      subject: "Welcome to OpenShip",
+      subject: "Welcome to Workbox Cloud",
       customerSender: "support",
       replyTo: "support@openship.io",
     }),
@@ -157,7 +157,7 @@ it("welcomes a verified Google signup through the same outbox without repeating 
     expect(h.send).toHaveBeenCalledExactlyOnceWith(
       expect.objectContaining({
         to: email,
-        subject: "Welcome to OpenShip",
+        subject: "Welcome to Workbox Cloud",
         customerSender: "support",
         replyTo: "support@openship.io",
       }),
@@ -191,7 +191,7 @@ it("keeps one OAuth account on repeat signup and privately explains how to sign 
     [{ providerId: "google", password: null }],
   );
   expect(h.send).toHaveBeenCalledWith(
-    expect.objectContaining({ to: email, subject: "Sign in to your OpenShip account" }),
+    expect.objectContaining({ to: email, subject: "Sign in to your Workbox Cloud account" }),
   );
   const notice = h.send.mock.calls.at(-1)![0] as { text: string };
   expect(notice.text).toContain("already have");

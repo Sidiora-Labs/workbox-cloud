@@ -49,7 +49,7 @@ export interface CloudDockerOptions {
   /** Organization-validated subscription owner of the managed server. */
   ownerWorkspaceId: string;
   namespace: string;
-  /** Provider-authorized domain; production uses Openship's configured domain. */
+  /** Provider-authorized domain; production uses Workbox Cloud's configured domain. */
   publicDomain?: string;
   beforeProvision?: () => Promise<void>;
   /** Explicit opt-in for a desktop/self-hosted source transfer; SaaS denies it. */

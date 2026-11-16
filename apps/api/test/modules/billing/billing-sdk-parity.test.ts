@@ -161,7 +161,7 @@ beforeEach(() => {
   }
   provider.catalog.mockResolvedValue({
     success: true,
-    // Deliberately stale provider prices: customer offers come from Openship.
+    // Deliberately stale provider prices: customer offers come from Workbox Cloud.
     plans: [
       { tierId: "hobby", name: "Hobby", priceMonthly: 10, priceYearly: 100, currency: "usd", creditsPerCycle: 1200, yearlyCreditsPerCycle: 14400, features: [] },
       { tierId: "pro", name: "Pro", priceMonthly: 29, priceYearly: 290, currency: "usd", creditsPerCycle: 3000, yearlyCreditsPerCycle: 36000, features: [] },
@@ -784,7 +784,7 @@ describe("billing through the same SDK and HTTP application operations", () => {
     expect(provider.resume).not.toHaveBeenCalled();
   });
 
-  it("uses Openship credit packs instead of legacy database prices and enforces the independent top-up switch", async () => {
+  it("uses Workbox Cloud credit packs instead of legacy database prices and enforces the independent top-up switch", async () => {
     const owner = await seedOwner(), c = await clients(owner), pack = CREDIT_PACKS[0]!;
     await c.native.getState();
     provider.subscriptions.set((await billingWorkspace(owner)).namespace!, {
@@ -809,7 +809,7 @@ describe("billing through the same SDK and HTTP application operations", () => {
           kind: "topup",
           offer: {
             reference: `openship:${expectedPack.id}:v3`,
-            name: "Openship compute credits",
+            name: "Workbox Cloud compute credits",
             description: expect.any(String),
             unitAmount: expectedPack.price_cents,
             currency: "usd",

@@ -100,7 +100,7 @@ export class CloudSupportService {
       ctx.user?.id !== ctx.userId
     )
       throw new AppError(
-        "Sign in to Openship Cloud to manage your support tickets.",
+        "Sign in to Workbox Cloud to manage your support tickets.",
         403,
         "SUPPORT_SESSION_REQUIRED",
       );
@@ -232,7 +232,7 @@ export class CloudSupportService {
     const input = parseInput(CloudSupportInputSchema, raw);
     if (input.source !== "contact")
       throw new AppError(
-        "Sign in to Openship Cloud to open a support request.",
+        "Sign in to Workbox Cloud to open a support request.",
         401,
         "SUPPORT_SESSION_REQUIRED",
       );
@@ -289,16 +289,16 @@ export class CloudSupportService {
           id,
           inputHash: hash(`provisioning:${input.workspaceId}:${input.operationId}`),
           ownerUserId: input.owner?.id ?? null,
-          name: input.owner?.name || "OpenShip Cloud",
+          name: input.owner?.name || "Workbox Cloud",
           email: input.owner?.email || SUPPORT_EMAIL,
           category: "deployment",
           source: "support",
-          subject: "We're resolving an issue with your OpenShip server",
+          subject: "We're resolving an issue with your Workbox Cloud server",
           message: `Initial provisioning needs support review.\nServer: ${input.serverName}\nWorkspace: ${input.workspaceId}\nOperation: ${input.operationId}\nAttempts: ${input.attempts}\nAutomatic provisioning attempts have stopped. The customer's subscription and existing resources remain recorded.`,
         },
         {
           sendReceipt: !!input.owner,
-          receiptBody: `We couldn't finish setting up your OpenShip server, “${input.serverName}”.\n\nOur team has been notified and is working to resolve it. You don't need to submit another payment. We'll update you by email.`,
+          receiptBody: `We couldn't finish setting up your Workbox Cloud server, “${input.serverName}”.\n\nOur team has been notified and is working to resolve it. You don't need to submit another payment. We'll update you by email.`,
         },
       ),
     );

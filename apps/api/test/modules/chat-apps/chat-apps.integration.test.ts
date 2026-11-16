@@ -295,9 +295,9 @@ describe("Chat commands through normal OAuth and deployment routes", () => {
     const connection = (await repos.chatApps.get(c.id))!;
     await repos.settings.setLocale(installer.userId, "ar");
     await repos.settings.setLocale(owner.userId, "fr");
-    expect(await commands.handle(connection, event("help"))).toContain("Commandes OpenShip");
+    expect(await commands.handle(connection, event("help"))).toContain("Commandes Workbox Cloud");
     expect(await commands.handle(connection, event("help", { userId: "unlinked" }))).toContain(
-      "أوامر OpenShip",
+      "أوامر Workbox Cloud",
     );
     await repos.settings.setLocale(owner.userId, "de");
     expect(await commands.handle(connection, event("help"))).toContain("OpenShip-Befehle");

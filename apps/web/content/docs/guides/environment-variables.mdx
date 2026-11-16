@@ -7,15 +7,15 @@ import { Step, Steps } from "fumadocs-ui/components/steps";
 
 Most apps need a few pieces of information to run: a database address, an API key, a "am I in production?"
 flag. Those are **environment variables** — little named settings your app reads when it starts. Think of
-them as sticky notes you hand your app: `DATABASE_URL = ...`, `STRIPE_KEY = ...`. Openship keeps those notes
+them as sticky notes you hand your app: `DATABASE_URL = ...`, `STRIPE_KEY = ...`. Workbox Cloud keeps those notes
 for you, hands them to your app every time it builds and runs, and hides the sensitive ones so nobody can
 read them over your shoulder.
 
 <Callout title="What you need first">
 
-- A project you've already created in Openship (if not, start with [Deploy from GitHub](/docs/guides/deploy-from-github)).
+- A project you've already created in Workbox Cloud (if not, start with [Deploy from GitHub](/docs/guides/deploy-from-github)).
 - The names and values you want to set — for example `DATABASE_URL` and its connection string.
-- Nothing else. Openship encrypts and stores the values for you.
+- Nothing else. Workbox Cloud encrypts and stores the values for you.
 
 </Callout>
 
@@ -63,7 +63,7 @@ row to **mark it as secret**. A secret's value is stored the same way, but from 
 (`••••••••`) instead of plain text, so it stays hidden whenever you reopen the editor.
 
 <Callout title="Environment values are encrypted at rest" type="info">
-  Whether or not you mark a variable secret, Openship **encrypts every value before saving it**.
+  Whether or not you mark a variable secret, Workbox Cloud **encrypts every value before saving it**.
   Marking a value secret adds the on-screen masking on top — it controls what *you* can see later,
   not whether it's protected on disk.
 </Callout>
@@ -85,7 +85,7 @@ those values again before deploying.
 
 ### Save
 
-Press **Save changes**. Openship only writes the rows you actually added, changed, or deleted — every other
+Press **Save changes**. Workbox Cloud only writes the rows you actually added, changed, or deleted — every other
 variable is left exactly as it was. That's why a masked secret you didn't touch is never overwritten: you
 never re-typed it, so it's never re-sent.
 
@@ -95,7 +95,7 @@ never re-typed it, so it's never re-sent.
 
 <Callout title="Saving isn't the same as applying" type="warn">
   A saved change is stored right away, but the **running app keeps its old values until the next
-  deploy**. If something is already live, Openship offers a shortcut to push the change out
+  deploy**. If something is already live, Workbox Cloud offers a shortcut to push the change out
   immediately — see [Apply without a full rebuild](#apply-without-a-full-rebuild) below. Otherwise
   the new values take effect the next time you deploy.
 </Callout>
@@ -144,7 +144,7 @@ ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 RUN npm run build
 ```
 
-For a Git source, Openship also passes `OPENSHIP_COMMIT_SHA`: the commit this deployment builds, on
+For a Git source, Workbox Cloud also passes `OPENSHIP_COMMIT_SHA`: the commit this deployment builds, on
 manual and automatic deploys alike. It takes precedence over a variable of the same name, so use it
 instead of a stored literal to stamp an image's revision:
 
@@ -185,7 +185,7 @@ file is only used after you choose **Import .env**.
 
 Open **Services → select a service → Environment** to see its effective saved
 variables. The list includes Compose values, shared project variables and explicit
-service overrides, with a source label on each row. Openship stores these values;
+service overrides, with a source label on each row. Workbox Cloud stores these values;
 the list remains available when the deployment server is offline.
 
 When you edit an inherited project value or a direct Compose reference such as
@@ -195,11 +195,11 @@ source. Derived values, such as a connection URL using that token, are included
 in the review. Existing service overrides remain independent.
 
 Shared changes are saved together with your other edits. If the configuration
-changes after review, Openship asks you to review again. Saving does not restart
+changes after review, Workbox Cloud asks you to review again. Saving does not restart
 containers: use **Apply & restart** or redeploy each affected service. Settings
 used during an image build require a rebuild.
 
-This edits configuration stored in Openship, not files in your repository. Literal
+This edits configuration stored in Workbox Cloud, not files in your repository. Literal
 Compose values and already-expanded imports do not establish a shared source;
 matching names or values are never automatically linked. Use project variables
 and Compose references when you want a shared editable value.
@@ -234,11 +234,11 @@ remove that override before relying on the project's rotated token.
 
 Inside the editor, each value has an **eye icon** to show or hide it. A secret you saved earlier comes back
 masked with the placeholder `•••••••• (set — type to replace)`. To change it, just type the new value over
-the dots. To keep it, leave it alone — Openship keeps the stored value untouched.
+the dots. To keep it, leave it alone — Workbox Cloud keeps the stored value untouched.
 
 ## Production and preview values
 
-Openship keeps variables **per environment**, so your test setup and your live setup can differ (a `preview`
+Workbox Cloud keeps variables **per environment**, so your test setup and your live setup can differ (a `preview`
 build can point at a test database while `production` points at the real one). The three environments are
 `production`, `preview`, and `development`.
 
@@ -266,7 +266,7 @@ values, including dollar signs, quotes, and multiline values, without expanding 
 Rebuilding an app just to change a setting is slow — nothing about your _code_ changed. So when you save an
 env change and the project is already deployed, the editor shows an **Apply (restart, no rebuild)** button.
 
-Press it and Openship recreates the running container from the image it already built, with the new values
+Press it and Workbox Cloud recreates the running container from the image it already built, with the new values
 injected. No git clone, no build — just a quick restart. It's the fastest way to roll out a changed key or a
 rotated secret.
 
@@ -280,26 +280,26 @@ and shows completion after the service starts. This is a dedicated service actio
 (`POST /api/projects/:id/services/:serviceId/apply-env`); it creates no deployment or
 build session. Docker gets a graceful stop, and the replacement retains the existing
 ports, project network address, volumes, commands, and resource limits. If startup
-fails, Openship restores the previous container and leaves the changes pending.
+fails, Workbox Cloud restores the previous container and leaves the changes pending.
 The toolbar offers Apply only when a comparison with the deployed container finds
 saved changes, including removed variables. **Check running service** refreshes
 that comparison. An unavailable server is reported as an unknown state, while the
 saved variables remain editable.
 
 For an older or migrated service, Docker may still hold variables that were never
-saved in Openship. **Recover from running service** reads those missing values
+saved in Workbox Cloud. **Recover from running service** reads those missing values
 from that service's container, excluding image defaults, and adds them to the
-editor for review. Press **Save** to store them encrypted in Openship. Recovery
+editor for review. Press **Save** to store them encrypted in Workbox Cloud. Recovery
 never overwrites an already saved value. Before applying, recover these values or
 explicitly choose to remove them from the running service.
 
-This action supports Docker services on a server or an Openship Cloud Docker
+This action supports Docker services on a server or a Workbox Cloud Docker
 workspace. Legacy cloud workspaces and adopted containers on Docker's default bridge
 require **Redeploy**. Namespace-sharing services must be refreshed together through
 a deployment.
 
 A normal **Restart** keeps the container's existing variables. When saved changes are
-pending, Openship opens the service's **Environment** panel so you can apply them there.
+pending, Workbox Cloud opens the service's **Environment** panel so you can apply them there.
 Variables used during a build still require a rebuild.
 
 ## CLI
@@ -370,7 +370,7 @@ openship service env set web -p my-stack -e preview API_URL=https://staging.exam
 </Callout>
 
 <Callout title="A secret shows as dots and I can't read it back" type="info">
-  That's on purpose — Openship never reveals a stored secret's value again, in the dashboard or the
+  That's on purpose — Workbox Cloud never reveals a stored secret's value again, in the dashboard or the
   CLI. If you need to change it, type a new value over the dots. If you've lost the original, set a
   fresh one.
 </Callout>

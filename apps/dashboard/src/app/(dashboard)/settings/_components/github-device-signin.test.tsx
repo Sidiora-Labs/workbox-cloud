@@ -171,7 +171,7 @@ describe("Settings repairs the stored GitHub token (#944)", () => {
     expect(container.textContent).not.toContain("Clear saved token");
   });
 
-  it("opens a GitHub token field from Change method instead of the OpenShip API-token page", async () => {
+  it("opens a GitHub token field from Change method instead of the Workbox Cloud API-token page", async () => {
     await render(appWithRejectedToken);
     await click("Change method");
     await click("Access token");

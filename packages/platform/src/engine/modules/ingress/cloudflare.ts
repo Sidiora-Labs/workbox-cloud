@@ -111,7 +111,7 @@ export function mergeIngress(
     )
   )
     conflict(
-      `The tunnel rule for ${hostname} was created or changed outside Openship. Review it in Cloudflare before retrying.`,
+      `The tunnel rule for ${hostname} was created or changed outside Workbox Cloud. Review it in Cloudflare before retrying.`,
     );
   // Inserting below a wildcard would silently send this hostname elsewhere.
   if (
@@ -273,7 +273,7 @@ export class CloudflareIngress {
     const saved = actual.ingress.filter((r) => r.hostname === host.hostname);
     if (rule ? saved.length !== 1 || canonical(saved[0]) !== canonical(rule) : saved.length !== 0)
       conflict(
-        "The tunnel changed while Openship was updating it. Review its configuration and retry.",
+        "The tunnel changed while Workbox Cloud was updating it. Review its configuration and retry.",
       );
     if (rule) ownership.rule = rule;
     else delete ownership.rule;
@@ -293,7 +293,7 @@ export class CloudflareIngress {
     );
   }
   private marker(host: IngressHostname) {
-    return `Managed by Openship (${host.id})`;
+    return `Managed by Workbox Cloud (${host.id})`;
   }
   private async records(host: IngressHostname, ownership: IngressOwnership) {
     if (!ownership.zoneId) ownership.zoneId = (await this.zone(host.hostname)).id;
@@ -323,7 +323,7 @@ export class CloudflareIngress {
       }
       if (existing)
         conflict(
-          `The DNS record for ${host.hostname} was moved or changed outside Openship. Restore it or remove it before retrying.`,
+          `The DNS record for ${host.hostname} was moved or changed outside Workbox Cloud. Restore it or remove it before retrying.`,
         );
     }
     const marker = this.marker(host),
@@ -343,7 +343,7 @@ export class CloudflareIngress {
       !ours.some((r) => r.id === ownership.dnsId)
     )
       conflict(
-        `The DNS record for ${host.hostname} was changed outside Openship. Restore it or remove it before retrying.`,
+        `The DNS record for ${host.hostname} was changed outside Workbox Cloud. Restore it or remove it before retrying.`,
       );
     if (ours.length > 1)
       conflict(
@@ -363,7 +363,7 @@ export class CloudflareIngress {
     }
     if (records.some((r) => !ours.includes(r) && ["A", "AAAA", "CNAME"].includes(r.type)))
       conflict(
-        `DNS already points ${host.hostname} elsewhere. Openship will not replace an existing record. Remove that record in Cloudflare, then retry.`,
+        `DNS already points ${host.hostname} elsewhere. Workbox Cloud will not replace an existing record. Remove that record in Cloudflare, then retry.`,
       );
     if (!ours.length) {
       ownership.dnsIntent = true;
@@ -418,7 +418,7 @@ export class CloudflareIngress {
         "INGRESS_ACCESS_ORGANIZATION",
       );
     const apps = (await this.list<unknown>("/access/apps")).map(parseAccessApp);
-    const name = `Openship ${host.id}`;
+    const name = `Workbox Cloud ${host.id}`;
     let app = apps.find(
       (a) =>
         a.id === ownership.appId ||
@@ -440,11 +440,11 @@ export class CloudflareIngress {
         ))
     )
       conflict(
-        `The Access application for ${host.hostname} changed outside Openship. Review it before retrying.`,
+        `The Access application for ${host.hostname} changed outside Workbox Cloud. Review it before retrying.`,
       );
     if (apps.some((a) => a.id !== app?.id && appCovers(a, host.hostname)))
       conflict(
-        `An existing Access application covers ${host.hostname}. Openship will not replace or adopt it.`,
+        `An existing Access application covers ${host.hostname}. Workbox Cloud will not replace or adopt it.`,
       );
     if (!app || canonical(policyIds(app)) !== canonical([host.accessPolicyId])) {
       if (!app) ownership.appIntent = true;
@@ -487,12 +487,12 @@ export class CloudflareIngress {
     let app = apps.find(
       (a) =>
         a.id === ownership.appId ||
-        (ownership.appIntent && a.name === `Openship ${host.id}` && a.domain === host.hostname),
+        (ownership.appIntent && a.name === `Workbox Cloud ${host.id}` && a.domain === host.hostname),
     );
     if (app) {
       app = await this.hydrateApp(app);
       if (
-        app.name !== `Openship ${host.id}` ||
+        app.name !== `Workbox Cloud ${host.id}` ||
         app.domain !== host.hostname ||
         app.type !== "self_hosted" ||
         app.destinations?.some((d) => d.uri !== host.hostname || d.overrides?.length) ||
@@ -505,7 +505,7 @@ export class CloudflareIngress {
         )
       )
         conflict(
-          `The Access application for ${host.hostname} changed outside Openship. It has been retained for review.`,
+          `The Access application for ${host.hostname} changed outside Workbox Cloud. It has been retained for review.`,
         );
       const appId = app.id;
       await this.ignoreMissing(() => this.get(`/access/apps/${appId}`, { method: "DELETE" }));
@@ -527,7 +527,7 @@ export class CloudflareIngress {
       throw error;
     }
     if (tunnel.name !== name)
-      conflict("This tunnel was renamed outside Openship. It has been retained for review.");
+      conflict("This tunnel was renamed outside Workbox Cloud. It has been retained for review.");
     let config: TunnelConfig | null;
     try {
       config = await this.configuration(id);
@@ -537,7 +537,7 @@ export class CloudflareIngress {
     }
     if (config?.ingress.some((r) => r.hostname || r.path || r.service !== "http_status:404"))
       conflict(
-        "The tunnel still contains routes created outside Openship. Remove those routes before disconnecting.",
+        "The tunnel still contains routes created outside Workbox Cloud. Remove those routes before disconnecting.",
       );
     await this.ignoreMissing(() => this.get(`/cfd_tunnel/${id}`, { method: "DELETE" }));
   }

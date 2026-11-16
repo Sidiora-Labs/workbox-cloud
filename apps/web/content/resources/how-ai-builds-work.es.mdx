@@ -1,27 +1,27 @@
 ---
-title: "Cómo funcionan las compilaciones de IA en OpenShip"
-description: "Una mirada profunda a cómo OpenShip usa IA para detectar marcos, generar configuraciones y optimizar compilaciones automáticamente."
+title: "Cómo funcionan las compilaciones de IA en Workbox Cloud"
+description: "Una mirada profunda a cómo Workbox Cloud usa IA para detectar marcos, generar configuraciones y optimizar compilaciones automáticamente."
 date: "2026-03-08"
 category: "Engineering"
-author: "OpenShip Team"
+author: "Workbox Cloud Team"
 ---
 
 Cuando ejecutas `openship deploy`, suceden muchas cosas antes de que tu aplicación entre en funcionamiento. Así es como funciona el sistema de construcción de IA.
 
 ## Paso 1: Detección del marco
 
-OpenShip escanea tu proyecto en busca de señales:
+Workbox Cloud escanea tu proyecto en busca de señales:
 
 - `package.json` scripts y dependencias
 - Archivos de configuración (`next.config.js`, `nuxt.config.ts`, `Cargo.toml`, etc.)
 - Dockerpresencia de archivo
 - Patrones de estructura de directorios.
 
-Esto produce una coincidencia del marco de confianza. Si OpenShip detecta Next.js con un 95 % de confianza, utiliza la canalización de compilación Next.js. Si hay un archivo Docker, lo usa directamente.
+Esto produce una coincidencia del marco de confianza. Si Workbox Cloud detecta Next.js con un 95 % de confianza, utiliza la canalización de compilación Next.js. Si hay un archivo Docker, lo usa directamente.
 
 ## Paso 2: Generación de configuración
 
-Según el marco detectado, OpenShip genera:
+Según el marco detectado, Workbox Cloud genera:
 
 - **Comando de compilación** - `npm run build`, `go build`, etc.
 - **Iniciar comando** - `npm start`, `./server`, etc.
@@ -40,7 +40,7 @@ La capa de IA optimiza la construcción:
 
 ## Paso 4: controles de salud
 
-Después de la implementación, OpenShip verifica:
+Después de la implementación, Workbox Cloud verifica:
 
 - El contenedor se inicia exitosamente.
 - El punto final de control de salud responde
@@ -50,4 +50,4 @@ Si alguna comprobación falla, la implementación se revierte automáticamente.
 
 ## ¿Qué sigue?
 
-Estamos trabajando en diagnósticos basados en IA: cuando falla una compilación, OpenShip analizará el error y sugerirá soluciones. Manténganse al tanto.
+Estamos trabajando en diagnósticos basados en IA: cuando falla una compilación, Workbox Cloud analizará el error y sugerirá soluciones. Manténganse al tanto.

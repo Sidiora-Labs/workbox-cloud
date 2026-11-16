@@ -9,7 +9,7 @@ r.get(
     authorizationHandledByOperation: true,
     tag: "job:read",
     query: C.list.input,
-    mcp: { description: "List authorized GitHub-compatible Openship Actions workflows." },
+    mcp: { description: "List authorized GitHub-compatible Workbox Cloud Actions workflows." },
   },
   ctrl.list,
 );

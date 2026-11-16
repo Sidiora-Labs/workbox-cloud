@@ -111,7 +111,7 @@ describe("loopGuard — the four guards", () => {
   it("drops our OWN outbound sender — the direct self-feeding loop", () => {
     // A notification delivered to an address inside a watched domain would otherwise be
     // captured and emit again, forever.
-    const h = parseHeaderBlock("From: Openship <noreply@acme.com>\n");
+    const h = parseHeaderBlock("From: Workbox Cloud <noreply@acme.com>\n");
     expect(loopGuard(h, { openshipSenders: ["NoReply@acme.com"] })).toEqual({
       drop: true,
       reason: "openship-sender",

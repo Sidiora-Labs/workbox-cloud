@@ -216,7 +216,7 @@ export class RailwayProjectTransfer {
     const current = await this.read(state);
     if (current.unmergedChangesCount)
       throw new AppError(
-        "Railway has staged changes. Resolve them before migration or source recovery; Openship will not apply them.",
+        "Railway has staged changes. Resolve them before migration or source recovery; Workbox Cloud will not apply them.",
         409,
         "IMPORT_SOURCE_STAGED_CHANGES",
       );
@@ -237,7 +237,7 @@ export class RailwayProjectTransfer {
     await this.driver.query(
       `mutation($environment: String!, $patch: EnvironmentConfig!) {
         environmentPatchCommit(environmentId: $environment, patch: $patch, skipDeploys: true,
-          commitMessage: "Openship project migration")
+          commitMessage: "Workbox Cloud project migration")
       }`,
       {
         environment: state.environmentId,

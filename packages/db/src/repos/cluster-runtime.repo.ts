@@ -50,7 +50,7 @@ export function createClusterRuntimeRepo(db: Database) {
   async function expire(org: string) {
     await interrupt(
       and(eq(table.organizationId, org), expired()),
-      "OpenShip stopped reporting setup progress. Retry to inspect the saved installation and continue.",
+      "Workbox Cloud stopped reporting setup progress. Retry to inspect the saved installation and continue.",
     );
   }
   async function get(org: string, clusterId: string) {
@@ -200,7 +200,7 @@ export function createClusterRuntimeRepo(db: Database) {
         if (!cluster) throw new NotFoundError("Cluster", clusterId);
         const [current] = await tx.select().from(table).where(owned(org, clusterId)).for("update");
         if (!current) throw new NotFoundError("Cluster runtime");
-        if (current.provider !== "k3s") throw conflict("This runtime is externally managed. Disconnect its cluster after removing its projects; OpenShip does not uninstall it.");
+        if (current.provider !== "k3s") throw conflict("This runtime is externally managed. Disconnect its cluster after removing its projects; Workbox Cloud does not uninstall it.");
         if (action === "remove" && current.status === "removed")
           return { row: current, started: false };
         if (clusterRuntimeRunning(current.status))
@@ -317,7 +317,7 @@ export function createClusterRuntimeRepo(db: Database) {
     recoverInterrupted: (exclusive: boolean) =>
       interrupt(
         exclusive ? undefined : expired(),
-        "OpenShip restarted before cluster setup finished. Retry to inspect the saved installation and continue.",
+        "Workbox Cloud restarted before cluster setup finished. Retry to inspect the saved installation and continue.",
       ),
   };
 }

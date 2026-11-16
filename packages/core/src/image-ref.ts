@@ -19,7 +19,7 @@ export function isMutableImageRef(ref: string): boolean {
 }
 
 /**
- * Shared precedence for an Openship container image reference (edge, mail, …).
+ * Shared precedence for a Workbox Cloud container image reference (edge, mail, …).
  * ONE resolver so a per-image wrapper can't drift on the order:
  *
  *   explicit → <image env override> → injectedDefault → `<registry>/<image>:<tag>`

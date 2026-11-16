@@ -1,9 +1,9 @@
 ---
 title: "Selbsthosting vs. verwaltete Plattformen: Die tatsächliche Kostenaufschlüsselung"
-description: "Wir haben die tatsächlichen Kosten für den Betrieb einer Produktionsanwendung von Next.js auf Vercel, AWS und einer selbstgehosteten Einrichtung von OpenShip verglichen. Die Zahlen könnten Sie überraschen."
+description: "Wir haben die tatsächlichen Kosten für den Betrieb einer Produktionsanwendung von Next.js auf Vercel, AWS und einer selbstgehosteten Einrichtung von Workbox Cloud verglichen. Die Zahlen könnten Sie überraschen."
 date: "2026-03-05"
 category: "Guide"
-author: "OpenShip Team"
+author: "Workbox Cloud Team"
 ---
 
 „Einfach Vercel verwenden“ ist ein guter Rat – bis Ihre Rechnung eintrifft. Wir haben dieselbe Next.js App in drei Setups ausgeführt und alle Kosten 30 Tage lang verfolgt.
@@ -19,7 +19,7 @@ Eine Produktions-App von Next.js 15 mit:
 
 ## Die Ergebnisse
 
-| | Vercel Pro | AWS (ECS + RDS) | OpenShip (selbst gehostet) |
+| | Vercel Pro | AWS (ECS + RDS) | Workbox Cloud (selbst gehostet) |
 |---|---|---|---|
 | Berechnen | 150 $/Monat | 85 $/Monat | 24 $/Monat |
 | Datenbank | 50 $/Monat (Neon) | 45 $/Monat | Im Lieferumfang enthalten |
@@ -27,13 +27,13 @@ Eine Produktions-App von Next.js 15 mit:
 | SSL/Domänen | Im Lieferumfang enthalten | 1 $/Monat | Im Lieferumfang enthalten |
 | **Gesamt** | **320 $/Monat** | **176 $/Monat** | **24 $/Monat** |
 
-Das selbstgehostete OpenShip-Setup läuft auf einem einzelnen Hetzner VPS (CPX31: 4 vCPU, 8 GB RAM, 160 GB SSD).
+Das selbstgehostete Workbox Cloud-Setup läuft auf einem einzelnen Hetzner VPS (CPX31: 4 vCPU, 8 GB RAM, 160 GB SSD).
 
 ## Die Kompromisse
 
 Verwaltete Plattformen bieten Ihnen null Betriebskosten. Sie pushen Code, er wird bereitgestellt. Das ist ein echter Wert.
 
-Aber OpenShip schließt die Lücke deutlich:
+Aber Workbox Cloud schließt die Lücke deutlich:
 – **KI übernimmt die Konfiguration** – Build-Erkennung, DockerDateigenerierung und SSL erfolgen automatisch.
 - **Ein-Befehl-Bereitstellung** - `openship deploy` ist genauso schnell.
 - **Integrierte Überwachung** – Protokolle, Metriken und Warnungen sofort einsatzbereit.

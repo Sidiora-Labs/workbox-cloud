@@ -187,7 +187,7 @@ export function AssistantToolActivity({
             </h2>
             <p className="mt-1 text-xs text-muted-foreground">
               <span className={state ? "hidden sm:inline" : ""}>
-                {opened ? "Tool call · OpenShip" : "Agent reasoning"}
+                {opened ? "Tool call · Workbox Cloud" : "Agent reasoning"}
               </span>
               {state && (
                 <span className={`sm:hidden ${state === "failed" ? "text-danger" : ""}`}>

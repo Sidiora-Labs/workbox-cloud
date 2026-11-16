@@ -86,7 +86,7 @@ export const CHAT_ACCESS_COPY: Partial<AccessCopy> = {
   readOnlySecretsNote:
     "This read-only grant includes data your account can access. Chat commands return project status and private links; raw logs and secrets are not posted.",
   missingClientId: "This request is invalid. Send /openship link to start again.",
-  signInRequiredBody: "Sign into OpenShip, then open the link from your chat again.",
+  signInRequiredBody: "Sign into Workbox Cloud, then open the link from your chat again.",
   authorizeError: "Couldn't link your account. Try again, or send /openship link to start again.",
   authorize: "Link my account",
 };

@@ -233,7 +233,7 @@ export function buildDiscordMessage(input: {
   timestamp: string;
 }): DiscordMessage {
   return {
-    username: "Openship",
+    username: "Workbox Cloud",
     avatar_url: "https://openship.io/favicon.ico",
     embeds: [
       {
@@ -293,7 +293,7 @@ async function sendEmail(
   const { title, body } = renderMessage(delivery);
   const delivered = await sendMail({
     to: config.address,
-    subject: `[Openship] ${title}`,
+    subject: `[Workbox Cloud] ${title}`,
     text: body,
     html: renderEmailHtml(delivery),
     organizationId: delivery.organizationId,
@@ -336,7 +336,7 @@ async function sendWebhook(
   });
 
   // HMAC signature so the receiver can verify the request came from
-  // Openship. The secret is set when the user creates the channel and
+  // Workbox Cloud. The secret is set when the user creates the channel and
   // stored encrypted in channel.config — we sign the raw body.
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -600,7 +600,7 @@ export async function sendTestToChannel(channel: NotificationChannel): Promise<v
     category: "test",
     createdAt: new Date(),
     payload: {
-      message: "Openship test notification — this channel is configured correctly.",
+      message: "Workbox Cloud test notification — this channel is configured correctly.",
     },
   } as unknown as NotificationDelivery;
   try { await worker(testDelivery, channel); }

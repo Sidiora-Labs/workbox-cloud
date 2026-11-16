@@ -44,7 +44,7 @@ type Account = NonNullable<Awaited<ReturnType<typeof repos.managementBilling.get
 function assertCloud() {
   if (!env.CLOUD_MODE)
     throw new AppError(
-      "Hosted management billing belongs to Openship Cloud",
+      "Hosted management billing belongs to Workbox Cloud",
       404,
       "CAPABILITY_UNAVAILABLE",
     );
@@ -240,7 +240,7 @@ export async function purchaseManagement(ctx: ExecutionContext, input: Managemen
       let owner = await account(org);
       if (!owner.namespaceReady) {
         await ensureCloudNamespace({
-          name: "Openship Manage",
+          name: "Workbox Cloud Manage",
           slug: owner.namespace,
           resource_limits: {
             max_vms: 0,

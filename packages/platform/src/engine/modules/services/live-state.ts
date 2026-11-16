@@ -15,7 +15,7 @@
  * off whatever container that resolves to:
  *
  *   1. label     — `openship.project` + `openship.service` (a native deploy)
- *   2. name      — `openship-<slug>-<service>`, the name Openship itself mints
+ *   2. name      — `openship-<slug>-<service>`, the name Workbox Cloud itself mints
  *                  (createServiceContainer); survives relabeling and adoption
  *   3. trackedId — the id stored on the `service_deployment` row; the only key an
  *                  attached container with a FOREIGN name has. Identity hint
@@ -55,7 +55,7 @@ export type LiveMatchKind = "label" | "name" | "trackedId" | "compose";
 const OWNED_CONTAINER_TIERS = ["label", "name", "trackedId"] as const;
 
 /** Compose labels are a recovery key only for an explicitly adopted stack.
- * Compose project names and Openship slugs are different namespaces; using a
+ * Compose project names and Workbox Cloud slugs are different namespaces; using a
  * slug match for normal deployments lets an unrelated same-named stack claim
  * the service. */
 export function liveMatchTiersForDeployment(
@@ -116,7 +116,7 @@ const UNMATCHED: Omit<LiveServiceMatch, "duplicates"> = {
   matchedBy: null,
 };
 
-/** Canonical container name Openship gives a compose service on a server —
+/** Canonical container name Workbox Cloud gives a compose service on a server —
  *  mirrors `createServiceContainer` in packages/adapters/src/runtime/docker.ts. */
 export function canonicalServiceContainerName(slug: string, serviceName: string): string | null {
   if (!slug || !serviceName) return null;

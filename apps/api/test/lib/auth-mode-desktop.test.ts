@@ -8,7 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
  * `DEPLOY_MODE === "desktop" ? "none" : "local"` guess on top of a catch-all
  * default that failed OPEN (a DB error handed out zero-auth on desktop). A single
  * stale "cloud" row — written by self-app.controller when a box with no local admin
- * connects Openship Cloud — was enough to send the loopback-only desktop app to a
+ * connects Workbox Cloud — was enough to send the loopback-only desktop app to a
  * remote sign-in screen with no way back.
  *
  * The contract these tests pin:

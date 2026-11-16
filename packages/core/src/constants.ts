@@ -2,7 +2,7 @@
  * Shared constants used across the monorepo.
  */
 
-export const APP_NAME = "Openship";
+export const APP_NAME = "Workbox Cloud";
 export const SUPPORT_EMAIL = "support@openship.io";
 
 /** Authenticated organization admins may intentionally create a shareable

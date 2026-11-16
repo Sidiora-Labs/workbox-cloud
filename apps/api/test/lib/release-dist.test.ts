@@ -312,7 +312,7 @@ describe("resolveReleaseVersion", () => {
     expect(safeFetchMock).not.toHaveBeenCalled();
   });
 
-  it("throws a typed error instead of borrowing Openship's API version", async () => {
+  it("throws a typed error instead of borrowing Workbox Cloud's API version", async () => {
     safeFetchMock.mockRejectedValue(new Error("upstream unavailable"));
     const source: ReleaseSource = {
       mode: "url",

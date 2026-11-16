@@ -1,7 +1,7 @@
 /**
  * OS service backend for `openship up` / `openship stop`.
  *
- * `openship up` (default) installs Openship as a persistent service that
+ * `openship up` (default) installs Workbox Cloud as a persistent service that
  * auto-restarts on crash and starts on boot, running until `openship stop`.
  * The service runs `openship up --foreground` — the attached supervisor in
  * commands/up.ts — so the OS service manager is what keeps it alive.
@@ -52,7 +52,7 @@ export interface UpFlags {
   managedEdge?: boolean;
   /** ACME contact email for the managed edge. */
   acmeEmail?: string;
-  /** Openship Mail: default the dashboard to the mail control plane. */
+  /** Workbox Cloud Mail: default the dashboard to the mail control plane. */
   mail?: boolean;
 }
 
@@ -85,7 +85,7 @@ function upArgs(flags: UpFlags): string[] {
   if (flags.acmeEmail) a.push("--acme-email", flags.acmeEmail);
   // Replayed, not carried in the unit's Environment=: the supervised process is
   // `up --foreground`, which builds its own env from the flags. Without this the
-  // service would boot the platform shell on a box installed as Openship Mail.
+  // service would boot the platform shell on a box installed as Workbox Cloud Mail.
   if (flags.mail) a.push("--mail");
   return a;
 }
@@ -210,7 +210,7 @@ function systemdUnit(flags: UpFlags): string {
       ? `Environment=PATH=${["/usr/local/sbin", "/usr/local/bin", "/usr/sbin", "/usr/bin", "/sbin", "/bin", OPENSHIP_BIN].join(":")}\n`
       : "";
   return `[Unit]
-Description=Openship control plane
+Description=Workbox Cloud control plane
 After=network-online.target
 Wants=network-online.target
 

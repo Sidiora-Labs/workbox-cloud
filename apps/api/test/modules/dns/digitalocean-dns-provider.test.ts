@@ -420,7 +420,7 @@ describe("digitaloceanDnsProvider", () => {
       expect(zone.records.map((r) => r.id)).toEqual([102, 901]);
     });
 
-    it("removes the marker of a record already deleted outside Openship", async () => {
+    it("removes the marker of a record already deleted outside Workbox Cloud", async () => {
       const zone = fakeZone("example.com", [
         rec({ id: 102, type: "TXT", data: "token" }),
         marker("_openship-owner.app", "A", 101, 900),

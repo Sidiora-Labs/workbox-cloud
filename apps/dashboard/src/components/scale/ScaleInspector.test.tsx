@@ -32,9 +32,9 @@ function render(id: string, draft: ScaleDraft = createExampleDraft()) {
 }
 
 describe("scaling panels", () => {
-  it("puts load balancing, health checks, and TLS inside OpenShip Edge", () => {
+  it("puts load balancing, health checks, and TLS inside Workbox Cloud Edge", () => {
     const html = render("edge-us");
-    expect(html).toContain("OpenShip Edge");
+    expect(html).toContain("Workbox Cloud Edge");
     expect(html).toContain("TLS termination");
     expect(html).toContain("Balancing algorithm");
     expect(html).toContain("Health check path");

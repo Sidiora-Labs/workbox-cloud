@@ -475,7 +475,7 @@ export class DockerBackupExecutor implements BackupExecutor {
   /**
    * The container's own `Config.Env`, as `KEY=value` pairs already split.
    *
-   * This is the credentials source for every service Openship did not deploy
+   * This is the credentials source for every service Workbox Cloud did not deploy
    * itself — see `BackupExecutor.readContainerEnv`. Returns `{}` rather than
    * throwing on any failure: it is an ENRICHMENT of the handle's env, so a
    * container that has gone away, or a daemon that refuses the inspect, must leave

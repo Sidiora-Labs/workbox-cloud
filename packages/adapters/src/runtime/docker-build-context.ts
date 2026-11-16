@@ -617,7 +617,7 @@ export function missingContextDockerfileMessage(
       ? " The source root has a Dockerfile, but it is outside this service's build context, so it is not used — set the service's build path to the directory that holds the Dockerfile you want, or add one there."
       : "") +
     (opts?.generatedRecipeRefused
-      ? " A declared build context builds from its own Dockerfile — Openship will not generate one for it, because a generated recipe copies from the source root."
+      ? " A declared build context builds from its own Dockerfile — Workbox Cloud will not generate one for it, because a generated recipe copies from the source root."
       : "")
   );
 }

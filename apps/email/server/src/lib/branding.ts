@@ -30,7 +30,7 @@ export type Branding = {
   loginFooter: string;
   homeHtml: string | null;
   /**
-   * Show the "Powered by OpenShip" row and its Docs / Privacy / Terms / GitHub
+   * Show the "Powered by Workbox Cloud" row and its Docs / Privacy / Terms / GitHub
    * links at the foot of the login page. GH-568: every one of those is vendor
    * chrome pointing off-site, and none of it was reachable from the branding
    * schema - so a fully branded deployment still advertised the vendor and led
@@ -42,11 +42,11 @@ export type Branding = {
 };
 
 export const defaultBranding: Branding = {
-  siteTitle: 'OpenShip Mail',
+  siteTitle: 'Workbox Cloud Mail',
   siteDescription: 'Your self-hosted mailbox.',
-  loginHeading: 'OpenShip Mail',
+  loginHeading: 'Workbox Cloud Mail',
   loginSubtext: 'Sign in with your mailbox credentials',
-  loginFooter: 'Self-hosted on your own mail server. No third parties.',
+  loginFooter: 'Self-hosted on your own mail server. Powered by Workbox Cloud.',
   homeHtml: null,
   showPoweredBy: true,
 };

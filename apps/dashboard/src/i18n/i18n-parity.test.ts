@@ -33,9 +33,9 @@ describe("i18n locale parity vs the English source", () => {
         writeFileSync(
           join(directory, locale, "sample.json"),
           JSON.stringify({
-            product: "OpenShip Cloud",
+            product: "Workbox Cloud",
             framework: "Ruby on Rails",
-            prose: "OpenShip deploys your applications.",
+            prose: "Workbox Cloud deploys your applications.",
           }),
         );
       }

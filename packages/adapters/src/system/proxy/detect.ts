@@ -498,7 +498,7 @@ async function probeEdgePort(
   //     `readlink /proc/<pid>/exe` can be denied). THIS is the self-takeover lock:
   //     our own edge must never read as foreign and get killed by the takeover.
   //
-  // A BARE HOST OpenResty is NOT ours, even one an older Openship installed. The
+  // A BARE HOST OpenResty is NOT ours, even one an older Workbox Cloud installed. The
   // edge is a container; a host OpenResty is a proxy to MIGRATE FROM, exactly like
   // a distro nginx or a Caddy (`canImportProxy("openresty")` is true and
   // `scanOpenshipEdge` reads both bare sites-enabled layouts). Calling it "ours"

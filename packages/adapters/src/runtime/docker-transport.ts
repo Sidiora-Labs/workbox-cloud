@@ -105,7 +105,7 @@ export function clearDockerContextCache(): void {
  * Contexts are how Colima / Rancher Desktop / Podman / rootless Docker actually
  * advertise themselves today: they register a context and switch to it, and set
  * no `DOCKER_HOST` at all. Reading only `DOCKER_HOST` meant `docker ps` worked
- * in the operator's shell while Openship reported no daemon on the very same
+ * in the operator's shell while Workbox Cloud reported no daemon on the very same
  * box — a self-hosted install that could not see its own Docker.
  *
  * Read from disk rather than by shelling out to `docker context inspect`: this

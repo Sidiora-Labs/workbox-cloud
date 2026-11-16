@@ -237,7 +237,7 @@ describe("applyProjectManifests", () => {
   });
 
   it("never replaces an object that the manifests did not create", async () => {
-    // Openship's own app Service carries the project labels but not the manifest label.
+    // Workbox Cloud's own app Service carries the project labels but not the manifest label.
     const { api, store } = fakeApi();
     store.set("/api/v1/namespaces/os-abc/services/app", {
       apiVersion: "v1",
@@ -347,7 +347,7 @@ describe("manifest ownership boundaries", () => {
     expect(() => admitProjectManifests([object], owner)).toThrow(/reserved selector/);
   });
 
-  it("prevents a user Service from selecting Openship application pods", () => {
+  it("prevents a user Service from selecting Workbox Cloud application pods", () => {
     expect(() =>
       admitProjectManifests(
         [

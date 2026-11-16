@@ -770,7 +770,7 @@ describe("mail database credential over a retained pgdata (GH-564)", () => {
  * Every other stub in this file is a SINGLE object, so `rootOrDegrade` degrades to it and
  * the elevated-write / unelevated-launch split is structurally invisible: the bug could not
  * fail a test even while it made mail setup impossible on a whole class of hosts. These
- * model the reporter's box instead — Openship running as a non-root user that is in the
+ * model the reporter's box instead — Workbox Cloud running as a non-root user that is in the
  * docker group AND has passwordless sudo, the one arm where `rootOrDegrade` returns a real
  * `elevatedExecutor` wrapper and the writer's identity diverges from the launcher's.
  *

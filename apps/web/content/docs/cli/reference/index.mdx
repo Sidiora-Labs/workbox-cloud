@@ -24,20 +24,20 @@ Put global options before the command, for example `openship --json project list
 
 | Command | Purpose |
 | --- | --- |
-| [`openship login`](/docs/cli/reference/login) | Connect to Cloud or self-hosted Openship with a Personal Access Token |
-| [`openship logout`](/docs/cli/reference/logout) | Remove the stored Openship token |
+| [`openship login`](/docs/cli/reference/login) | Connect to Cloud or self-hosted Workbox Cloud with a Personal Access Token |
+| [`openship logout`](/docs/cli/reference/logout) | Remove the stored Workbox Cloud token |
 | [`openship context`](/docs/cli/reference/context) | Manage connection contexts (list/use/add/rm) |
 | [`openship token`](/docs/cli/reference/token) | Manage personal access tokens |
 | [`openship access`](/docs/cli/reference/access) | Manage workspaces, members, invitations and resource grants |
 | [`openship credential`](/docs/cli/reference/credential) | Manage stored registry and DNS credentials; reads return masked secrets |
 | [`openship github`](/docs/cli/reference/github) | Connect GitHub, browse repositories and manage deployment sources |
-| [`openship api`](/docs/cli/reference/api) | Make an authenticated request to any Openship API route (like `gh api`) |
+| [`openship api`](/docs/cli/reference/api) | Make an authenticated request to any Workbox Cloud API route (like `gh api`) |
 
 ## Deploy
 
 | Command | Purpose |
 | --- | --- |
-| [`openship init`](/docs/cli/reference/init) | Link the current directory to an Openship project (.openship/project.json) |
+| [`openship init`](/docs/cli/reference/init) | Link the current directory to a Workbox Cloud project (.openship/project.json) |
 | [`openship config`](/docs/cli/reference/config) | Author and validate openship.json (declarative deploy config) |
 | [`openship deploy`](/docs/cli/reference/deploy) | Trigger a deployment for the current project |
 | [`openship deployment`](/docs/cli/reference/deployment) | Manage deployments (list, inspect, redeploy, rollback, …) |
@@ -47,7 +47,7 @@ Put global options before the command, for example `openship --json project list
 
 | Command | Purpose |
 | --- | --- |
-| [`openship project`](/docs/cli/reference/project) | Manage Openship projects |
+| [`openship project`](/docs/cli/reference/project) | Manage Workbox Cloud projects |
 | [`openship app`](/docs/cli/reference/app) | Browse, install, and configure catalog apps |
 | [`openship service`](/docs/cli/reference/service) | Manage the services in a compose stack (a multi-service project) |
 | [`openship domain`](/docs/cli/reference/domain) | Manage custom domains, DNS verification, and SSL certificates |
@@ -62,7 +62,7 @@ Put global options before the command, for example `openship --json project list
 | [`openship webhook`](/docs/cli/reference/webhook) | Manage incoming deploy and job webhooks |
 | [`openship audit`](/docs/cli/reference/audit) | Inspect audit events and retention settings |
 | [`openship analytics`](/docs/cli/reference/analytics) | Read project traffic, deployments and runtime resource measurements |
-| [`openship settings`](/docs/cli/reference/settings) | Manage user preferences on the selected Openship instance |
+| [`openship settings`](/docs/cli/reference/settings) | Manage user preferences on the selected Workbox Cloud instance |
 
 ## Cloud
 
@@ -86,14 +86,14 @@ Put global options before the command, for example `openship --json project list
 
 | Command | Purpose |
 | --- | --- |
-| [`openship up`](/docs/cli/reference/up) | Start Openship as a persistent service (boot + auto-restart); --foreground to run attached |
-| [`openship stop`](/docs/cli/reference/stop) | Stop Openship (started by `openship up`) — it won't restart or return on reboot |
-| [`openship status`](/docs/cli/reference/status) | Show the local Openship service (installed/running, ports) and the active context's API health |
+| [`openship up`](/docs/cli/reference/up) | Start Workbox Cloud as a persistent service (boot + auto-restart); --foreground to run attached |
+| [`openship stop`](/docs/cli/reference/stop) | Stop Workbox Cloud (started by `openship up`) — it won't restart or return on reboot |
+| [`openship status`](/docs/cli/reference/status) | Show the local Workbox Cloud service (installed/running, ports) and the active context's API health |
 | [`openship doctor`](/docs/cli/reference/doctor) | Check database + services health and repair a corrupt local database |
-| [`openship open`](/docs/cli/reference/open) | Open the Openship dashboard in your browser |
-| [`openship install`](/docs/cli/reference/install) | Download and install the Openship desktop app for this OS |
-| [`openship update`](/docs/cli/reference/update) | Update the Openship CLI + bundled server to the latest release |
-| [`openship uninstall`](/docs/cli/reference/uninstall) | Remove Openship from this machine: stop it, delete its data (database, certs, edge config), its images, and ~/.openship. Deployed apps are left running. |
+| [`openship open`](/docs/cli/reference/open) | Open the Workbox Cloud dashboard in your browser |
+| [`openship install`](/docs/cli/reference/install) | Download and install the Workbox Cloud desktop app for this OS |
+| [`openship update`](/docs/cli/reference/update) | Update the Workbox Cloud CLI + bundled server to the latest release |
+| [`openship uninstall`](/docs/cli/reference/uninstall) | Remove Workbox Cloud from this machine: stop it, delete its data (database, certs, edge config), its images, and ~/.openship. Deployed apps are left running. |
 | [`openship reset-admin-password`](/docs/cli/reference/reset-admin-password) | Reset the local admin login on THIS machine (no sign-in required) |
 
 ## Shell

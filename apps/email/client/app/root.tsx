@@ -74,7 +74,7 @@ export const meta: MetaFunction = () => {
     // against the page URL just fine. Adding a baked-in absolute here
     // would defeat the multi-host portability.
     { property: 'og:type', content: 'website' },
-    { rel: 'manifest', href: '/manifest.webmanifest' },
+    { rel: 'manifest', href: '/manifest.json' },
   ];
 };
 
@@ -86,10 +86,8 @@ export function Layout({ children }: PropsWithChildren) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#141414" media="(prefers-color-scheme: dark)" />
         <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" href="/brand/wb_cloud_dark.webp" type="image/webp" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/brand/wb_cloud_dark.webp" />
         <link rel="manifest" href="/manifest.json" />
         <Meta />
         {import.meta.env.REACT_SCAN && (

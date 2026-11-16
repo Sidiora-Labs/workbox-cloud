@@ -263,7 +263,7 @@ export async function createRepository(
     owner: opts.owner,
     params: {
       name,
-      description: opts.description ?? `Repository created by Openship`,
+      description: opts.description ?? `Repository created by Workbox Cloud`,
       private: opts.private ?? false,
     },
   });

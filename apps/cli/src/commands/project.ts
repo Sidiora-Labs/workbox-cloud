@@ -509,7 +509,7 @@ const sleepModeCmd = new Command("sleep-mode")
 // (project.routes.ts:119-120, localOnly). Gate with requireSelfHost.
 const TRANSFER_DIRS = ["to-cloud", "to-self-hosted"];
 const transferCmd = new Command("transfer")
-  .description("Promote a project to Openship Cloud, or bring it back (self-hosted only)")
+  .description("Promote a project to Workbox Cloud, or bring it back (self-hosted only)")
   .argument("<id>", "Project ID")
   .argument("<direction>", `One of: ${TRANSFER_DIRS.join(", ")}`)
   .action(
@@ -631,7 +631,7 @@ function printLogEntry(entry: Record<string, unknown>): void {
 // ─── parent ────────────────────────────────────────────────────────────────────
 export const projectCommand = new Command("project")
   .alias("projects")
-  .description("Manage Openship projects");
+  .description("Manage Workbox Cloud projects");
 
 projectCommand.addCommand(listCmd);
 projectCommand.addCommand(getCmd);

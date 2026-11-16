@@ -37,7 +37,7 @@ export const LAUNCHER_PATH = join(BIN_DIR, "openship");
  * the copy scripts/install.sh writes — both are regenerated on install/update.
  */
 export const LAUNCHER_SH = `#!/bin/sh
-# Openship CLI launcher — runs the tarball-installed CLI under Node.
+# Workbox Cloud CLI launcher — runs the tarball-installed CLI under Node.
 # Managed by scripts/install.sh and \`openship update\`; manual edits are overwritten.
 SELF="$0"
 while [ -L "$SELF" ]; do

@@ -1,11 +1,11 @@
 ---
 title: Authentication
-description: How you prove who you are to Openship — session cookies, personal access tokens, MCP OAuth, and desktop loopback mode.
+description: How you prove who you are to Workbox Cloud — session cookies, personal access tokens, MCP OAuth, and desktop loopback mode.
 ---
 
 import { TypeTable } from 'fumadocs-ui/components/type-table';
 
-Every request to Openship has to answer one question first: **who are you?** Openship accepts four
+Every request to Workbox Cloud has to answer one question first: **who are you?** Workbox Cloud accepts four
 different ways to answer it, and which one applies depends on *where* the request comes from — a browser
 tab, a script, an AI agent, or the desktop app talking to itself. This page walks through each one.
 
@@ -24,19 +24,19 @@ after login are covered separately in [Permission model](/docs/security/permissi
 | **MCP OAuth** | An OAuth 2.1 access token the client fetches for you | AI agents (Claude, Cursor, …) connecting to `/api/mcp` |
 | **Zero-auth loopback** | Nothing — the request just comes from `127.0.0.1` | The desktop app, or a local single-user instance you opt into |
 
-A single request uses exactly one of these. Openship checks for a `Bearer` token first; if there isn't
+A single request uses exactly one of these. Workbox Cloud checks for a `Bearer` token first; if there isn't
 one, it looks for a session cookie; if there's neither, it falls back to the loopback path (and only if
 that mode is turned on).
 
 ## Session cookies (the dashboard)
 
-When you log in to the dashboard, Openship gives your browser a **signed, httpOnly session cookie**.
+When you log in to the dashboard, Workbox Cloud gives your browser a **signed, httpOnly session cookie**.
 "httpOnly" means JavaScript running in the page cannot read it — so even if a bad script somehow ran on
 the page, it couldn't steal your session. The browser sends the cookie automatically on every request;
 you never handle it yourself.
 
 The cookie name is prefixed with your instance mode — `openship.session_token` on a self-hosted install,
-`openship-cloud.session_token` on Openship Cloud.
+`openship-cloud.session_token` on Workbox Cloud.
 
 ### OAuth and generic OIDC (SSO)
 
@@ -47,7 +47,7 @@ provider (Authentik, Keycloak, Okta, Microsoft Entra ID, Google Workspace) via e
   `GOOGLE_CLIENT_SECRET`.
 - **Generic OIDC:** `OIDC_ISSUER`, `OIDC_CLIENT_ID`, and `OIDC_CLIENT_SECRET` (all three required;
   partial configuration is ignored with a boot warning), plus optional `OIDC_DISPLAY_NAME` for the
-  login button label (defaults to `"SSO"`). Openship discovers endpoints from
+  login button label (defaults to `"SSO"`). Workbox Cloud discovers endpoints from
   `${OIDC_ISSUER}/.well-known/openid-configuration` (a trailing slash is removed only when constructing the discovery URL) and
   requests `openid email profile`. The authorization request uses PKCE and a nonce tied to the
   same single-use sign-in state. Discovery must report the exact configured issuer. Production
@@ -55,7 +55,7 @@ provider (Authentik, Keycloak, Okta, Microsoft Entra ID, Google Workspace) via e
   Redirects from discovery, token, key and UserInfo endpoints are refused.
 
 Generic OIDC is available only on a self-hosted instance using local accounts
-(`OPENSHIP_AUTH_MODE=local`). Openship Cloud ignores these settings and keeps its
+(`OPENSHIP_AUTH_MODE=local`). Workbox Cloud ignores these settings and keeps its
 existing login providers. Account-free mode and instances that delegate login to
 Cloud reject OIDC sign-in and account-linking requests, including direct API calls.
 
@@ -79,10 +79,10 @@ Account-linking and sign-up rules for OIDC:
   account linking and invitation-based signup. An unverified address cannot claim an invitation
   or an existing account. Check the provider's email scope mapping; Authentik's default email
   mapping may need configuring to return its verified email claim.
-- **Issuer-scoped accounts:** Openship identifies OIDC accounts by the exact issuer and subject
+- **Issuer-scoped accounts:** Workbox Cloud identifies OIDC accounts by the exact issuer and subject
   pair. Changing the IdP does not transfer an old subject's login to the new issuer. A verified
   email can still link through the existing account-linking rules; IdP roles and groups never
-  grant Openship permissions.
+  grant Workbox Cloud permissions.
 - **Invite-only sign-up stays enforced:** Self-hosted instances remain invite-only after the initial
   admin is created. A new OIDC user must have a pending, unexpired invitation from an instance admin;
   there is no automatic email-domain join.
@@ -90,16 +90,16 @@ Account-linking and sign-up rules for OIDC:
   OIDC sign-in, linking and callback endpoints are rejected. GitHub and
   Google stay unadvertised the same way they already are in that mode.
 - **Deprovisioning (v1 limitation):** Removing a user at the IdP blocks future OIDC sign-ins, but
-  there is no SCIM push and existing Openship sessions remain valid until they expire (30 days by
-  default) or an admin removes the member in Openship.
+  there is no SCIM push and existing Workbox Cloud sessions remain valid until they expire (30 days by
+  default) or an admin removes the member in Workbox Cloud.
 
 ### Passkeys
 
-On Openship Cloud or a self-hosted instance with local accounts, open **Settings → Security → Passkeys**
+On Workbox Cloud or a self-hosted instance with local accounts, open **Settings → Security → Passkeys**
 after signing in. Add a passkey using Face ID, Touch ID, Windows Hello, a password manager, or a
 compatible hardware security key. Registration requires a recent session and a discoverable credential
 so the login page can find it without a username. The private key stays with your authenticator;
-Openship stores the public WebAuthn credential.
+Workbox Cloud stores the public WebAuthn credential.
 
 Choose **Sign in with a passkey** on the login page. If you enabled two-factor authentication, complete
 that step before a session is issued. You can remove saved passkeys from Settings even in a browser
@@ -112,7 +112,7 @@ registering a passkey there. Use your password or social login to do that.
 
 ### Two-factor authentication
 
-Open **Settings → Security → Two-factor authentication** on Openship Cloud or a self-hosted instance
+Open **Settings → Security → Two-factor authentication** on Workbox Cloud or a self-hosted instance
 using `OPENSHIP_AUTH_MODE=local` (including a VPS). No email delivery or additional provider is needed
 for authenticator codes.
 
@@ -131,7 +131,7 @@ your password. Replacing codes invalidates the old set. An enabled authenticator
 by starting setup again: disable it explicitly first. Keep your authenticator or a recovery code
 available; an email password reset is not a way to bypass the second factor.
 
-These controls do not apply to account-free local mode. Instances that delegate sign-in to Openship
+These controls do not apply to account-free local mode. Instances that delegate sign-in to Workbox Cloud
 Cloud manage account security on Cloud rather than storing a separate local factor.
 
 Authentication tables are added automatically during the normal database upgrade. Back up and retain
@@ -142,7 +142,7 @@ Project-only transfers do not move account credentials.
 
 <Callout title="Bearer tokens are refused from the dashboard's own origin" type="warn">
 If a request arrives with a `Bearer` header **and** an `Origin` matching one of the dashboard's trusted
-browser origins, Openship rejects it (`401 BEARER_NOT_ALLOWED_FROM_BROWSER`). Bearer tokens are for
+browser origins, Workbox Cloud rejects it (`401 BEARER_NOT_ALLOWED_FROM_BROWSER`). Bearer tokens are for
 CLIs and servers; a token showing up from a browser tab is the signature of a stolen credential being
 replayed, so the door is closed. The CLI sends no `Origin` header at all, which is why its tokens are
 accepted.
@@ -158,7 +158,7 @@ Authorization: Bearer opsh_pat_…
 ```
 
 Every token looks like `opsh_pat_` followed by a 43-character random secret (256 bits of entropy).
-Openship stores **only a SHA-256 hash** of it — the plaintext is shown to you exactly once, at creation,
+Workbox Cloud stores **only a SHA-256 hash** of it — the plaintext is shown to you exactly once, at creation,
 and can never be retrieved again. A token always **acts as the person who created it** and carries that
 person's role, unless you narrow it (see below).
 
@@ -217,7 +217,7 @@ returns `401 INVALID_TOKEN`.
 
 ## MCP OAuth (AI agents)
 
-Openship is a standards-compliant **OAuth 2.1** server for the **Model Context Protocol (MCP)** — the
+Workbox Cloud is a standards-compliant **OAuth 2.1** server for the **Model Context Protocol (MCP)** — the
 way AI agents call tools. An MCP-capable client (Claude, Cursor, …) points at `POST /api/mcp`, and the
 handshake is automatic: the first unauthenticated request returns a `401` pointing at
 `/.well-known/oauth-protected-resource`, the client registers itself, runs the **PKCE** authorize flow
@@ -274,14 +274,14 @@ missing session is a plain `401`. Turning it on is a deliberate operator choice 
 itself. A request arriving through a network reverse proxy carries the proxy's address as its TCP peer,
 not loopback, so it is refused.
 
-Openship recognizes three auth modes overall:
+Workbox Cloud recognizes three auth modes overall:
 
 - **`none`** — zero-auth loopback, described above. Default for the desktop app only; never used by a
   CLI-started or public instance.
 - **`local`** — standard login required (email + password, configured OAuth, or a registered passkey via
   [Better Auth](https://www.better-auth.com/)). Default for a fresh self-hosted install, and always used
   for CLI (`openship up`) and public instances.
-- **`cloud`** — the desktop app signs in with an Openship Cloud account instead of a local one.
+- **`cloud`** — the desktop app signs in with a Workbox Cloud account instead of a local one.
 
 <Callout title="Creating the first admin" type="info">
 A CLI or self-hosted instance has no public sign-up. The first admin (email + password) is created during the
@@ -297,7 +297,7 @@ never be mistaken for "no login required."
 
 ## Cloud sign-in
 
-Choosing **Continue with Cloud** (or connecting a self-hosted instance to Openship Cloud) runs a PKCE
+Choosing **Continue with Cloud** (or connecting a self-hosted instance to Workbox Cloud) runs a PKCE
 handshake that mints a **cloud session** for the connecting owner. That session is stored **encrypted,
 server-side only** — the browser never sees it — and org-scoped cloud calls act on the owner's behalf
 through it. How that boundary is kept clean is covered in
@@ -305,11 +305,11 @@ through it. How that boundary is kept clean is covered in
 
 ## Where credentials live
 
-Openship keeps secrets where they're safest instead of copying them around:
+Workbox Cloud keeps secrets where they're safest instead of copying them around:
 
 - **PAT secrets** are stored only as a SHA-256 hash; the plaintext exists just once, in your clipboard.
 - **Cloud sessions** are encrypted at rest on the instance and never exposed to the browser.
-- The managed **Openship GitHub App private key** lives only on Openship Cloud. A self-hosted workspace may
+- The managed **Workbox Cloud GitHub App private key** lives only on Workbox Cloud. A self-hosted workspace may
   instead register one or more Apps in Settings; each private key, client secret, and webhook secret is
   stored in a versioned AES-256-GCM envelope and is never returned by the API. The legacy process-environment
   configuration remains supported. Every App path mints short-lived, repository-scoped installation tokens.
@@ -340,5 +340,5 @@ Openship keeps secrets where they're safest instead of copying them around:
 <Cards>
   <Card title="Permission model" href="/docs/security/permissions" description="What a logged-in identity is actually allowed to do — roles and resource grants." />
   <Card title="Connect an AI agent (MCP)" href="/docs/mcp" description="Endpoint URLs, client config, and verification for MCP clients." />
-  <Card title="The local ↔ cloud boundary" href="/docs/security/cloud-boundary" description="How self-hosted instances talk to Openship Cloud without leaking identity." />
+  <Card title="The local ↔ cloud boundary" href="/docs/security/cloud-boundary" description="How self-hosted instances talk to Workbox Cloud without leaking identity." />
 </Cards>

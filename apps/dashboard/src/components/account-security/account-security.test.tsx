@@ -92,7 +92,7 @@ beforeEach(() => {
   h.enable.mockResolvedValue({
     data: {
       method: "totp",
-      totpURI: "otpauth://totp/OpenShip:owner?secret=JBSWY3HPEHPK3VXP&issuer=OpenShip",
+      totpURI: "otpauth://totp/Workbox Cloud:owner?secret=JBSWY3HPEHPK3VXP&issuer=Workbox Cloud",
       backupCodes: codes,
     },
     error: null,
@@ -239,7 +239,7 @@ describe("account security settings", () => {
       resolveSetup({
         data: {
           method: "totp",
-          totpURI: "otpauth://totp/OpenShip:owner?secret=JBSWY3HPEHPK3VXP&issuer=OpenShip",
+          totpURI: "otpauth://totp/Workbox Cloud:owner?secret=JBSWY3HPEHPK3VXP&issuer=Workbox Cloud",
           backupCodes: codes,
         },
         error: null,

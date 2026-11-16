@@ -187,7 +187,7 @@ app.use('/*', serveStatic({
 // take over routing on the client. Registered last so it never shadows API
 // routes (those returned a response above and never fell through). Deep links
 // are documents too, so they get the same branded shell - a link preview of
-// https://mail.example.com/mail/inbox must not say "OpenShip Mail" either.
+// https://mail.example.com/mail/inbox must not say "Workbox Cloud Mail" either.
 app.get('*', sendIndexHtml);
 
 const port = env.PORT;

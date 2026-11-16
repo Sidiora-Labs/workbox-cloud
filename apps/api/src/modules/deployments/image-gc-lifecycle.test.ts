@@ -55,7 +55,7 @@ type Image = {
 function daemon(images: Image[]) {
   const inventory = new Map(images.map((image) => [image.Id, image]));
   const pruneImages = vi.fn(async () => {
-    // Docker's filtered prune has no knowledge of Openship's retained IDs.
+    // Docker's filtered prune has no knowledge of Workbox Cloud's retained IDs.
     for (const image of inventory.values()) {
       if (
         image.Labels["openship.project"] === h.project.id &&

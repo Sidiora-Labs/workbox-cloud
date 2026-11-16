@@ -290,7 +290,7 @@ export async function getInstallationIdByOrg(
   if (cached) return Number(cached);
 
   // A workspace-owned source is fully local and intentionally wins over the
-  // optional Openship Cloud bridge. It was explicitly configured for this org.
+  // optional Workbox Cloud bridge. It was explicitly configured for this org.
   const local = await repos.gitInstallation.findByOrgAndOwner(organizationId, owner);
   if (local?.sourceId) {
     await store.set(cacheKey, String(local.installationId), GITHUB_TOKEN_CACHE_TTL_SECONDS);
@@ -945,7 +945,7 @@ export async function getUserStatusWithDiagnostics(
  *     on the wire.
  *
  * Priority for `primary`:
- *   1. Openship App when connected — safest (short-lived install tokens)
+ *   1. Workbox Cloud GitHub App when connected — safest (short-lived install tokens)
  *   2. gh CLI when available — local builds only
  *   3. null — nothing usable
  */
@@ -955,7 +955,7 @@ export async function getGitHubConnectionState(
   const userId = ctx.userId;
   const onSelfHosted = !env.CLOUD_MODE;
 
-  // ── Openship App side ──────────────────────────────────────────────
+  // ── Workbox Cloud GitHub App side ──────────────────────────────────────────────
   // In CLOUD_MODE the App is local-signed; in self-hosted+cloud-connected
   // the App is cloud-proxied. Both flow through getUserStatus which
   // already abstracts that.
@@ -1076,7 +1076,7 @@ export async function getUserInstallations(
     : [];
   // A custom source augments the existing integration. It is authoritative for
   // owners it covers, but it must not hide installations that still come from
-  // Openship Cloud or the user's OAuth connection.
+  // Workbox Cloud or the user's OAuth connection.
   const mode = customConfigured
     ? await resolveGitHubFallbackAuthMode(ctx)
     : await resolveGitHubAuthMode(ctx);
@@ -1274,7 +1274,7 @@ export function getGitHubAuthMode(): GitHubAuthMode {
  *   1. `CLOUD_MODE=true` (this IS api.openship.io) → "app", unconditionally.
  *   2. A workspace-owned custom App → "app" for the composite source UI.
  *   3. Explicit `GITHUB_AUTH_MODE` env var → used as-is on self-hosted only.
- *   4. Self-hosted + the user is connected to Openship Cloud → "cloud-app".
+ *   4. Self-hosted + the user is connected to Workbox Cloud → "cloud-app".
  *      All App-scoped operations (install URL, list installations, mint
  *      install token, OAuth identity) proxy through api.openship.io.
  *   5. Self-hosted + NOT cloud-connected → "cli" (the gh CLI / PAT
@@ -1416,7 +1416,7 @@ export async function resolveInstallUrl(
     const { cloudClient } = await import("../../lib/cloud/client");
     const res = await cloudClient({ organizationId }).github.installUrl();
     if (res) {
-      // The Openship App's Setup URL returns to Cloud, so Cloud's durable DB
+      // The Workbox Cloud GitHub App's Setup URL returns to Cloud, so Cloud's durable DB
       // binding is authoritative. Persisting the same nonce locally creates a
       // dead second copy that no callback can consume.
       return res;
@@ -1430,7 +1430,7 @@ export async function resolveInstallUrl(
     // Signal unreachable so the caller tells the user the truth instead
     // of handing them a dead link.
     errorDiagnostics.warn("platform/engine/modules/github/github.auth",
-      "[GitHub] install URL unavailable — Openship Cloud unreachable (cloud-app mode); refusing stateless local fallback",
+      "[GitHub] install URL unavailable — Workbox Cloud unreachable (cloud-app mode); refusing stateless local fallback",
     );
     return { url: "", state: "", cloudUnreachable: true };
   }

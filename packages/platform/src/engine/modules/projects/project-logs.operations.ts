@@ -261,8 +261,8 @@ export const openProjectServerLogs: NonNullable<ProjectDependencies["openServerL
       if (!conn) {
         const edgeUp = !failure && (await probeMgmt(serverId).catch((diagnosticFailure) => { observeCaughtError(diagnosticFailure, "platform/engine/modules/projects/project-logs.operations"); return false; }));
         const error = edgeUp
-          ? `The Openship edge is running but refused the log stream for ${domain}. Check that this domain is routed through the edge, then retry.`
-          : `Couldn't reach the Openship edge's log service on this server${failure ? `: ${failure}` : ""}. Make sure the edge is running (\`docker ps\` should show openship-edge) and redeploy the routing if it isn't.`;
+          ? `The Workbox Cloud edge is running but refused the log stream for ${domain}. Check that this domain is routed through the edge, then retry.`
+          : `Couldn't reach the Workbox Cloud edge's log service on this server${failure ? `: ${failure}` : ""}. Make sure the edge is running (\`docker ps\` should show openship-edge) and redeploy the routing if it isn't.`;
         yield new TextEncoder().encode(`event: error\ndata: ${JSON.stringify({ error })}\n\n`);
         return;
       }

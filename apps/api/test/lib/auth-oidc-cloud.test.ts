@@ -29,7 +29,7 @@ afterAll(async () => {
   await closeDb();
 });
 
-describe("Self-hosted OIDC stays disabled on Openship Cloud", () => {
+describe("Self-hosted OIDC stays disabled on Workbox Cloud", () => {
   it("does not register or advertise an instance-wide identity provider", () => {
     expect(oidcProviderConfig()).toBeUndefined();
     expect(configuredAuthProviders().some((provider) => provider.id === "oidc")).toBe(false);

@@ -3,7 +3,7 @@ import { safeFetch, type SafeFetchResponse } from "../../../lib/safe-fetch";
 
 /** The operations exposed by the Workbox adapter.  Workbox's own provider
  * mapping is intentionally partial: capabilities and lifetime are derived by
- * Openship, while attach/transfer/output digests are bounded by the Workbox
+ * Workbox Cloud, while attach/transfer/output digests are bounded by the Workbox
  * API available at the connected endpoint. */
 export type WorkboxCapabilityName =
   | "create"

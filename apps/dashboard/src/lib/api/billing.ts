@@ -51,7 +51,7 @@ export interface BillingState {
   buildMinutesResetAt?: string;
   maxServiceMachine?: { tier: string; cpuCores: number; memoryMb: number } | null;
   /**
-   * Live resource capacity + consumption, sourced from Openship Cloud. Optional
+   * Live resource capacity + consumption, sourced from Workbox Cloud. Optional
    * and additive: the self-hosted billing proxy forwards it verbatim when the
    * SaaS provides it, and the dashboard's Capacity panel falls back to the
    * tier's `limits` from the pricing catalog for any ceiling the cloud hasn't
@@ -63,13 +63,13 @@ export interface BillingState {
    */
   capacity?: BillingCapacity;
   /**
-   * MASTER billing-feature availability, decided by Openship Cloud
+   * MASTER billing-feature availability, decided by Workbox Cloud
    * (`BILLING_ENABLED`). When false, new purchases are disabled. Existing
    * customers can still manage their payment details and stop renewal.
    */
   billing?: BillingFeature;
   /**
-   * One-time credit top-up availability, decided by Openship Cloud. Requires
+   * One-time credit top-up availability, decided by Workbox Cloud. Requires
    * the master `billing.enabled` AND the top-ups sub-switch. The UI enables the
    * buy flow only when `available` is true; otherwise it shows the "coming soon"
    * preview. Optional/defensive: treated as NOT available when absent.

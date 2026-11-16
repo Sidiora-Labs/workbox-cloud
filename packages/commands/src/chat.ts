@@ -43,7 +43,7 @@ export const CHAT_COMMANDS = [
     verb: "chat",
     argument: null,
     group: "assistant",
-    description: "Open the current conversation in OpenShip. Continue from either place.",
+    description: "Open the current conversation in Workbox Cloud. Continue from either place.",
   },
   {
     verb: PROJECT_COMMANDS.list.chat,
@@ -61,7 +61,7 @@ export const CHAT_COMMANDS = [
     verb: PROJECT_COMMANDS.logs.chat,
     argument: PROJECT_COMMANDS.logs.argument,
     group: "projects",
-    description: "Open private logs in OpenShip. Log contents stay out of chat.",
+    description: "Open private logs in Workbox Cloud. Log contents stay out of chat.",
   },
   {
     verb: PROJECT_COMMANDS.redeploy.chat,
@@ -85,19 +85,19 @@ export const CHAT_COMMANDS = [
     verb: "link",
     argument: null,
     group: "account",
-    description: "Connect your own OpenShip account and choose its permissions.",
+    description: "Connect your own Workbox Cloud account and choose its permissions.",
   },
   {
     verb: "verify",
     argument: "code",
     group: "account",
-    description: "Finish linking with the code from OpenShip, in the original conversation.",
+    description: "Finish linking with the code from Workbox Cloud, in the original conversation.",
   },
   {
     verb: "unlink",
     argument: null,
     group: "account",
-    description: "Disconnect your chat account and revoke its OpenShip access.",
+    description: "Disconnect your chat account and revoke its Workbox Cloud access.",
   },
   {
     verb: "start",
@@ -139,7 +139,7 @@ export function chatSlackCommands(purpose: ChatAppPurpose, webhookUrl?: string) 
   return [
     {
       command: "/openship",
-      description: "OpenShip commands and help",
+      description: "Workbox Cloud commands and help",
       usage_hint: "help",
       should_escape: false,
       ...destination,

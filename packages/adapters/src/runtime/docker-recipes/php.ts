@@ -56,7 +56,7 @@ function phpBinaryVersionCheck(config: BuildConfig): string[] {
       : undefined);
   if (!version) return [];
   return [
-    `RUN php -r 'if (PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION !== "${version}") { fwrite(STDERR, "Openship requires PHP ${version}; image provides " . PHP_VERSION . "\\n"); exit(1); }'`,
+    `RUN php -r 'if (PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION !== "${version}") { fwrite(STDERR, "Workbox Cloud requires PHP ${version}; image provides " . PHP_VERSION . "\\n"); exit(1); }'`,
   ];
 }
 
@@ -128,7 +128,7 @@ export function generatePhpDockerfile(config: BuildConfig): string {
     `FROM ${config.runtimeImage} AS runtime`,
     ...(config.runtimeImageOverride
       ? [
-          "RUN command -v frankenphp >/dev/null && command -v install-php-extensions >/dev/null && id www-data >/dev/null || { printf 'Openship runtime image must provide FrankenPHP, install-php-extensions and www-data\\n' >&2; exit 1; }",
+          "RUN command -v frankenphp >/dev/null && command -v install-php-extensions >/dev/null && id www-data >/dev/null || { printf 'Workbox Cloud runtime image must provide FrankenPHP, install-php-extensions and www-data\\n' >&2; exit 1; }",
         ]
       : []),
     ...phpBinaryVersionCheck(config),

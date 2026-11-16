@@ -5,7 +5,7 @@ description: Browser sessions, OAuth discovery, and authentication handoffs.
 
 import { TypeTable } from 'fumadocs-ui/components/type-table';
 
-The Auth API is how Openship signs users in and keeps their session. Almost everything here is served by
+The Auth API is how Workbox Cloud signs users in and keeps their session. Almost everything here is served by
 [Better Auth](https://better-auth.com) through a single catch-all — email/password sign-in and sign-up, OAuth,
 the organization/member/invitation endpoints, and the MCP OAuth authorization server. A small set of
 **desktop-only** endpoints sit in front of it to bootstrap a zero-auth local session and hand off cloud sign-in
@@ -57,7 +57,7 @@ For an account with 2FA enabled, a primary sign-in returns `{ "twoFactorRedirect
 a usable session. Preserve the signed challenge cookie and submit an authenticator or recovery code;
 only successful verification issues the session. Social callbacks redirect to the dashboard's
 `/two-factor` page and resume their validated destination after verification. Account security endpoints
-are available only where local accounts are hosted, including Openship Cloud's account service and
+are available only where local accounts are hosted, including Workbox Cloud's account service and
 self-hosted VPS installations. See [Auth & sessions](/docs/security/auth#two-factor-authentication).
 
 ## Get the current session
@@ -67,7 +67,7 @@ GET /api/auth/get-session
 ```
 
 Returns the active session and user as JSON, or `401` when unauthenticated. In zero-auth desktop mode
-(self-hosted onboarding, no password), a miss triggers an inline bootstrap: Openship provisions the local admin
+(self-hosted onboarding, no password), a miss triggers an inline bootstrap: Workbox Cloud provisions the local admin
 user, mints a session, sets the cookie on the response, and returns it — so the dashboard's first navigation
 succeeds instead of looping to `/login`.
 

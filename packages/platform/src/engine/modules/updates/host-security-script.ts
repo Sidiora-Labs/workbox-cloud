@@ -132,7 +132,7 @@ if mode in ('plan-reboot', 'reboot'):
     if mode == 'reboot':
         if plan != args['expected']:
             raise RuntimeError('The server changed. Review the reboot again.')
-        subprocess.run(['/usr/sbin/shutdown', '-r', '+1', 'Openship: approved security kernel reboot'], check=True, timeout=10)
+        subprocess.run(['/usr/sbin/shutdown', '-r', '+1', 'Workbox Cloud: approved security kernel reboot'], check=True, timeout=10)
         emit(observation)
     else:
         emit(plan)

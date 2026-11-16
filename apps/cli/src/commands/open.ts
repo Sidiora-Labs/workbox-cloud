@@ -6,7 +6,7 @@ import { waitForApi } from "@repo/onboarding";
 import { getApiUrl, getDashboardUrl } from "../lib/config";
 
 export const openCommand = new Command("open")
-  .description("Open the Openship dashboard in your browser")
+  .description("Open the Workbox Cloud dashboard in your browser")
   .option("--cloud", "Open the hosted cloud dashboard (app.openship.io)")
   .option("--dashboard-url <url>", "Dashboard base URL to open")
   .option("--context <name>", "Context whose dashboard URL to open")

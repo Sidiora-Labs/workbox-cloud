@@ -1,6 +1,6 @@
 /**
  * The application scaling journey through real HTTP, persistence, deployment
- * admission/pipeline, an authenticated registry, K3s and OpenShip Edge.
+ * admission/pipeline, an authenticated registry, K3s and Workbox Cloud Edge.
  *
  * Only infrastructure LOCATION is substituted: disposable containers replace
  * already-prepared remote hosts. The production adapters and their observations
@@ -364,7 +364,7 @@ describeDockerE2E.sequential("application scaling through the complete deploymen
         organizationId: org.organizationId,
       });
       project = await seedProject(org.organizationId, {
-        // A valid OpenShip ID that Kubernetes cannot use directly as a label.
+        // A valid Workbox Cloud ID that Kubernetes cannot use directly as a label.
         id: `proj_${lab.id}_`,
         name: "Scaling acceptance API",
         slug: lab.id,
@@ -491,7 +491,7 @@ describeDockerE2E.sequential("application scaling through the complete deploymen
     const replies: ScalingReply[] = [];
     const errors: string[] = [];
     await eventually(
-      "each ready instance to serve through OpenShip Edge",
+      "each ready instance to serve through Workbox Cloud Edge",
       async () => {
         try {
           const answer = await lab.request(hostname);

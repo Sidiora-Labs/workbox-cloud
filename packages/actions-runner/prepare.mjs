@@ -184,7 +184,7 @@ func ExecutionDetails(ctx context.Context, environment ExecutionsEnvironment) (s
   replace("Strategy:  strategy,", "Strategy:  rc.runtimeStrategy(strategy),");
   replace("Strategy: strategy,", "Strategy: rc.runtimeStrategy(strategy),");
   source += `
-// OpenShip schedules the matrix; preserve its concrete strategy context.
+// Workbox Cloud schedules the matrix; preserve its concrete strategy context.
 func (rc *RunContext) runtimeStrategy(value map[string]interface{}) map[string]interface{} {
   for key, item := range rc.RuntimeStrategy { value[key] = item }
   return value

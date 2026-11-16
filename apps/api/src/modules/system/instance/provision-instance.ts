@@ -278,7 +278,7 @@ export function provisionInstance(
     });
     if (!response.ok)
       throw new AppError(
-        `The new instance is not ready for a secure handoff (HTTP ${response.status}). Check its domain and that both instances use Openship ${plan.version}, then resume.`,
+        `The new instance is not ready for a secure handoff (HTTP ${response.status}). Check its domain and that both instances use Workbox Cloud ${plan.version}, then resume.`,
         409,
       );
     const result = z
@@ -286,7 +286,7 @@ export function provisionInstance(
       .safeParse(await response.json().catch((diagnosticFailure) => { observeCaughtError(diagnosticFailure, "api/modules/system/instance/provision-instance"); return null; }));
     if (!result.success)
       throw new AppError(
-        `The receiving API must run Openship ${plan.version}. Check its image and public address, then resume this move.`,
+        `The receiving API must run Workbox Cloud ${plan.version}. Check its image and public address, then resume this move.`,
         409,
       );
     if (result.data.code.origin !== remoteOrigin)

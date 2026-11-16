@@ -5,7 +5,7 @@ import { Icon as UiIcon } from "@repo/ui/icons";
 
 /**
  * /cloud-authorize — explicit consent screen for the self-hosted
- * "Connect to Openship Cloud" flow.
+ * "Connect to Workbox Cloud" flow.
  *
  * The API's GET /api/cloud/connect-handoff used to auto-mint a one-time
  * handoff code for any authenticated browser whose URL passed the

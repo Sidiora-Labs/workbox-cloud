@@ -27,7 +27,7 @@ export function oblienApiUrl(base: URL, path: string): URL {
   return url;
 }
 
-/** OpenShip's saved Cloud workspace policies are its own persisted contract.
+/** Workbox Cloud's saved Cloud workspace policies are its own persisted contract.
  * Map that count to provider VMs only at the external boundary. */
 export function toOblienVmLimits<T extends { max_workspaces?: number | null }>(limits: T) {
   const { max_workspaces, ...rest } = limits;

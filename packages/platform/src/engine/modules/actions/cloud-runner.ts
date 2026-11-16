@@ -178,7 +178,7 @@ async function clientFor(run: Pick<ActionRun, "organizationId">, runner: ActionR
 
 function workspaceInput(job: ActionWorkerAllocation, runner: ActionRunner) {
   return {
-    name: `Openship Actions ${job.id}`,
+    name: `Workbox Cloud Actions ${job.id}`,
     // Job IDs are case-sensitive and can end in URL-safe punctuation. A hash
     // preserves their identity while satisfying the provider's hostname rules.
     slug: `actions-${createHash("sha256").update(job.id).digest("hex").slice(0, 32)}`,

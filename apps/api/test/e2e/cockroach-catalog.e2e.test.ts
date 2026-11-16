@@ -152,7 +152,7 @@ describeDockerE2E("CockroachDB companion service (#1484)", () => {
       config("replacement"),
       {
         // Existing saved services can use the image's supported environment
-        // override from the normal settings form, even before an OpenShip update.
+        // override from the normal settings form, even before a Workbox Cloud update.
         ...config("environment-recovery"),
         commandArgv: undefined,
         environment: { ...environment, COCKROACH_ARGS: entry.commandArgv!.join(" ") },

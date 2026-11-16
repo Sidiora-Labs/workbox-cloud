@@ -331,7 +331,7 @@ export function ManagementPlan({
         <div className="space-y-3 rounded-xl bg-muted/50 p-4">
           <p className="text-sm">
             End management after the paid period? Your apps and data keep running on your servers.
-            OpenShip will no longer manage them after your allowance ends.
+            Workbox Cloud will no longer manage them after your allowance ends.
           </p>
           <Button
             disabled={action.busy}
@@ -427,7 +427,7 @@ export function ManagementPlan({
       )}
       <div className={showingDetails ? "sr-only" : "space-y-1"}>
         <h2 id={`${supportChoiceId}-title`} className="text-base font-medium text-foreground">
-          OpenShip Manage
+          Workbox Cloud Manage
         </h2>
         <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
           {copy.description}
@@ -574,7 +574,7 @@ export function ManagementPlan({
               <p className="text-sm text-muted-foreground">Need dedicated hardware?</p>
               <Button asChild variant="ghost" size="sm">
                 <a
-                  href={`mailto:${data.pricing.dedicatedContact}?subject=Dedicated%20Openship%20hosting`}
+                  href={`mailto:${data.pricing.dedicatedContact}?subject=Dedicated%20Workbox Cloud%20hosting`}
                 >
                   Request a quote
                   <Icon name="arrow-right" className="size-4 rtl:rotate-180" />

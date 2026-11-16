@@ -18,7 +18,7 @@ async function HomePlanCard() {
 /**
  * The dashboard home, per product view.
  *
- * In Openship Mail this IS the mail console — the server list, or the scoped
+ * In Workbox Cloud Mail this IS the mail console — the server list, or the scoped
  * server, whichever `resolveMailView()` picks. Rendered, not redirected: the URL
  * stays `/`, which is where login lands, so a mail operator never sees the URL
  * bounce to /emails?serverId=… on every visit and never lands on a dashboard of

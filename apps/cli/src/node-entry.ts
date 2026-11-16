@@ -80,11 +80,11 @@ if (tooOld) {
 
   if (major < HARD_FLOOR) {
     process.stderr.write(
-      `\nOpenship needs Node ${SUPPORTED} or newer — this is Node v${process.versions.node}.\n\n` +
+      `\nWorkbox Cloud needs Node ${SUPPORTED} or newer — this is Node v${process.versions.node}.\n\n` +
         `  Install Node ${SUPPORTED}+ and re-run, or use the official installer, which\n` +
         `  brings its own Node and doesn't touch the one you have:\n\n` +
         `    ${INSTALLER}\n\n` +
-        `  Non-interactive (CI, a service)? Set OPENSHIP_VENDOR_NODE=1 and Openship\n` +
+        `  Non-interactive (CI, a service)? Set OPENSHIP_VENDOR_NODE=1 and Workbox Cloud\n` +
         `  fetches its own Node ${SUPPORTED} without asking.\n\n` +
         `If you upgrade Node with a version manager (nvm, fnm, volta), global packages\n` +
         `live per Node version — reinstall the CLI afterwards or the command will go\n` +
@@ -97,7 +97,7 @@ if (tooOld) {
   // an install that works today to enforce a number we only just started publishing
   // would be a worse bug than the one this gate exists to fix.
   process.stderr.write(
-    `Warning: Node v${process.versions.node} is below Openship's supported floor ` +
+    `Warning: Node v${process.versions.node} is below Workbox Cloud's supported floor ` +
       `(Node ${SUPPORTED}+). It may work; it isn't tested. Upgrade, or install with:\n` +
       `  ${INSTALLER}\n`,
   );

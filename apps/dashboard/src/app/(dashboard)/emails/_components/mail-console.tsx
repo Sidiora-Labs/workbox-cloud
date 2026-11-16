@@ -4,7 +4,7 @@ import { reportCaughtError as observeCaughtError } from "@repo/core/diagnostics"
 import { Icon as UiIcon } from "@repo/ui/icons";
 
 /**
- * The mail console — the whole of /emails, and Openship Mail's home page.
+ * The mail console — the whole of /emails, and Workbox Cloud Mail's home page.
  *
  * It lives here rather than inside a `page.tsx` because two routes render it:
  * /emails on the full platform, and `/` in mail view, where the platform
@@ -323,7 +323,7 @@ function MailConsoleInner() {
       const { servers } = await mailApi.listMailServers();
       setRegistryError(null);
       setMailServers(servers);
-      // In Openship Mail view the sidebar is built from this same registry, so
+      // In Workbox Cloud Mail view the sidebar is built from this same registry, so
       // tell it when the set changed — an install completing has to expand the
       // rail from "Set up mail" to the tabs in place, or it reads as a failure.
       const sig = registrySignature(servers);
@@ -916,7 +916,7 @@ function MailConsoleInner() {
   const showSetupForm = view === "setup";
   const showProgress = view === "progress";
 
-  // Openship Mail: the rail names the section, so the page header does too —
+  // Workbox Cloud Mail: the rail names the section, so the page header does too —
   // "Domains", not "Email Server" over a second "Domains" heading inside the tab
   // (which is where that heading used to live; see _lib/mail-section). Overview
   // keeps "Email Server": it's the server's front page.

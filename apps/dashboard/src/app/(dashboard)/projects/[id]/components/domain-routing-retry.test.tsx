@@ -215,16 +215,16 @@ describe("routing retry on the Domains page", () => {
       await emit("session", { sessionId: "edge-a" });
       await emit("prompt", {
         promptId: "takeover",
-        title: "Use the OpenShip edge?",
+        title: "Use the Workbox Cloud edge?",
         message: "Another proxy owns these ports.",
         actions: [
           { id: "cancel", label: "Leave it" },
-          { id: "takeover", label: "Use OpenShip" },
+          { id: "takeover", label: "Use Workbox Cloud" },
         ],
       });
       expect(mocks.fetch).toHaveBeenCalledTimes(1);
       const confirm = [...log.querySelectorAll("button")].find(
-        (button) => button.textContent?.trim() === "Use OpenShip",
+        (button) => button.textContent?.trim() === "Use Workbox Cloud",
       )!;
       expect(confirm).toBeDefined();
       await act(async () => confirm.click());

@@ -295,7 +295,7 @@ export const project = pgTable(
     objectStorage: jsonb("object_storage").$type<ProjectObjectStorage | null>(),
 
     /**
-     * Deploy-time readiness gate (Openship's own, NOT the Docker HEALTHCHECK
+     * Deploy-time readiness gate (Workbox Cloud's own, NOT the Docker HEALTHCHECK
      * directive — that one lives per compose service in `service.advanced`).
      *
      * NULL = off, which is the default for every project: an unconfigured deploy

@@ -51,7 +51,7 @@ export interface DiscoveredService {
   shmSize?: number;
   /** compose service name, or the container name for a standalone container. */
   name: string;
-  /** Where it was discovered — informs how much Openship can reconstruct. */
+  /** Where it was discovered — informs how much Workbox Cloud can reconstruct. */
   source: "compose" | "container";
   containerId?: string;
   containerName?: string;
@@ -91,7 +91,7 @@ export interface DiscoveredService {
    *  `swapDisabled` reflects HostConfig MemorySwap === Memory. */
   resources?: { cpuCores?: number; memoryMb?: number; swapDisabled?: boolean };
   /** Reverse-proxy kind when this container IS the edge proxy (image/command
-   *  matches AND it binds a host edge port). Openship's OpenResty replaces it,
+   *  matches AND it binds a host edge port). Workbox Cloud's OpenResty replaces it,
    *  so it's dropped from import — importing it is the 80/443 conflict. */
   proxyKind?: ProxyKind;
   /** Host edge ports (80/443) this service publishes. Reserved for OpenResty:
@@ -134,11 +134,11 @@ export interface DiscoveredGroup {
  * the `openship.project` label) + its `.openship/manifest.json` entry. `knownHere`
  * = this project id already exists in the scanning instance's DB (genuinely
  * managed here → not re-importable, just counted). `knownHere: false` = orphaned:
- * the DB was reset (DR) or the server came from another Openship instance →
+ * the DB was reset (DR) or the server came from another Workbox Cloud instance →
  * re-importable, preserving the original id/slug so the live containers re-attach.
  */
 export interface OpenshipProjectGroup {
-  /** Original Openship project id from the `openship.project` label. */
+  /** Original Workbox Cloud project id from the `openship.project` label. */
   projectId: string;
   /** Best-effort display name (manifest name/slug → compose project → derived). */
   suggestedName: string;
@@ -180,12 +180,12 @@ export interface DiscoveredStack {
   services: DiscoveredService[];
   volumes: Array<{ name: string; driver: string; inUseBy: string[] }>;
   networks: Array<{ name: string; driver: string }>;
-  /** Stack-level notes for things Openship can't carry over 1:1. */
+  /** Stack-level notes for things Workbox Cloud can't carry over 1:1. */
   warnings: string[];
   adoptable: boolean;
   /** Live containers already managed by a project in THIS instance's DB (count). */
   alreadyManaged: number;
-  /** Openship projects recovered from the server (see {@link OpenshipProjectGroup});
+  /** Workbox Cloud projects recovered from the server (see {@link OpenshipProjectGroup});
    *  `knownHere: false` entries are re-importable. Empty when none found. */
   openshipProjects: OpenshipProjectGroup[];
   /** Every route the foreign proxy serves, flattened (one per port+path). Lets the
@@ -272,7 +272,7 @@ export function splitEnvByProvenance(
 }
 
 /**
- * Container env (`Config.Env`, in order) → the config Openship imports, plus the
+ * Container env (`Config.Env`, in order) → the config Workbox Cloud imports, plus the
  * vars it left behind because the image supplies them.
  *
  * `imageEnv` = the image's own ordered `Config.Env`. `declaredKeys` = keys the
@@ -329,7 +329,7 @@ function portsToComposeStrings(ports: DockerPortBinding[]): string[] {
   return out;
 }
 
-/** The host ports Openship's OpenResty edge owns — never re-published by an
+/** The host ports Workbox Cloud's OpenResty edge owns — never re-published by an
  *  imported workload. */
 export const EDGE_PORTS = new Set([80, 443]);
 
@@ -421,7 +421,7 @@ function inspectHealthcheckToCompose(
  * service adopts. Priority:
  *   1. an explicit compose-file declaration (`declared.name`)
  *   2. the `com.docker.compose.service` label (a real compose stack)
- *   3. Openship's own `openship.service` label — Openship deploys compose
+ *   3. Workbox Cloud's own `openship.service` label — Workbox Cloud deploys compose
  *      services as plain dockerode containers (`openship-<slug>-<svc>`) that
  *      carry NO compose label, so without this step the moved service was named
  *      after the CONTAINER (`openship-openship-web`) and no longer matched its
@@ -438,7 +438,7 @@ export function discoveredServiceName(
 
 /**
  * Display-grouping key for an Openship-DEPLOYED container that carries no
- * compose label. Openship runs compose services as plain containers named
+ * compose label. Workbox Cloud runs compose services as plain containers named
  * `openship-<slug>-<svc>` (labels `openship.project`/`openship.service`, but NO
  * `com.docker.compose.project`), so without this they all collapse into the
  * single "standalone" bucket — the exact symptom in flat-docker mode where a
@@ -446,7 +446,7 @@ export function discoveredServiceName(
  * one group. Derive the stack SLUG from the container name minus the EXACT
  * `openship.service` suffix (using the label makes it precise even for
  * hyphenated service names like `mongo-express`). Returns null when the
- * container isn't an Openship compose service (→ truly standalone).
+ * container isn't a Workbox Cloud compose service (→ truly standalone).
  */
 export function openshipStackName(
   containerName: string | undefined,
@@ -652,7 +652,7 @@ export function reconcileStack(opts: {
   /** {@link imageRefKey} → its baked-in default CMD tokens, dropped when the
    *  container only restates it (see toDiscoveredService). */
   imageCmds?: Map<string, string[]>;
-  /** Openship projects recovered from the server (computed in the IO shell). */
+  /** Workbox Cloud projects recovered from the server (computed in the IO shell). */
   openshipProjects?: OpenshipProjectGroup[];
   /** published host port → route the foreign proxy already serves (from the
    *  IO-shell proxy scan). Attached per-service by matching published ports. */
@@ -667,7 +667,7 @@ export function reconcileStack(opts: {
   ];
 
   // Build each service alongside the group it belongs to, then group. Priority:
-  // the real compose project → else the Openship stack slug (openship-deployed
+  // the real compose project → else the Workbox Cloud stack slug (openship-deployed
   // services have no compose label, so this keeps a moved stack together instead
   // of flattening it into standalone) → else truly standalone (null).
   const built = details.map((d) => ({
@@ -712,7 +712,7 @@ export function reconcileStack(opts: {
     .filter((v) => inUse.has(v.name))
     .map((v) => ({ name: v.name, driver: v.driver, inUseBy: [...(inUse.get(v.name) ?? [])] }));
 
-  // Stack-level warnings for topology Openship flattens or can't model.
+  // Stack-level warnings for topology Workbox Cloud flattens or can't model.
   const warnings: string[] = [];
   const customNetworks = networks
     .map((n) => n.name)
@@ -720,12 +720,12 @@ export function reconcileStack(opts: {
     .filter((name) => services.some((s) => s.networks.includes(name)));
   if (customNetworks.length > 0) {
     warnings.push(
-      `Openship runs all services on one project network; custom networks (${customNetworks.join(", ")}) will be flattened. Services still reach each other by name.`,
+      `Workbox Cloud runs all services on one project network; custom networks (${customNetworks.join(", ")}) will be flattened. Services still reach each other by name.`,
     );
   }
   if (composeProjects.length > 0 || declared.size > 0) {
     warnings.push(
-      "Compose `configs`, `secrets`, `expose`, `depends_on` conditions, and host-level keys (`privileged`, `cap_add`, `devices`, `sysctls`) are not modeled by Openship and won't carry over. A container currently sharing another's namespace (`network_mode`/`pid`) is adopted onto the project network instead — re-declare it in the stack's compose file if it must stay shared.",
+      "Compose `configs`, `secrets`, `expose`, `depends_on` conditions, and host-level keys (`privileged`, `cap_add`, `devices`, `sysctls`) are not modeled by Workbox Cloud and won't carry over. A container currently sharing another's namespace (`network_mode`/`pid`) is adopted onto the project network instead — re-declare it in the stack's compose file if it must stay shared.",
     );
   }
   if (services.some((s) => Object.keys(s.env).length > 0)) {

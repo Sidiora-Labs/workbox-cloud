@@ -98,7 +98,7 @@ export class ActionsWorker {
       manifest = JSON.parse(await readFile(join(this.assetsDirectory, "manifest.json"), "utf8"));
     } catch (cause) {
       const error = new AppError(
-        "The Actions runner is missing from this Openship installation. Install a release containing the Actions runner assets.",
+        "The Actions runner is missing from this Workbox Cloud installation. Install a release containing the Actions runner assets.",
         503,
         "ACTIONS_RUNNER_ASSET_MISSING",
       );

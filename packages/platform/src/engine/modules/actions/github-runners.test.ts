@@ -547,7 +547,7 @@ describe("official GitHub runner reconciliation", () => {
   it("allocates only explicitly opted-in labels", () => {
     expect(requestsOpenshipRunner(["ubuntu-latest"])).toBe(false);
     expect(requestsOpenshipRunner(["self-hosted", "linux"])).toBe(false);
-    expect(requestsOpenshipRunner(["SELF-HOSTED", "Openship", "linux"])).toBe(true);
+    expect(requestsOpenshipRunner(["SELF-HOSTED", "Workbox Cloud", "linux"])).toBe(true);
   });
   it("resumes asynchronous VM deletion without reconnecting or releasing capacity early", async () => {
     const f = await fixture();

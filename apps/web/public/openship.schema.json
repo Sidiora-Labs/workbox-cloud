@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://openship.io/openship.schema.json",
-  "title": "Openship deploy config",
-  "description": "openship.json — declarative deploy config for Openship. Auto-detection runs first; every field present here overrides it. Absent fields keep the detected value.",
+  "title": "Workbox Cloud deploy config",
+  "description": "openship.json — declarative deploy config for Workbox Cloud. Auto-detection runs first; every field present here overrides it. Absent fields keep the detected value.",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -347,7 +347,7 @@
             }
           },
           "resources": {
-            "description": "Per-service cpu/memory caps, overriding the top-level resources field by field. Parity with compose mem_limit / deploy.resources.limits, which Openship also reads off the compose file. 0 = no limit. swapDisabled runs the container without swap and requires a positive memory limit (own or inherited).",
+            "description": "Per-service cpu/memory caps, overriding the top-level resources field by field. Parity with compose mem_limit / deploy.resources.limits, which Workbox Cloud also reads off the compose file. 0 = no limit. swapDisabled runs the container without swap and requires a positive memory limit (own or inherited).",
             "type": "object",
             "additionalProperties": false,
             "properties": {

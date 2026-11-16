@@ -1,7 +1,7 @@
 import { reportCaughtError as observeCaughtError } from "@repo/core/diagnostics";
 import { exitCommand, rethrowCommandExit } from "../lib/command-exit";
 /**
- * `openship doctor` — diagnose and repair a local Openship instance.
+ * `openship doctor` — diagnose and repair a local Workbox Cloud instance.
  *
  * For a LOCAL self-hosted box (the active context points at localhost) this is a
  * real health surface: service state, database liveness/migrations, deployed-
@@ -153,7 +153,7 @@ async function remotePreflight(): Promise<void> {
   if (isJsonMode()) {
     printJson({ context, apiUrl, reachable, checks });
   } else {
-    process.stdout.write(chalk.bold("\n  Openship doctor\n\n"));
+    process.stdout.write(chalk.bold("\n  Workbox Cloud doctor\n\n"));
     for (const c of checks) process.stdout.write(`  ${GLYPH[c.status]} ${chalk.bold(c.name.padEnd(8))} ${c.detail}\n`);
     process.stdout.write("\n");
   }
@@ -181,7 +181,7 @@ async function reportOnce(): Promise<void> {
       lastError: s.lastError,
     });
   } else {
-    process.stdout.write(chalk.bold("\n  Openship doctor\n\n"));
+    process.stdout.write(chalk.bold("\n  Workbox Cloud doctor\n\n"));
     process.stdout.write(`  ${GLYPH[svc.state]} ${chalk.bold("Service".padEnd(10))} ${svc.detail}\n`);
     process.stdout.write(`  ${GLYPH[db.state]} ${chalk.bold("Database".padEnd(10))} ${db.detail}\n`);
     for (const c of s.components) process.stdout.write(`  ${GLYPH[c.state]} ${chalk.bold(c.name.padEnd(10))} ${c.detail}\n`);
@@ -227,7 +227,7 @@ async function autoFix(): Promise<void> {
 /* ── Interactive doctor (TTY, local) ─────────────────────────────────────── */
 
 async function interactiveDoctor(): Promise<void> {
-  intro(`${chalk.bgCyan(chalk.black(" Openship "))}${chalk.dim(" doctor")}`);
+  intro(`${chalk.bgCyan(chalk.black(" Workbox Cloud "))}${chalk.dim(" doctor")}`);
 
   // Menu loop — re-gather status each pass so a repair/restart reflects live.
   for (;;) {
@@ -314,7 +314,7 @@ export const doctorCommand = new Command("doctor")
       const health = await session.client.system.health();
       if (isJsonMode()) printJson({ mode: "native", instanceId: session.ship.instanceId, organizationId: session.client.organizationId, ...health });
       else {
-        console.log(chalk.bold("\n  Openship doctor\n"));
+        console.log(chalk.bold("\n  Workbox Cloud doctor\n"));
         console.log(`  Instance   ${session.ship.instanceId}`);
         console.log(`  Database   ${health.db.driver}: ${health.db.ok ? "healthy" : health.db.error ?? "unavailable"}`);
         if (health.hostChannel) console.log(`  Host       ${health.hostChannel.state}`);

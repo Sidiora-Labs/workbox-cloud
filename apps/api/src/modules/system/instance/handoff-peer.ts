@@ -382,7 +382,7 @@ export async function stageTarget(id: string, input: HandoffManifest): Promise<v
       throw fail("The snapshot belongs to another instance.");
     if (manifest.version !== readApiVersion())
       throw fail(
-        "Install the same Openship version on both instances before moving.",
+        "Install the same Workbox Cloud version on both instances before moving.",
         "INSTANCE_VERSION_MISMATCH",
       );
     if (row.manifest) {

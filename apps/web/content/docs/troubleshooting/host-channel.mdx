@@ -5,9 +5,9 @@ description: "\"This operation targets the HOST machine, but no host channel is 
 
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-When Openship runs in a container it builds and runs your apps through the Docker socket — but a
+When Workbox Cloud runs in a container it builds and runs your apps through the Docker socket — but a
 container can't operate the machine underneath it. For the handful of jobs that need the host itself,
-Openship keeps a private SSH channel to it: an ed25519 key authorized for one user, dialed over the
+Workbox Cloud keeps a private SSH channel to it: an ed25519 key authorized for one user, dialed over the
 internal `host.docker.internal` bridge and never over a public address.
 
 This page is about the state where that channel was never built. The install reported success, the
@@ -16,7 +16,7 @@ dashboard looks fine, ordinary deploys work — and then one specific operation 
 <Callout type="error">
 ```
 This operation targets the HOST machine, but no host channel is configured
-(OPENSHIP_HOST_SSH_HOST is unset) and Openship is running in a container — so it
+(OPENSHIP_HOST_SSH_HOST is unset) and Workbox Cloud is running in a container — so it
 would have run inside the container instead, against the wrong filesystem.
 Re-run `openship up` to provision the host channel. `openship doctor` reports
 whether it worked.
@@ -42,7 +42,7 @@ Read this before you touch anything, because the instinct to rebuild the box is 
   restarting and routing your apps needs the socket, not this channel.
 - **Blocked until the channel works:**
   - the host terminal, host system info and host port scans
-  - taking over `:80`/`:443` from a proxy Openship didn't start
+  - taking over `:80`/`:443` from a proxy Workbox Cloud didn't start
   - installing or updating the mail engine
   - deploying a catalog app that needs a generated config file on the host (Supabase's `kong.yml`, say)
 

@@ -47,20 +47,20 @@ const panelTones = (html: string) =>
 
 describe("grouping", () => {
   it("puts scopes needing attention before scopes with only advisories", () => {
-    expect(groupOrder(render())).toEqual(["Servers", "Projects", "Domains", "OpenShip"]);
+    expect(groupOrder(render())).toEqual(["Servers", "Projects", "Domains", "Workbox Cloud"]);
   });
 
   it("puts a project problem before platform and server updates", () => {
     const updates = ISSUE_FIXTURES.advisory!.filter((issue) => issue.scope !== "project");
     const project = ISSUE_FIXTURES.action!.find((issue) => issue.kind === "workload_unhealthy")!;
-    expect(groupOrder(render([...updates, project]))).toEqual(["Projects", "OpenShip", "Servers"]);
+    expect(groupOrder(render([...updates, project]))).toEqual(["Projects", "Workbox Cloud", "Servers"]);
   });
 
   it("omits a scope with nothing in it rather than showing an empty panel", () => {
     // The advisory bucket has no domain rows, so there must be no Domains panel —
     // an empty group reads as "checked and fine", which this surface never claims.
     const html = render(ISSUE_FIXTURES.advisory!);
-    expect(groupOrder(html)).toEqual(["OpenShip", "Servers", "Projects"]);
+    expect(groupOrder(html)).toEqual(["Workbox Cloud", "Servers", "Projects"]);
     expect(html).not.toContain("Custom hostnames and certificates");
   });
 
@@ -113,11 +113,11 @@ describe("tone comes from the worst row in the panel", () => {
   });
 
   it("drops advisories back to the muted surface the moment something louder shares the page", () => {
-    // In the mixed feed an outage is present, so the advisory-only OpenShip panel must
+    // In the mixed feed an outage is present, so the advisory-only Workbox Cloud panel must
     // NOT read amber — "a new version exists" can't look like "down" when both show at
     // once. The louder panels keep their own tone.
     const tones = panelTones(render(ISSUE_FIXTURES.mixed!));
-    expect(tones.OpenShip).toBe("text-foreground"); // advisory, muted beneath louder
+    expect(tones["Workbox Cloud"]).toBe("text-foreground"); // advisory, muted beneath louder
     expect(tones.Servers).toBe("text-danger"); // outage
     expect(tones.Domains).toBe("text-warning"); // action_required
   });

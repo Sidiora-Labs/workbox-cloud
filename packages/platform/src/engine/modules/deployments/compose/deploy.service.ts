@@ -2379,7 +2379,7 @@ async function deployComposeServicesCore(
             logger.log(
               `Couldn't read live port occupancy on the target, so ${allocation.port} for ` +
                 `${service.name} avoids database-pinned ports and ports this deploy already took. ` +
-                `If publishing it fails as "already allocated", check that Openship can reach ` +
+                `If publishing it fails as "already allocated", check that Workbox Cloud can reach ` +
                 `this host (Servers → this box).\n`,
               "warn",
             );
@@ -3814,7 +3814,7 @@ async function deployComposeServicesCore(
         // Sync the managed edge proxy for EACH free .opsh.io route (a multi-port
         // service has several). Best-effort: the container is already running and
         // any custom domain is routed locally; the edge proxy only wires up the
-        // free URL via Openship Cloud, so a failure here (403, slug taken,
+        // free URL via Workbox Cloud, so a failure here (403, slug taken,
         // unreachable) must not flip a healthy service to "failed".
         const managedRoutes = proxyRoutes.filter((r) => r.isCloud && r.managedSubdomain);
         let managedEdgeReady = true;
@@ -4588,7 +4588,7 @@ async function deployComposeServicesCore(
             `(port ${route.targetPort}, matched by ${resolved.owner.via}).\n`,
         );
         registeredRoutes.push(route);
-        // A free *.opsh.io hostname resolves ONLY through Openship Cloud's edge, so the
+        // A free *.opsh.io hostname resolves ONLY through Workbox Cloud's edge, so the
         // local vhost above is half of it — the same pairing the per-service loop does
         // for its own free routes. Without this the project's free URL would have a
         // working origin and no route pointing at it.

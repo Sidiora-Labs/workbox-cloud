@@ -9,9 +9,9 @@ The Images API returns the **build-image catalog** — the curated list of ready
 (PostgreSQL, Redis, and friends) you pick from when adding a service to a project. In the dashboard this is
 the image grid in the **Add service** modal; it's a read-only lookup, so there's nothing to create or edit.
 
-<Callout title="Catalog comes from Openship Cloud" type="info">
+<Callout title="Catalog comes from Workbox Cloud" type="info">
 The module is available on every deploy mode (self-hosted, cloud, and desktop), but the catalog itself is
-served by Openship Cloud. On a **SaaS** instance it uses the master catalog; on a **self-hosted** instance
+served by Workbox Cloud. On a **SaaS** instance it uses the master catalog; on a **self-hosted** instance
 with a cloud account linked it uses your org's cloud token. On a self-hosted instance with **no** cloud
 link, the endpoint returns an empty list with `cloudConnected: false` rather than an error — the dashboard
 falls back to the "Custom image" tile. Results are cached in memory for a few minutes.

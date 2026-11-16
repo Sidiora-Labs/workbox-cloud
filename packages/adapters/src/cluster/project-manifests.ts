@@ -31,7 +31,7 @@ export const PROJECT_MANIFEST_KINDS: Readonly<
 export const MAX_PROJECT_MANIFEST_BYTES = 1024 * 1024;
 export const MAX_PROJECT_MANIFEST_OBJECTS = 64;
 
-/** Marks objects created from manifests, so Openship's own workload objects are never touched. */
+/** Marks objects created from manifests, so Workbox Cloud's own workload objects are never touched. */
 export const PROJECT_MANIFEST_LABEL = "openship.io/manifest";
 const HASH_ANNOTATION = "openship.io/manifest-hash";
 const DNS_LABEL = /^[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?$/;
@@ -257,7 +257,7 @@ export interface ApplyProjectManifestsResult {
 /**
  * Apply admitted objects, then prune manifest objects of this project that are no
  * longer declared. Only objects carrying this project's manifest labels are ever
- * replaced or deleted; Openship's own app objects and anything foreign stay untouched.
+ * replaced or deleted; Workbox Cloud's own app objects and anything foreign stay untouched.
  * Jobs are create-only; other kinds use server-validated replacement. A dry-run
  * validates the complete set before any mutation. This is NOT a cross-resource
  * transaction: concurrent edits/network failures can still interrupt the commit.

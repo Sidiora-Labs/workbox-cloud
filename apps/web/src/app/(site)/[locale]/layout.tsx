@@ -6,9 +6,9 @@ import { routing, localizedHref } from "@/i18n/routing";
 import "../../globals.css";
 
 const SITE_URL = "https://openship.io";
-const SITE_NAME = "OpenShip";
-const TITLE_DEFAULT = "OpenShip - Open Source, Self-Hostable Deployment Platform";
-const TITLE_TEMPLATE = "%s - OpenShip";
+const SITE_NAME = "Workbox Cloud";
+const TITLE_DEFAULT = "Workbox Cloud - Open Source, Self-Hostable Deployment Platform";
+const TITLE_TEMPLATE = "%s - Workbox Cloud";
 const DESCRIPTION =
   "Deploy anything, own everything. Self-hostable, AI-powered deployment platform with free SSL, unlimited domains, instant rollbacks, and CLI/MCP support. Open source and free to self-host, forever.";
 
@@ -54,14 +54,11 @@ const baseMetadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.ico" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/brand/wb_cloud_dark.webp", type: "image/webp" },
     ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    apple: [{ url: "/brand/wb_cloud_dark.webp", type: "image/webp" }],
     other: [
-      { url: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
-      { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
+      { url: "/brand/wb_cloud_dark.webp", type: "image/webp" },
     ],
   },
   manifest: "/site.webmanifest",
@@ -75,7 +72,7 @@ const baseMetadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "OpenShip - Deploy Anything. Own Everything.",
+    title: "Workbox Cloud - Deploy Anything. Own Everything.",
     description:
       "Open source, self-hostable deployment platform with AI-powered builds and instant rollbacks.",
     creator: "@openship",
@@ -95,7 +92,7 @@ const baseMetadata: Metadata = {
   alternates: {
     canonical: "/",
     types: {
-      "application/rss+xml": [{ url: "/blog/rss.xml", title: "OpenShip Blog" }],
+      "application/rss+xml": [{ url: "/blog/rss.xml", title: "Workbox Cloud Blog" }],
     },
   },
   // verification: {
@@ -126,7 +123,7 @@ const organizationLd = {
   name: SITE_NAME,
   legalName: "Oblien LLC",
   url: SITE_URL,
-  logo: `${SITE_URL}/android-chrome-512x512.png`,
+  logo: `${SITE_URL}/brand/wb_cloud_dark.webp`,
   description: DESCRIPTION,
   foundingDate: "2024",
   sameAs: [
@@ -202,7 +199,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/brand/wb_cloud_dark.webp" type="image/webp" />
         <link rel="preconnect" href="https://cdn.oblien.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://cdn.oblien.com" />
         <script

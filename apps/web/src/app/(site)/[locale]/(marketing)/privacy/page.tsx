@@ -8,21 +8,21 @@ import { Navbar, Footer } from "@/components/landing";
 
 const PAGE_TITLE = "Privacy Policy";
 const PAGE_DESCRIPTION =
-  "How OpenShip handles your data. What we collect, why, where it lives, how to remove it. We do not sell personal data and we do not show ads.";
+  "How Workbox Cloud handles your data. What we collect, why, where it lives, how to remove it. We do not sell personal data and we do not show ads.";
 
 const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
   alternates: { canonical: "/privacy" },
   openGraph: {
-    title: `${PAGE_TITLE} - OpenShip`,
+    title: `${PAGE_TITLE} - Workbox Cloud`,
     description: PAGE_DESCRIPTION,
     url: "/privacy",
     type: "article",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${PAGE_TITLE} - OpenShip`,
+    title: `${PAGE_TITLE} - Workbox Cloud`,
     description: PAGE_DESCRIPTION,
   },
 };
@@ -41,7 +41,7 @@ function getSections(copy: Copy) {
       title: copy("Overview"),
       body: [
         copy(
-          "OpenShip is a deployment platform. We host code, secrets, and infrastructure on your behalf when you use OpenShip Cloud. When you self-host, everything stays on your own machines and this policy applies only to the parts of our service you interact with (account, billing, support).",
+          "Workbox Cloud is a deployment platform. We host code, secrets, and infrastructure on your behalf when you use Workbox Cloud. When you self-host, everything stays on your own machines and this policy applies only to the parts of our service you interact with (account, billing, support).",
         ),
         copy(
           "This policy describes what we collect, why, where it lives, and how to remove it. We do not sell personal data. We do not show ads.",
@@ -93,7 +93,7 @@ function getSections(copy: Copy) {
       title: copy("Customer-approved support reviews"),
       body: [
         copy(
-          "OpenShip staff do not browse your private source code, database contents, application files, or secret values as part of support. Your content remains yours.",
+          "Workbox Cloud staff do not browse your private source code, database contents, application files, or secret values as part of support. Your content remains yours.",
         ),
         copy(
           "Our support team reviews relevant technical metadata and sanitized failure diagnostics only when you request troubleshooting help or approve a review. This can include deployment status, resource usage, infrastructure settings, and the cause of a failed deployment. A review is limited to the technical issue you ask us to investigate.",

@@ -57,7 +57,7 @@ describe("platform transport self-repair", () => {
         smtpHost: "mail.example.com",
         smtpPort: 465,
         secure: true,
-        from: "Openship <openship@example.com>",
+        from: "Workbox Cloud <openship@example.com>",
       })
       .mockResolvedValueOnce({
         email: "openship@example.com",
@@ -65,7 +65,7 @@ describe("platform transport self-repair", () => {
         smtpHost: "mail.example.com",
         smtpPort: 465,
         secure: true,
-        from: "Openship <openship@example.com>",
+        from: "Workbox Cloud <openship@example.com>",
       });
     mocks.firstSend.mockRejectedValue(
       Object.assign(new Error("535 Authentication credentials invalid"), {

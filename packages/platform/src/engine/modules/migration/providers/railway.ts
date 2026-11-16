@@ -273,7 +273,7 @@ async function discover(access: ProviderAccess, source: PlatformMigrationSource)
       );
     if (s.cronSchedule)
       blockers.push(
-        "This service has a Railway schedule. Configure its equivalent in Openship before enabling it.",
+        "This service has a Railway schedule. Configure its equivalent in Workbox Cloud before enabling it.",
       );
     if (s.numReplicas != null && s.numReplicas !== 1)
       blockers.push(

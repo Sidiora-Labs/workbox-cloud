@@ -110,7 +110,7 @@ function parseUpstreams(config: string): Map<string, string[]> {
 const HTTP_PROXY_TARGET_RE = /^(https?:\/\/)([^/?#]+)([/?#].*)?$/i;
 
 /**
- * Turn a raw proxy_pass value into a concrete Openship route target, or reject
+ * Turn a raw proxy_pass value into a concrete Workbox Cloud route target, or reject
  * it (so the caller warns and skips) when it can't be resolved to a real
  * host:port — an unknown/undeclared upstream or an nginx variable would
  * otherwise produce a vhost that fails `openresty -t`, and a unix socket one
@@ -177,7 +177,7 @@ function resolveProxyTarget(
 export function strictLoopbackUpstreamPorts(config: string): Set<number> {
   const normalized = stripComments(config);
   if (!normalized.trim() || !/server\s*\{/.test(normalized)) {
-    throw new Error("Cannot read Openship edge routes: active OpenResty config dump was empty");
+    throw new Error("Cannot read Workbox Cloud edge routes: active OpenResty config dump was empty");
   }
   const upstreams = parseUpstreams(normalized);
   const ports = new Set<number>();
@@ -187,11 +187,11 @@ export function strictLoopbackUpstreamPorts(config: string): Set<number> {
     if (!raw) continue;
     const resolved = resolveProxyTarget(raw, upstreams, { allowVariablesAfterAuthority: true });
     if ("reason" in resolved && !resolved.unixSocket) {
-      throw new Error(`Cannot inventory Openship edge routes: ${resolved.reason}`);
+      throw new Error(`Cannot inventory Workbox Cloud edge routes: ${resolved.reason}`);
     }
 
     // The migration parser intentionally selects the first member of a named
-    // upstream because one Openship route has one target. Collision inventory
+    // upstream because one Workbox Cloud route has one target. Collision inventory
     // has a stricter job: every member can receive traffic from the stale vhost,
     // so every concrete loopback member must protect its port.
     const parsed = raw.match(HTTP_PROXY_TARGET_RE);
@@ -212,12 +212,12 @@ export function strictLoopbackUpstreamPorts(config: string): Set<number> {
         url = new URL(target);
       } catch (diagnosticFailure) {
         observeCaughtError(diagnosticFailure, "adapters/system/proxy/import/nginx");
-        throw new Error(`Cannot inventory Openship edge routes: invalid proxy_pass "${raw}"`);
+        throw new Error(`Cannot inventory Workbox Cloud edge routes: invalid proxy_pass "${raw}"`);
       }
       if (!isLoopbackHost(url.hostname)) continue;
       const port = url.port ? Number(url.port) : url.protocol === "https:" ? 443 : 80;
       if (!Number.isSafeInteger(port) || port < 1 || port > 65_535) {
-        throw new Error(`Cannot inventory Openship edge routes: invalid loopback port in "${raw}"`);
+        throw new Error(`Cannot inventory Workbox Cloud edge routes: invalid loopback port in "${raw}"`);
       }
       ports.add(port);
     }
@@ -302,7 +302,7 @@ function servesNothing(locationBody: string): boolean {
  *
  * certbot writes exactly one of these per host beside the real :443 vhost, so a
  * 5-site nginx yields 5 blocks with no proxy_pass and no root. They carry NO
- * route to migrate (the TLS vhost beside them has it) and Openship's edge issues
+ * route to migrate (the TLS vhost beside them has it) and Workbox Cloud's edge issues
  * that redirect itself, so they're skipped SILENTLY — warning about them reads as
  * "5 of your sites won't migrate" when every one of them did.
  *
@@ -339,7 +339,7 @@ function isHttpsUpgradeForSelf(body: string, names: string[]): boolean {
  * (`try_files` → `/index.html` → redirect cycle). Our edge answers ACME itself,
  * so these carry nothing to migrate.
  *
- * The same reasoning covers Openship's own edge-target challenge vhost
+ * The same reasoning covers Workbox Cloud's own edge-target challenge vhost
  * (`_oblien-challenge-<slug>.conf`): a block whose only location answers
  * `/.well-known/oblien-proxy-challenge/` is scaffolding proving we control a
  * routing target, not a site. Recognising it HERE rather than in each consumer is
@@ -610,13 +610,13 @@ const OUR_EDGE_SITE_GLOBS = [
  * Scan OUR OWN OpenResty edge's per-domain `server{}` blocks. NginxProvider
  * writes them to the OpenResty sites-enabled tree (NOT `/etc/nginx`, and the
  * binary is `openresty` so `nginx -T` doesn't apply), so this is how migrate
- * surfaces routes Openship itself already serves (edge classification "ours").
+ * surfaces routes Workbox Cloud itself already serves (edge classification "ours").
  * The blocks are plain nginx (`server_name` + `proxy_pass http://host:<port>` +
  * `ssl_certificate`), so the same parser applies. Read-only; empty if unreadable.
  */
 /**
  * Scan a FOREIGN host OpenResty holding — or having held — the edge ports: a legacy
- * bare Openship edge, or a hand-rolled one.
+ * bare Workbox Cloud edge, or a hand-rolled one.
  *
  * Unlike {@link scanOpenshipEdge} (which reads OUR edge's KNOWN site trees), this
  * can't assume where the vhosts live, so it dumps the fully-resolved config
@@ -707,7 +707,7 @@ printf '__OPENSHIP_NO_INGRESS__'
  * allocation cannot use that contract: treating an SSH, permission, or Docker
  * read failure as an empty edge would allow allocation of a port an existing
  * vhost still dials. This variant therefore proves that the sites trees are
- * readable and rejects when the running Openship edge cannot be inspected.
+ * readable and rejects when the running Workbox Cloud edge cannot be inspected.
  */
 export async function scanOpenshipEdgeStrict(
   executor: CommandExecutor,
@@ -725,11 +725,11 @@ export async function scanOpenshipEdgeStrict(
     const bareConfig = await dumpResolvedConfig(executor, ["openresty"]);
     if (bareConfig) return parseStrictEdgeConfig(bareConfig);
     throw new Error(
-      "Cannot read Openship edge routes: neither Docker nor bare OpenResty inventory is available",
+      "Cannot read Workbox Cloud edge routes: neither Docker nor bare OpenResty inventory is available",
     );
   }
   if (!detected.exists) {
-    // "No Openship container" is not proof that the edge has no routes. A
+    // "No Workbox Cloud container" is not proof that the edge has no routes. A
     // foreign nginx/caddy/traefik may still own :80/:443 and retain a stale
     // loopback upstream that a new workload could capture. Private deployments
     // must not install/take over an edge merely to allocate a loopback port.
@@ -740,14 +740,14 @@ export async function scanOpenshipEdgeStrict(
       return { ...parseNginxConfig(""), loopbackUpstreamPorts: new Set() };
     }
     throw new Error(
-      "Cannot read Openship edge routes: no running Openship edge or bare OpenResty inventory is available",
+      "Cannot read Workbox Cloud edge routes: no running Workbox Cloud edge or bare OpenResty inventory is available",
     );
   }
   if (!detected.running) {
-    throw new Error("Cannot read Openship edge routes: the edge container is not running");
+    throw new Error("Cannot read Workbox Cloud edge routes: the edge container is not running");
   }
   const container = knownContainer ?? detected.name;
-  if (!container) throw new Error("Cannot read Openship edge routes: container identity missing");
+  if (!container) throw new Error("Cannot read Workbox Cloud edge routes: container identity missing");
   // Dump the FULL resolved config from the active process namespace. Reading
   // only sites-enabled misses loopback upstreams in the baked/base config (ACME,
   // webhook/control routes) and misses includes outside the known site globs.
@@ -755,7 +755,7 @@ export async function scanOpenshipEdgeStrict(
     containerCommand(container, "openresty -T 2>/dev/null"),
   );
   if (!fromContainer.trim() || !/server\s*\{/.test(fromContainer)) {
-    throw new Error("Cannot read Openship edge routes: active OpenResty config dump was empty");
+    throw new Error("Cannot read Workbox Cloud edge routes: active OpenResty config dump was empty");
   }
   return parseStrictEdgeConfig(fromContainer);
 }

@@ -74,7 +74,7 @@ export interface BrowseResult {
 }
 
 /**
- * A vhost the edge serves with no Openship record behind it.
+ * A vhost the edge serves with no Workbox Cloud record behind it.
  *
  * `static` is the case that matters: it keeps returning 200 with a removed
  * project's built files. A dead `proxy` vhost 502s and announces itself.
@@ -110,7 +110,7 @@ export interface InstanceSettings {
   productMode?: "platform" | "mail" | null;
   /** What the instance actually resolves to right now (override ?? env). */
   productModeEffective?: "platform" | "mail";
-  /** Stored host-control override — may OpenShip deploy to the machine it runs
+  /** Stored host-control override — may Workbox Cloud deploy to the machine it runs
    *  on ("This Server")? null = unset (the OPENSHIP_HOST_CONTROL env decides). */
   hostControl?: boolean | null;
   /** What host control actually resolves to right now (override ?? env), already
@@ -594,7 +594,7 @@ export const systemApi = {
   inspectSwarm: (id: string, details = false) => checkedResponse(ServerResourceSchemas.inspectSwarm, api.get(`${endpoints.system.server(id)}/swarm?details=${details}`, { timeout: 45_000 })),
   connectSwarm: (id: string, input: { name: string; requestId: string }) => checkedResponse(ServerResourceSchemas.connectSwarm, api.post(`${endpoints.system.server(id)}/swarm/connect`, input, { timeout: 45_000 })),
   /**
-   * Vhosts the local edge serves that Openship no longer tracks.
+   * Vhosts the local edge serves that Workbox Cloud no longer tracks.
    *
    * `scanned: false` is NOT "all clear" — it means we couldn't compare (no edge,
    * or a foreign proxy). Render the reason, never an empty success state.
@@ -796,7 +796,7 @@ export const systemApi = {
    * Remove a server, resolving the fate of every workload bound to it.
    *
    * `destroyOnSource` is the operator's explicit opt-in to stop and delete the
-   * containers on the machine; without it the workloads are removed from Openship
+   * containers on the machine; without it the workloads are removed from Workbox Cloud
    * only and keep running. Flags travel as query params (same idiom as
    * `projectsApi.delete`), and the timeout scales with the workload count because
    * each teardown is its own SSH round-trip — a short client timeout would abort a

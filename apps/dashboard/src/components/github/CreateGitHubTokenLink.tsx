@@ -13,7 +13,7 @@ export function CreateGitHubTokenLink({
 }) {
   return (
     <a
-      href="https://github.com/settings/tokens/new?scopes=repo,read:org&description=OpenShip"
+      href="https://github.com/settings/tokens/new?scopes=repo,read:org&description=Workbox Cloud"
       target="_blank"
       rel="noopener noreferrer"
       className={cn(

@@ -86,7 +86,7 @@ interface UpOpts {
   compose?: boolean;
   /** Force the bare process service (the pre-compose install). */
   bare?: boolean;
-  /** Install as Openship Mail: the dashboard's default shell is the mail control
+  /** Install as Workbox Cloud Mail: the dashboard's default shell is the mail control
    *  plane instead of the full platform (OPENSHIP_PRODUCT=mail). */
   mail?: boolean;
   /** Non-interactive answer for the compose edge preflight when a foreign proxy holds :80/:443. */
@@ -190,7 +190,7 @@ function ensureAuthSecret(): string {
 }
 
 export const upCommand = new Command("up")
-  .description("Start Openship as a persistent service (boot + auto-restart); --foreground to run attached")
+  .description("Start Workbox Cloud as a persistent service (boot + auto-restart); --foreground to run attached")
   // No defaults on the port flags ON PURPOSE. A commander default makes the option
   // always "set", which reads downstream as "the operator asked for 4000" — it
   // outranked the ports the install was already configured with (rewriting an
@@ -228,15 +228,15 @@ export const upCommand = new Command("up")
     "Managed edge: install OpenResty + a free Let's Encrypt cert on this box and route --public-url's domain to the dashboard (no reverse proxy needed)",
   )
   .option("--acme-email <email>", "Contact email for Let's Encrypt certificates (managed edge)")
-  .option("--from-source", "Preview: build + run Openship from source (a branch) instead of a published release — runs attached")
+  .option("--from-source", "Preview: build + run Workbox Cloud from source (a branch) instead of a published release — runs attached")
   .option("--ref <branch>", "Git branch/tag/sha to build with --from-source (default: main)")
-  .option("--source <path>", "Build from an existing local Openship checkout instead of cloning")
+  .option("--source <path>", "Build from an existing local Workbox Cloud checkout instead of cloning")
   .option("--repo <url>", "Git remote to clone for --from-source (default: oblien/openship)")
   .option("--compose", "Install via Docker Compose using the published images (postgres + redis + api + dashboard + edge on :80/:443). Default when Docker is available on Linux.")
   .option("--bare", "Install as the bare process service (embedded DB, no Docker) instead of Compose")
   .option(
     "--mail",
-    "Install as Openship Mail: the dashboard opens on the mail control plane (mail servers, domains, mailboxes) instead of the full platform. Same install, same binary — a default shell, not a restriction. Anyone can switch back under Settings → General, and an admin can change the box-wide default under Settings → Instance.",
+    "Install as Workbox Cloud Mail: the dashboard opens on the mail control plane (mail servers, domains, mailboxes) instead of the full platform. Same install, same binary — a default shell, not a restriction. Anyone can switch back under Settings → General, and an admin can change the box-wide default under Settings → Instance.",
   )
   .option(
     "--no-host-control",
@@ -258,7 +258,7 @@ export const upCommand = new Command("up")
     "--open-host-firewall",
     "Compose mode: if the api container can't reach this machine's SSH port, add the host firewall rule that allows it (scoped to the container subnet, ufw/firewalld only). Without this the blocked channel is reported and left alone. Not implied by --yes.",
   )
-  .option("--edge <action>", "Compose mode: how to handle an existing proxy on :80/:443 — 'migrate' (import its sites into Openship's edge), 'takeover' (stop it; its sites stop serving), or 'cancel'. Default: prompt when interactive, else cancel.")
+  .option("--edge <action>", "Compose mode: how to handle an existing proxy on :80/:443 — 'migrate' (import its sites into Workbox Cloud's edge), 'takeover' (stop it; its sites stop serving), or 'cancel'. Default: prompt when interactive, else cancel.")
   .option(
     "--reset-secrets",
     "Compose mode: generate new secrets even though this install's data volume still exists. `up` normally refuses, because the database keeps the password it was created with and every stored environment variable was encrypted with the old BETTER_AUTH_SECRET — the password gets realigned, those variables do not. Use only when the original .env is genuinely gone.",
@@ -419,7 +419,7 @@ export async function runHeadlessProvision(
     for (const w of result.warnings) reportCliMessage("warn", chalk.yellow(`  ⚠ ${w}`));
     if (opts.managedEdge && !result.domainRegistered)
       throw new Error("Managed domain registration did not complete. Retry after resolving the domain warning above.");
-    console.log(chalk.green(`\n  ✓ Openship provisioned${result.liveUrl ? `: ${result.liveUrl}` : "."}`));
+    console.log(chalk.green(`\n  ✓ Workbox Cloud provisioned${result.liveUrl ? `: ${result.liveUrl}` : "."}`));
   } catch (err) {
     observeCaughtError(err, "cli/commands/up");
     reportCliMessage("error", chalk.red(`\n  Headless provisioning failed: ${(err as Error).message}\n`));
@@ -559,8 +559,8 @@ async function runCompose(opts: UpOpts & { yes?: boolean }): Promise<{ apiPort: 
   const fromSource = sourceBuildDir();
   const spinner = ora(
     fromSource
-      ? `Building Openship from ${fromSource} and starting the stack…`
-      : "Starting Openship via Docker Compose…",
+      ? `Building Workbox Cloud from ${fromSource} and starting the stack…`
+      : "Starting Workbox Cloud via Docker Compose…",
   ).start();
   const res = await composeUp({
     // Prefetched above, before the preflight stopped anything.
@@ -601,7 +601,7 @@ async function runCompose(opts: UpOpts & { yes?: boolean }): Promise<{ apiPort: 
     );
     process.exit(1);
   }
-  spinner.succeed("Openship is running via Docker Compose.");
+  spinner.succeed("Workbox Cloud is running via Docker Compose.");
 
   // If we stopped the operator's proxy to free :80/:443, OUR edge now owes them a
   // working one. `compose up -d` succeeds as soon as the container is CREATED, so a
@@ -618,7 +618,7 @@ async function runCompose(opts: UpOpts & { yes?: boolean }): Promise<{ apiPort: 
   if (edgePlan.action && (await edgeIsBroken(new LocalExecutor()))) {
     const reason = await edgeCrashReason(new LocalExecutor());
     reportCliMessage("error",
-      chalk.red(`\n  Openship's edge container is not running${reason ? ` — ${reason}` : "."}`),
+      chalk.red(`\n  Workbox Cloud's edge container is not running${reason ? ` — ${reason}` : "."}`),
     );
     const restored = await rollbackHostEdge();
     // The same "put your proxy back" hint `edge-import` and `uninstall` print, from the
@@ -694,7 +694,7 @@ async function runCompose(opts: UpOpts & { yes?: boolean }): Promise<{ apiPort: 
  * (bun-run raw TS) and the dashboard dir (local build) differ.
  */
 async function runFromSource(opts: UpOpts): Promise<void> {
-  console.log(chalk.cyan("\n  Building Openship from source (preview mode)…"));
+  console.log(chalk.cyan("\n  Building Workbox Cloud from source (preview mode)…"));
   console.log(
     chalk.dim("  Unverified dev build — for previewing a branch, not production self-hosting.\n"),
   );
@@ -714,7 +714,7 @@ async function runFromSource(opts: UpOpts): Promise<void> {
 }
 
 /**
- * Default `openship up`: install + start Openship as a persistent service that
+ * Default `openship up`: install + start Workbox Cloud as a persistent service that
  * auto-restarts on crash and starts on boot, running until `openship stop`.
  */
 export async function startService(
@@ -767,7 +767,7 @@ export async function startService(
         ? chalk.dim(`  Dashboard: ${publicUrl}  (login required)\n`)
         : chalk.dim(`  Dashboard: http://localhost:${dashPort}  (login required)\n`);
       console.log(
-        chalk.green("\n  ✔ Openship is running as a service.\n") +
+        chalk.green("\n  ✔ Workbox Cloud is running as a service.\n") +
           (opts.ui !== false ? dashboardLine : "") +
           (publicUrl
             ? chalk.dim("  API is proxied through the dashboard (not exposed). Point your reverse proxy / DNS at the dashboard port.\n")
@@ -842,7 +842,7 @@ async function runForeground(opts: UpOpts, source?: FromSourceRun): Promise<void
       // the in-process job runner) made the API report `isServerHost: false`
       // (health.routes.ts), so `registerSelfServerReconcile` — gated on
       // modes:["selfhosted"] — never ran, "This Server" was never registered, and
-      // the deploy wizard offered Openship Cloud as the only target on a box the
+      // the deploy wizard offered Workbox Cloud as the only target on a box the
       // operator had just installed on purpose.
       //
       // It also mislabelled the security posture: DEPLOY_MODE=desktop relaxes the
@@ -876,7 +876,7 @@ async function runForeground(opts: UpOpts, source?: FromSourceRun): Promise<void
     // bootstrap endpoint; both processes share this token file.
     env.OPENSHIP_REQUIRE_AUTH = "true";
     env.INTERNAL_TOKEN = mintBareInternalToken();
-    // Openship Mail. Only the DEFAULT shell: the instance setting (Settings →
+    // Workbox Cloud Mail. Only the DEFAULT shell: the instance setting (Settings →
     // Instance) is stored in the database and wins over this, so an operator who
     // has switched the box back isn't overridden on the next boot.
     if (opts.mail) env.OPENSHIP_PRODUCT = "mail";
@@ -920,7 +920,7 @@ async function runForeground(opts: UpOpts, source?: FromSourceRun): Promise<void
     delete env.DATABASE_URL;
     delete env.POSTGRES_URL;
 
-    const spinner = ora(`Starting Openship on http://localhost:${port} …`).start();
+    const spinner = ora(`Starting Workbox Cloud on http://localhost:${port} …`).start();
     // `detached` puts the child in its OWN process group so we can reap the
     // whole subtree (the API/dashboard may fork workers) with one group signal,
     // and so an orphan can be found + swept by `openship stop`. NOT unref'd — the
@@ -946,7 +946,7 @@ async function runForeground(opts: UpOpts, source?: FromSourceRun): Promise<void
     child.stderr.on("data", buffer);
     child.on("exit", (code) => {
       if (code && code !== 0) {
-        spinner.fail(`Openship server exited (code ${code})`);
+        spinner.fail(`Workbox Cloud server exited (code ${code})`);
         process.stderr.write(buffered.slice(-2000));
         process.exit(code);
       }
@@ -969,13 +969,13 @@ async function runForeground(opts: UpOpts, source?: FromSourceRun): Promise<void
     }
 
     if (!healthy) {
-      spinner.fail("Openship did not become healthy in time");
+      spinner.fail("Workbox Cloud did not become healthy in time");
       process.stderr.write(buffered.slice(-2000));
       child.kill("SIGTERM");
       process.exit(1);
     }
 
-    spinner.succeed(`Openship API running at http://localhost:${port}`);
+    spinner.succeed(`Workbox Cloud API running at http://localhost:${port}`);
 
     // Track every child so Ctrl-C / a fatal exit / `openship stop` tears them all
     // down together. The API + dashboard hold keep-alive sockets to EACH OTHER,

@@ -30,7 +30,7 @@ async function setup(instanceAdmin = true) {
   const owner = await seedOwner({ instanceAdmin });
   const user = (await repos.user.findById(owner.userId))!;
   const input = {
-    name: "Openship",
+    name: "Workbox Cloud",
     slug: `openship-${owner.userId}`,
     organizationId: owner.orgId,
     appTemplateId: "openship",

@@ -35,7 +35,7 @@ interface HealthEnv {
 }
 
 export const statusCommand = new Command("status")
-  .description("Show the local Openship service (installed/running, ports) and the active context's API health")
+  .description("Show the local Workbox Cloud service (installed/running, ports) and the active context's API health")
   .action(async () => {
     if (isNativeMode()) {
       const session = nativeSession()!;
@@ -43,7 +43,7 @@ export const statusCommand = new Command("status")
       const result = { mode: "native", instanceId: session.ship.instanceId, organizationId: session.client.organizationId, env };
       if (isJsonMode()) printJson(result);
       else {
-        console.log(chalk.bold("\n  Openship status\n"));
+        console.log(chalk.bold("\n  Workbox Cloud status\n"));
         console.log(`  Instance       ${result.instanceId}`);
         console.log(`  Organization   ${result.organizationId}`);
         console.log(`  Connection     native SDK`);
@@ -57,7 +57,7 @@ export const statusCommand = new Command("status")
     // Compose install → the bare service manager reads "not installed", which is
     // misleading. Show the stack (docker compose ps) + a health probe instead.
     if (readInstallMethod() === "compose" && !isJsonMode()) {
-      console.log(chalk.bold("\n  Openship status (Docker Compose)\n"));
+      console.log(chalk.bold("\n  Workbox Cloud status (Docker Compose)\n"));
       composePs();
       try {
         const h = await getRemoteClient().http.request<Health>("/health", { signal: AbortSignal.timeout(8000) });
@@ -103,7 +103,7 @@ export const statusCommand = new Command("status")
         : chalk.dim("not installed");
 
     let out =
-      chalk.bold("\n  Openship status\n\n") +
+      chalk.bold("\n  Workbox Cloud status\n\n") +
       row("Service", serviceState) +
       row("Manager", svc.kind === "unsupported" ? chalk.dim("none") : svc.kind) +
       (ports.api ? row("API port", ports.api) : "") +

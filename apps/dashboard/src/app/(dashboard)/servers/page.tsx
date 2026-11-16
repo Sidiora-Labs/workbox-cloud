@@ -189,7 +189,7 @@ function ServerInventoryPage() {
     return () => clearInterval(timer);
   }, [pending, fetchServers]);
 
-  // "Add → This machine" (#527): register the box OpenShip runs on as a deploy
+  // "Add → This machine" (#527): register the box Workbox Cloud runs on as a deploy
   // target. Server-host only (desktop derives "here" without a row; the SaaS
   // control plane is never its own target), and only while host control is on —
   // with it off the create call 400s. Once the isLocal row exists it's already in
@@ -387,7 +387,7 @@ function ServerInventoryPage() {
           <h1 className="text-2xl font-medium text-foreground/80" style={{ letterSpacing: "-0.2px" }}>
             {t.servers.list.title}
           </h1>
-          <p className="text-sm text-muted-foreground/70 mt-1">{selfHosted ? t.servers.list.subtitle : "Your infrastructure, managed from OpenShip Cloud."}</p>
+          <p className="text-sm text-muted-foreground/70 mt-1">{selfHosted ? t.servers.list.subtitle : "Your infrastructure, managed from Workbox Cloud."}</p>
         </div>
         <div className="flex items-center gap-2">
         {activeTab === "servers" && <Button variant="ghost" size="icon" disabled={refreshing} aria-label={t.servers.networks.refresh} onClick={() => void fetchServers()}><UiIcon name="refresh" className={`size-4 ${refreshing ? "animate-spin" : ""}`} /></Button>}

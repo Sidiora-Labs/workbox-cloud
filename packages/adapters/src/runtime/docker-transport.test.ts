@@ -92,7 +92,7 @@ describe("resolveLocalDockerSocketPath", () => {
 describe("resolveLocalDockerSocketPath: docker CLI context", () => {
   it("reads the active context when DOCKER_HOST is unset", () => {
     // `colima start` selects a context and exports nothing. Before this tier,
-    // `docker ps` worked in the operator's shell while Openship saw no daemon.
+    // `docker ps` worked in the operator's shell while Workbox Cloud saw no daemon.
     const DOCKER_CONFIG = dockerConfigDir(
       { colima: "unix:///Users/me/.colima/default/docker.sock" },
       "colima",

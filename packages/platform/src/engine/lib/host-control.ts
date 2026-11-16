@@ -1,5 +1,5 @@
 /**
- * THE host-control resolver — may OpenShip deploy to the machine it runs on?
+ * THE host-control resolver — may Workbox Cloud deploy to the machine it runs on?
  *
  * "Host control" governs whether this box is itself a deploy target: the isLocal
  * "This Server" row, and every host-OS operation that reaches the machine through

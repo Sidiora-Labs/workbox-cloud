@@ -6,7 +6,7 @@ import { getApiOrigin, getRequestOriginFromHeaders } from "@/lib/api/urls";
 /**
  * Server-side API client for Next.js server components, layouts, and route handlers.
  *
- * Automatically forwards the browser's cookies to the Openship API
+ * Automatically forwards the browser's cookies to the Workbox Cloud API
  * so session authentication works transparently.
  *
  * Usage:

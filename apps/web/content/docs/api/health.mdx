@@ -5,7 +5,7 @@ description: Check installation availability and SDK protocol support.
 
 import { TypeTable } from 'fumadocs-ui/components/type-table';
 
-The Health API is how anything outside Openship checks that an instance is alive and learns how it's set
+The Health API is how anything outside Workbox Cloud checks that an instance is alive and learns how it's set
 up — its version, auth mode, and which cloud (if any) it targets. Load balancers and Docker health checks
 hit `GET /api/health`; the CLI and dashboard read `GET /api/health/env` to decide which login flow to show.
 From the terminal it's the [`openship status`](/docs/cli/run) command. Both routes are available on every
@@ -57,7 +57,7 @@ curl "$OPENSHIP_URL/api/health/env"
     selfHosted: { type: 'boolean', description: 'True unless the instance runs in cloud mode (i.e. self-hosted or desktop).' },
     deployMode: { type: 'string', description: "The instance's deploy mode, e.g. \"server\" or \"desktop\"." },
     version: { type: 'string', description: 'Running API version (from apps/api/package.json) — lets the dashboard flag an outdated instance.' },
-    authMode: { type: 'string', description: 'Which login flow to use: "none" (zero-auth local user), "cloud" (external auth on Openship Cloud), or "local" (local Better Auth).' },
+    authMode: { type: 'string', description: 'Which login flow to use: "none" (zero-auth local user), "cloud" (external auth on Workbox Cloud), or "local" (local Better Auth).' },
     teamMode: { type: 'string', description: 'Deployment shape; "single_user" by default. A non-default value means the instance has been migrated to a multi-user deployment.' },
     migrationTargetUrl: { type: 'string | null', description: 'Where a launcher should point during/after a team migration; null when none is in progress.' },
     migrationInProgress: { type: 'boolean', description: 'A team migration is currently running.' },

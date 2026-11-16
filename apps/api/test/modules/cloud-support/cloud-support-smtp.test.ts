@@ -26,7 +26,7 @@ const state = vi.hoisted(() => ({
     SMTP_PORT: 465,
     SMTP_USER: "test",
     SMTP_PASS: "test",
-    SMTP_FROM: "Openship Support <support@openship.io>",
+    SMTP_FROM: "Workbox Cloud Support <support@openship.io>",
   },
   service: null as CloudSupportService | null,
   localMail: vi.fn(),
@@ -235,7 +235,7 @@ it("saves a website submission through HTTP and delivers both emails through the
   expect(delivered).toHaveLength(2);
   const acknowledgement = delivered.find((m) => m.recipient === body.email)!;
   expect(acknowledgement.message).toContain("Reply-To: support@openship.io");
-  expect(acknowledgement.message).toContain("From: Openship Support <support@openship.io>");
+  expect(acknowledgement.message).toContain("From: Workbox Cloud Support <support@openship.io>");
   expect(acknowledgement.message).toContain(receipt.id);
   expect(delivered.find((m) => m.recipient === "support@openship.io")!.message).toContain(
     `Reply-To: ${body.email}`,

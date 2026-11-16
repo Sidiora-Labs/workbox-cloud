@@ -337,7 +337,7 @@ export const digitaloceanDnsProvider: DnsProvider = {
     name: "digitalocean",
     displayName: "DigitalOcean",
     description:
-      "Openship writes your domain's DNS records on DigitalOcean DNS, so a new custom domain verifies and gets its certificate without you leaving the page.",
+      "Workbox Cloud writes your domain's DNS records on DigitalOcean DNS, so a new custom domain verifies and gets its certificate without you leaving the page.",
     requiredScopes: ["domain:read", "domain:create", "domain:update", "domain:delete"],
     tokenUrl: "https://cloud.digitalocean.com/account/api/tokens",
   },
@@ -436,7 +436,7 @@ export const digitaloceanDnsProvider: DnsProvider = {
     }
 
     // Nothing was there, so this record IS ours — and only this branch writes a
-    // marker, which is what makes the marker mean "Openship created this".
+    // marker, which is what makes the marker mean "Workbox Cloud created this".
     const created = await doRequest<{ domain_record: DoRecordItem }>(token, recordsPath(zoneId), {
       method: "POST",
       body: JSON.stringify(body),

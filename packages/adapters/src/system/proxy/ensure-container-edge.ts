@@ -2,7 +2,7 @@
  * Bring up OUR edge as a CONTAINER on any box — the single installed edge path.
  *
  * Replaces apt-installing OpenResty + certbot and templating nginx.conf/Lua onto
- * the host: `apps/edge` bakes a complete config, the Openship Lua and certbot into
+ * the host: `apps/edge` bakes a complete config, the Workbox Cloud Lua and certbot into
  * one multi-arch image, so the edge becomes a versioned artifact pinned to the
  * release instead of a package-manager outcome that drifts per distro and arch.
  *
@@ -445,7 +445,7 @@ export async function ensureContainerEdge(
       checked ??
       (await rootOrDegrade(executor, {
         purpose: "Resolving the edge's bind-mount sources",
-        consequence: "Docker may mount a different host directory than Openship writes.",
+        consequence: "Docker may mount a different host directory tha Workbox Cloud writes.",
         report: (message) => onLog(log(message, "warn")),
       }));
     resolvedMounts = await resolveEdgeContainerMounts(host);
@@ -474,7 +474,7 @@ export async function ensureContainerEdge(
     } else {
       // A listener is not proof that the container sees the host's vhosts. On
       // macOS an old command may have mounted `/var/...` from Docker's VM while
-      // Openship wrote through the host symlink at `/private/var/...`: nginx is
+      // Workbox Cloud wrote through the host symlink at `/private/var/...`: nginx is
       // healthy and every domain still returns the unrouted 404. Compare Docker's
       // actual sources with the target host's physical paths and recreate on drift.
       const mounts = await targetMounts();

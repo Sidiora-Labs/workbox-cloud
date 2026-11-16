@@ -25,7 +25,7 @@
     "installing": "جارٍ التثبيت…",
     "advanced": "خيارات النشر المتقدمة",
     "nameLabel": "الاسم",
-    "nameHint": "كيف يظهر هذا التطبيق في OpenShip.",
+    "nameHint": "كيف يظهر هذا التطبيق في Workbox Cloud.",
     "domainTitle": "أين يجب أن يتواجد؟",
     "domainFree": "نطاق فرعي مجاني",
     "domainFreeHint": "نطاق فرعي مجاني على {domain}",
@@ -73,8 +73,8 @@
     "routePortLabel": "منفذ فقط (بدون نطاق)",
     "routePortDesc": "يمكن الوصول إليه من خلال عنوان المضيف والمنفذ — لا يلزم وجود نطاق أو سحابة.",
     "routeFreeLabel": "نطاق فرعي مجاني",
-    "routeFreeDesc": "نطاق فرعي مجاني على {domain}، يتم توجيهه بواسطة OpenShip Cloud.",
-    "routeFreeNeedsCloud": "اربط OpenShip Cloud لاستخدام نطاق فرعي مجاني.",
+    "routeFreeDesc": "نطاق فرعي مجاني على {domain}، يتم توجيهه بواسطة Workbox Cloud.",
+    "routeFreeNeedsCloud": "اربط Workbox Cloud لاستخدام نطاق فرعي مجاني.",
     "routeCustomLabel": "نطاقك الخاص",
     "routeCustomDesc": "وجه نطاقاً تملكه إلى هذا التطبيق.",
     "routeDomainLabel": "النطاق",
@@ -257,7 +257,7 @@
     },
     "statusActive": "نشط",
     "statusDisabled": "معطّل",
-    "hostedCloud": "OpenShip Cloud",
+    "hostedCloud": "Workbox Cloud",
     "hostedServer": "خادم",
     "hostedLocal": "محلي",
     "projectStatus": {
@@ -278,7 +278,7 @@
       "currentServer": "الخادم الحالي",
       "migrate": "ترحيل",
       "noOtherServers": "أضف خادمًا ثانيًا لنقل هذا المشروع إليه.",
-      "cloudLater": "من خادم إلى خادم. النقل إلى OpenShip Cloud أو منه غير مدعوم بعد.",
+      "cloudLater": "من خادم إلى خادم. النقل إلى Workbox Cloud أو منه غير مدعوم بعد.",
       "startFailed": "تعذّر بدء الترحيل",
       "confirmTitle": "نقل {project} إلى {server}",
       "confirmSubtitle": "لا يتغيّر أي شيء حتى تبدأ النقل.",
@@ -326,7 +326,7 @@
       "anotherServer": "خادم آخر",
       "targetLocal": "الجهاز المحلي",
       "targetServer": "خادم مُستضاف ذاتيًا",
-      "targetCloud": "OpenShip Cloud"
+      "targetCloud": "Workbox Cloud"
     },
     "danger": {
       "title": "منطقة الخطر",
@@ -619,13 +619,13 @@
     },
     "appBanner": {
       "title": "تطبيق GitHub غير مثبّت",
-      "description": "ثبّت تطبيق OpenShip على GitHub في حسابك أو مؤسستك لتفعيل النشر التلقائي وعمليات النشر المُشغّلة عبر webhook للمشاريع السحابية.",
+      "description": "ثبّت تطبيق Workbox Cloud على GitHub في حسابك أو مؤسستك لتفعيل النشر التلقائي وعمليات النشر المُشغّلة عبر webhook للمشاريع السحابية.",
       "install": "تثبيت تطبيق GitHub"
     },
     "webhookBanner": {
       "summary": "يلزم عنوان عام",
       "title": "تفعيل النشر التلقائي",
-      "description": "يحتاج النشر التلقائي إلى نقطة webhook مباشرة. اعرض واجهة برمجة تطبيقات OpenShip هذه على عنوان عام أو هيّئ نطاق webhook موثّقًا للتسليم المباشر."
+      "description": "يحتاج النشر التلقائي إلى نقطة webhook مباشرة. اعرض واجهة برمجة تطبيقات Workbox Cloud هذه على عنوان عام أو هيّئ نطاق webhook موثّقًا للتسليم المباشر."
     },
     "source": {
       "title": "المستودع المصدر",
@@ -666,7 +666,7 @@
       "active": "نشط",
       "inactive": "غير نشط",
       "descDirect": "تُسلَّم الأحداث مباشرة عبر {domain}",
-      "descActive": "أحداث المستودع تصل إلى OpenShip",
+      "descActive": "أحداث المستودع تصل إلى Workbox Cloud",
       "descInactive": "لم يتم تهيئة webhook أو أنه لا يستجيب"
     },
     "rollbackStrategy": {
@@ -875,10 +875,10 @@
     "linkedTitleOther": "{count} مشاريع مرتبطة بهذا التطبيق",
     "linkedNote": "ستستمر في العمل وبياناتها كما هي — ستفقد هذا الاتصال فقط. أعد نشرها ليصبح ذلك ساريًا.",
     "linkedNoteRecordOnly": "ستستمر في العمل، لكن الربط يُحذف مع السجل — واستيراد التطبيق لاحقًا لن يعيده.",
-    "recordOnlyLabel": "إزالة من OpenShip فقط",
-    "recordOnlyDesc": "يبقي التطبيق وبياناته قيد التشغيل على خادمك — تتم إزالة سجل OpenShip فقط. يمكنك إعادة استيراده لاحقاً.",
+    "recordOnlyLabel": "إزالة من Workbox Cloud فقط",
+    "recordOnlyDesc": "يبقي التطبيق وبياناته قيد التشغيل على خادمك — تتم إزالة سجل Workbox Cloud فقط. يمكنك إعادة استيراده لاحقاً.",
     "recordOnlyReversible": "قابل للتراجع — يبقى التطبيق على خادمك.",
-    "recordOnlyNote": "لا يتم المساس بأي شيء على الخادم — يستمر التطبيق في العمل مع بياناته. تتم فقط إزالة سجل OpenShip، ويمكن إعادة استيراده لاحقاً.",
+    "recordOnlyNote": "لا يتم المساس بأي شيء على الخادم — يستمر التطبيق في العمل مع بياناته. تتم فقط إزالة سجل Workbox Cloud، ويمكن إعادة استيراده لاحقاً.",
     "confirmRecordOnly": "إزالة السجل"
   },
   "routing": {
@@ -966,7 +966,7 @@
       "servesPathHint": "تتم خدمة الطلبات الموجهة إلى هذا النطاق من هذا المسار في مخرجات البناء.",
       "servesPathRedeploy": "تسري المسارات الجديدة عند النشر التالي.",
       "externalIngress": "دخول وTLS خارجي",
-      "externalIngressDesc": "ينتهي TLS عند البروكسي العكسي (Cloudflare Tunnel أو Nginx Proxy Manager أو موازن التحميل). لا يلزم أن يشير النطاق إلى هذا الخادم، ولن يصدر OpenShip شهادة.",
+      "externalIngressDesc": "ينتهي TLS عند البروكسي العكسي (Cloudflare Tunnel أو Nginx Proxy Manager أو موازن التحميل). لا يلزم أن يشير النطاق إلى هذا الخادم، ولن يصدر Workbox Cloud شهادة.",
       "noWww": "هذا النطاق موجود بالفعل في هذا المشروع."
     },
     "dns": {
@@ -1094,8 +1094,8 @@
         "deployment": "هذا المسار ينتظر عملية نشر. انشر المشروع لتطبيقه.",
         "disabled": "هذا المشروع أو هذه الخدمة معطلة. فعّلها قبل فحص المسار.",
         "removing": "تجري إزالة هذا النطاق. لا يوجد تحقق مجدول.",
-        "manual_certificate": "يستخدم هذا النطاق شهادة مرفوعة يدويًا. ارفع شهادة بديلة صالحة ثم أعد فحصها. لا يجددها OpenShip تلقائيًا.",
-        "managed_certificate": "تُدار TLS من الوكيل الخارجي أو OpenShip Cloud. راجع إعدادات ذلك المزود.",
+        "manual_certificate": "يستخدم هذا النطاق شهادة مرفوعة يدويًا. ارفع شهادة بديلة صالحة ثم أعد فحصها. لا يجددها Workbox Cloud تلقائيًا.",
+        "managed_certificate": "تُدار TLS من الوكيل الخارجي أو Workbox Cloud. راجع إعدادات ذلك المزود.",
         "route_missing": "لم يُطبق هذا المسار المُعدّ بعد. أعد محاولة التوجيه لتطبيقه. لا توجد إعادة محاولة تلقائية للتوجيه.",
         "manual_dns": "تستخدم هذه الشهادة التحقق اليدوي بسجل TXT. افتح إعداد HTTPS لتأكيد سجل TXT جديد، أو اختر مزود DNS متصلًا للتجديد التلقائي.",
         "managed_owner": "تُدار تسمية النطاق وشهادته من خلال الخدمة المالكة له. تحقق من إعدادات النطاق في تلك الخدمة."
@@ -1121,7 +1121,7 @@
       "automatic": "مزود تلقائي",
       "manual": "TXT يدوي",
       "automaticHint": "اربط مزوّد DNS في الإعدادات ← بيانات الاعتماد لإنشاء سجلات التحقق من الشهادة وتجديد HTTPS تلقائيًا.",
-      "manualHint": "أضف سجل TXT مؤقتًا لدى مزود DNS. يحتاج كل تجديد إلى سجل TXT جديد؛ سيعرض OpenShip موعد التجديد.",
+      "manualHint": "أضف سجل TXT مؤقتًا لدى مزود DNS. يحتاج كل تجديد إلى سجل TXT جديد؛ سيعرض Workbox Cloud موعد التجديد.",
       "routing": "1. وجّه النطاق إلى هذا الخادم",
       "certificate": "2. فعّل HTTPS",
       "startAutomatic": "تفعيل HTTPS تلقائيًا",
@@ -1230,7 +1230,7 @@
     "updating": "جارٍ التحديث…",
     "updateFailed": "فشل التحديث",
     "toastTitle": "المصدر",
-    "cliManaged": "هذه هي لوحة تحكم OpenShip — يتم تحديثها ذاتياً. قم بتشغيل \"openship update\" على المضيف لترقيتها؛ لا يوجد شيء لتغييره هنا."
+    "cliManaged": "هذه هي لوحة تحكم Workbox Cloud — يتم تحديثها ذاتياً. قم بتشغيل \"openship update\" على المضيف لترقيتها؛ لا يوجد شيء لتغييره هنا."
   },
   "routeRules": {
     "pathLabel": "بادئة المسار (اختياري)",
@@ -1349,7 +1349,7 @@
     "reviewResources": "مراجعة الموارد المتأثرة ({count})",
     "openRuns": "فتح عمليات الخادم",
     "lastRun": "آخر فحص",
-    "appOpen": "تعمل عندما يكون OpenShip مفتوحًا.",
+    "appOpen": "تعمل عندما يكون Workbox Cloud مفتوحًا.",
     "scanStates": {
       "pending": "قيد الانتظار",
       "running": "جارٍ التشغيل",
@@ -1360,7 +1360,7 @@
     "reviewReboot": "مراجعة إعادة التشغيل",
     "applyReboot": "جدولة إعادة التشغيل",
     "rebooting": "تمت جدولة إعادة التشغيل؛ في انتظار التحقق من النواة",
-    "rebootInterruption": "سيُعاد تشغيل الخادم خلال دقيقة، مما يقطع جميع أحماله. سيتحقق OpenShip من النواة العاملة عند عودة الاتصال بالمضيف."
+    "rebootInterruption": "سيُعاد تشغيل الخادم خلال دقيقة، مما يقطع جميع أحماله. سيتحقق Workbox Cloud من النواة العاملة عند عودة الاتصال بالمضيف."
   },
   "sourceImageUpdate": {
     "github_access_required": "امنح هذا المستودع صلاحية القراءة والكتابة للمحتويات وطلبات السحب في اتصال GitHub. قد يحتاج المالك إلى الموافقة على صلاحيات التطبيق المحدّثة.",

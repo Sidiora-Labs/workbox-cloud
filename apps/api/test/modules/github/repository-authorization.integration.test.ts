@@ -265,7 +265,7 @@ function claim(owner: Actor, state: string, installationId = "42") {
 }
 
 describe("Cloud repository authorization from browser callback through library and clone", () => {
-  it("lets two Openship accounts connect the same GitHub identity without transferring either login", async () => {
+  it("lets two Workbox Cloud accounts connect the same GitHub identity without transferring either login", async () => {
     const first = await actor();
     const second = await actor();
     await db

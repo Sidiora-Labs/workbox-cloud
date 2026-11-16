@@ -260,7 +260,7 @@ const browseCommand = new Command("browse")
 /* ── migration ───────────────────────────────────────────────────────
  * POST /api/system/migration/{preflight,start,start-cloud,start-tunnel,switch-back}
  * → migration.controller. Preflight/start move a single-user instance onto the
- * operator's own server; start-cloud → Openship Cloud; start-tunnel → edge
+ * operator's own server; start-cloud → Workbox Cloud; start-tunnel → edge
  * tunnel; switch-back reverses any of them.
  */
 function buildDomain(opts: { hostname?: string; slug?: string }): DomainChoice {
@@ -325,11 +325,11 @@ migrationCommand
 
 migrationCommand
   .command("start-cloud")
-  .description("Migrate this instance to Openship Cloud")
+  .description("Migrate this instance to Workbox Cloud")
   .option("--allow-non-empty-target", "Proceed even if the cloud org already has projects")
   .action(async (opts) => {
     await guarded(async () => {
-      const spin = spinner("Migrating to Openship Cloud…");
+      const spin = spinner("Migrating to Workbox Cloud…");
       try {
         const res = await getRemoteClient().instance.migrateToCloud({ allowNonEmptyTarget: opts.allowNonEmptyTarget === true });
         spin?.succeed("Cloud migration complete.");
@@ -514,7 +514,7 @@ email.command("test").argument("<address>", "Recipient for one test message")
     return result;
   }));
 systemCommand.addCommand(email);
-const orphans = new Command("untracked-sites").description("Inspect edge sites not tracked by Openship");
+const orphans = new Command("untracked-sites").description("Inspect edge sites not tracked by Workbox Cloud");
 orphans.command("list").description("Read untracked edge sites and scan readiness")
   .action(() => printResult(() => getShipClient().system.listUntrackedEdgeSites()));
 orphans.command("remove").argument("<hostname>", "Exact hostname from the scan")

@@ -273,7 +273,7 @@
     "projects.listClusterDatabases": {
       "page": "projects",
       "section": "Cluster databases",
-      "description": "List the project's operator-managed databases and saved observations. Available on self-hosted OpenShip.",
+      "description": "List the project's operator-managed databases and saved observations. Available on self-hosted Workbox Cloud.",
       "route": "GET /api/projects/:id/cluster/databases"
     },
     "projects.listClusterDatabaseImports": {
@@ -3009,7 +3009,7 @@
     "servers.enableManagedRuntime": {
       "page": "servers",
       "section": "Managed server controls",
-      "description": "Enable the Runtime API used by Openship for deployments and server management. Requires server admin and active server entitlement.",
+      "description": "Enable the Runtime API used by Workbox Cloud for deployments and server management. Requires server admin and active server entitlement.",
       "route": "POST /api/system/servers/:id/managed/runtime-api/enable"
     },
     "servers.managedRuntimeCredential": {
@@ -3060,7 +3060,7 @@
     },
     "mail.listServers": {
       "page": "mail",
-      "description": "List every server Openship has provisioned (or is provisioning) mail on.",
+      "description": "List every server Workbox Cloud has provisioned (or is provisioning) mail on.",
       "route": "GET /api/mail/servers"
     },
     "mail.scan": {
@@ -3135,7 +3135,7 @@
     },
     "mail.renewCertificate": {
       "page": "mail",
-      "description": "Renew a due mail certificate through Openship Edge and reload Postfix/Dovecot, reusing a still-valid certificate and repairing its service configuration.",
+      "description": "Renew a due mail certificate through Workbox Cloud Edge and reload Postfix/Dovecot, reusing a still-valid certificate and repairing its service configuration.",
       "route": "POST /api/mail/admin/:serverId/certificate/renew"
     },
     "mail.updateCertificate": {
@@ -3400,7 +3400,7 @@
     },
     "migrations.adopt": {
       "page": "migration",
-      "description": "Create an Openship project from the selected discovered services.",
+      "description": "Create a Workbox Cloud project from the selected discovered services.",
       "route": "POST /api/migration/adopt"
     },
     "migrations.reimport": {
@@ -3500,7 +3500,7 @@
     },
     "instance.migrateToCloud": {
       "page": "data-transfer",
-      "description": "Migrate → Openship Cloud.",
+      "description": "Migrate → Workbox Cloud.",
       "route": "POST /api/system/migration/start-cloud"
     },
     "instance.exposeTunnel": {
@@ -4290,7 +4290,7 @@
     },
     "POST /api/cloud/github/install-url": {
       "page": "cloud",
-      "description": "Build an Openship installation-selection URL with a one-time workspace state; existing installations can reconnect without another GitHub setup callback."
+      "description": "Build a Workbox Cloud installation-selection URL with a one-time workspace state; existing installations can reconnect without another GitHub setup callback."
     },
     "POST /api/cloud/github/installation-token": {
       "page": "cloud",
@@ -4358,7 +4358,7 @@
     },
     "GET /api/cloud/status": {
       "page": "cloud",
-      "description": "Openship Cloud connection status for this instance."
+      "description": "Workbox Cloud connection status for this instance."
     },
     "POST /api/cloud/teardown-project": {
       "page": "cloud",
@@ -4527,11 +4527,11 @@
     },
     "POST /api/system/self-edge/preflight": {
       "page": "edge",
-      "description": "Check edge readiness for the Openship installation itself."
+      "description": "Check edge readiness for the Workbox Cloud installation itself."
     },
     "POST /api/system/self-register": {
       "page": "system",
-      "description": "Register the Openship installation as a managed application."
+      "description": "Register the Workbox Cloud installation as a managed application."
     },
     "GET /api/system/self-register/stream": {
       "page": "system",
@@ -4911,7 +4911,7 @@
     "GET /api/actions/oidc/.well-known/openid-configuration": {
       "page": "actions",
       "section": "Job runtime protocols",
-      "description": "Discover the configured Openship identity issuer. Public HTTPS metadata contains no credentials."
+      "description": "Discover the configured Workbox Cloud identity issuer. Public HTTPS metadata contains no credentials."
     },
     "GET /api/actions/oidc/jwks": {
       "page": "actions",
@@ -5060,12 +5060,12 @@
     "DELETE /api/chat-apps/:id": {
       "page": "chat-apps",
       "availability": "Desktop, self-hosted, Cloud",
-      "description": "Remove encrypted provider credentials and linked OpenShip grants."
+      "description": "Remove encrypted provider credentials and linked Workbox Cloud grants."
     },
     "POST /api/chat-apps/:id/unlink": {
       "page": "chat-apps",
       "availability": "Desktop, self-hosted, Cloud",
-      "description": "Disconnect only the signed-in user’s chat identities and their OpenShip grants."
+      "description": "Disconnect only the signed-in user’s chat identities and their Workbox Cloud grants."
     },
     "PATCH /api/chat-apps/:id/assistant-policy": {
       "page": "chat-apps",
@@ -5095,7 +5095,7 @@
     "GET /api/chat-apps/callback": {
       "page": "chat-apps",
       "availability": "Desktop, self-hosted, Cloud",
-      "description": "Redirect only to OpenShip settings; code exchange and sender verification remain separate."
+      "description": "Redirect only to Workbox Cloud settings; code exchange and sender verification remain separate."
     },
     "POST /api/chat-apps/webhooks/:id": {
       "page": "chat-apps",

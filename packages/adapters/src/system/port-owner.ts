@@ -1,5 +1,5 @@
 /**
- * Who owns a host port, and what Openship is ALLOWED to stop to take it.
+ * Who owns a host port, and what Workbox Cloud is ALLOWED to stop to take it.
  *
  * Lifted out of the deploy-time port probe, and shared with the edge takeover,
  * because both resolved a port's owner the same wrong way. The process LISTENING on
@@ -18,7 +18,7 @@
  *     listener at all — the publish is pure iptables DNAT);
  *   - which systemd units may be stopped, for each of the two callers, since they
  *     want different answers about proxies and only one of them is a takeover;
- *   - which containers are Openship's OWN, because the control plane runs as a
+ *   - which containers are Workbox Cloud's OWN, because the control plane runs as a
  *     compose stack and "stop the container on port 4000" is otherwise a way for a
  *     deploy to stop the API running it.
  */
@@ -30,7 +30,7 @@ import type { ExecOnly } from "../types";
 import type { ProxyKind } from "./types";
 import { tryExec } from "./probe-exec";
 
-/** Labels Openship stamps on what it creates: `DockerRuntime.labels()`, plus `role` from `deployRole`. */
+/** Labels Workbox Cloud stamps on what it creates: `DockerRuntime.labels()`, plus `role` from `deployRole`. */
 export const OPENSHIP_LABEL = {
   project: "openship.project",
   deployment: "openship.deployment",
@@ -268,7 +268,7 @@ export function isOurEdgeContainer(name?: string, image?: string): boolean {
   );
 }
 
-/** A container Openship created — `openship.project` is stamped on every one. */
+/** A container Workbox Cloud created — `openship.project` is stamped on every one. */
 export function isOpenshipContainer(container: PortContainer): boolean {
   return Boolean(container.projectId);
 }
@@ -302,11 +302,11 @@ export function isBuildHelperContainer(container: PortContainer): boolean {
 
 /** The images the control plane itself runs as. */
 const PLATFORM_IMAGE_RE = /(?:^|\/)openship-(?:api|dashboard|edge)(?::|$)/i;
-/** Containers Openship creates under a fixed name rather than through compose. */
+/** Containers Workbox Cloud creates under a fixed name rather than through compose. */
 const PLATFORM_NAMES = new Set<string>([EDGE_CONTAINER_NAME, MAIL_CONTAINER, MAIL_DB_CONTAINER]);
 
 /**
- * Is this container part of Openship ITSELF, rather than something it deployed?
+ * Is this container part of Workbox Cloud ITSELF, rather than something it deployed?
  *
  * `openship up` runs the control plane as a compose stack — api on 4000, dashboard on
  * 3001, plus postgres and redis — and the mail engine adds `openship-mail` on the SMTP
@@ -314,7 +314,7 @@ const PLATFORM_NAMES = new Set<string>([EDGE_CONTAINER_NAME, MAIL_CONTAINER, MAI
  * ordinary foreign containers and a deploy that wanted one of those ports would offer
  * "Stop Container & Continue" for the API serving the request.
  *
- * Name and image cover everything Openship publishes under its own identity. The
+ * Name and image cover everything Workbox Cloud publishes under its own identity. The
  * stack's postgres/redis run stock images under compose service names, so the only
  * thing marking THEM as ours is the compose project they share with the api — one
  * extra query, and only for a candidate that is part of some compose project.
@@ -326,7 +326,7 @@ export async function isOpenshipPlatformContainer(
   if (PLATFORM_NAMES.has(container.name)) return true;
   if (isOurEdgeContainer(container.name, container.image)) return true;
   if (PLATFORM_IMAGE_RE.test(container.image)) return true;
-  // A container Openship deployed is a project's, never the platform's — and it is a
+  // A container Workbox Cloud deployed is a project's, never the platform's — and it is a
   // legitimate stop target, so don't let its compose project drag it in here.
   if (container.projectId || !container.composeProject) return false;
 
@@ -372,13 +372,13 @@ export function isContainerPortForwarder(command: string | undefined): boolean {
 }
 
 /**
- * The one systemd unit shape Openship installs per deployment — the bare/systemd
+ * The one systemd unit shape Workbox Cloud installs per deployment — the bare/systemd
  * supervisor's `openship-{deploymentId}.service`.
  *
  * Pinned to the `dep_` id prefix rather than a bare `openship-*` wildcard because the
  * control plane's own units share that namespace: `openship.service`, and a dev
  * install's `openship-dev.service` which a wildcard reads as a managed deployment
- * with id "dev" — and then offers to stop Openship itself.
+ * with id "dev" — and then offers to stop Workbox Cloud itself.
  */
 const MANAGED_DEPLOYMENT_UNIT_RE = /^openship-(dep_[A-Za-z0-9_-]+)\.service$/;
 
@@ -386,7 +386,7 @@ const MANAGED_DEPLOYMENT_UNIT_RE = /^openship-(dep_[A-Za-z0-9_-]+)\.service$/;
  * The unit name the systemd supervisor installs for a deployment — the WRITER of the
  * convention {@link managedDeploymentIdFromUnit} reads back. Both live here because a
  * drift between them is silent and one-directional: the reader simply stops recognizing
- * the unit as Openship's and the deploy is told a stale deployment of its own is a
+ * the unit as Workbox Cloud's and the deploy is told a stale deployment of its own is a
  * foreign process it must not touch.
  */
 export function managedDeploymentUnitName(deploymentId: string): string {
@@ -474,10 +474,10 @@ function isProtectedUnit(unit: string): boolean {
  * established that the unit really is the port's owner (see
  * {@link isContainerPortForwarder}: for a published container port it never is).
  *
- * Openship's own per-deployment unit is always allowed. A genuine third-party service
+ * Workbox Cloud's own per-deployment unit is always allowed. A genuine third-party service
  * — an `mysql.service` actually holding its port — stays allowed, because stopping it
  * is a real answer to a port conflict and the prompt names it. Proxies are NOT: on an
- * Openship host the proxy on :80 fronts every routed domain, so trading it for one
+ * Workbox Cloud host the proxy on :80 fronts every routed domain, so trading it for one
  * app's port is never what the operator meant.
  */
 export function mayStopUnitForAppPort(unit: string | undefined): boolean {

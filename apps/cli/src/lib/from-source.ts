@@ -1,5 +1,5 @@
 /**
- * Build + run Openship from SOURCE (a branch/tag/sha or a local checkout) for
+ * Build + run Workbox Cloud from SOURCE (a branch/tag/sha or a local checkout) for
  * `openship up --from-source` — the "preview main on a remote box" flow, the
  * remote sibling of `bun dev` locally.
  *
@@ -109,7 +109,7 @@ export async function prepareFromSource(opts: {
     sourceDir = resolve(opts.source);
     if (!isMonorepo(sourceDir)) {
       throw new Error(
-        `--source ${sourceDir} doesn't look like an Openship checkout ` +
+        `--source ${sourceDir} doesn't look like a Workbox Cloud checkout ` +
           `(missing package.json / apps/api / apps/dashboard).`,
       );
     }

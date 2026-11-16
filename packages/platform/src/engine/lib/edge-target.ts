@@ -6,7 +6,7 @@ import { getInstanceReachability } from "./public-url";
 import { isIpLiteral, resolveInstancePublicIp, resolveLocalServerHost } from "./server-target";
 
 /**
- * The host Openship Cloud's shared edge (Oblien) dials for a free `<slug>.opsh.io`
+ * The host Workbox Cloud's shared edge (Oblien) dials for a free `<slug>.opsh.io`
  * route — it must be a PUBLIC address reachable from the internet on :80, never a
  * loopback/private one.
  *
@@ -36,19 +36,19 @@ export interface EdgeTargetResult {
 }
 
 const NO_PUBLIC_HOST =
-  "this server has no public address Openship Cloud can reach — set OPENSHIP_PUBLIC_URL or SERVER_IP";
+  "this server has no public address Workbox Cloud can reach — set OPENSHIP_PUBLIC_URL or SERVER_IP";
 
 /** Why a `.opsh.io` target is refused. `fix` differs by source: the instance's own
  *  address comes from env, a server row's comes from the row. */
 const cloudEdgeTargetReason = (address: string, fix: string) =>
-  `"${address}" is a ${SYSTEM.DOMAINS.CLOUD_DOMAIN} hostname, which IS the Openship Cloud edge — ` +
+  `"${address}" is a ${SYSTEM.DOMAINS.CLOUD_DOMAIN} hostname, which IS the Workbox Cloud edge — ` +
   `proxying there would loop back to the edge instead of reaching the box. ${fix}`;
 
 const CLOUD_EDGE_FIX_INSTANCE = "Set SERVER_IP to this server's own public IP.";
 const CLOUD_EDGE_FIX_SERVER = "Correct the server's address in Settings → Servers.";
 
 /**
- * Is this host the Openship Cloud edge itself (`*.opsh.io`)?
+ * Is this host the Workbox Cloud edge itself (`*.opsh.io`)?
  *
  * A Cloud hostname is perfectly public — `isNonPublicHost` rightly says so — but it
  * is never a valid edge TARGET: Oblien terminates `<slug>.opsh.io` and forwards to
@@ -71,7 +71,7 @@ export function isCloudEdgeHost(value: string): boolean {
 }
 
 /**
- * THE target string. Openship Cloud keys a target verification on a normalized
+ * THE target string. Workbox Cloud keys a target verification on a normalized
  * `scheme://host:port`, and it must be byte-comparable with the string we later
  * route — verifying `http://1.2.3.4` and routing `1.2.3.4:8080` is a permanent
  * `target_unverified` that looks like a Cloud-side bug from here.
@@ -192,7 +192,7 @@ function usableTargets(candidates: readonly Candidate[]): string[] {
  */
 const hostnameTargetWarning = (host: string, fix: string) =>
   `routed by name ("${host}") rather than by IP. That serves fine while the name resolves to this ` +
-  `server on port 80, but Openship Cloud's edge re-resolves it per request, so putting a CDN/proxy in ` +
+  `server on port 80, but Workbox Cloud's edge re-resolves it per request, so putting a CDN/proxy in ` +
   `front of it — or an https redirect on it — would stop the free URL reaching this app. ${fix}`;
 
 const HOSTNAME_FIX_INSTANCE = "Set SERVER_IP to this server's public IP to pin it.";

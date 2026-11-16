@@ -28,7 +28,7 @@ import { canManageMailServers } from "@/lib/mail-availability";
 import { CloudMailClient } from "@/app/(dashboard)/emails/_components/cloud-mail-client";
 
 /**
- * Mail provider wizard — the app-catalog entry point for Openship Mail, and the
+ * Mail provider wizard — the app-catalog entry point for Workbox Cloud Mail, and the
  * ONLY one: the webmail app is `unlisted` in the catalog precisely so this chooser
  * is where both branches start. A provider chooser that WRAPS the existing
  * machinery, no duplication:
@@ -181,7 +181,7 @@ function MailWizardInner() {
       showToast(m.hostsRequired, "error");
       return;
     }
-    // Deploying the webmail TO Openship Cloud needs a cloud connection — same
+    // Deploying the webmail TO Workbox Cloud needs a cloud connection — same
     // gate as the deploy wizard / app install, so the pick isn't a dead end.
     if (destination?.deployTarget === "cloud" && !cloudConnected) {
       if (!(await requireCloud("cloud-deploy-target"))) return;

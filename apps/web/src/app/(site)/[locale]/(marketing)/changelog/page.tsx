@@ -9,28 +9,28 @@ import { Footer } from "@/components/landing/footer";
 import { ChangelogEntries } from "./_components/changelog-entries";
 import "./changelog.css";
 
-const CHANGELOG_DESC = "New features, fixes, and improvements to OpenShip.";
+const CHANGELOG_DESC = "New features, fixes, and improvements to Workbox Cloud.";
 
 // Driven by the repo CHANGELOG.md + GitHub releases; refresh on a short cache.
 export const revalidate = 600;
 
 const metadata: Metadata = {
-  // Plain string — the root layout's "%s - OpenShip" template adds the suffix
-  // (the old value double-suffixed to "Changelog – OpenShip - OpenShip").
+  // Plain string — the root layout's "%s - Workbox Cloud" template adds the suffix
+  // (the old value double-suffixed to "Changelog – Workbox Cloud - Workbox Cloud").
   title: "Changelog",
   description: CHANGELOG_DESC,
   alternates: { canonical: "/changelog" },
   openGraph: {
-    title: "Changelog - OpenShip",
+    title: "Changelog - Workbox Cloud",
     description: CHANGELOG_DESC,
     url: "/changelog",
     type: "website",
-    siteName: "OpenShip",
+    siteName: "Workbox Cloud",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Changelog - OpenShip",
+    title: "Changelog - Workbox Cloud",
     description: CHANGELOG_DESC,
   },
 };
@@ -59,7 +59,7 @@ export default async function ChangelogPage() {
             {copy("What's new")}
           </h1>
           <p className="th-text-body mt-5 text-lg leading-relaxed">
-            {copy("Features, fixes, and improvements shipping in OpenShip.")}
+            {copy("Features, fixes, and improvements shipping in Workbox Cloud.")}
           </p>
         </header>
 

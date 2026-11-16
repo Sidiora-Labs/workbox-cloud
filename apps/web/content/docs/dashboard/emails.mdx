@@ -5,7 +5,7 @@ description: Run your own mail server from the dashboard — provision or adopt 
 
 The **Email Server** screen (route `/emails`) is where you stand up a complete, self-hosted mail
 server on one of your own servers and then run it day to day — domains, mailboxes, DNS, health, backups.
-Openship installs the whole stack (Postfix, Dovecot, anti-spam, SSL, DKIM/SPF/DMARC) over SSH and then
+Workbox Cloud installs the whole stack (Postfix, Dovecot, anti-spam, SSL, DKIM/SPF/DMARC) over SSH and then
 gives you an admin panel so you never have to touch the box by hand.
 
 You can run more than one. Each mail server lives on its own host (one mail setup per server), and the screen
@@ -13,25 +13,25 @@ lists them all so you pick which to manage — a single server opens straight in
 several land you on a **Mail servers** list with an **Add mail server** action to provision or adopt another.
 
 <Callout title="Self-hosted only">
-This screen manages a mail server on **your own connected server** over SSH. It isn't part of Openship
+This screen manages a mail server on **your own connected server** over SSH. It isn't part of Workbox Cloud
 Cloud — you provision it against a server you've added under **Servers**. For a friendly walkthrough of the
 whole flow (including webmail), see [Email &amp; webmail](/docs/guides/email-webmail).
 </Callout>
 
 ## Why run your own — and how deliverability works
 
-Two things usually stop people self-hosting email, and Openship's model is built around exactly those two
+Two things usually stop people self-hosting email, and Workbox Cloud's model is built around exactly those two
 gaps: **deliverability** (a brand-new server IP lands in spam) and the fact that transactional senders like
 **Amazon SES**, Postmark, or SendGrid **only send** — they give you no inbox, no IMAP, no webmail, and no
 ownership of your messages.
 
-- **You own the inbox.** Openship self-hosts the *receiving* side those providers don't offer — real Postfix +
+- **You own the inbox.** Workbox Cloud self-hosts the *receiving* side those providers don't offer — real Postfix +
   Dovecot mailboxes, IMAP/POP3, and webmail — so your messages, domains, and mailbox data live on **your**
   server. You own the infrastructure and the data, not a vendor.
 - **You borrow the reputation for sending.** Outbound can go direct-to-MX, or **relay through a trusted
   provider's SMTP** (Amazon SES, or any SMTP relay). When you relay, your mail inherits the provider's warmed,
   high-reputation sending IPs — the deliverability of a managed sender — while everything else stays on your
-  box. Openship writes the Postfix relay (`relayhost` + SASL) for you and aligns SPF, DKIM, and MAIL FROM
+  box. Workbox Cloud writes the Postfix relay (`relayhost` + SASL) for you and aligns SPF, DKIM, and MAIL FROM
   (SES-aware) so messages authenticate.
 
 <Callout title="A realistic promise" type="info">
@@ -63,7 +63,7 @@ server's domain (or name), its host, and a status pill:
 | Pill | Meaning |
 |---|---|
 | **Installing** | An install is currently running on this server. |
-| **Running** | Provisioned and managed by Openship. |
+| **Running** | Provisioned and managed by Workbox Cloud. |
 | **Incomplete** | Registered, but the install didn't finish. |
 
 Click a card to open it. **Add mail server** starts a new provision/adopt. The trash icon (**Remove from
@@ -101,7 +101,7 @@ continuing.
 Twice during the install, the wizard pauses and needs you to act — first for DNS, then for reverse DNS.
 
 The final **Verify Public Mail Ports** step first confirms the daemons are listening on the server, then
-connects from the Openship API to the public DNS address on TCP 25, 465, 587, and 993. The API may run on the
+connects from the Workbox Cloud API to the public DNS address on TCP 25, 465, 587, and 993. The API may run on the
 mail server itself. Missing or loopback-only listeners, failed client ports (465/587/993), and non-timeout
 errors on TCP 25 stop setup. Check both the host firewall and the cloud provider's firewall when a listening
 port cannot be reached.
@@ -143,9 +143,9 @@ and the install finishes with SSL.
 
 ## Adopt an existing mail server
 
-Already installed a mail server with Openship but lost the dashboard record (e.g. you re-imaged the
+Already installed a mail server with Workbox Cloud but lost the dashboard record (e.g. you re-imaged the
 orchestrator)? On the setup form, click **Already have a mail server? Adopt it**. In the **Adopt existing
-mail server** dialog, pick the server and press **Scan server** — Openship reads the box (detects the mail
+mail server** dialog, pick the server and press **Scan server** — Workbox Cloud reads the box (detects the mail
 stack and its on-server state file) without changing anything. If a mail stack is found, **Adopt** brings it
 back under management with no reinstall and no data loss.
 
@@ -174,7 +174,7 @@ during the first days of sending.
 Your day-one screen. The top card shows the mail server **Hostname** (`mail.<domain>`, click to copy) and a
 webmail action: **Open webmail** if webmail is deployed, or **Deploy webmail** if it isn't — the latter
 takes you into the webmail deploy flow for this server. A **Protocol details →** link jumps to the Advanced
-tab. A webmail deployed by Openship 0.6.1 or earlier also gets a **Replace webmail** link here — those installs
+tab. A webmail deployed by Workbox Cloud 0.6.1 or earlier also gets a **Replace webmail** link here — those installs
 predate the webmail app and are replaced rather than redeployed (see
 [Email &amp; webmail](/docs/guides/email-webmail#step-3--deploy-the-webmail-app)).
 
@@ -261,7 +261,7 @@ actual values when something's off.
 
 ### Health
 
-If Openship cannot read the server, **Mail status unavailable** offers **Retry status**. Saved details
+If Workbox Cloud cannot read the server, **Mail status unavailable** offers **Retry status**. Saved details
 remain visible when available, and current health is unknown until a check succeeds. A failed
 connection does not offer setup or engine repair, or start and stop mail services.
 
@@ -269,7 +269,7 @@ The single "is everything working?" screen. A banner at the top aggregates a ver
 
 - **Daemons** — live systemd status of each mail process (Postfix, Dovecot, anti-spam, etc.), refreshed on a
   10-second poll. Each row has a **Logs** button and a menu to **Start**, **Stop**, or **Restart** that unit.
-- **Public mail ports** — combines the server's local listener table with connections from the Openship
+- **Public mail ports** — combines the server's local listener table with connections from the Workbox Cloud
   control plane to the public DNS address on TCP 25, 465, 587, and 993. The UI poll reuses one result for 60
   seconds, so this is a bounded health check rather than a continuous port watcher.
 - **Outbound delivery** — shows the direct/relay send path, queue depth, and actionable deferral reasons.
@@ -283,7 +283,7 @@ usually means this outer layer is dropping the connection.
 
 ### Backup
 
-Backups run through Openship's general backup system, so the mail server is just another backup source.
+Backups run through Workbox Cloud's general backup system, so the mail server is just another backup source.
 Choose **what to back up**: accounts, domains &amp; aliases (always included), **Mailbox message data** (the
 maildirs, folders, queue and quarantine — can be large), and **DKIM keys &amp; secrets**.
 New policies include messages and keys by default; existing exclusions are retained.
@@ -306,7 +306,7 @@ Settings → Instance export does not include mailbox messages by default.
 ### Advanced
 
 **Mail certificate** shows expiry and the certificate served by SMTP (465/587) and IMAP (993).
-**Check certificate** refreshes those observations. **Renew certificate** uses the existing Openship
+**Check certificate** refreshes those observations. **Renew certificate** uses the existing Workbox Cloud
 edge to obtain a certificate when due, reloads Postfix and Dovecot, and checks the served certificates.
 A certificate that is still valid is reused, so repeated clicks do not create extra ACME orders.
 
@@ -315,8 +315,8 @@ renewal** job; disabling the mail toggle leaves certificate monitoring active. E
 and services still serving an old certificate appear in **Health** and global **Monitoring**.
 The checks share a five-minute cache; Monitoring's re-scan refreshes them immediately.
 
-The Openship control plane must remain running for scheduled renewal. In Desktop, keep Openship open;
-for unattended operation, run a self-hosted control plane. When adopting a legacy mail host, Openship
+The Workbox Cloud control plane must remain running for scheduled renewal. In Desktop, keep Workbox Cloud open;
+for unattended operation, run a self-hosted control plane. When adopting a legacy mail host, Workbox Cloud
 retires a host Certbot timer only if it manages this mail certificate alone. A timer that also manages
 other certificates is left unchanged and reported for migration.
 
@@ -327,7 +327,7 @@ The power-user surface, top to bottom:
 - **Mail-stack tools** — **Restart stack** cycles every mail daemon at once (a quick fix after a deploy
   hiccup); it doesn't touch mailboxes, queues, or state.
 - **Danger zone** — **Re-run setup wizard** (**Open wizard**), **Reset on-server state** (**Reset state** —
-  clears Openship's tracking but leaves the running stack intact), and **Remove mail server** (**Remove** —
+  clears Workbox Cloud's tracking but leaves the running stack intact), and **Remove mail server** (**Remove** —
   drops it from the list only, re-adoptable later).
 - **Install metadata** — Server ID, Primary domain, and the Started / Finished timestamps.
 

@@ -9,7 +9,7 @@ import { MarketingIntro } from "@/components/marketing/marketing-intro";
 
 const pageMetadata: Metadata = {
   title: "Customer Support",
-  description: "Sign in to OpenShip to get help with your deployments, account, or billing.",
+  description: "Sign in to Workbox Cloud to get help with your deployments, account, or billing.",
   alternates: { canonical: "/support" },
 };
 
@@ -30,7 +30,7 @@ export default function SupportPage() {
             </>
           }
           description={copy(
-            "Get help with your deployments, account, or billing from your OpenShip dashboard. Sign in to open a request, follow its progress, and continue the conversation.",
+            "Get help with your deployments, account, or billing from your Workbox Cloud dashboard. Sign in to open a request, follow its progress, and continue the conversation.",
           )}
         />
         <div className="site-container marketing-content">

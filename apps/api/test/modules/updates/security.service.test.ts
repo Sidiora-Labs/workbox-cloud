@@ -866,7 +866,7 @@ describe("security operations", () => {
               id: "control-plane-release",
               severity: "critical",
               announce: true,
-              title: "Update Openship",
+              title: "Update Workbox Cloud",
               message: "Install the patched control plane.",
               affects: ">=0.0.0",
             },

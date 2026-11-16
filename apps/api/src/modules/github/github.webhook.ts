@@ -166,7 +166,7 @@ export const githubWebhookProvider: WebhookProvider = {
     candidates.push(...sourceSecrets);
     // env.GITHUB_WEBHOOK_SECRET is the legacy/App fallback — append it ONLY when
     // this delivery has no per-project or cloud-binding candidate of its own
-    // (installation/ping, or a repo Openship doesn't manage). Appending it for a
+    // (installation/ping, or a repo Workbox Cloud doesn't manage). Appending it for a
     // routable delivery that already has a per-project secret would make it a
     // cross-repo skeleton key that validates any managed repo's webhook.
     const customAppDelivery = sourceSecrets.length > 0;
@@ -179,7 +179,7 @@ export const githubWebhookProvider: WebhookProvider = {
     }
 
     // No unsigned path — a delivery with no resolvable secret can't be verified,
-    // even self-hosted. Register the webhook through Openship (sets a per-project
+    // even self-hosted. Register the webhook through Workbox Cloud (sets a per-project
     // secret) or configure GITHUB_WEBHOOK_SECRET.
     if (candidates.length === 0) {
       return { valid: false, error: "No webhook secret configured — signature cannot be verified" };

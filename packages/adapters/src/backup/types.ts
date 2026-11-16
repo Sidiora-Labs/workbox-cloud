@@ -256,7 +256,7 @@ export interface BackupExecutor {
    *
    * Producers detect a database and authenticate to it from `ServiceHandle.env`,
    * which is assembled from the service row plus the project's env-var rows. That
-   * covers everything Openship deployed and nothing it adopted: a service row built
+   * covers everything Workbox Cloud deployed and nothing it adopted: a service row built
    * from a running container carries no `environment` at all, so `POSTGRES_DB` and
    * `POSTGRES_USER` are simply absent and `PgDumpProducer.detects()` returns false
    * for an image that is plainly postgres — the volume fallback then runs instead

@@ -381,7 +381,7 @@ export function ChatAppForm({
                     <span className="min-w-0 flex-1">
                       <span className="block font-medium">Connection settings</span>
                       <span className="mt-1 block leading-5 text-muted-foreground">
-                        OpenShip · {transport === "outbound" ? "Direct connection" : "Webhook"}
+                        Workbox Cloud · {transport === "outbound" ? "Direct connection" : "Webhook"}
                       </span>
                     </span>
                     <Icon
@@ -419,10 +419,10 @@ export function ChatAppForm({
                     </div>
                     <p className="text-xs leading-5 text-muted-foreground">
                       {transport === "outbound"
-                        ? "No public URL needed. Keep OpenShip running with internet access."
+                        ? "No public URL needed. Keep Workbox Cloud running with internet access."
                         : provider === "teams"
                           ? "Microsoft Teams requires a public HTTPS bot endpoint. Local Desktop alone cannot receive Teams messages."
-                          : "Requires a public HTTPS OpenShip API. After saving, enable the bot and register its webhook URL."}
+                          : "Requires a public HTTPS Workbox Cloud API. After saving, enable the bot and register its webhook URL."}
                     </p>
                   </div>
                 </details>

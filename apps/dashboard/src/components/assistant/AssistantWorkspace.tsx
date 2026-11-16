@@ -182,7 +182,7 @@ function AssistantEntry({ scope }: { scope: string }) {
                 <div className="min-w-0">
                   <p className="truncate text-sm font-medium">{chosenTarget.name}</p>
                   <p className="mt-0.5 text-xs text-muted-foreground">
-                    Runs on your OpenShip Cloud plan
+                    Runs on your Workbox Cloud plan
                   </p>
                 </div>
               </div>
@@ -195,7 +195,7 @@ function AssistantEntry({ scope }: { scope: string }) {
                   id="assistant-host"
                   options={targets.map((t) => ({
                     value: t.id,
-                    label: t.kind === "cloud" ? `${t.name} · OpenShip Cloud` : t.name,
+                    label: t.kind === "cloud" ? `${t.name} · Workbox Cloud` : t.name,
                     icon: (
                       <Icon name={t.kind === "cloud" ? "cloud" : "server"} className="size-4" />
                     ),

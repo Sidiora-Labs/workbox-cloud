@@ -187,7 +187,7 @@ export function elevatedExecutor(inner: CommandExecutor): CommandExecutor {
 /**
  * Ensure `path` exists and the login user can write into it.
  *
- * Openship's host directories sit under `/opt`, which no non-root user may
+ * Workbox Cloud's host directories sit under `/opt`, which no non-root user may
  * create in, and the ones Docker materialises for a bind mount are created by
  * the daemon and so are root-owned. A plain `mkdir -p` fails on both, which is
  * why this elevates and then hands the result over rather than only creating it.

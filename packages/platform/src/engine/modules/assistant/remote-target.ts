@@ -75,7 +75,7 @@ export async function createRemoteAssistantClient(
     const temporary = `/tmp/openship-mw-${purpose}-${assistantProfileKey(connection).slice(0, 20)}`;
     const mcpUrl = `${connection.origin}/api/mcp`;
     if (new URL(mcpUrl).protocol !== "https:")
-      throw fail("Remote assistants require an HTTPS OpenShip API.");
+      throw fail("Remote assistants require an HTTPS Workbox Cloud API.");
     const env = {
       ...assistantEnvironment(
         root,

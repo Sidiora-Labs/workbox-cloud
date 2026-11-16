@@ -79,7 +79,7 @@ export function proxy(req: NextRequest) {
   const theme = req.cookies.get(THEME_COOKIE)?.value;
   if (parseThemeCookie(theme)) requestHeaders.set(THEME_HEADER, theme!);
 
-  // Same trick for the per-user product view (full platform vs Openship Mail).
+  // Same trick for the per-user product view (full platform vs Workbox Cloud Mail).
   // The (dashboard) layout resolves the rail on the server so first paint is
   // already correct — reading it from an unreliable cookies() would flip the
   // whole sidebar after hydration.

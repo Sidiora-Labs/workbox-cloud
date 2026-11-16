@@ -560,7 +560,7 @@ export function buildConfigSnapshot(project: Project, branch?: string): Deployme
  *
  * Version precedence lives in resolveReleaseVersion: explicit webhook/redeploy
  * tag → pinnedVersion → newest advertised. There is intentionally no fallback
- * to OpenShip's own package version for arbitrary projects.
+ * to Workbox Cloud's own package version for arbitrary projects.
  *
  * Mutates `snapshot` in place and returns the resolved semver (no leading "v").
  */
@@ -2331,7 +2331,7 @@ export async function requestBuildAccess(
  * Cancel an in-flight deployment.
  *
  * `keepProvisioned` aborts the build and marks the row cancelled but SKIPS the
- * runtime teardown — the record-only ("remove from Openship only") delete needs
+ * runtime teardown — the record-only ("remove from Workbox Cloud only") delete needs
  * to quiesce an in-flight deploy while honoring its "nothing on the server is
  * touched" guarantee, so it must never destroy the containers/images the deploy
  * had already provisioned.
@@ -2491,7 +2491,7 @@ export async function redeployBuildSession(
   const { dep: oldDep, project } = await loadDeployment(deploymentId);
   if (ctx.organizationId !== project.organizationId) throw new NotFoundError("Deployment", deploymentId);
   resolveDeploymentEnvironment(project, oldDep.environment);
-  // The Openship control plane updates itself via the CLI — never a redeploy.
+  // The Workbox Cloud control plane updates itself via the CLI — never a redeploy.
   // The apply-update endpoint (updates.service) reaches redeploy directly, and
   // the self-app is a repo-less release project so the GitHub gate below
   // short-circuits without catching it — guard explicitly here too, matching
@@ -2893,7 +2893,7 @@ async function triggerDeploymentNow(ctx: RequestContext, data: DeploymentTrigger
   }
   const environment = resolveDeploymentEnvironment(project, data.environment);
   if (data.serverId) await requireOrgServer(data.serverId, ctx.organizationId);
-  // The Openship control plane IS the running host service, not a redeployable
+  // The Workbox Cloud control plane IS the running host service, not a redeployable
   // workload — it updates itself via the CLI. It's a release-provider project, so
   // the git/localPath 403 below would NOT catch it; guard it explicitly.
   assertNotControlPlane(project);

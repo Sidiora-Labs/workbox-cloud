@@ -409,30 +409,30 @@ export class OblienBillingApi {
         subscription_ended: "This subscription has ended. Start a new checkout to subscribe again.",
         billing_customer_conflict: "This organization's billing needs to be separated from a legacy account. Contact support.",
         billing_identity_conflict: "This organization's billing identity needs to be verified. Contact support.",
-        billing_redirect_not_allowed: "Cloud billing return links are not configured. Contact Openship support.",
-        invalid_redirect_url: "Cloud billing requires a valid HTTPS return link. Contact Openship support.",
-        billing_idempotency_conflict: "This checkout attempt no longer matches the original request. Contact Openship support before starting another payment.",
-        billing_checkout_reconciliation_required: "An earlier checkout needs to be reviewed. Contact Openship support before starting another payment.",
+        billing_redirect_not_allowed: "Cloud billing return links are not configured. Contact Workbox Cloud support.",
+        invalid_redirect_url: "Cloud billing requires a valid HTTPS return link. Contact Workbox Cloud support.",
+        billing_idempotency_conflict: "This checkout attempt no longer matches the original request. Contact Workbox Cloud support before starting another payment.",
+        billing_checkout_reconciliation_required: "An earlier checkout needs to be reviewed. Contact Workbox Cloud support before starting another payment.",
         capacity_checkout_pending:
           "This Cloud space already has an unfinished purchase. Open Billing and complete or cancel it before starting another.",
         capacity_checkout_limit:
-          "There are too many unfinished purchases. Open Billing and complete or cancel an existing purchase before starting another. If none is listed, contact Openship support.",
+          "There are too many unfinished purchases. Open Billing and complete or cancel an existing purchase before starting another. If none is listed, contact Workbox Cloud support.",
         capacity_resource_update_pending:
           "This Cloud space is still updating. Wait for the current operation to finish before changing its plan.",
         billing_payment_mismatch:
-          "We could not verify this payment against your checkout. Contact Openship support before making another payment.",
+          "We could not verify this payment against your checkout. Contact Workbox Cloud support before making another payment.",
         checkout_cancellation_pending:
           "Cancellation is still being confirmed. Refresh its status before starting another checkout.",
         checkout_already_paid: "Payment already completed. Refresh its verification status.",
         checkout_expired: "This checkout has expired. Choose your plan again to start a new checkout.",
         capacity_checkout_expired: "This checkout has expired. Choose your plan again to start a new checkout.",
-        invalid_offer: "This Cloud offer is not configured correctly. Contact Openship support.",
-        reseller_enterprise_required: "Cloud payments require an account configuration update by Openship. Contact Openship support.",
-        billing_provider_configuration_error: "Cloud payments are not configured correctly. Contact Openship support.",
-        billing_database_collation_error: "Cloud billing is unavailable. Contact Openship support.",
+        invalid_offer: "This Cloud offer is not configured correctly. Contact Workbox Cloud support.",
+        reseller_enterprise_required: "Cloud payments require an account configuration update by Workbox Cloud. Contact Workbox Cloud support.",
+        billing_provider_configuration_error: "Cloud payments are not configured correctly. Contact Workbox Cloud support.",
+        billing_database_collation_error: "Cloud billing is unavailable. Contact Workbox Cloud support.",
         billing_storage_unavailable: "Cloud billing is temporarily unavailable. Please try again later.",
         billing_provider_unavailable: "Cloud checkout is temporarily unavailable. Please try again later.",
-        billing_provider_rejected: "Cloud checkout could not be completed. Contact Openship support.",
+        billing_provider_rejected: "Cloud checkout could not be completed. Contact Workbox Cloud support.",
         billing_quote_expired: "This price quote expired. Review a fresh quote before confirming.",
         billing_quote_changed: "The subscription or price changed. Review a fresh quote before confirming.",
         idempotency_conflict: "This billing attempt no longer matches its original request. Refresh its status before trying again.",
@@ -443,9 +443,9 @@ export class OblienBillingApi {
         capacity_billing_unavailable: "Monthly server purchases are temporarily unavailable. Existing paid servers keep their coverage.",
         capacity_unavailable: "This server size is temporarily unavailable. Please try again later or contact support.",
         billing_capacity_unavailable: "This server size is temporarily unavailable. Please try again later or contact support.",
-        billing_offer_underfunded: "Cloud pricing is not configured correctly for this server. Contact Openship support.",
-        capacity_price_below_cost: "Cloud pricing is not configured correctly for this server. Contact Openship support.",
-        insufficient_redeemable_balance: "Cloud server purchases are temporarily unavailable. Contact Openship support.",
+        billing_offer_underfunded: "Cloud pricing is not configured correctly for this server. Contact Workbox Cloud support.",
+        capacity_price_below_cost: "Cloud pricing is not configured correctly for this server. Contact Workbox Cloud support.",
+        insufficient_redeemable_balance: "Cloud server purchases are temporarily unavailable. Contact Workbox Cloud support.",
       };
       const checkoutUnavailable = path === "/billing/checkout" && providerFailure;
       const checkoutPending = !providerFailure && code === "capacity_checkout_pending";
@@ -508,7 +508,7 @@ export class OblienBillingApi {
       !reseller.effectiveResourceLimits || !reseller.aggregateResourceLimits
     ) {
       throw new AppError(
-        "The billing provider must enforce total namespace capacity before Cloud checkout can be enabled. Contact Openship support.",
+        "The billing provider must enforce total namespace capacity before Cloud checkout can be enabled. Contact Workbox Cloud support.",
         503,
         "OBLIEN_BILLING_UPGRADE_REQUIRED",
       );

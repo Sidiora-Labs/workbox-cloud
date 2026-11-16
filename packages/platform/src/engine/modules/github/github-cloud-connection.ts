@@ -34,7 +34,7 @@ export async function cloudGitHubConnection<K extends Method>(
   );
   if (!response)
     throw new AppError(
-      "Openship Cloud is unavailable. Reconnect your Cloud account and try again.",
+      "Workbox Cloud is unavailable. Reconnect your Cloud account and try again.",
       503,
       "CLOUD_CONNECTION_UNAVAILABLE",
     );
@@ -51,7 +51,7 @@ export async function cloudGitHubConnection<K extends Method>(
   }
   if (!Value.Check(GitHubCollectionSchemas[method].output, body))
     throw new AppError(
-      "Cloud returned an invalid GitHub connection response. Update Openship Cloud and try again.",
+      "Cloud returned an invalid GitHub connection response. Update Workbox Cloud and try again.",
       502,
       "CLOUD_GITHUB_INVALID_RESPONSE",
     );
@@ -69,7 +69,7 @@ export async function cloudGitHubConnection<K extends Method>(
       !URL.canParse(body.url)
     )
       throw new AppError(
-        "Cloud returned an incomplete GitHub connection attempt. Update Openship Cloud and try again.",
+        "Cloud returned an incomplete GitHub connection attempt. Update Workbox Cloud and try again.",
         502,
         "CLOUD_GITHUB_INVALID_RESPONSE",
       );

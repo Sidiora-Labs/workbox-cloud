@@ -14,14 +14,14 @@ const metadata: Metadata = {
   description: DESCRIPTION,
   alternates: { canonical: PATH },
   openGraph: {
-    title: `${TITLE} - OpenShip`,
+    title: `${TITLE} - Workbox Cloud`,
     description: DESCRIPTION,
     url: PATH,
     type: "article",
-    siteName: "OpenShip",
+    siteName: "Workbox Cloud",
     locale: "en_US",
   },
-  twitter: { card: "summary_large_image", title: `${TITLE} - OpenShip`, description: DESCRIPTION },
+  twitter: { card: "summary_large_image", title: `${TITLE} - Workbox Cloud`, description: DESCRIPTION },
 };
 
 export async function generateMetadata(

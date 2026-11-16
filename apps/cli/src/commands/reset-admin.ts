@@ -25,7 +25,7 @@ export const resetAdminCommand = new Command("reset-admin-password")
   .option("--name <name>", "Also set the admin display name")
   .option("--password <password>", "New password (prompted if omitted)")
   .action(async (opts) => {
-    intro(chalk.cyan("Reset Openship admin password"));
+    intro(chalk.cyan("Reset Workbox Cloud admin password"));
 
     let pw: string | undefined = opts.password;
     if (!pw) {
@@ -61,7 +61,7 @@ export const resetAdminCommand = new Command("reset-admin-password")
       body: JSON.stringify({ password: pw, email: opts.email, name: opts.name }),
     });
     if (call.kind === "unreachable") {
-      log.error(`Couldn't reach the Openship API on port ${port}. Is it running? (openship status)`);
+      log.error(`Couldn't reach the Workbox Cloud API on port ${port}. Is it running? (openship status)`);
       log.info("If it's listening on another port, pass --port <n>.");
       process.exit(1);
     }

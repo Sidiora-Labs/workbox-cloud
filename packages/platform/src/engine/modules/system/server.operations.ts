@@ -353,7 +353,7 @@ async function updateServer(ctx: ExecutionContext, id: string, body: UpdateServe
   if (!existing) return failServer({ error: "Server not found" }, 404);
   if (existing.workspaceId) {
     if (Object.keys(body).some(key => key !== "name") || !body.name?.trim())
-      return failServer({ error: "Managed server connections are configured by Openship Cloud. Only the name can be edited.", code: "MANAGED_SERVER_CONNECTION" }, 400);
+      return failServer({ error: "Managed server connections are configured by Workbox Cloud. Only the name can be edited.", code: "MANAGED_SERVER_CONNECTION" }, 400);
     const cloud = await managed.rename(ctx, existing.workspaceId, { name: body.name });
     audit.recordAsync(operationAuditContext(ctx), { eventType: "server:write", resourceType: "server", resourceId: id, after: { name: cloud.name } });
     return serializeServer({ ...existing, name: cloud.name }, cloud);
@@ -390,7 +390,7 @@ async function updateServer(ctx: ExecutionContext, id: string, body: UpdateServe
       return failServer(
         {
           error:
-            "This row is the machine Openship runs on, so its SSH details are display-only " +
+            "This row is the machine Workbox Cloud runs on, so its SSH details are display-only " +
             "— the connection to this host uses the channel key provisioned by " +
             "`openship up`, not credentials stored here. Re-run `openship up` to change it.",
           fields: attempted,
@@ -523,7 +523,7 @@ function withBuildCacheBudgetCapability<T extends { capabilities: object } | nul
  * This exists because the server row is not the blast radius. Every project bound to
  * the box goes with it, and the confirm has to name them BEFORE the operator commits:
  * their env vars are `ON DELETE CASCADE` and the on-server manifest is deliberately
- * secret-free, so "removed from Openship" is reversible in structure and permanently
+ * secret-free, so "removed from Workbox Cloud" is reversible in structure and permanently
  * lossy in secrets.
  */
 async function serverDeletionPreview(ctx: ExecutionContext, id: string) {
@@ -601,7 +601,7 @@ async function serverDeletionPreview(ctx: ExecutionContext, id: string) {
  * "server" and its next deploy dies in resolveOrgServer. So the fate of the workloads
  * is now explicit and always resolved:
  *
- *   default              → recordOnly teardown: the Openship rows go, the containers
+ *   default              → recordOnly teardown: the Workbox Cloud rows go, the containers
  *                          keep running and stay re-importable from their manifest.
  *   ?destroyOnSource=true → full teardown: stopped, removed and volumes wiped.
  *
@@ -636,7 +636,7 @@ async function deleteServerUnderLock(
   // deletion after their teardown has already happened.
   if (existing.workspaceId) throw new AppError("Manage this server through its Cloud workspace", 409, "MANAGED_SERVER_LIFECYCLE_REQUIRED");
   // The auto-registered host ("This Server") is not user-removable — it IS the
-  // machine OpenShip runs on, and the boot reconcile would just recreate it.
+  // machine Workbox Cloud runs on, and the boot reconcile would just recreate it.
   // Checked before any teardown so a refused removal never destroys a workload.
   if (existing.isLocal) {
     return failServer({ error: "This is the current host and can't be removed." }, 400);
@@ -684,7 +684,7 @@ async function deleteServerUnderLock(
         id: p.id,
         name: p.name,
         ok: false,
-        error: "The Openship control plane can't be torn down via the API.",
+        error: "The Workbox Cloud control plane can't be torn down via the API.",
       });
       continue;
     }
@@ -810,7 +810,7 @@ async function deleteServerUnderLock(
  * `{server, <id>, [admin]}` grant confines an agent to exactly this box.
  *
  * `admin` rather than `write`: this is unrestricted shell as the server's SSH user
- * (root in Openship's model), which is strictly more than any other `server:write`
+ * (root in Workbox Cloud's model), which is strictly more than any other `server:write`
  * route can do. It is the same tier `/api/system/install` asserts, which is the
  * closest existing capability.
  */

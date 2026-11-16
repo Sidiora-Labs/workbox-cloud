@@ -1,9 +1,9 @@
 ---
 name: openship
-description: Deploy and operate applications in an Openship instance using its connected MCP tools, including investigating deployments, installing catalog apps, and managing infrastructure. Use when the user asks to work through Openship.
+description: Deploy and operate applications in a Workbox Cloud instance using its connected MCP tools, including investigating deployments, installing catalog apps, and managing infrastructure. Use when the user asks to work through Workbox Cloud.
 ---
 
-Use the connected Openship MCP server to complete the user's authorized task and verify the result.
+Use the connected Workbox Cloud MCP server to complete the user's authorized task and verify the result.
 
 Read the relevant live workflow with `get_mcp_guide` using `query.name`. For orientation, read
 `openship-overview`; without arguments the tool lists the guides available on this instance.
@@ -30,7 +30,7 @@ destination only if several are available and the user's choice is unclear. Pass
 `organizationId` as a top-level argument alongside `body` or `query` throughout the flow.
 `serverId` selects the runtime destination; it is distinct from the workspace.
 
-A filesystem path is local to the Openship controller, not necessarily the machine running Codex.
+A filesystem path is local to the Workbox Cloud controller, not necessarily the machine running Codex.
 Cloud cannot read an agent-local folder. Follow `deploy-a-folder` for controller-local imports or
 authenticated uploads. MCP carries JSON, not archive bytes, and OAuth credentials stay in the client.
 Use an already authenticated uploader or a git source when upload is needed.

@@ -5,7 +5,7 @@ Feature cards, onboarding and empty-state graphics use the approved
 `@repo/ui/illustrations` entry point. That larger artwork complements the
 compact control glyphs documented here.
 
-The dashboard, Openship Cloud UI, and desktop chrome use the same icon catalog
+The dashboard, Workbox Cloud UI, and desktop chrome use the same icon catalog
 from `@repo/ui/icons`. The default theme is `outline-modern`, with 201 bundled
 PNGs in `apps/dashboard/public/icons` (about 454 KiB total). Source files retain
 their original square dimensions.
@@ -83,7 +83,7 @@ the icon picker also uses it for previews of user-selected artwork URLs.
 
 ## Local assets and CDN configuration
 
-Openship Cloud loads icons from `https://cdn.oblien.com/static/png-icons` first.
+Workbox Cloud loads icons from `https://cdn.oblien.com/static/png-icons` first.
 The root layout selects this host before rendering, including authentication
 screens. Self-hosted and desktop installations default to the bundled `/icons`
 files, including desktop instances connected to Cloud.

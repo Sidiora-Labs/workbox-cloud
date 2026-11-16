@@ -76,7 +76,7 @@ function presentOperation(
 function requireSaas() {
   if (!env.CLOUD_MODE)
     throw new AppError(
-      "Cloud spaces are available in Openship Cloud",
+      "Cloud spaces are available in Workbox Cloud",
       400,
       "CLOUD_WORKSPACE_TARGET_UNAVAILABLE",
     );

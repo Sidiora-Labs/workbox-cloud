@@ -507,7 +507,7 @@ export async function reviewPlatform(
         // Repository errors can include source files or private URLs. Keep this
         // review actionable without returning their contents or credentials.
         source.blockers.push(
-          "Openship could not read this GitHub revision. Grant repository access and check its build configuration, then review again.",
+          "Workbox Cloud could not read this GitHub revision. Grant repository access and check its build configuration, then review again.",
         );
       }
     }

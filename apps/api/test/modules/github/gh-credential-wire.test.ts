@@ -198,7 +198,7 @@ describe("LocalGitHubSource — gh credential on the wire", () => {
     });
 
     it("carries the method, so the first-run consent gate sees the truth", async () => {
-      // library/page.tsx gates the "may Openship use your host's gh login?"
+      // library/page.tsx gates the "may Workbox Cloud use your host's gh login?"
       // prompt on method === "host-cli" (via `?? "host-cli"`), so dropping the
       // field asked for consent covering a credential the operator had just
       // typed in themselves.

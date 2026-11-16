@@ -60,7 +60,7 @@ export interface PortOccupant {
   /** The port is published by a container runtime, so the listener is a forwarder and
    *  any unit resolved from its cgroup is the DAEMON's, not the workload's. */
   dockerPublished?: boolean;
-  /** The container is part of Openship ITSELF (the compose control plane, the mail
+  /** The container is part of Workbox Cloud ITSELF (the compose control plane, the mail
    *  engine, the edge) — never a stop target for an application port. */
   platformContainer?: boolean;
   /** More than one container publishes this port (same port, different host IPs), so
@@ -146,7 +146,7 @@ export type PortVerdict =
  *
  * The refusal REASON is returned from here rather than re-derived by the copy, because
  * a second chain over the same fields drifted immediately: it had no `platform` arm, so
- * refusing to stop Openship's own API container fell through to the docker-blind copy
+ * refusing to stop Workbox Cloud's own API container fell through to the docker-blind copy
  * and told the operator to go `docker stop` it by hand — #628 restated as prose. A
  * total switch on {@link PortRefusal} makes a new refusal a compile error instead.
  */
@@ -163,7 +163,7 @@ export function portStopVerdict(occupant: PortOccupant): PortVerdict {
     if (isOurEdgeContainer(occupant.containerName, occupant.containerImage)) {
       return { target: "none", why: "our-edge" };
     }
-    // Openship's own control plane or mail engine.
+    // Workbox Cloud's own control plane or mail engine.
     if (occupant.platformContainer) return { target: "none", why: "platform" };
     // An id off a cgroup with no name or image behind it: docker could not describe it,
     // so the checks above could not run. Stopping a container we cannot identify is
@@ -510,7 +510,7 @@ async function withContainer(
     ...(container.serviceName ? { serviceName: container.serviceName } : {}),
     // Ownership now rests on the container's labels, not on a unit name. Left
     // UNDEFINED when the container carries no `openship.project`: a container adopted
-    // in place by the docker migration is tracked by Openship while wearing no labels
+    // in place by the docker migration is tracked by Workbox Cloud while wearing no labels
     // at all, so "no label" means "could not tell", never "not ours".
     ...(isOpenshipContainer(container) ? { isManagedDeployment: true } : {}),
     // Naming a build helper as such matters: it is ours and safe to stop, but an
@@ -663,11 +663,11 @@ function freeActionLabel(occupant: PortOccupant): string {
   switch (portStopTarget(occupant)) {
     case "container":
       return occupant.isManagedDeployment
-        ? "Stop Openship Container & Continue"
+        ? "Stop Workbox Cloud Container & Continue"
         : "Stop Container & Continue";
     case "unit":
       return occupant.isManagedDeployment
-        ? "Stop Openship Deployment & Continue"
+        ? "Stop Workbox Cloud Deployment & Continue"
         : "Stop Service & Continue";
     default:
       return "Free Port & Continue";
@@ -686,37 +686,37 @@ function refusalReason(port: number, occupant: PortOccupant, why: PortRefusal): 
     case "ambiguous":
       return (
         `Port ${port} is published by ${occupant.ambiguousOwners} containers at once (${occupant.command}), ` +
-        `so Openship can't tell which one owns it. Stop the right container yourself, or deploy on a different port.`
+        `so Workbox Cloud can't tell which one owns it. Stop the right container yourself, or deploy on a different port.`
       );
     case "our-edge":
       return (
-        `Port ${port} belongs to the Openship edge proxy (container ${named}), which routes every domain on this ` +
+        `Port ${port} belongs to the Workbox Cloud edge proxy (container ${named}), which routes every domain on this ` +
         `server. Deploy on a different host port and route it through the edge instead.`
       );
     case "platform":
       return (
-        `Port ${port} is held by Openship itself — container ${named} is part of the control plane running this ` +
-        `deploy. Stopping it would take Openship down, so deploy on a different host port.`
+        `Port ${port} is held by Workbox Cloud itself — container ${named} is part of the control plane running this ` +
+        `deploy. Stopping it would take Workbox Cloud down, so deploy on a different host port.`
       );
     case "unidentified-container":
       return (
         `Port ${port} is held by container ${occupant.containerId}, which this Docker daemon won't describe — so ` +
-        `Openship can't tell whether it is one of its own (the edge publishes nothing and is only visible this ` +
+        `Workbox Cloud can't tell whether it is one of its own (the edge publishes nothing and is only visible this ` +
         `way). Run \`docker inspect ${occupant.containerId}\` on the server, stop it if it is safe to, then redeploy.`
       );
     case "docker-blind":
       return (
-        `Port ${port} is published by a Docker container Openship couldn't identify — the process holding it is ` +
-        `Docker's port forwarder, not the app, so there is nothing here Openship can safely stop. ` +
+        `Port ${port} is published by a Docker container Workbox Cloud couldn't identify — the process holding it is ` +
+        `Docker's port forwarder, not the app, so there is nothing here Workbox Cloud can safely stop. ` +
         `Run \`docker ps --filter publish=${port}\` on the server, stop that container, then redeploy.`
       );
     case "protected-unit":
       return (
-        `Port ${port} is held by ${occupant.systemdUnit}, a service Openship will not stop — doing so would take ` +
+        `Port ${port} is held by ${occupant.systemdUnit}, a service Workbox Cloud will not stop — doing so would take ` +
         `down more than this deploy. Free the port on the server, or deploy on a different port.`
       );
     case "no-owner":
-      return `Port ${port} is occupied by ${occupant.command}, which Openship can't free automatically.`;
+      return `Port ${port} is occupied by ${occupant.command}, which Workbox Cloud can't free automatically.`;
   }
 }
 
@@ -731,7 +731,7 @@ function refusalReason(port: number, occupant: PortOccupant, why: PortRefusal): 
  *
  * `outgoingDeploymentId` names the deployment this deploy replaces. When that is what
  * holds the port, the caller stops it before the new release binds, so there is nothing
- * to ask; any other owner, another Openship deployment included, is still prompted for.
+ * to ask; any other owner, another Workbox Cloud deployment included, is still prompted for.
  */
 export async function ensurePortAvailable(
   executor: CommandExecutor,
@@ -762,7 +762,7 @@ export async function ensurePortAvailable(
   const message =
     reason ??
     (occupant.isManagedDeployment
-      ? `Port ${port} is occupied by ${occupant.command}, which Openship deployed.`
+      ? `Port ${port} is occupied by ${occupant.command}, which Workbox Cloud deployed.`
       : `Port ${port} is occupied by ${occupant.command}. This may not be a previous deployment.`);
   logger.log(`${message} Waiting for user decision...\n`, "warn");
 

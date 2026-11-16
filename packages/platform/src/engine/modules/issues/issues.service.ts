@@ -5,7 +5,7 @@ import { SYSTEM, currentMailCertificateHealth, mailHostname } from "@repo/core";
  *
  * "What is wrong across this whole installation right now, and what do I click?"
  *
- * Openship already detected every one of these conditions — it just answered the
+ * Workbox Cloud already detected every one of these conditions — it just answered the
  * question one surface at a time. A crash loop lived on its project's Health tab,
  * an unreachable box only ever reached a notification channel, a broken cert sat on
  * a domain row, and edge/mail state made it to the home card. An operator with a
@@ -492,8 +492,8 @@ export async function listOrganizationIssues(
       severity: "action_required",
       scope: "platform",
       source: "component",
-      title: "Openship",
-      message: "Openship cannot establish a network connection to the affected servers. Their current service health is unknown. Restore the connection, then recheck monitoring.",
+      title: "Workbox Cloud",
+      message: "Workbox Cloud cannot establish a network connection to the affected servers. Their current service health is unknown. Restore the connection, then recheck monitoring.",
       details: {
         connectionIssue: true,
         observerOffline,
@@ -503,7 +503,7 @@ export async function listOrganizationIssues(
           reason: row.reason,
         })),
       },
-      target: { scope: "platform", id: "observer", name: "Openship", href: "/monitoring" },
+      target: { scope: "platform", id: "observer", name: "Workbox Cloud", href: "/monitoring" },
       resolveWith: [],
     });
   }

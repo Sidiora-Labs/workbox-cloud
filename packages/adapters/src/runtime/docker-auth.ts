@@ -136,8 +136,8 @@ export class DockerCredentialHelperError extends Error {
     // Names neither the helper nor the config path: the helper's name identifies the
     // operator's credential tooling, and this string reaches deploy logs.
     super(
-      `Openship can't read the credentials for ${registry}: they are stored in a Docker ` +
-        `credential helper, which is not available inside the Openship container. ` +
+      `Workbox Cloud can't read the credentials for ${registry}: they are stored in a Docker ` +
+        `credential helper, which is not available inside the Workbox Cloud container. ` +
         `Add the credentials inline to the Docker config (docker logout ${registry}, ` +
         `remove the credential helper for it, then docker login ${registry}), or use a ` +
         `public image.`,

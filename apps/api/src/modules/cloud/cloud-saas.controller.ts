@@ -121,7 +121,7 @@ function oblienErrorResponse(c: Context, err: unknown, fallback: string) {
  * POST /api/cloud/analytics  { operation, domain, params }
  *
  * Local/desktop instances call this to read Oblien analytics for a
- * hostname they own on Openship Cloud. Forwarded via the caller's
+ * hostname they own on Workbox Cloud. Forwarded via the caller's
  * namespace token — Oblien returns data only for hostnames in the
  * caller's namespace, so cross-tenant access is structurally
  * impossible. No SaaS-side ownership check needed.
@@ -851,7 +851,7 @@ async function handleSubgraphIngest(c: Context, promotion: boolean) {
       if (nameTaken) {
         return c.json(
           {
-            error: "A project with this name already exists on Openship Cloud. Rename this project and retry.",
+            error: "A project with this name already exists on Workbox Cloud. Rename this project and retry.",
             code: "SLUG_TAKEN",
             table: err.table,
           },
@@ -1051,7 +1051,7 @@ export async function githubOauthSuccess(c: Context) {
   return c.html(
     renderCallbackHtml(
       "GitHub connected",
-      "GitHub repository access is authorized. You can close this window — continue App installation from Openship.",
+      "GitHub repository access is authorized. You can close this window — continue App installation from Workbox Cloud.",
       { closeAfterMs: 2000 },
     ),
   );
@@ -1060,7 +1060,7 @@ export async function githubOauthSuccess(c: Context) {
 /**
  * POST /api/cloud/github/install-url
  *
- * Returns Openship's account-selection URL with a one-time state token. It
+ * Returns Workbox Cloud's account-selection URL with a one-time state token. It
  * offers existing installations, or forwards a new install to GitHub with the
  * same state. GitHub preserves that state and appends it to the Setup URL alongside
  * `installation_id` and `setup_action` — that's what lets us attribute
@@ -1082,7 +1082,7 @@ export async function githubInstallUrl(c: Context) {
  * here AFTER they approve the App installation on github.com. We use the
  * one-time state token (issued by githubInstallUrl and embedded into the
  * install URL) to recover the SaaS userId + workspace that started the flow.
- * Attribution then requires that user's GitHub token and the Openship App JWT
+ * Attribution then requires that user's GitHub token and the Workbox Cloud GitHub App JWT
  * to resolve the same installation before the state and workspace claim are
  * committed atomically. No browser session is trusted on this callback.
  */
@@ -1127,7 +1127,7 @@ export async function githubInstallCallback(c: Context) {
       return c.html(
         renderCallbackHtml(
           "Installation requested",
-          "An organization admin needs to approve the install. After approval, return to Openship Settings and choose Install GitHub App again to complete the verified workspace connection.",
+          "An organization admin needs to approve the install. After approval, return to Workbox Cloud Settings and choose Install GitHub App again to complete the verified workspace connection.",
         ),
       );
     case "forbidden":
@@ -1175,7 +1175,7 @@ async function githubInstallSelection(c: Context) {
       return c.html(
         renderCallbackHtml(
           "Install link expired",
-          "This installation link expired or was already used. Start a new connection from Openship.",
+          "This installation link expired or was already used. Start a new connection from Workbox Cloud.",
         ),
         400,
       );
@@ -1227,7 +1227,7 @@ function renderCallbackHtml(
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>${escapeHtml(title)} · Openship</title>
+  <title>${escapeHtml(title)} · Workbox Cloud</title>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; max-width: 480px; margin: 80px auto; padding: 24px; color: #1a1a1a; background: #fafafa; }
     .card { background: #fff; border-radius: 12px; padding: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06); }

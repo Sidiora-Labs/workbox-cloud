@@ -17,24 +17,24 @@ import { CLOUD_SLA } from "@/lib/cloud-service";
 
 const PAGE_URL = "https://openship.io/pricing";
 export const revalidate = 60;
-const DESCRIPTION = `Compare OpenShip Cloud resource pools for your projects. Shared CPU, RAM and storage, support included, and a ${CLOUD_SLA.monthlyUptimePercent}% monthly uptime guarantee on every plan.`;
+const DESCRIPTION = `Compare Workbox Cloud resource pools for your projects. Shared CPU, RAM and storage, support included, and a ${CLOUD_SLA.monthlyUptimePercent}% monthly uptime guarantee on every plan.`;
 const pageMetadata: Metadata = {
   title: "Pricing",
   description: DESCRIPTION,
   alternates: { canonical: "/pricing" },
   openGraph: {
-    title: "Pricing - OpenShip",
+    title: "Pricing - Workbox Cloud",
     description: DESCRIPTION,
     url: "/pricing",
     type: "website",
   },
-  twitter: { card: "summary_large_image", title: "Pricing - OpenShip", description: DESCRIPTION },
+  twitter: { card: "summary_large_image", title: "Pricing - Workbox Cloud", description: DESCRIPTION },
 };
 
 function buildLd(pricing: CloudPricing, copy: Copy) {
   const offers = pricing.tiers.map((plan) => ({
     "@type": "Offer",
-    name: `OpenShip Cloud ${plan.name}`,
+    name: `Workbox Cloud ${plan.name}`,
     description: cloudPlanSummary(plan, copy),
     price: priceLd(plan.price.monthly),
     priceCurrency: CURRENCY_LD,
@@ -61,9 +61,9 @@ function buildLd(pricing: CloudPricing, copy: Copy) {
     {
       "@context": "https://schema.org",
       "@type": "Product",
-      name: "OpenShip Cloud",
+      name: "Workbox Cloud",
       description: DESCRIPTION,
-      brand: { "@type": "Brand", name: "OpenShip" },
+      brand: { "@type": "Brand", name: "Workbox Cloud" },
       category: "Software / Developer Tools",
       ...(offers.length
         ? {
@@ -111,7 +111,7 @@ export default async function PricingLayout({ children }: { children: ReactNode 
 export async function generateMetadata() {
   const copy = await getCopy();
   const description = copy(
-    "Compare OpenShip Cloud resource pools for your projects. Shared CPU, RAM and storage, support included, and a {uptime}% monthly uptime guarantee on every plan.",
+    "Compare Workbox Cloud resource pools for your projects. Shared CPU, RAM and storage, support included, and a {uptime}% monthly uptime guarantee on every plan.",
     { uptime: CLOUD_SLA.monthlyUptimePercent },
   );
   return localizedMetadata({

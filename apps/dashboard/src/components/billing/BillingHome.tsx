@@ -204,8 +204,8 @@ export function BillingPlanCards({
           kind={t.billing.hub.management}
           title={
             subscription
-              ? `OpenShip Manage · ${t.billing.managementPlans[subscription.plan ?? "basic"]}`
-              : "OpenShip Manage"
+              ? `Workbox Cloud Manage · ${t.billing.managementPlans[subscription.plan ?? "basic"]}`
+              : "Workbox Cloud Manage"
           }
           status={
             <span className="text-xs text-muted-foreground">

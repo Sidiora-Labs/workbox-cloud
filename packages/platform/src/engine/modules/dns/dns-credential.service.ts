@@ -157,7 +157,7 @@ export async function resolveDnsManager(
   options: { allowInactiveZone?: boolean } = {},
 ): Promise<DnsManagerLookup> {
   // The generic credential store is the single source of truth: `dns_credential` was one
-  // of three places Openship kept a third-party secret, each with its own shape and form.
+  // of three places Workbox Cloud kept a third-party secret, each with its own shape and form.
   // Rows land here via the boot backfill (see credential-backfill.ts) — SQL could not do
   // that copy, because the old column is an `enc1:` envelope over the RAW token and the new
   // one is over a JSON object, and the key is app-side.
@@ -467,7 +467,7 @@ export async function provisionRecords(
           outcome: "failed",
           action,
           error:
-            "Existing records here are not managed by Openship — remove or consolidate them first.",
+            "Existing records here are not managed by Workbox Cloud — remove or consolidate them first.",
         });
         continue;
       }
@@ -503,7 +503,7 @@ export async function provisionRecords(
 }
 
 /**
- * Delete the records Openship created for `names`, and only those.
+ * Delete the records Workbox Cloud created for `names`, and only those.
  *
  * Ownership is read off the provider-side comment marker. Name matching alone is
  * not enough: for an apex domain these names ARE the zone apex, where the
@@ -540,7 +540,7 @@ export async function releaseRecords(
       if (err instanceof DnsApiError && err.isAuthFailure) {
         await markCredentialInvalid(organizationId, lookup.manager.credentialId);
       }
-      // Best effort by design: a domain must still be removable from Openship
+      // Best effort by design: a domain must still be removable from Workbox Cloud
       // when the provider is unreachable. The leftover record is visible in the
       // operator's zone; a blocked delete is not.
       return { deleted, reason: safeErrorMessage(err) };

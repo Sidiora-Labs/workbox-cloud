@@ -365,7 +365,7 @@ function ServerDetail({ serverId }: { serverId: string }) {
 
   const runComponentAction = useCallback(async (component: ComponentStatus) => {
     // Reinstalling Docker restarts the daemon, which restarts every container on
-    // the box — Openship's own stack included. That used to happen as an invisible
+    // the box — Workbox Cloud's own stack included. That used to happen as an invisible
     // side effect of steps that merely needed Docker present (#491); now it happens
     // only here, and only after the operator is told what it costs.
     if (component.name === "docker" && component.installed) {

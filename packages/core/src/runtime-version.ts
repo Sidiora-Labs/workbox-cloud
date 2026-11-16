@@ -150,7 +150,7 @@ export function assertRuntimeVersionTarget(config: RuntimeImageTarget & {
   const policy = getRuntimeVersionPolicy(config.framework);
   if (!supportsRuntimeImageOverride(config)) {
     throw new ValidationError(
-      `${config.runtimeVersion != null ? "runtimeVersion" : "runtimeImage"} requires an Openship-generated ${policy?.label ? `${policy.label} ` : ""}Docker build. Remove runtimeVersion and runtimeImage for bare runtimes, static sites, Compose/monorepo services, prebuilt images or your own Dockerfile.`,
+      `${config.runtimeVersion != null ? "runtimeVersion" : "runtimeImage"} requires a Workbox Cloud-generated ${policy?.label ? `${policy.label} ` : ""}Docker build. Remove runtimeVersion and runtimeImage for bare runtimes, static sites, Compose/monorepo services, prebuilt images or your own Dockerfile.`,
     );
   }
 }

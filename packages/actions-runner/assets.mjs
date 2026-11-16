@@ -57,7 +57,7 @@ export function ensureRunnerAssets() {
   });
   if (result.status !== 0)
     throw new Error(
-      "Actions runner build failed. Building Openship requires the Go toolchain declared in packages/actions-runner/go.mod.",
+      "Actions runner build failed. Building Workbox Cloud requires the Go toolchain declared in packages/actions-runner/go.mod.",
     );
   return verifyRunnerAssets();
 }

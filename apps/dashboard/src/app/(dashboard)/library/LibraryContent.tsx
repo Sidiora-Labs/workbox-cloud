@@ -124,7 +124,7 @@ export function LibraryContent() {
     setGhCliConsent(true);
   }, []);
   // Gate ONLY a credential we found on the host by ourselves. A device sign-in or
-  // a pasted token was handed over by the operator inside Openship — asking them
+  // a pasted token was handed over by the operator inside Workbox Cloud — asking them
   // to consent again to the thing they just did is a dead end that made a fresh
   // token look broken until the prompt was noticed and accepted.
   const needsGhCliConsent =

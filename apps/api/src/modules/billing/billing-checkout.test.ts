@@ -131,7 +131,7 @@ describe("Cloud customer checkout", () => {
     ]);
     expect(presentCloudPlans().annual.enabled).toBe(false);
   });
-  it("starts an Openship offer bound to the authenticated organization", async () => {
+  it("starts a Workbox Cloud offer bound to the authenticated organization", async () => {
     await createCheckoutSession(ctx(), "starter", "monthly", "attempt-00000001");
     const input = h.checkout.mock.calls[0]![0];
     expect(input).toMatchObject({
@@ -219,7 +219,7 @@ describe("Cloud customer checkout", () => {
       plan.availableForPurchase = previous;
     }
   });
-  it("keeps an old provider Hobby subscription mapped to its original Openship Starter tier", () => {
+  it("keeps an old provider Hobby subscription mapped to its original Workbox Cloud Starter tier", () => {
     expect(subscriptionPlan(subscription, "org-a", "ns-org-a").tier).toBe("starter");
   });
   it.each([["hobby", 12000], ["starter", 24000], ["pro", 46800], ["team", 118800]] as const)(
@@ -376,7 +376,7 @@ describe("Cloud customer checkout", () => {
     );
     expect(h.checkout).not.toHaveBeenCalled();
   });
-  it("purchases reseller credit packs from Openship pricing", async () => {
+  it("purchases reseller credit packs from Workbox Cloud pricing", async () => {
     h.subscription.mockImplementation(async (namespace) => ({
       success: true,
       namespace,

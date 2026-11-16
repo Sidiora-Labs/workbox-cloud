@@ -1,4 +1,4 @@
-/** Shared release/advisory cadence. Signing in to Openship is not GitHub authentication. */
+/** Shared release/advisory cadence. Signing in to Workbox Cloud is not GitHub authentication. */
 export const UPDATE_POLL_AUTHENTICATED_MS = 5 * 60_000;
 export const UPDATE_POLL_ANONYMOUS_MS = 60 * 60_000;
 export function updatePollInterval(authenticated: boolean): number {

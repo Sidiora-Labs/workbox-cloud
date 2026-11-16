@@ -371,7 +371,7 @@ export function createProjectGitOperations(
             {
               success: false,
               error:
-                "Set a webhook domain or expose this Openship API on a public URL to enable auto-deploy.",
+                "Set a webhook domain or expose this Workbox Cloud API on a public URL to enable auto-deploy.",
               webhook_strategy: "none",
             },
             400,

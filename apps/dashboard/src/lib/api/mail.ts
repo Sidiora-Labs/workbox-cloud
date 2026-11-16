@@ -183,7 +183,7 @@ export interface MailWebmailSummary {
    */
   projectId?: string | null;
   /**
-   * Deployed by a pre-catalog Openship (webmail as a shipped bundle, not an image).
+   * Deployed by a pre-catalog Workbox Cloud (webmail as a shipped bundle, not an image).
    * It runs and reports `installed`, but it can only be REPLACED — a redeploy has
    * no pipeline to run — so the UI offers the upgrade instead of staying silent.
    */

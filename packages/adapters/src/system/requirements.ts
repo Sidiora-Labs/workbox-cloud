@@ -2,7 +2,7 @@
  * System-component prerequisite policy.
  *
  * Keep this independent from the control plane's DEPLOY_MODE. That value says
- * how Openship itself is running; it cannot describe a remote deployment box.
+ * how Workbox Cloud itself is running; it cannot describe a remote deployment box.
  */
 
 /** Every managed remote deployment target needs these core tools. */

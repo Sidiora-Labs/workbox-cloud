@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
- * `resolveEdgeTargetHost` decides what address Openship Cloud's shared edge dials
+ * `resolveEdgeTargetHost` decides what address Workbox Cloud's shared edge dials
  * for a free `<slug>.opsh.io` route. These tests pin the ORDERING, which is the
  * whole behaviour: DECLARED beats GUESSED, and an IP breaks the tie among declared.
  *
@@ -176,7 +176,7 @@ describe("resolveEdgeTargetHost — a probed IP is the last resort", () => {
     const result = await resolveEdgeTargetHost(ORG);
 
     expect(result.host).toBeNull();
-    expect(result.reason).toContain("Openship Cloud edge");
+    expect(result.reason).toContain("Workbox Cloud edge");
   });
 
   it("reports no public address when there is genuinely nothing", async () => {

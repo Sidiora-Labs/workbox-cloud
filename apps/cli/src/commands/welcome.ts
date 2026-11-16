@@ -5,7 +5,7 @@ import { promptSelfHostedUrl, runLogin } from "./login";
 
 /** First run is a choice of destination; installing a server is explicit. */
 export async function runWelcome(install: () => Promise<void>, help: () => void): Promise<void> {
-  intro("Openship");
+  intro("Workbox Cloud");
   const active = getContext();
   if (active.apiUrl) {
     log.info(`Current connection: ${getActiveContext()} (${active.apiUrl})`);
@@ -17,17 +17,17 @@ export async function runWelcome(install: () => Promise<void>, help: () => void)
     options: [
       {
         value: "cloud",
-        label: "Connect to Openship Cloud",
+        label: "Connect to Workbox Cloud",
         hint: "manage Cloud from this machine",
       },
       {
         value: "remote",
-        label: "Connect to self-hosted Openship",
+        label: "Connect to self-hosted Workbox Cloud",
         hint: "use an existing installation",
       },
       {
         value: "install",
-        label: "Install Openship on this machine",
+        label: "Install Workbox Cloud on this machine",
         hint: "interactive server setup",
       },
       { value: "help", label: "Show commands" },

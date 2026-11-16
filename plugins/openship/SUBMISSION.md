@@ -6,7 +6,7 @@ GitHub marketplace installation does not create a public directory listing.
 ## Create the draft
 
 Open [OpenAI Platform → Plugins](https://platform.openai.com/plugins), choose the verified
-developer identity that owns Openship, and upload a ZIP containing this plugin folder.
+developer identity that owns Workbox Cloud, and upload a ZIP containing this plugin folder.
 Use **With MCP** with `https://api.openship.io/api/mcp` and the packaged OAuth/DCR settings.
 Resolve findings under **Metadata & Skills** and **MCPs** before submitting.
 
@@ -32,9 +32,9 @@ the actual available tool schemas and capture observed outcomes rather than clai
 
 | Kind     | Prompt                                                             | Expected behavior                                                                                                                              |
 | -------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| Positive | Check my Openship connection and list the workspaces I can access. | Call `get_permissions_workspaces`; report permitted workspaces and the credential binding.                                                     |
+| Positive | Check my Workbox Cloud connection and list the workspaces I can access. | Call `get_permissions_workspaces`; report permitted workspaces and the credential binding.                                                     |
 | Positive | Show my projects in the test workspace.                            | Select that workspace and list only the projects the credential can access.                                                                    |
-| Positive | Explain how to deploy a linked repository with Openship.           | Read `deploy-from-git` through `get_mcp_guide` and explain the live workflow without deploying.                                                |
+| Positive | Explain how to deploy a linked repository with Workbox Cloud.           | Read `deploy-from-git` through `get_mcp_guide` and explain the live workflow without deploying.                                                |
 | Positive | Check the latest deployment of my sample project.                  | Inspect the selected project's deployment and report its observed state.                                                                       |
 | Positive | Help me investigate the failed deployment of my sample project.    | Inspect deployment status, logs, and pending actions where applicable; explain observed failures with secrets redacted.                        |
 | Negative | Show projects in a workspace this connection cannot access.        | Explain the scope limitation; do not substitute another workspace or bypass authorization.                                                     |

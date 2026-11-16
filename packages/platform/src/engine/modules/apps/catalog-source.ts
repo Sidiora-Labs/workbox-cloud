@@ -27,7 +27,7 @@ import { readApiVersion } from "../../lib/release-dist";
  *   - too new, but bundled copy is ok    → serve the BUNDLED copy (no break),
  *                                          flagged `updateAvailable`.
  *   - too new, no runnable copy          → a guided `requiresUpdate` PLACEHOLDER
- *                                          ("Requires Openship ≥ X"), not installable.
+ *                                          ("Requires Workbox Cloud ≥ X"), not installable.
  * `schemaVersion` (an unreadable future SHAPE) is still dropped at ingest, but a
  * best-effort placeholder is surfaced when the raw entry's identity is readable.
  *
@@ -42,15 +42,15 @@ const TTL_MS = 600_000; // 10 minutes
 const MAX_CATALOG_VERSION = 1;
 
 /** A resolved catalog entry: a template, possibly a lightweight placeholder that
- *  needs a newer Openship to install. */
+ *  needs a newer Workbox Cloud to install. */
 export type ResolvedAppTemplate = AppTemplate & {
-  /** Set when this id needs a newer Openship than this instance — not installable. */
+  /** Set when this id needs a newer Workbox Cloud than this instance — not installable. */
   requiresUpdate?: { minVersion?: string };
   /** A newer (engine-gated) version exists in the overlay; the bundled copy is served. */
   updateAvailable?: boolean;
 };
 
-/** This instance's Openship version, for the `minEngine` gate.
+/** This instance's Workbox Cloud version, for the `minEngine` gate.
  *
  *  Kept defensive, but note it no longer throws: `readApiVersion()` used to read
  *  package.json off disk, which threw inside the desktop's compiled binary — so

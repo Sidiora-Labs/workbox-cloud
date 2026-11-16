@@ -1,14 +1,14 @@
-# Openship plugin for Codex and Claude Code
+# Workbox Cloud plugin for Codex and Claude Code
 
-Packages Openship's existing MCP server with a workflow skill and a connection-check onboarding
-skill. Both clients share the skills and connect to **Openship Cloud** at
+Packages Workbox Cloud's existing MCP server with a workflow skill and a connection-check onboarding
+skill. Both clients share the skills and connect to **Workbox Cloud** at
 `https://api.openship.io/api/mcp`, using OAuth and dynamic client registration. Each user authorizes
 their own account and resource scope. No API key, extra server, or monorepo build is needed.
 
 ## Install from GitHub
 
 Users can run these commands from any directory. The client downloads and caches the plugin;
-there is no manual clone, dependency install, or Openship build. These examples use the default
+there is no manual clone, dependency install, or Workbox Cloud build. These examples use the default
 branch and become available once the plugin is merged.
 
 ### Codex
@@ -19,7 +19,7 @@ codex plugin add openship@openship
 ```
 
 If your Codex client provides plugin installation through its UI, register the marketplace with
-the first command, then install **Openship** from that marketplace in the plugin directory.
+the first command, then install **Workbox Cloud** from that marketplace in the plugin directory.
 
 ### Claude Code
 
@@ -47,14 +47,14 @@ Then run the corresponding install command above.
 
 ### Connect your account
 
-Restart the client and start a new conversation. Complete the Openship browser authorization
+Restart the client and start a new conversation. Complete the Workbox Cloud browser authorization
 through the client's connection flow; in Claude Code, use `/mcp` to authenticate the plugin's
-Openship server. Run the plugin's setup skill to verify the connection and list permitted
+Workbox Cloud server. Run the plugin's setup skill to verify the connection and list permitted
 workspaces. Claude Code exposes it as `/openship:openship-setup`; Codex also provides the plugin's
 setup action. Setup succeeds only after an authenticated tool call returns.
 
-Then try “Deploy this repository with Openship” or “Investigate my failed Openship deployments.”
-Openship checks the approved permissions on every call.
+Then try “Deploy this repository with Workbox Cloud” or “Investigate my failed Workbox Cloud deployments.”
+Workbox Cloud checks the approved permissions on every call.
 
 ## Install from this checkout
 

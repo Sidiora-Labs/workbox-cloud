@@ -1,6 +1,6 @@
 /**
  * Docker migration run — one execution of "migrate a server's existing Docker
- * stack into Openship". Owned by the MigrationOrchestrator FSM. Sibling in
+ * stack into Workbox Cloud". Owned by the MigrationOrchestrator FSM. Sibling in
  * spirit to backup_run/backup_restore. Adds NO columns to existing tables; all
  * cross-references cascade or set-null.
  *
@@ -76,7 +76,7 @@ export const dockerMigrationRun = pgTable(
       onDelete: "set null",
     }),
 
-    /** The adopted Openship project. */
+    /** The adopted Workbox Cloud project. */
     projectId: text("project_id").references(() => project.id, { onDelete: "set null" }),
     projectName: text("project_name").notNull(),
     serviceNames: jsonb("service_names").$type<string[]>().notNull().default([]),

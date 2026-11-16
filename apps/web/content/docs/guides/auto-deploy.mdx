@@ -1,17 +1,17 @@
 ---
 title: Auto-deploy on push
-description: Make Openship rebuild and ship your app automatically every time you push to GitHub — from the dashboard or the terminal.
+description: Make Workbox Cloud rebuild and ship your app automatically every time you push to GitHub — from the dashboard or the terminal.
 ---
 
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-Once your app is deployed, you don't want to click "Deploy" by hand every time you change something. **Auto-deploy** fixes that: you push your code to GitHub as usual, and Openship rebuilds and ships it for you. Think of it like a doorbell — every time you push, GitHub rings the bell, and Openship answers by shipping the new version.
+Once your app is deployed, you don't want to click "Deploy" by hand every time you change something. **Auto-deploy** fixes that: you push your code to GitHub as usual, and Workbox Cloud rebuilds and ships it for you. Think of it like a doorbell — every time you push, GitHub rings the bell, and Workbox Cloud answers by shipping the new version.
 
-That doorbell has a name: a **webhook**. A webhook is just a little message GitHub sends to Openship the instant you push, saying "new code is here" — so Openship can start building without you lifting a finger.
+That doorbell has a name: a **webhook**. A webhook is just a little message GitHub sends to Workbox Cloud the instant you push, saying "new code is here" — so Workbox Cloud can start building without you lifting a finger.
 
 <Callout title="What you need first">
 - A project that's already **linked to a GitHub repository** (see [Deploy from GitHub](/docs/guides/deploy-from-github)).
-- A way for GitHub to reach Openship. That's either **Openship on a public web address**, or a **verified domain** on the project for direct delivery. More on this below — Openship tells you which one applies.
+- A way for GitHub to reach Workbox Cloud. That's either **Workbox Cloud on a public web address**, or a **verified domain** on the project for direct delivery. More on this below — Workbox Cloud tells you which one applies.
 </Callout>
 
 ## Turn it on from the dashboard
@@ -38,9 +38,9 @@ That's the whole thing — from now on, pushes to your deploy branch are evaluat
 
 <Step>
 
-### If Openship asks for a webhook endpoint
+### If Workbox Cloud asks for a webhook endpoint
 
-Sometimes Openship can't be reached from the public internet on its own (for example, you're running it on your laptop or a private network). When that's the case, you'll see an **Enable auto-deploy** notice telling you to set a webhook endpoint.
+Sometimes Workbox Cloud can't be reached from the public internet on its own (for example, you're running it on your laptop or a private network). When that's the case, you'll see an **Enable auto-deploy** notice telling you to set a webhook endpoint.
 
 The fix is the **Webhook Endpoint** card. Pick one of your project's **verified domains** from the "Select domain..." menu. GitHub will then deliver push events straight to that domain. To stop using it later, open the same menu and choose **Clear selection**.
 
@@ -54,7 +54,7 @@ This card only appears once the project has at least one **verified** domain. If
 
 ### Check the status
 
-The **Webhook** card shows whether GitHub is actually reaching Openship: **Active** (or **Direct**, when it's going through your chosen domain) means events are getting through; **Inactive** means the webhook isn't set up or isn't responding yet. After your next push, this is the card to glance at.
+The **Webhook** card shows whether GitHub is actually reaching Workbox Cloud: **Active** (or **Direct**, when it's going through your chosen domain) means events are getting through; **Inactive** means the webhook isn't set up or isn't responding yet. After your next push, this is the card to glance at.
 
 </Step>
 
@@ -80,36 +80,36 @@ openship project git webhook-domain <project-id> --clear
 
 ## How the webhook gets wired (the short version)
 
-You don't have to think about this, but here's what happens under the hood so nothing feels like magic. Openship picks the simplest delivery route that works for your setup:
+You don't have to think about this, but here's what happens under the hood so nothing feels like magic. Workbox Cloud picks the simplest delivery route that works for your setup:
 
-- **Public Openship** — if your Openship API has a public web address, turning on Auto Deploy registers a webhook on your repo that points at `…/api/webhooks/github`. GitHub calls it on every push.
-- **Verified domain** — if you set a Webhook Endpoint, GitHub delivers instead to `https://<your-domain>/_openship/hooks/github`, which routes to Openship. This is the option for private or laptop installs.
-- **GitHub App** — on Openship Cloud or with your own self-hosted App, push events arrive through the App automatically; there's no duplicate per-repo webhook to manage.
+- **Public Workbox Cloud** — if your Workbox Cloud API has a public web address, turning on Auto Deploy registers a webhook on your repo that points at `…/api/webhooks/github`. GitHub calls it on every push.
+- **Verified domain** — if you set a Webhook Endpoint, GitHub delivers instead to `https://<your-domain>/_openship/hooks/github`, which routes to Workbox Cloud. This is the option for private or laptop installs.
+- **GitHub App** — on Workbox Cloud or with your own self-hosted App, push events arrive through the App automatically; there's no duplicate per-repo webhook to manage.
 
-For relevant changes, Openship builds the pushed commit. Manual Deploy always remains available.
+For relevant changes, Workbox Cloud builds the pushed commit. Manual Deploy always remains available.
 
 ## Troubleshooting
 
 <Callout title="The Auto Deploy toggle won't turn on" type="warn">
-You'll see an **Enable auto-deploy** notice, and the error reads *"Set a webhook domain or expose this Openship API on a public URL to enable auto-deploy."* GitHub has no way to reach Openship yet. Either put Openship on a public address, or set a **Webhook Endpoint** domain on the Source tab (see step 3).
+You'll see an **Enable auto-deploy** notice, and the error reads *"Set a webhook domain or expose this Workbox Cloud API on a public URL to enable auto-deploy."* GitHub has no way to reach Workbox Cloud yet. Either put Workbox Cloud on a public address, or set a **Webhook Endpoint** domain on the Source tab (see step 3).
 </Callout>
 
 <Callout title="“Domain must be verified before it can receive webhooks”" type="error">
-The domain you picked isn't verified yet, so Openship won't route webhooks to it. Verify the domain first ([Custom domains](/docs/guides/custom-domains)), then select it again.
+The domain you picked isn't verified yet, so Workbox Cloud won't route webhooks to it. Verify the domain first ([Custom domains](/docs/guides/custom-domains)), then select it again.
 </Callout>
 
 <Callout title="“Could not create webhook”" type="error">
-This means Openship couldn't add the webhook to your repository — usually because your GitHub connection doesn't have **admin** access to that repo. Reconnect GitHub and make sure the repository is included with full access, then toggle Auto Deploy again.
+This means Workbox Cloud couldn't add the webhook to your repository — usually because your GitHub connection doesn't have **admin** access to that repo. Reconnect GitHub and make sure the repository is included with full access, then toggle Auto Deploy again.
 </Callout>
 
 <Callout title="I pushed, but nothing deployed" type="warn">
-Check the **Webhook** status card on the Source tab. If it says **Inactive**, delivery isn't reaching Openship — revisit the webhook endpoint above. Also confirm you pushed to the project's **deploy branch**; pushes to other branches are ignored.
+Check the **Webhook** status card on the Source tab. If it says **Inactive**, delivery isn't reaching Workbox Cloud — revisit the webhook endpoint above. Also confirm you pushed to the project's **deploy branch**; pushes to other branches are ignored.
 
 If another deployment is running, the new push is reported as **queued** and
 deploys when the running deployment finishes. Only the latest pending push is kept;
 its commit is checked against the repository branch before admission. Manual
 deployments and rollbacks supersede pending pushes. This works for self-hosted
-instances and pushes forwarded to Openship Cloud, using the existing durable
+instances and pushes forwarded to Workbox Cloud, using the existing durable
 Actions admission controller rather than a separate scheduled job.
 
 Under **Source**, enable **Cancel obsolete builds** to also cancel an older automatic
@@ -124,7 +124,7 @@ cannot run.
 A push that cannot start for another reason is reported as a **failed** delivery,
 with the reason in the project's webhook events. Fix the cause, then
 **Redeliver** the failed event from GitHub's webhook
-delivery history. GitHub does not automatically redeliver failures. Openship
+delivery history. GitHub does not automatically redeliver failures. Workbox Cloud
 accepts a retry of the same failed delivery ID and remembers projects already
 handled by that delivery, so only the remaining projects are retried. It also skips
 a commit that is already building or live. A successful delivery remains deduplicated.
@@ -142,10 +142,10 @@ a commit that is already building or live. A successful delivery remains dedupli
 ## Monorepos: deploy the app that changed
 
 A single-app project with a saved subfolder such as `apps/storefront` automatically checks whether a push
-can affect that app. This works for GitHub push deliveries handled by self-hosted Openship and Openship
+can affect that app. This works for GitHub push deliveries handled by self-hosted Workbox Cloud and Workbox Cloud
 Cloud. Existing Compose and multi-app service selection keep their current behavior.
 
-For npm, Yarn, Bun, and pnpm workspaces, Openship reads package manifests at the incoming commit and follows
+For npm, Yarn, Bun, and pnpm workspaces, Workbox Cloud reads package manifests at the incoming commit and follows
 local dependencies transitively. A change under `apps/admin` does not redeploy `apps/storefront` unless the
 storefront depends on it. Changes to required shared packages, root build configuration and lockfiles do
 trigger deployment. Turbo global dependencies, root inputs and named cross-package task dependencies are

@@ -48,7 +48,7 @@ function CloudConnectCallbackInner() {
     if (searchParams.get("setup_error") === "pkce") {
       setStatus("error");
       setErrorMessage(
-        "OpenShip could not securely start the Cloud sign-in. Close this window and try again.",
+        "Workbox Cloud could not securely start the Cloud sign-in. Close this window and try again.",
       );
       return;
     }

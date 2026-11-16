@@ -169,7 +169,7 @@ export class PostgresArchive {
       endpoint: backup.status.endpointURL ?? null,
     };
   }
-  /** The operator continues an accepted backup even if OpenShip disconnects.
+  /** The operator continues an accepted backup even if Workbox Cloud disconnects.
    * A retry adopts that same request, starting a new attempt only after failure. */
   async run(requestId: string, generation: number, log: (message: string) => Promise<void>) {
     if (!/^[a-z0-9-]{1,48}$/.test(requestId))

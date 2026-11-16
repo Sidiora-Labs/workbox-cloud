@@ -280,7 +280,7 @@ export function dockerGap(state: DockerState = dockerState()): DockerGap | null 
       hint: thisHost().profile.isRoot
         ? start
           ? `Start it with: ${start}`
-          : "Start the Docker daemon — this host has no service manager Openship recognizes."
+          : "Start the Docker daemon — this host has no service manager Workbox Cloud recognizes."
         : `Add your user to the docker group: sudo usermod -aG docker ${userInfo().username} — then log out and back in (or run: newgrp docker). If the daemon is stopped: ${start ?? "start it the way this host starts services"}`,
     };
   }
@@ -500,7 +500,7 @@ export interface ComposeUpOpts {
    */
   resetSecrets?: boolean;
   /**
-   * Install as Openship Mail: the dashboard's default shell is the mail control
+   * Install as Workbox Cloud Mail: the dashboard's default shell is the mail control
    * plane rather than the full platform (`OPENSHIP_PRODUCT`). Absent on a re-run
    * keeps whatever the install chose — see resolveEnvConfig.
    */
@@ -1234,7 +1234,7 @@ function authorizeKeyAt(authKeysPath: string, pub: string): void {
 }
 
 /**
- * Openship no longer AUTHORIZES a root key on a non-root box — `chooseHostChannelUser`
+ * Workbox Cloud no longer AUTHORIZES a root key on a non-root box — `chooseHostChannelUser`
  * logs in as the invoker and elevates instead, so there is nothing to mint. The revoke
  * below is deliberately kept: an install provisioned by an older CLI has a root line we
  * are no longer using, and leaving a standing root credential behind would be worse than
@@ -2671,7 +2671,7 @@ export function resolveEnvConfig(
   extraTrustedOrigins?: string;
   registry: string;
   hostControl: boolean;
-  /** Which shell the dashboard defaults to (Openship Mail vs the full platform). */
+  /** Which shell the dashboard defaults to (Workbox Cloud Mail vs the full platform). */
   productMode: "platform" | "mail";
   /** Where the api container reaches this machine's sshd for host ops. */
   hostSshHost: string;

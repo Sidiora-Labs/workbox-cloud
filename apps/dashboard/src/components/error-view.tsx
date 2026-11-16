@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
  *
  * Built in the same theme-variable language as `not-found-view.tsx` so all three
  * dead ends read as one family, and — unlike the bare centered text they replace —
- * it keeps the Openship brand mark and a way out (docs / GitHub), because these
+ * it keeps the Workbox Cloud brand mark and a way out (docs / GitHub), because these
  * are exactly the screens where a self-hoster is stuck and needs a next step.
  *
  * Callers own the full-height centering wrapper, matching NotFoundView.

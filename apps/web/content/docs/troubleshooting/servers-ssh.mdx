@@ -5,8 +5,8 @@ description: Fix a server that won't connect over SSH, a component that won't in
 
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-When you deploy to your own machine, Openship reaches it over SSH — the same way you'd type `ssh you@your-box`
-in a terminal. Most "my server won't work" problems come down to one of four things: Openship can't log in,
+When you deploy to your own machine, Workbox Cloud reaches it over SSH — the same way you'd type `ssh you@your-box`
+in a terminal. Most "my server won't work" problems come down to one of four things: Workbox Cloud can't log in,
 can't reach the box, can't install a tool it needs, or a tool it installed isn't running. This page walks
 through each one.
 
@@ -18,8 +18,8 @@ walkthrough see [Deploy to your own server](/docs/guides/custom-servers) and the
 [`openship server`](/docs/cli/self-host).
 </Callout>
 
-<Callout title="Not this page: the box Openship itself runs on" type="info">
-A containerized install reaches **its own host** over a separate SSH channel that Openship provisions
+<Callout title="Not this page: the box Workbox Cloud itself runs on" type="info">
+A containerized install reaches **its own host** over a separate SSH channel that Workbox Cloud provisions
 for itself — no credentials you typed, and nothing on the Servers screens. If your symptom is
 *"This operation targets the HOST machine, but no host channel is configured"*, a server that reads
 **Offline** while its containers are plainly running, or a `:80`/`:443` takeover that won't start, go to
@@ -50,7 +50,7 @@ server allows password login.` / `SSH key authentication failed for … Check th
 passphrase, or whether the server accepts this key.`
 </Callout>
 
-**What it means.** Openship reached the server, but the server rejected the login. The network is fine — the
+**What it means.** Workbox Cloud reached the server, but the server rejected the login. The network is fine — the
 username, the secret (password / key / passphrase), or the chosen **auth method** is wrong, or the server
 doesn't accept that kind of login.
 
@@ -68,7 +68,7 @@ Match the **Authentication** method to how you actually log in:
 
 - **Password** — the server must allow password login (`PasswordAuthentication yes` in its sshd config). Many
   cloud images disable it.
-- **SSH Key** — the **Key Path** must point at a **private** key the machine running Openship can read
+- **SSH Key** — the **Key Path** must point at a **private** key the machine running Workbox Cloud can read
   (e.g. `~/.ssh/id_rsa`), and the matching public key must be in the server's `~/.ssh/authorized_keys`. Add
   the **Passphrase** if the key has one.
 - **Agent** — uses the host machine's running `ssh-agent`; see [Agent auth finds no keys](#agent-auth-finds-no-keys).
@@ -76,7 +76,7 @@ Match the **Authentication** method to how you actually log in:
 
 <Step>
 Verify the same details work from a plain terminal: `ssh -p <port> <user>@<host>`. If that fails too, the fix
-is on the server, not in Openship.
+is on the server, not in Workbox Cloud.
 </Step>
 
 <Step>
@@ -98,7 +98,7 @@ A failure that isn't about credentials — the underlying message contains somet
 `ETIMEDOUT`, `EHOSTUNREACH`, `ENETUNREACH`, or `SSH connection closed before ready`.
 </Callout>
 
-**What it means.** Openship never got as far as logging in. Either nothing is listening on that host and port,
+**What it means.** Workbox Cloud never got as far as logging in. Either nothing is listening on that host and port,
 a firewall is dropping the packets, or the address is wrong.
 
 - `ECONNREFUSED` — the host answered but nothing is listening on that **port** (wrong port, or sshd is down).
@@ -114,19 +114,19 @@ Double-check the **Server IP Address** and **Port**. A typo here is the most com
 </Step>
 
 <Step>
-Confirm the SSH port is open to the machine running Openship — check your provider's firewall / security-group
+Confirm the SSH port is open to the machine running Workbox Cloud — check your provider's firewall / security-group
 rules, not just the server's local firewall.
 </Step>
 
 <Step>
-Test raw reachability from the Openship host: `nc -vz <host> <port>` (or `ssh -p <port> <user>@<host>`). If
-that can't connect, the problem is network/firewall, not Openship.
+Test raw reachability from the Workbox Cloud host: `nc -vz <host> <port>` (or `ssh -p <port> <user>@<host>`). If
+that can't connect, the problem is network/firewall, not Workbox Cloud.
 </Step>
 
 </Steps>
 
 <Callout title="&quot;Cooling down after repeated failures&quot;" type="warn">
-After a couple of consecutive failures Openship trips a short circuit breaker and fast-fails with
+After a couple of consecutive failures Workbox Cloud trips a short circuit breaker and fast-fails with
 `Server is unreachable — cooling down after repeated failures, retry in ~30s.` instead of hammering a dead box
 on every check. This is expected — fix the underlying reachability problem, wait out the countdown, then retry.
 A single success clears it.
@@ -137,10 +137,10 @@ A single success clears it.
 Select **Cloudflare Access** in the server's **Connection** field. Use the Access application hostname,
 not a URL or a raw `ProxyCommand`. Passwords, encrypted keys and agent authentication are supported.
 
-If OpenShip reports that `cloudflared` is missing, install it on the machine running the API. Windows
+If Workbox Cloud reports that `cloudflared` is missing, install it on the machine running the API. Windows
 desktop bundles it. An operator can override the executable using the process environment variable
 `OPENSHIP_CLOUDFLARED_PATH`; quote Windows paths containing spaces when setting that variable.
-Finish Cloudflare authentication as the same OS user running OpenShip, then retry **Test Connection**.
+Finish Cloudflare authentication as the same OS user running Workbox Cloud, then retry **Test Connection**.
 In headless or container installations, an authenticated `cloudflared` session must be available in
 that environment. Check that the Access policy permits the account and that the tunnel points to SSH.
 
@@ -172,7 +172,7 @@ Make sure the key that reaches the final host is loaded in your `ssh-agent` (see
 </Step>
 
 <Step>
-Prefer configuring the bastion once in your `~/.ssh/config` and pointing Openship at the target host — the
+Prefer configuring the bastion once in your `~/.ssh/config` and pointing Workbox Cloud at the target host — the
 Agent path reads your SSH config the same way your terminal does.
 </Step>
 
@@ -186,7 +186,7 @@ authentication failure.
 </Callout>
 
 **What it means.** Agent auth authenticates exactly the way `ssh <host>` does in your terminal: through the
-host machine's `ssh-agent`. Openship looks for the agent socket in `SSH_AUTH_SOCK`, and — because a
+host machine's `ssh-agent`. Workbox Cloud looks for the agent socket in `SSH_AUTH_SOCK`, and — because a
 GUI-launched desktop app often doesn't inherit that variable — falls back to `launchctl getenv SSH_AUTH_SOCK`
 on macOS and `systemctl --user show-environment` on Linux. If no agent (or no loaded key) is found, the login
 has nothing to offer and fails. The Agent path is also non-interactive (`BatchMode=yes`), so it never prompts
@@ -197,13 +197,13 @@ for a password or passphrase — it must succeed with agent/keys alone.
 <Steps>
 
 <Step>
-On the machine running Openship, confirm an agent is running and has your key:
+On the machine running Workbox Cloud, confirm an agent is running and has your key:
 `ssh-add -l`. If it lists "no identities", load one with `ssh-add ~/.ssh/id_rsa`.
 </Step>
 
 <Step>
-Confirm plain `ssh <user>@<host>` works from that same machine. If it does but Openship doesn't, the agent
-socket isn't being found — restart Openship from a shell that has `SSH_AUTH_SOCK` set, or switch to **SSH Key**
+Confirm plain `ssh <user>@<host>` works from that same machine. If it does but Workbox Cloud doesn't, the agent
+socket isn't being found — restart Workbox Cloud from a shell that has `SSH_AUTH_SOCK` set, or switch to **SSH Key**
 auth and point at the key file directly.
 </Step>
 
@@ -216,7 +216,7 @@ On Windows, the OpenSSH agent is a named pipe rather than a socket and isn't sup
 
 ## A component won't install or reports unhealthy
 
-Openship installs and health-checks a small set of components on each server: **Docker**, **Git**,
+Workbox Cloud installs and health-checks a small set of components on each server: **Docker**, **Git**,
 **OpenResty**, **Certbot**, and **rsync**. Docker and Git are the core requirements for deployments; the rest
 are optional infrastructure. Manage them from the server's **Components** tab (the **System Health** card) or
 with `openship server install`/`check`.
@@ -237,7 +237,7 @@ means it's present but the background service is stopped.
 
 <Step>
 For a missing Docker, use **Install** on the Docker row (or `openship server install <serverId> -c docker`).
-Openship installs it via the official `curl -fsSL https://get.docker.com | sh` script and, on systemd hosts,
+Workbox Cloud installs it via the official `curl -fsSL https://get.docker.com | sh` script and, on systemd hosts,
 enables and starts the service.
 </Step>
 
@@ -265,7 +265,7 @@ Automated Docker (and OpenResty) installation targets Linux servers. On a non-Li
 unix:///var/run/docker.sock``
 </Callout>
 
-**What it means.** SSH works and Docker is installed, but the user Openship logs in as may not talk to the
+**What it means.** SSH works and Docker is installed, but the user Workbox Cloud logs in as may not talk to the
 Docker daemon. `/var/run/docker.sock` is owned by `root` and the `docker` group, so a non-root user outside
 that group is refused. This says nothing about whether the daemon is running — the permission check happens
 first.
@@ -297,7 +297,7 @@ Or skip this and edit the server to log in as `root` instead.
 
 <Step>
 Press **Re-check** (or `openship server check <serverId>`). Group changes only apply to new login sessions;
-Openship notices that its existing SSH session predates the change and reconnects before checking again, so
+Workbox Cloud notices that its existing SSH session predates the change and reconnects before checking again, so
 you don't need to remove and re-add the server.
 </Step>
 
@@ -308,9 +308,9 @@ Anyone who can use the Docker socket can start a container that mounts the host'
 in `docker` grants the same power as `root` on that server. Only add a user you'd trust with `root`.
 </Callout>
 
-If the server is **the machine Openship itself runs on**, there is no SSH session to replace: Openship's own
+If the server is **the machine Workbox Cloud itself runs on**, there is no SSH session to replace: Workbox Cloud's own
 process keeps the groups it started with, and the Docker row adds
-`Restart Openship to apply the updated user group membership.` Restart the Openship service (`openship stop`,
+`Restart Workbox Cloud to apply the updated user group membership.` Restart the Workbox Cloud service (`openship stop`,
 then `openship up`). For the desktop app, log out of your desktop session and back in first, then reopen the
 app — it inherits its groups from your login.
 
@@ -359,7 +359,7 @@ An install returns an error such as `install_in_progress`, `Invalid component na
 **What it means.**
 
 - `install_in_progress` — a setup session for this server is already running; only one runs at a time.
-- `Invalid component names` / `Invalid or missing component name` — the component isn't one Openship installs.
+- `Invalid component names` / `Invalid or missing component name` — the component isn't one Workbox Cloud installs.
   The valid names are `docker`, `git`, `openresty`, `certbot`, and `rsync`.
 
 **How to fix.**
@@ -400,7 +400,7 @@ There's no **Ports** tab, or a tunnel action fails with `Not available in this m
 </Callout>
 
 **What it means.** Port forwarding is **desktop-only**. Forwarding a remote port to "localhost" only makes
-sense when the Openship orchestrator *is* your own machine, so the feature is hidden on hosted and self-hosted
+sense when the Workbox Cloud orchestrator *is* your own machine, so the feature is hidden on hosted and self-hosted
 VPS instances.
 
 **How to fix.** Use the desktop app to manage port forwards for that server. There's nothing to change on the
@@ -432,7 +432,7 @@ SSH connection, so if SSH is down the tunnel can't start.
 </Step>
 
 <Step>
-If the start still fails, the OS may have picked a busy local port — set **Local** to `0` so Openship binds any
+If the start still fails, the OS may have picked a busy local port — set **Local** to `0` so Workbox Cloud binds any
 free port, then **Start** again. **Stop** and **Start** cleanly reopen a stuck forward.
 </Step>
 

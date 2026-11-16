@@ -27,8 +27,8 @@ const helpItems: MenuItemConstructorOptions[] = [
   { label: "Send Feedback", click: () => void shell.openExternal(BRAND_LINKS.contact) },
   { type: "separator" },
   { label: "Community (Discord)", click: () => void shell.openExternal(BRAND_LINKS.community) },
-  { label: "OpenShip on GitHub", click: () => void shell.openExternal(BRAND_LINKS.github) },
-  { label: "OpenShip on X", click: () => void shell.openExternal(BRAND_LINKS.x) },
+  { label: "Workbox Cloud on GitHub", click: () => void shell.openExternal(BRAND_LINKS.github) },
+  { label: "Workbox Cloud on X", click: () => void shell.openExternal(BRAND_LINKS.x) },
 ];
 
 export function buildAppMenu(getWindow: () => BrowserWindow | null): void {

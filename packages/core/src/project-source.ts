@@ -31,7 +31,7 @@ export const RELEASE_ARTIFACT_KINDS = ["archive", "image"] as const;
 export type ReleaseArtifactKind = (typeof RELEASE_ARTIFACT_KINDS)[number];
 
 /**
- * A tracked release source. `mode` chooses how OpenShip discovers a version
+ * A tracked release source. `mode` chooses how Workbox Cloud discovers a version
  * (GitHub Releases or an external version URL); `artifactKind` independently
  * chooses whether that release deploys an extracted archive or a registry image.
  * The deployed VERSION/tag, not a commit, drives redeploys.

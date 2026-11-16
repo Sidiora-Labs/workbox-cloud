@@ -83,9 +83,9 @@ export const domain = pgTable(
      * Externally-managed ingress + TLS. When true, an upstream (Cloudflare Tunnel,
      * a load balancer, etc.) terminates TLS and forwards HTTP to this box, so the
      * hostname does NOT resolve to the server's (possibly Tailscale) SSH address.
-     * Openship then: verifies ownership via TXT only (no A-record check), skips
+     * Workbox Cloud then: verifies ownership via TXT only (no A-record check), skips
      * certbot, and serves a plain-HTTP OpenResty route. DNS/LB/firewall stay
-     * outside Openship.
+     * outside Workbox Cloud.
      */
     externalIngress: boolean("external_ingress").notNull().default(false),
 

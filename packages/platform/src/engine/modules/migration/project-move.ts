@@ -1,5 +1,5 @@
 /**
- * The migration's SECOND door: move a project Openship already owns onto another
+ * The migration's SECOND door: move a project Workbox Cloud already owns onto another
  * server, instead of adopting a stranger's containers into a new one.
  *
  * The first door starts from a scan. It discovers containers, asks the operator which
@@ -192,11 +192,11 @@ export function assertProjectMovable(input: {
   const { project, targetServerId } = input;
 
   if (input.isControlPlane) {
-    // Openship cannot migrate itself with itself: the run would stop the API executing
+    // Workbox Cloud cannot migrate itself with itself: the run would stop the API executing
     // it. Moving a control plane is `openship` CLI work on the box, not a wizard.
     throw new ProjectMoveRefused(
       "control_plane",
-      "This is the Openship control plane — it can't migrate itself. Move it with the Openship CLI on the server instead.",
+      "This is the Workbox Cloud control plane — it can't migrate itself. Move it with the Workbox Cloud CLI on the server instead.",
     );
   }
 
@@ -274,7 +274,7 @@ export function planProjectMove(input: {
   discovered: DiscoveredService[];
   /** Container ids carrying `openship.project=<project.id>` on the source host. */
   ourContainerIds: string[];
-  /** True when this project IS the Openship control plane. */
+  /** True when this project IS the Workbox Cloud control plane. */
   isControlPlane?: boolean;
   /** What the operator is doing. Only a COPY may be scoped — see `serviceNames`. */
   intent?: ProjectMoveIntent;

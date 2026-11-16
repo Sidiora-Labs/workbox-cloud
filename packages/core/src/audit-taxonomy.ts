@@ -318,7 +318,7 @@ export const AUDIT_EVENTS: Record<string, AuditEventDef> = {
     label: "DNS records provisioned",
     tone: "info",
     description:
-      "Openship wrote this domain's records at the connected DNS provider. The counts of applied and failed records are in the details.",
+      "Workbox Cloud wrote this domain's records at the connected DNS provider. The counts of applied and failed records are in the details.",
   },
   "domain.cert_uploaded": {
     category: "domains",
@@ -366,7 +366,7 @@ export const AUDIT_EVENTS: Record<string, AuditEventDef> = {
     action: "verified the credential for",
     label: "Credential verified",
     tone: "info",
-    description: "Openship asked the provider whether a stored credential still works.",
+    description: "Workbox Cloud asked the provider whether a stored credential still works.",
   },
   "dns_credential.connected": {
     category: "domains",
@@ -374,7 +374,7 @@ export const AUDIT_EVENTS: Record<string, AuditEventDef> = {
     label: "DNS provider connected",
     tone: "info",
     description:
-      "An API token that lets Openship write this organization's DNS records was stored. The token itself is never recorded.",
+      "An API token that lets Workbox Cloud write this organization's DNS records was stored. The token itself is never recorded.",
   },
   "dns_credential.disconnected": {
     category: "domains",
@@ -382,7 +382,7 @@ export const AUDIT_EVENTS: Record<string, AuditEventDef> = {
     label: "DNS provider disconnected",
     tone: "warning",
     description:
-      "Openship can no longer write DNS records for domains in that provider's zones; records already written are left in place.",
+      "Workbox Cloud can no longer write DNS records for domains in that provider's zones; records already written are left in place.",
   },
   "domain:write": {
     category: "domains",
@@ -473,7 +473,7 @@ export const AUDIT_EVENTS: Record<string, AuditEventDef> = {
     action: "reported unreachable",
     label: "Server unreachable",
     tone: "danger",
-    description: "Openship could not open an SSH connection to this server.",
+    description: "Workbox Cloud could not open an SSH connection to this server.",
   },
   "server.reachable": {
     category: "servers",
@@ -544,7 +544,7 @@ export const AUDIT_EVENTS: Record<string, AuditEventDef> = {
     action: "provisioned the identity",
     label: "Identity provisioned",
     tone: "info",
-    description: "A trusted host mapped an external identity to an Openship user.",
+    description: "A trusted host mapped an external identity to a Workbox Cloud user.",
   },
   "organization.created": {
     category: "members",
@@ -908,11 +908,11 @@ export const AUDIT_EVENTS: Record<string, AuditEventDef> = {
     category: "system",
     action: "applied an update",
     label: "Update applied",
-    description: "An Openship component was updated or an update scan was triggered.",
+    description: "A Workbox Cloud component was updated or an update scan was triggered.",
   },
   "cloud.disconnect": {
     category: "system",
-    action: "disconnected from Openship Cloud",
+    action: "disconnected from Workbox Cloud",
     label: "Cloud disconnected",
     tone: "warning",
   },
@@ -1196,7 +1196,7 @@ export const AUDIT_RESOURCE_LABELS: Record<string, string> = {
   incoming_webhook: "a webhook",
   mcp_client: "a connected AI agent",
   billing: "billing",
-  cloud: "Openship Cloud",
+  cloud: "Workbox Cloud",
   settings: "settings",
   "instance-settings": "instance settings",
   instance: "this instance",

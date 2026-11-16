@@ -148,7 +148,7 @@ export async function resolveProjectChangeImpact(
     let policy;
     if (configText !== null) {
       const parsed = parseOpenshipConfigJson(configText);
-      if (!parsed.config || parsed.errors.length) throw new Error("Invalid Openship path policy");
+      if (!parsed.config || parsed.errors.length) throw new Error("Invalid Workbox Cloud path policy");
       policy = parsed.config.autoDeployPaths;
     }
     const remaining = policy?.exclude?.length

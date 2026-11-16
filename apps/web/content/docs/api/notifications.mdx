@@ -25,7 +25,7 @@ Categories are the stable, user-facing event groups (e.g. `deploy.failed`, `back
 
 The response also carries a `groups` array (`{ id, label }`, already in display order) that the categories'
 `group` field points into — `deployment`, `app_health`, `backups`, `jobs`, `domains`, `members`, `billing`.
-The `billing` group and its categories are omitted outside Openship Cloud, where nothing can fire them.
+The `billing` group and its categories are omitted outside Workbox Cloud, where nothing can fire them.
 
 <Tabs items={['SDK', 'REST API']} groupId="api-transport" persist>
 <Tab value="SDK">

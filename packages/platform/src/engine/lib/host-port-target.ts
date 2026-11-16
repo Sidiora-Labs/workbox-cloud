@@ -95,8 +95,8 @@ async function readValidatedTargetId(
   const cached = stableTargetIds.get(executor);
   if (cached) return cached;
   // machine-id is the OS-issued, normally world-readable identity. Prefer it so
-  // all SSH users converge even when a private OpenShip host-id has narrower
-  // permissions. The OpenShip id is the stable fallback for targets without one.
+  // all SSH users converge even when a private Workbox Cloud host-id has narrower
+  // permissions. The Workbox Cloud id is the stable fallback for targets without one.
   try {
     const machineId = normalizeTargetMachineId(await executor.readFile(MACHINE_ID_PATH));
     if (machineId) {
@@ -106,7 +106,7 @@ async function readValidatedTargetId(
     }
   } catch (diagnosticFailure) {
     observeCaughtError(diagnosticFailure, "platform/engine/lib/host-port-target");
-    // Fall through to the existing OpenShip target id, then the locator.
+    // Fall through to the existing Workbox Cloud target id, then the locator.
   }
   try {
     const hostId = normalizeTargetHostId(await executor.readFile(OPENSHIP_HOST_ID_PATH));

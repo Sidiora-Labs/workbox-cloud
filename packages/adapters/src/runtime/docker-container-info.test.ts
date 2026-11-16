@@ -16,7 +16,7 @@ describe("Docker container information normalization", () => {
     expect(sample.exitCode).toBeNull();
     expect(sample.restartCount).toBe(0);
   });
-  it("prefers Openship's loopback publish and preserves one mapping per container port", () => {
+  it("prefers Workbox Cloud's loopback publish and preserves one mapping per container port", () => {
     expect(
       dockerPublishedPortInfo([
         { privatePort: 3000, publicPort: 80, type: "tcp", ip: "0.0.0.0" },

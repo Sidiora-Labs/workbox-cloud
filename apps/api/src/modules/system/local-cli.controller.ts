@@ -26,7 +26,7 @@ export async function createLocalCliSession(c: Context) {
   const admin = await repos.user.findFoundingAdmin();
   if (!admin || admin.role !== "admin") {
     return c.json(
-      { error: "No local administrator is available. Complete Openship setup first." },
+      { error: "No local administrator is available. Complete Workbox Cloud setup first." },
       409,
     );
   }

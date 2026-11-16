@@ -37,7 +37,7 @@ async function registerConfiguredResources(origin: string, headers: Headers): Pr
     try {
       await auth.api.adminCreateOAuthResource({
         headers,
-        body: { identifier, name: "Openship MCP" },
+        body: { identifier, name: "Workbox Cloud MCP" },
       });
     } catch (error) {
       // Another API replica may have registered it concurrently. Confirm the

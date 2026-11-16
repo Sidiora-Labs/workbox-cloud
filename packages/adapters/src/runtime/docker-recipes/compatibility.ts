@@ -34,6 +34,6 @@ export function runtimeCompatibilityLines(config: BuildConfig): string[] {
   if (!command) return [];
   return [
     `COPY --from=builder ${requirementsPath} ${requirementsPath}`,
-    `RUN openship_runtime_actual="$( ${command} )" && openship_runtime_expected="$(cat ${requirementsPath})" && if [ "$openship_runtime_actual" != "$openship_runtime_expected" ]; then printf 'Openship runtime image is incompatible with the builder. Expected:\\n%s\\nActual:\\n%s\\n' "$openship_runtime_expected" "$openship_runtime_actual" >&2; exit 1; fi && rm ${requirementsPath}`,
+    `RUN openship_runtime_actual="$( ${command} )" && openship_runtime_expected="$(cat ${requirementsPath})" && if [ "$openship_runtime_actual" != "$openship_runtime_expected" ]; then printf 'Workbox Cloud runtime image is incompatible with the builder. Expected:\\n%s\\nActual:\\n%s\\n' "$openship_runtime_expected" "$openship_runtime_actual" >&2; exit 1; fi && rm ${requirementsPath}`,
   ];
 }

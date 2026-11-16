@@ -78,7 +78,7 @@ setManagedImagesFromSource("buildkit", Boolean(buildKitBuildSpec()));
 enforceRouteScanAtBoot(app);
 
 const server = serve({ fetch: app.fetch, port, ...(hostname ? { hostname } : {}) }, (info) => {
-  console.log(`Openship API running on http://${hostname ?? "localhost"}:${info.port}`);
+  console.log(`Workbox Cloud API running on http://${hostname ?? "localhost"}:${info.port}`);
   // Visible echo of the resolved runtime + cloud target. The full
   // `[env]` line at module load already prints OPENSHIP_TARGET + the
   // resolved URLs; this second line confirms the SAME resolution at

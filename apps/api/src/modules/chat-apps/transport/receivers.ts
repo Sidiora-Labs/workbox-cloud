@@ -2,7 +2,7 @@ import { setTimeout as delay } from "node:timers/promises";
 import { createChatProviders, normalizeMessage, silentLogger } from "./providers";
 import type { ProviderFetch, ReceiverFactory } from "./types";
 
-/** Provider SDKs own reconnect/heartbeat behavior; OpenShip owns authorization and receipts. */
+/** Provider SDKs own reconnect/heartbeat behavior; Workbox Cloud owns authorization and receipts. */
 export function createReceivers(fetcher?: ProviderFetch): ReceiverFactory {
   const providers = createChatProviders(fetcher);
   return async (c, config, hooks) => {

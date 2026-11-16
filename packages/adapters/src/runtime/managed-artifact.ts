@@ -20,7 +20,7 @@ import { sq } from "../system/local-shell";
 import type { CommandExecutor } from "../types";
 
 /**
- * Every directory tree an Openship runtime may create and therefore may remove:
+ * Every directory tree a Workbox Cloud runtime may create and therefore may remove:
  * `BareRuntime`'s default workDir, `STATIC_RELEASE_BASE` under it, and the
  * `.builds`/`releases` subdirs of both.
  *
@@ -78,7 +78,7 @@ export function assertManagedArtifactPath(ref: string, ownedBase = MANAGED_ARTIF
   }
   if (target !== base && !target.startsWith(`${base}/`)) {
     throw new Error(
-      `Refusing to remove "${ref}": outside ${base}. Openship removes only ` +
+      `Refusing to remove "${ref}": outside ${base}. Workbox Cloud removes only ` +
         `directories it created (release dirs, static doc-roots, build dirs).`,
     );
   }

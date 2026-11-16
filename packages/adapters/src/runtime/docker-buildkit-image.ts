@@ -31,7 +31,7 @@ export function resolveBuildKitImage(): string {
 function unavailable(cause: unknown): AppError {
   return Object.assign(
     new AppError(
-      "Remote build protection is unavailable. Use rootful Linux Docker with Buildx and the Openship BuildKit image matching this release. No repository build commands were run.",
+      "Remote build protection is unavailable. Use rootful Linux Docker with Buildx and the Workbox Cloud BuildKit image matching this release. No repository build commands were run.",
       503,
       "BUILD_METADATA_PROTECTION_UNAVAILABLE",
     ),

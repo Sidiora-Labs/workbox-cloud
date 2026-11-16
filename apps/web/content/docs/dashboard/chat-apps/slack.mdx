@@ -1,13 +1,13 @@
 ---
 title: Slack
-description: Create a Slack bot and use OpenShip deployment commands in allowed channels.
+description: Create a Slack bot and use Workbox Cloud deployment commands in allowed channels.
 ---
 
-Connect a workspace bot, then let each teammate link their own OpenShip account. OpenShip replies privately to the person who sent the command.
+Connect a workspace bot, then let each teammate link their own Workbox Cloud account. Workbox Cloud replies privately to the person who sent the command.
 
 ## Before you start
 
-You need permission to install a Slack app and manage OpenShip settings. The default direct connection uses **Socket Mode** and works from Desktop or a private server without exposing OpenShip. Keep OpenShip running. Use a separate Slack app for this connector so you do not change another bot’s delivery mode.
+You need permission to install a Slack app and manage Workbox Cloud settings. The default direct connection uses **Socket Mode** and works from Desktop or a private server without exposing Workbox Cloud. Keep Workbox Cloud running. Use a separate Slack app for this connector so you do not change another bot’s delivery mode.
 
 ## 1. Create the Slack app
 
@@ -19,7 +19,7 @@ You need permission to install a Slack app and manage OpenShip settings. The def
 
 The connector uses slash commands and `chat.postEphemeral`; it does not need message-history scopes for commands. Slack documents [Socket Mode](https://docs.slack.dev/apis/events-api/using-socket-mode/), [slash-command setup](https://docs.slack.dev/interactivity/implementing-slash-commands/) and the [message scope](https://docs.slack.dev/reference/scopes/chat.write).
 
-## 2. Save the connector in OpenShip
+## 2. Save the connector in Workbox Cloud
 
 Open **Settings → Chat apps → Slack**. Choose a name and bot role, then fill in:
 
@@ -40,7 +40,7 @@ In the Slack app's **Slash Commands**, create a command with:
 | --- | --- |
 | Command | `/openship` |
 | Request URL | Not required with Socket Mode enabled. |
-| Short description | `Check and control OpenShip deployments` |
+| Short description | `Check and control Workbox Cloud deployments` |
 | Usage hint | `help` |
 
 Save and reinstall the app if Slack asks you to accept changed scopes. Event subscriptions and an Incoming Webhook are not needed for this command connection.
@@ -51,18 +51,18 @@ In an allowed channel, send `/openship help`, then `/openship link`. Follow the 
 
 ## Native command suggestions
 
-Slack lists registered slash commands when you type `/`. It treats everything after the command name as text, so OpenShip offers separate entries such as `/openship-projects`, `/openship-status` and `/openship-ask` with descriptions and argument hints. `/openship projects` and the other existing commands still work.
+Slack lists registered slash commands when you type `/`. It treats everything after the command name as text, so Workbox Cloud offers separate entries such as `/openship-projects`, `/openship-status` and `/openship-ask` with descriptions and argument hints. `/openship projects` and the other existing commands still work.
 
-1. In OpenShip, open your connection's actions menu → **Native commands**.
+1. In Workbox Cloud, open your connection's actions menu → **Native commands**.
 2. Select **Update connector**, then **Copy definitions**.
 3. In Slack's app settings, open **App Manifest** in JSON mode. Merge the copied entries into `features.slash_commands`, keeping your other settings and unrelated commands. Replace older entries with the same names instead of duplicating them.
 4. Save the manifest and reinstall the app if Slack asks. Type `/openship-` in an allowed channel to see the commands.
 
-The definitions come from the bot's saved roles. Repeat this step after changing those roles. The bot token cannot update Slack's app configuration; [manifest updates require a separate configuration token](https://docs.slack.dev/reference/methods/apps.manifest.update/). OpenShip does not need that additional credential. Read Slack's [manifest reference](https://docs.slack.dev/reference/app-manifest/) for the command fields.
+The definitions come from the bot's saved roles. Repeat this step after changing those roles. The bot token cannot update Slack's app configuration; [manifest updates require a separate configuration token](https://docs.slack.dev/reference/methods/apps.manifest.update/). Workbox Cloud does not need that additional credential. Read Slack's [manifest reference](https://docs.slack.dev/reference/app-manifest/) for the command fields.
 
 ## Talk to your assistant
 
-Select **Assistant** for conversations. Also select **Control plane** to use the same bot for deployment commands. Use a separate provider bot/application if you also want a dedicated deployment-command bot. After opt-in, `/openship chats` lists your earlier conversations here, `/openship resume <conversation-id>` continues one, and `/openship chat` opens the same conversation in OpenShip. You can continue it in either place.
+Select **Assistant** for conversations. Also select **Control plane** to use the same bot for deployment commands. Use a separate provider bot/application if you also want a dedicated deployment-command bot. After opt-in, `/openship chats` lists your earlier conversations here, `/openship resume <conversation-id>` continues one, and `/openship chat` opens the same conversation in Workbox Cloud. You can continue it in either place.
 
 Complete the [assistant opt-in](/docs/dashboard/chat-apps#talk-to-your-assistant), then send `/openship ask Check my latest deployment`. Use the same command for follow-up messages, and `/openship new` or `/openship stop` to manage your conversation. Slash commands need no additional scopes.
 
@@ -82,9 +82,9 @@ For an existing public HTTPS installation, choose **Webhook** instead. Enter the
 ## Troubleshooting
 
 - **Unknown command:** check the app is installed and the slash command is named `/openship`. Use the channel composer; Slack's custom slash commands do not work inside message threads.
-- **No command result:** enable the OpenShip connector, check its workspace/channel IDs, and make sure the bot and sender are channel members.
-- **Reconnecting:** check Socket Mode is enabled, the app token has `connections:write`, and OpenShip can reach Slack over HTTPS/WebSockets. Use only one connector for this app.
+- **No command result:** enable the Workbox Cloud connector, check its workspace/channel IDs, and make sure the bot and sender are channel members.
+- **Reconnecting:** check Socket Mode is enabled, the app token has `connections:write`, and Workbox Cloud can reach Slack over HTTPS/WebSockets. Use only one connector for this app.
 - **Webhook request rejected:** confirm the signing secret belongs to the same app and your proxy preserves the request body and Slack signature headers.
-- **Acknowledgement but no final reply:** stay active in Slack. [Ephemeral replies](https://docs.slack.dev/reference/methods/chat.postEphemeral/) are not persistent and may not reach inactive users. Check OpenShip's deployment history before repeating a write action.
+- **Acknowledgement but no final reply:** stay active in Slack. [Ephemeral replies](https://docs.slack.dev/reference/methods/chat.postEphemeral/) are not persistent and may not reach inactive users. Check Workbox Cloud's deployment history before repeating a write action.
 
 See [all commands and permissions](/docs/dashboard/chat-apps#commands).

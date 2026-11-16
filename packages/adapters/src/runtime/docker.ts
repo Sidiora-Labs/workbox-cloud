@@ -12,7 +12,7 @@
  * Build strategy:
  *   Builds from a staged source context sent to the Docker daemon. If the
  *   repository already provides a Dockerfile, that becomes the source of
- *   truth. Otherwise Openship generates a minimal builder Dockerfile.
+ *   truth. Otherwise Workbox Cloud generates a minimal builder Dockerfile.
  *   Deploy creates a container from the resulting image.
  *
  * SECURITY MODEL:
@@ -269,7 +269,7 @@ export type DockerConnectionOptions = DockerTransportOptions & {
 
 /**
  * Docker Engine build-cache prune options. These intentionally mirror the
- * small, stable subset of POST /build/prune that OpenShip needs instead of
+ * small, stable subset of POST /build/prune that Workbox Cloud needs instead of
  * dockerode's PruneBuilderOptions: dockerode 4.0.9 accepts an options object but
  * drops every pruning option before making the request.
  */
@@ -2087,7 +2087,7 @@ OPENSHIP_BASES_PY`, { timeout: 5_000 });
 
     if (!await this.remoteBuildKitAvailable())
       throw new AppError(
-        "Remote builds require Docker Buildx and the protected Openship BuildKit worker. Install Buildx on this server before retrying; no repository build commands ran.",
+        "Remote builds require Docker Buildx and the protected Workbox Cloud BuildKit worker. Install Buildx on this server before retrying; no repository build commands ran.",
         503,
         "BUILD_METADATA_PROTECTION_UNAVAILABLE",
       );
@@ -2592,7 +2592,7 @@ OPENSHIP_BASES_PY`, { timeout: 5_000 });
     );
     if (Object.keys(dockerBuildResourceLimits(config.resources)).length > 0) {
       if (requiresSecrets) throw new AppError(
-        "Secure generated Docker builds require BuildKit, but the Docker Engine API cannot enforce this build's CPU/memory limits. Build on an SSH server with the protected Openship BuildKit worker to retain those limits.",
+        "Secure generated Docker builds require BuildKit, but the Docker Engine API cannot enforce this build's CPU/memory limits. Build on an SSH server with the protected Workbox Cloud BuildKit worker to retain those limits.",
         422, "BUILD_SECRET_RESOURCE_LIMITS_UNSUPPORTED",
       );
       log.log(
@@ -2816,7 +2816,7 @@ OPENSHIP_BASES_PY`, { timeout: 5_000 });
             // Start exact-container cleanup before closing the response. The
             // Engine API does not reliably stop a legacy build when its client
             // disconnects, so stream destruction alone can leave the compiler
-            // consuming the host after OpenShip has already reported failure.
+            // consuming the host after Workbox Cloud has already reported failure.
             inactivityTimedOut = true;
             if (buildContainerTracker) {
               void buildContainerTracker.terminateActive();
@@ -3118,7 +3118,7 @@ OPENSHIP_BASES_PY`, { timeout: 5_000 });
    * runs exactly the bytes acquired here even if a mutable tag moves between
    * prepare and deploy. The image is deliberately non-owned: it came from a
    * registry and may be shared by unrelated containers on the target daemon, so
-   * deployment cleanup must never remove it as if Openship had built it.
+   * deployment cleanup must never remove it as if Workbox Cloud had built it.
    */
   async prepareImage(config: ImageArtifactConfig, logger?: BuildLogger): Promise<BuildResult> {
     const log = logger ?? new BuildLogger();
@@ -4902,7 +4902,7 @@ OPENSHIP_BASES_PY`, { timeout: 5_000 });
    *
    * SSH uses the same managed collector; its legacy daemon state stays separate.
    * Native build cache belongs to the DAEMON, not to a project: intermediate records
-   * do not reliably retain OpenShip's final-image labels. Callers therefore own
+   * do not reliably retain Workbox Cloud's final-image labels. Callers therefore own
    * the host-wide policy (bounded automatic retention vs an explicit full
    * clear). Docker itself excludes records leased by an active build.
    *
@@ -5110,7 +5110,7 @@ OPENSHIP_BASES_PY`, { timeout: 5_000 });
   // Unscoped runtimes enumerate the entire daemon, including unlabeled resources. Powers
   // "migrate an existing Docker deployment": read whatever already runs on a
   // server (a compose stack or hand-run containers) so it can be adopted as an
-  // Openship project. Strictly read-only.
+  // Workbox Cloud project. Strictly read-only.
 
   /** Running and stopped containers visible to this runtime. Unscoped hosts
    * retain label-agnostic discovery for adopting existing applications. */
@@ -5274,9 +5274,9 @@ OPENSHIP_BASES_PY`, { timeout: 5_000 });
     // with an unauthorized manifest fetch (#581). Resolved per pull rather than cached: a
     // credential can be added while the API is running, and a stale "none" would outlive it.
     //
-    // The INJECTED resolver wins — that is Openship's own credential store, which works on
+    // The INJECTED resolver wins — that is Workbox Cloud's own credential store, which works on
     // every install shape and every target. The host config is the fallback, and only when
-    // no resolver was supplied at all: an org that manages its registries in Openship
+    // no resolver was supplied at all: an org that manages its registries in Workbox Cloud
     // should not have a stray `docker login` on the box quietly override it.
     const authconfig = this.connectionOptions?.resolveRegistryAuth
       ? await this.connectionOptions.resolveRegistryAuth(ref)

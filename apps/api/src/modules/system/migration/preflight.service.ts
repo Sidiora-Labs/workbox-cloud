@@ -102,7 +102,7 @@ function checkReleaseDistPresent(): { ok: boolean; detail: string } {
   return {
     ok: false,
     detail:
-      "Openship release dist not built. Run `bun run --cwd apps/api build-release` " +
+      "Workbox Cloud release dist not built. Run `bun run --cwd apps/api build-release` " +
       "before starting the migration (or set OPENSHIP_RELEASE_DIST_PATH).",
   };
 }

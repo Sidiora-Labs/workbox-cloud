@@ -1,4 +1,4 @@
-<h1 align="center">Openship</h1>
+<h1 align="center">Workbox Cloud</h1>
 
 <p align="center">
   Open-Source-Deployment-Plattform zum Selbsthosten mit integriertem CI/CD.<br>
@@ -34,7 +34,7 @@
 </p>
 
 <p align="center">
-  <img src="../../apps/web/public/screenshots/de/deploy.webp" alt="Openship dashboard" width="800" />
+  <img src="../../apps/web/public/screenshots/de/deploy.webp" alt="Workbox Cloud dashboard" width="800" />
 </p>
 
 ---
@@ -43,7 +43,7 @@
 
 ```bash
 npm i -g openship     # or: curl -fsSL https://get.openship.io | sh
-openship up           # installs Openship as a background service (starts on boot, auto-restarts)
+openship up           # installs Workbox Cloud as a background service (starts on boot, auto-restarts)
 ```
 
 `openship open` öffnet das Dashboard; `openship stop` stoppt den Dienst. Lieber ein einmaliger, angehängter Lauf? `openship up --foreground`. Um ein Projekt zu deployen:
@@ -68,11 +68,11 @@ Oder hol dir die Desktop-App (`openship install` oder Download von [openship.io]
 
 ## Was es macht
 
-Richte es auf ein Repo. Openship erkennt deinen Stack, baut ihn, konfiguriert alles und liefert ihn aus — keine Konfigurationsdateien, keine Pipelines, kein YAML.
+Richte es auf ein Repo. Workbox Cloud erkennt deinen Stack, baut ihn, konfiguriert alles und liefert ihn aus — keine Konfigurationsdateien, keine Pipelines, kein YAML.
 
 Datenbanken, Domains, SSL, CDN, E-Mail, Backups — alles an einem Ort verwaltet.
 
-Funktioniert mit **Openship Cloud** (managed) oder **jedem Linux-Server**, der dir gehört. Einzelentwickler, die Nebenprojekte ausliefern, und Teams im Produktivbetrieb nutzen dasselbe Werkzeug.
+Funktioniert mit **Workbox Cloud** (managed) oder **jedem Linux-Server**, der dir gehört. Einzelentwickler, die Nebenprojekte ausliefern, und Teams im Produktivbetrieb nutzen dasselbe Werkzeug.
 
 ---
 
@@ -96,7 +96,7 @@ Funktioniert mit **Openship Cloud** (managed) oder **jedem Linux-Server**, der d
 
 ## Überall deployen
 
-- **Openship Cloud** — managed, Auto-Scaling, keine Einrichtung
+- **Workbox Cloud** — managed, Auto-Scaling, keine Einrichtung
 - **Jeder VPS** — Hetzner, DigitalOcean, Linode, OVH und der Rest
 - **Dedizierte Server** — Bare Metal, Colocation, Homelab
 - **Multi-Server** — verteile Workloads über mehrere Maschinen
@@ -134,6 +134,6 @@ Siehe [CONTRIBUTING.md](../../CONTRIBUTING.md).
 
 ## Lizenz
 
-Openship ist **Open-Source**-Software, lizenziert unter der [Apache License 2.0](../../LICENSE).
+Workbox Cloud ist **Open-Source**-Software, lizenziert unter der [Apache License 2.0](../../LICENSE).
 
 Du darfst sie verwenden, ausführen, modifizieren, selbst hosten und weitergeben — auch in kommerziellen und Closed-Source-Produkten — gemäß den Bedingungen der Apache-2.0-Lizenz. Den vollständigen Text findest du in der [LICENSE](../../LICENSE).

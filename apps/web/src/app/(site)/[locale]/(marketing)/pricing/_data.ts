@@ -13,7 +13,7 @@ export function faq(pricing: CloudPricing, copy: Copy): FaqItem[] {
 
   return [
     {
-      q: copy("How much does OpenShip Cloud cost?"),
+      q: copy("How much does Workbox Cloud cost?"),
       a: [
         ladder
           ? copy("Plans are {value0}, {value1}.", {
@@ -43,7 +43,7 @@ export function faq(pricing: CloudPricing, copy: Copy): FaqItem[] {
     {
       q: copy("Do all Cloud plans include an uptime SLA and support?"),
       a: copy(
-        "Yes. Every paid OpenShip Cloud plan includes a {value0}% monthly uptime guarantee for OpenShip-managed infrastructure, whether billed monthly or annually. If we miss it, you can request service credits under the Cloud SLA in our Terms of Service. Maintenance announced at least {value1} days in advance is excluded only within its announced window. Contact support by email, through the app, or from our public support page. The guarantee does not cover servers you host yourself, free trials, or preview and beta features.",
+        "Yes. Every paid Workbox Cloud plan includes a {value0}% monthly uptime guarantee for Workbox Cloud-managed infrastructure, whether billed monthly or annually. If we miss it, you can request service credits under the Cloud SLA in our Terms of Service. Maintenance announced at least {value1} days in advance is excluded only within its announced window. Contact support by email, through the app, or from our public support page. The guarantee does not cover servers you host yourself, free trials, or preview and beta features.",
         {
           value0: String(CLOUD_SLA.monthlyUptimePercent),
           value1: String(CLOUD_SLA.maintenanceNoticeDays),
@@ -82,7 +82,7 @@ export function faq(pricing: CloudPricing, copy: Copy): FaqItem[] {
             },
           )
         : copy(
-            "Choose Server management to see the current plans for managing your own infrastructure through OpenShip Cloud.",
+            "Choose Server management to see the current plans for managing your own infrastructure through Workbox Cloud.",
           ),
     },
     {
@@ -94,19 +94,19 @@ export function faq(pricing: CloudPricing, copy: Copy): FaqItem[] {
     {
       q: copy("What happens if I cancel Manage?"),
       a: copy(
-        "Management remains available through your paid period. Your apps, databases and files keep running on your servers. Once the allowance ends, OpenShip Cloud stops managing those servers; it does not delete or stop them. You can manage them directly or subscribe again.",
+        "Management remains available through your paid period. Your apps, databases and files keep running on your servers. Once the allowance ends, Workbox Cloud stops managing those servers; it does not delete or stop them. You can manage them directly or subscribe again.",
       ),
     },
     {
       q: copy("Is self-hosting really free?"),
       a: copy(
-        "Yes. Run the full OpenShip platform on your own servers, free under Apache 2.0, with no OpenShip subscription or per-seat fees. You pay your infrastructure provider directly.",
+        "Yes. Run the full Workbox Cloud platform on your own servers, free under Apache 2.0, with no Workbox Cloud subscription or per-seat fees. You pay your infrastructure provider directly.",
       ),
     },
     {
       q: copy("Can I move between Cloud and my own servers?"),
       a: copy(
-        "Yes. OpenShip uses standard containers and supports migration between Cloud and your own infrastructure. Your apps are portable, so you can choose where they run as your needs change.",
+        "Yes. Workbox Cloud uses standard containers and supports migration between Cloud and your own infrastructure. Your apps are portable, so you can choose where they run as your needs change.",
       ),
     },
   ];

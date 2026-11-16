@@ -16,10 +16,9 @@ const SOURCE_LOCALE = "en";
 
 // These display names intentionally stay English in every locale.
 const BRAND_NAMES = new Set([
-  "OpenShip",
-  "OpenShip Cloud",
-  "OpenShip Desktop",
-  "OpenShip Manage",
+  "Workbox Cloud",
+  "Workbox Cloud Desktop",
+  "Workbox Cloud Manage",
   "Ruby on Rails",
 ]);
 

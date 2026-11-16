@@ -44,11 +44,11 @@ export function CompletePlatform() {
               <h2 id="platform-title" className="cp-title">
                 {copy("Apps, data, and automation.")}
                 <br />
-                <span>{copy("Run it all from OpenShip.")}</span>
+                <span>{copy("Run it all from Workbox Cloud.")}</span>
               </h2>
               <p className="cp-sub">
                 {copy(
-                  "Deploy code, run services, and manage the infrastructure behind them. Use OpenShip Cloud or connect your own servers.",
+                  "Deploy code, run services, and manage the infrastructure behind them. Use Workbox Cloud or connect your own servers.",
                 )}
               </p>
             </div>

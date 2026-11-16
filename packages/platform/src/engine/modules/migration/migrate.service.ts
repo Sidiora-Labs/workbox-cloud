@@ -1,16 +1,16 @@
 /**
- * Adopt a discovered Docker stack as an Openship project.
+ * Adopt a discovered Docker stack as a Workbox Cloud project.
  *
  * Re-discovers the server (server truth, not client-sent config), filters to the
  * services the user selected, and creates a `services` project whose service
  * rows mirror the running containers. Same-server adoption reuses the EXISTING
  * named volumes in place by default (`namespaceVolumes=false`, original bare
- * names) so data survives — Openship would otherwise re-scope them to
+ * names) so data survives — Workbox Cloud would otherwise re-scope them to
  * `openship-<slug>-<name>` and mount empty volumes. A service the user marks
  * "copy" instead keeps the scoped name; its data is duplicated into that new
  * volume during moving_data, leaving the original volume untouched.
  *
- * This creates records only; deploy + cutover (stop old → start Openship's) is a
+ * This creates records only; deploy + cutover (stop old → start Workbox Cloud's) is a
  * separate step so the user reviews before anything on the server changes.
  */
 
@@ -51,7 +51,7 @@ import {
 type EnsureBody = Parameters<typeof ensureProject>[0];
 type ParsedComposeList = Parameters<typeof repos.service.syncFromCompose>[1];
 
-/** Openship deployment id shape — validated before trusting a server label as a PK. */
+/** Workbox Cloud deployment id shape — validated before trusting a server label as a PK. */
 const DEPLOYMENT_ID_RE = /^dep_[A-Za-z0-9]+$/;
 
 /** Compose file names to probe in a linked repo (mirrors prepare.service COMPOSE_FILES). */
@@ -84,7 +84,7 @@ export async function parseRepoCompose(
   branch?: string,
 ): Promise<RepoComposeService[]> {
   // NB: we deliberately do NOT read the repo's `.env` for `${VAR}` interpolation.
-  // Secrets live in Openship's ENCRYPTED env store — captured from the running
+  // Secrets live in Workbox Cloud's ENCRYPTED env store — captured from the running
   // container for adopted services, or set via the wizard/env UI for new ones —
   // never a committed repo file. Pulling a `.env` here would pin those values
   // as service overrides, hiding later rotations in the project store. A bare
@@ -109,7 +109,7 @@ export async function parseRepoCompose(
       const blocking = blockingComposeFields(parsed.unsupported);
       if (blocking.length > 0) {
         throw new Error(
-          "The repo's Docker Compose file declares options Openship can't deploy faithfully:\n" +
+          "The repo's Docker Compose file declares options Workbox Cloud can't deploy faithfully:\n" +
             describeBlockingComposeFields(blocking),
         );
       }
@@ -213,16 +213,16 @@ function volumeToComposeString(v: DiscoveredVolumeMount): string | null {
   return `${v.source}:${v.target}${mode}`;
 }
 
-/** Normalize an adopted service's ports for the shared Openship service group.
+/** Normalize an adopted service's ports for the shared Workbox Cloud service group.
  *
  *  Adoption deliberately leaves every service UNEXPOSED and drops the HOST side of
  *  ALL published ports, keeping only the container port. Three reasons, one rule:
  *
- *   - 80/443 belong to Openship's OpenResty edge — a service can't bind them, the
+ *   - 80/443 belong to Workbox Cloud's OpenResty edge — a service can't bind them, the
  *     edge routes to the container port instead.
  *   - A pinned host port (e.g. "5432:5432") collides with whatever already holds
  *     it on the box: another adopted service, a second project's Postgres, or
- *     Openship's OWN Postgres. That collision is the exact `port is already
+ *     Workbox Cloud's OWN Postgres. That collision is the exact `port is already
  *     allocated` failure #388 reports — and it aborts the whole deploy, not just
  *     the one service. Stripping the host binding removes the entire class.
  *   - Exposure is added LATER from the project's Domains tab, which runs the one
@@ -599,14 +599,14 @@ export async function adoptServerStack(opts: {
     opts.targetServerId && opts.targetServerId !== serverId ? { mustCreate: true } : undefined);
 
   // `ensureProject` REUSES a project whose slug matches the name, and
-  // slugify("Openship") is the control-plane self-app's own slug — so naming a
-  // migration "Openship" adopted the user's foreign containers INTO Openship's own
+  // slugify("Workbox Cloud") is the control-plane self-app's own slug — so naming a
+  // migration "Workbox Cloud" adopted the user's foreign containers INTO Workbox Cloud's own
   // project, with `created:false` so a rollback would not even remove it. Refuse the
   // name instead. Checked on the result rather than by re-deriving the slug: the
   // matching rules live in ensureProject and must not be duplicated here.
   if (!created && isControlPlaneProject(await repos.project.findById(project_id))) {
     throw new Error(
-      `"${projectName}" is reserved — that is Openship's own project on this instance. ` +
+      `"${projectName}" is reserved — that is Workbox Cloud's own project on this instance. ` +
         `Pick a different project name.`,
     );
   }
@@ -880,7 +880,7 @@ async function writeAttachedRuntime(opts: {
   return true;
 }
 
-/** Openship id shape — validated before we trust a server-supplied label as a PK. */
+/** Workbox Cloud id shape — validated before we trust a server-supplied label as a PK. */
 const PROJECT_ID_RE = /^proj_[A-Za-z0-9]+$/;
 
 /**
@@ -1152,9 +1152,9 @@ async function restoreFromSnapshot(opts: {
 }
 
 /**
- * Re-import an ORPHANED Openship project recovered from a server (see
+ * Re-import an ORPHANED Workbox Cloud project recovered from a server (see
  * `reconcileOpenshipProjects`): the DB was reset (DR) or the server came from
- * another Openship instance. Rebuilds the project + compose service rows,
+ * another Workbox Cloud instance. Rebuilds the project + compose service rows,
  * PRESERVING the original id (+ slug) so the still-running containers' labels
  * re-attach immediately — teardown/reclaim/network reconcile recognize them. Then
  * LIVE RE-ATTACHES the runtime graph (deployment + service_deployment rows) from
@@ -1176,7 +1176,7 @@ export async function reimportOpenshipProject(opts: {
 
   // Never trust a raw label as a primary key without shape-checking it.
   if (!PROJECT_ID_RE.test(projectId)) {
-    throw new Error("Invalid Openship project id.");
+    throw new Error("Invalid Workbox Cloud project id.");
   }
   // Refuse-not-merge: if ANY project (any org, incl. soft-deleted) already owns
   // this id, do not graft server-supplied state onto it.
@@ -1188,10 +1188,10 @@ export async function reimportOpenshipProject(opts: {
   const stack = await discoverServerStack(serverId, organizationId);
   const group = stack.openshipProjects.find((p) => p.projectId === projectId);
   if (!group) {
-    throw new Error("That Openship project was not found on the server.");
+    throw new Error("That Workbox Cloud project was not found on the server.");
   }
   if (group.knownHere) {
-    throw new Error("That Openship project is already managed by this instance.");
+    throw new Error("That Workbox Cloud project is already managed by this instance.");
   }
 
   // PRIMARY: a full server-side subgraph snapshot → restore it faithfully (exact

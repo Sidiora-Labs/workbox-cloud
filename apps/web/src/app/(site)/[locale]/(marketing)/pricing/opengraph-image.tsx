@@ -1,6 +1,6 @@
 import { renderOgImage, OG_SIZE } from "@/lib/og-image";
 
-export const alt = "OpenShip pricing — Cloud plans, server management and free self-hosting";
+export const alt = "Workbox Cloud pricing — Cloud plans, server management and free self-hosting";
 export const size = OG_SIZE;
 export const contentType = "image/png";
 

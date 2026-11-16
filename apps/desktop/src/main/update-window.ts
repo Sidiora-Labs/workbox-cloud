@@ -88,7 +88,7 @@ function buildHtml(info: UpdateInfo): string {
     const u = window.desktop && window.desktop.updates;
     document.getElementById("title").textContent = INFO.title;
     document.getElementById("sub").textContent =
-      "OpenShip " + INFO.version + " is ready to install.";
+      "Workbox Cloud " + INFO.version + " is ready to install.";
     document.getElementById("announcement").textContent = INFO.announcement;
     document.getElementById("notes").textContent = INFO.notes;
     const status = document.getElementById("status");
@@ -128,7 +128,7 @@ export function openUpdateWindow(
     minimizable: false,
     maximizable: false,
     fullscreenable: false,
-    title: "OpenShip Update",
+    title: "Workbox Cloud Update",
     parent: parent ?? undefined,
     show: false,
     // Match the app's page background per OS theme so there's no wrong-theme

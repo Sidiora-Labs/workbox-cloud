@@ -272,7 +272,7 @@ export async function addDomain(
   }
 
   /**
-   * Is the edge ALREADY serving this hostname from a vhost Openship lost track of?
+   * Is the edge ALREADY serving this hostname from a vhost Workbox Cloud lost track of?
    *
    * The DB conflict check above is the only gate on claiming a hostname, and it
    * only knows about `domain` rows. Edge config lives on the host and outlives
@@ -697,7 +697,7 @@ async function edgeHostUnreachable(ctx: RequestContext, project: Project): Promi
 }
 
 const HOST_CHANNEL_HINT =
-  "This server runs a bare-metal edge, but Openship's API is in a container that can't reach the host's " +
+  "This server runs a bare-metal edge, but Workbox Cloud's API is in a container that can't reach the host's " +
   "OpenResty or /etc/letsencrypt to manage TLS. Provision the host SSH channel (OPENSHIP_HOST_SSH_*, e.g. " +
   "via `openship up`), or bind-mount the host's /etc/letsencrypt + OpenResty sites into the API container.";
 
@@ -709,7 +709,7 @@ function isPathSafeHostname(hostname: string): boolean {
 
 /**
  * Migration / first-publish SSL reuse. When a custom-domain row is freshly minted
- * for a hostname the SERVER ALREADY serves — an Openship re-migration on the same
+ * for a hostname the SERVER ALREADY serves — a Workbox Cloud re-migration on the same
  * box, or a foreign reverse proxy (nginx/caddy/apache/traefik, bare OR container)
  * we're taking over — adopt the cert that's already there instead of re-issuing via
  * ACME (which fails behind Cloudflare, or when the cert isn't at certbot's standard
@@ -1234,13 +1234,13 @@ async function removeLiveDomain(ctx: RequestContext, domain: Domain, project: Pr
   // `releaseRecords` deletes only records carrying our ownership marker. Matching
   // on the name alone is what makes this dangerous: for an apex custom domain
   // these names ARE the zone apex, where the operator's MX, SPF TXT and CAA live,
-  // and "remove this domain from Openship" must never take their mail with it.
+  // and "remove this domain from Workbox Cloud" must never take their mail with it.
   const released = await releaseRecords(ctx.organizationId, domain.hostname, [
     domain.hostname,
     `_openship-challenge.${domain.hostname}`,
   ]).catch((err: unknown) => { observeCaughtError(err, "platform/engine/modules/domains/domain.service"); return ({ deleted: 0, reason: safeErrorMessage(err) }); });
   if (released.reason) {
-    // Not fatal: a domain must stay removable from Openship when the provider is
+    // Not fatal: a domain must stay removable from Workbox Cloud when the provider is
     // unreachable. An orphan record is visible in the zone; a blocked delete isn't.
     errorDiagnostics.warn("platform/engine/modules/domains/domain.service", `[dns] could not fully clean up records for ${domain.hostname}:`, released.reason);
   }
@@ -1266,7 +1266,7 @@ async function removeLiveDomain(ctx: RequestContext, domain: Domain, project: Pr
     : await releaseManagedHostnames([domain.hostname], { organizationId: ctx.organizationId });
   if (edgeFailures.length > 0) {
     throw new AppError(
-      `Couldn't release the free ${domain.hostname} route on Openship Cloud (${edgeFailures.join(", ")}). ` +
+      `Couldn't release the free ${domain.hostname} route on Workbox Cloud (${edgeFailures.join(", ")}). ` +
         `The domain was kept so you can retry — removing it now would leave the URL resolving and the name reserved.`,
       502,
       "MANAGED_EDGE_RELEASE_FAILED",
@@ -1278,7 +1278,7 @@ async function removeLiveDomain(ctx: RequestContext, domain: Domain, project: Pr
   // just the domain row left the service still configured for that hostname,
   // which is why removing a free route then made every later action demand Cloud:
   // preflight's `servicesNeedCloud` kept seeing the stale *.opsh.io slug and
-  // reported "Connect Openship Cloud to expose services on free *.opsh.io
+  // reported "Connect Workbox Cloud to expose services on free *.opsh.io
   // subdomains" — even while the user was adding a CUSTOM domain.
   //
   // ONE transaction, because the two writes describe one outcome. As separate

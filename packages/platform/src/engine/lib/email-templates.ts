@@ -1,5 +1,5 @@
 /**
- * Email templates for Openship.
+ * Email templates for Workbox Cloud.
  *
  * Each template returns { subject, html, text } so they can be
  * passed directly to sendMail(). Keep all copy and markup here
@@ -12,7 +12,7 @@
 
 import { SUPPORT_EMAIL } from "@repo/core";
 
-const BRAND = "Openship";
+const BRAND = "Workbox Cloud";
 
 /**
  * Escape a value for interpolation into HTML text/attribute content
@@ -81,16 +81,16 @@ export function supportEmail(input: {
     ? `[${input.id}] ${input.contact ? "We received your message" : "We received your support request"}`
     : `[${input.id}] ${input.subject}`;
   const text = acknowledgement
-    ? `Your ${input.contact ? "message" : "support request"} has been saved.\n\nReference: ${input.id}\n\nThe Openship team will reply by email. If you have more details, reply to this email and keep the reference in the subject.\n\nOpenship ${input.contact ? "Team" : "Support"}\n${input.replyAddress ?? SUPPORT_EMAIL}`
+    ? `Your ${input.contact ? "message" : "support request"} has been saved.\n\nReference: ${input.id}\n\nThe Workbox Cloud team will reply by email. If you have more details, reply to this email and keep the reference in the subject.\n\nWorkbox Cloud ${input.contact ? "Team" : "Support"}\n${input.replyAddress ?? SUPPORT_EMAIL}`
     : input.kind === "notification"
-      ? `New Openship support request\n\nReference: ${input.id}\nFrom: ${input.name} <${input.email}>\nSubject: ${input.subject}\n\n${input.message}`
+      ? `New Workbox Cloud support request\n\nReference: ${input.id}\nFrom: ${input.name} <${input.email}>\nSubject: ${input.subject}\n\n${input.message}`
       : input.kind === "customer_reply"
         ? `New reply from ${input.name} <${input.email}>\n\nReference: ${input.id}\nSubject: ${input.subject}\n\n${input.reply}`
-        : `${input.reply}\n\nReference: ${input.id}\nOpenship Support\n${SUPPORT_EMAIL}`;
+        : `${input.reply}\n\nReference: ${input.id}\nWorkbox Cloud Support\n${SUPPORT_EMAIL}`;
   return {
     subject,
     text,
-    html: layout(`<h1 style="font-size:22px;margin:0 0 20px">${acknowledgement ? "We received your request" : "Openship Support"}</h1><div style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.65;color:#374151">${htmlEscape(text)}</div>`),
+    html: layout(`<h1 style="font-size:22px;margin:0 0 20px">${acknowledgement ? "We received your request" : "Workbox Cloud Support"}</h1><div style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.65;color:#374151">${htmlEscape(text)}</div>`),
   };
 }
 
@@ -111,7 +111,7 @@ export function verifyEmailTemplate(user: { name?: string | null; email: string 
   `);
 
   return {
-    subject: "Verify your Openship email",
+    subject: "Verify your Workbox Cloud email",
     html,
     text: `Hi ${user.name || "there"},\n\nVerify your email: ${url}\n\nIf you didn't create an account, ignore this email.`,
   };
@@ -125,16 +125,16 @@ export function existingAccountEmail(
   const login = new URL("/login", dashboardUrl).href;
   const reset = new URL("/forgot-password", dashboardUrl).href;
   return {
-    subject: "Sign in to your OpenShip account",
+    subject: "Sign in to your Workbox Cloud account",
     html: layout(`
       ${greeting(user.name)}
-      <p style="color:#374151;font-size:14px;line-height:1.6">You already have an OpenShip account. This signup attempt did not create another account or change your password.</p>
+      <p style="color:#374151;font-size:14px;line-height:1.6">You already have a Workbox Cloud account. This signup attempt did not create another account or change your password.</p>
       <p style="color:#374151;font-size:14px;line-height:1.6">Sign in with your existing password, or use Google or GitHub if that is how you registered.</p>
       ${ctaButton(htmlEscape(login), "Sign in")}
       <p style="color:#374151;font-size:14px;line-height:1.6">To set or reset a password, <a href="${htmlEscape(reset)}" style="color:#111">request a password reset code</a>.</p>
       <p style="color:#6b7280;font-size:13px">If you did not request this email, you can ignore it. Your account has not changed.</p>
     `),
-    text: `Hi ${user.name || "there"},\n\nYou already have an OpenShip account. This signup attempt did not create another account or change your password.\n\nSign in with your existing password, or use Google or GitHub if that is how you registered: ${login}\n\nTo set or reset a password, request a reset code: ${reset}\n\nIf you did not request this email, you can ignore it. Your account has not changed.`,
+    text: `Hi ${user.name || "there"},\n\nYou already have a Workbox Cloud account. This signup attempt did not create another account or change your password.\n\nSign in with your existing password, or use Google or GitHub if that is how you registered: ${login}\n\nTo set or reset a password, request a reset code: ${reset}\n\nIf you did not request this email, you can ignore it. Your account has not changed.`,
   };
 }
 
@@ -243,7 +243,7 @@ export function organizationInviteEmail(opts: {
     </p>
     ${ctaButton(opts.url, "Accept invitation")}
     <p style="color:#9ca3af;font-size:13px;margin:0">
-      If you don't have an Openship account yet, you'll be asked to create one with this email
+      If you don't have a Workbox Cloud account yet, you'll be asked to create one with this email
       (${htmlEscape(opts.invitee.email)}). The invitation expires in 7 days.
     </p>
   `);

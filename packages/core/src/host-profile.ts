@@ -56,7 +56,7 @@ export type SystemFirewall =
  * Every distro ID we recognize by name — including openSUSE, which we refuse to drive.
  *
  * Naming a distro we won't provision is the point rather than an oversight: it turns
- * "unsupported host" into "Openship doesn't drive openSUSE's zypper", which an
+ * "unsupported host" into "Workbox Cloud doesn't drive openSUSE's zypper", which an
  * operator can act on. A distro absent from this union resolves to `unknown` and is
  * refused with the observed ID quoted back, unless `ID_LIKE` names a family we drive.
  */
@@ -153,7 +153,7 @@ export interface EnvironmentProfile {
   probeError: string | null;
 
   // ── the verdict ──
-  /** Openship can drive this host. When false, `unsupportedReason` says why. */
+  /** Workbox Cloud can drive this host. When false, `unsupportedReason` says why. */
   supported: boolean;
   unsupportedReason: string | null;
 }
@@ -337,7 +337,7 @@ function refuse(reason: string): HostSupportVerdict {
 }
 
 /**
- * Can Openship drive this host?
+ * Ca Workbox Cloud drive this host?
  *
  * Ordered most-fundamental first so the reason names the root fault rather than a
  * downstream symptom — a forced command makes every other probe meaningless, so it
@@ -353,12 +353,12 @@ export function assessHostSupport(facts: HostSupportFacts): HostSupportVerdict {
   // a probe that merely timed out — and quoted our own script as the thing the host said.
   if (facts.probeError) {
     return refuse(
-      `Openship could not measure this host: the probe never finished, so nothing below is ` +
+      `Workbox Cloud could not measure this host: the probe never finished, so nothing below is ` +
         `a fact about the box. A loaded machine, a dropped SSH channel or a shell that ` +
-        // "Openship's own" and not "it reported", because this string is OUR diagnostic
+        // "Workbox Cloud's own" and not "it reported", because this string is OUR diagnostic
         // about a host that said nothing — attributing it to the box is how a timeout on
         // our own probe script got quoted back at the operator as the host's answer.
-        `cannot run a script all look like this. Openship's own diagnostic: ` +
+        `cannot run a script all look like this. Workbox Cloud's own diagnostic: ` +
         `${JSON.stringify(facts.probeError)}`,
     );
   }
@@ -369,7 +369,7 @@ export function assessHostSupport(facts: HostSupportFacts): HostSupportVerdict {
     // can't run the script at all. Either way the box answered something else, and
     // quoting what it said is the only thing that gets an operator to the fix.
     return refuse(
-      `This host answered Openship's probe with something other than the probe's output, ` +
+      `This host answered Workbox Cloud's probe with something other than the probe's output, ` +
         `so nothing about it could be measured. An sshd forced command (\`ForceCommand\`, or ` +
         `\`command=\` in authorized_keys) is the usual cause — AWS AMIs ship one on root's ` +
         `key and expect you to connect as ec2-user instead. It said: ` +
@@ -385,7 +385,7 @@ export function assessHostSupport(facts: HostSupportFacts): HostSupportVerdict {
     const observed = facts.osRaw?.trim();
     return refuse(
       observed
-        ? `Openship drives Linux hosts (and macOS locally); this one reports \`uname -s\` as ` +
+        ? `Workbox Cloud drives Linux hosts (and macOS locally); this one reports \`uname -s\` as ` +
             `${JSON.stringify(observed)}, which it has no provisioning path for.`
         : "Could not determine this host's operating system (`uname -s` returned nothing usable).",
     );
@@ -400,11 +400,11 @@ export function assessHostSupport(facts: HostSupportFacts): HostSupportVerdict {
     const observed = facts.archRaw?.trim();
     return refuse(
       observed
-        ? `Openship has no build for this host's CPU architecture (\`uname -m\` reported ` +
+        ? `Workbox Cloud has no build for this host's CPU architecture (\`uname -m\` reported ` +
             `${JSON.stringify(observed)}), and it will not guess — every release artifact it ` +
             `downloads is architecture-specific. x86_64/amd64 and aarch64/arm64 are supported.`
         : "Could not determine this host's CPU architecture (`uname -m` returned nothing " +
-            "usable), and Openship will not guess — the release artifacts it downloads are " +
+            "usable), and Workbox Cloud will not guess — the release artifacts it downloads are " +
             "architecture-specific.",
     );
   }
@@ -419,7 +419,7 @@ export function assessHostSupport(facts: HostSupportFacts): HostSupportVerdict {
       break;
     case "suse":
       return refuse(
-        `Openship doesn't drive openSUSE/SLES hosts${idSuffix(facts.distroId)} — it has no zypper ` +
+        `Workbox Cloud doesn't drive openSUSE/SLES hosts${idSuffix(facts.distroId)} — it has no zypper ` +
           `provisioning path. ${SUPPORTED_FAMILIES}`,
       );
     case "unknown":
@@ -433,7 +433,7 @@ export function assessHostSupport(facts: HostSupportFacts): HostSupportVerdict {
       if (facts.packageManager === "none") {
         return refuse(
           `Unrecognized Linux distribution${idSuffix(facts.distroId)} with no usable package ` +
-            `manager. Openship could not match it to a supported family from its os-release ID ` +
+            `manager. Workbox Cloud could not match it to a supported family from its os-release ID ` +
             `or ID_LIKE, and found none of apt-get, dnf, yum, apk or pacman. ${SUPPORTED_FAMILIES}`,
         );
       }
@@ -449,7 +449,7 @@ export function assessHostSupport(facts: HostSupportFacts): HostSupportVerdict {
       // lookups and arrives here as neither a family nor `"unknown"`.
       const unwired: never = facts.distroFamily;
       return refuse(
-        `Openship has no provisioning path for this host's Linux family ` +
+        `Workbox Cloud has no provisioning path for this host's Linux family ` +
           `(${JSON.stringify(String(unwired))})${idSuffix(facts.distroId)}. ${SUPPORTED_FAMILIES}`,
       );
     }

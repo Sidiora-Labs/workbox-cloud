@@ -1,6 +1,6 @@
 # Cloud customer emails
 
-OpenShip Cloud sends four independent transactional messages:
+Workbox Cloud sends four independent transactional messages:
 
 | Trigger                                                        | Message                                                                                                 | Sender                                                                            |
 | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |

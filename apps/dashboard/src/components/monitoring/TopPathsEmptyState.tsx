@@ -12,7 +12,7 @@ import { Icon as UiIcon } from "@repo/ui/icons";
  *
  * The copy says WHY it is off, which matters here in a way it doesn't for an ordinary empty
  * state: this is the only analytics dimension that is opt-in, and without the reason an
- * operator reasonably reads it as something Openship forgot to turn on.
+ * operator reasonably reads it as something Workbox Cloud forgot to turn on.
  */
 
 import { useI18n, interpolate } from "@/components/i18n-provider";

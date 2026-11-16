@@ -1,6 +1,6 @@
 # CLI and SDK platform coverage — 2026-10-07
 
-The CLI can operate an existing Openship Cloud or remote self-hosted controller from a machine with
+The CLI can operate an existing Workbox Cloud or remote self-hosted controller from a machine with
 Node.js 22 and API access. Remote commands do not require a local Openship installation, database,
 Docker daemon, or SSH connection to the controller. They authenticate with that controller's PAT and
 use its current membership, resource grants, product capabilities and provider configuration.
@@ -148,7 +148,7 @@ remain governed by native policy and the existing provider support.
   exercises packaged SDK mail/migration/instance requests, fixed tenant headers, both terminal kinds
   over real loopback HTTP/WebSockets, and packaged CLI context selection with conflicting environment
   credentials.
-- Public `/api/health` probes on live Openship Cloud and the local dev API both returned HTTP 200
+- Public `/api/health` probes on live Workbox Cloud and the local dev API both returned HTTP 200
   with `{ protocol: 1, fixedOrganizationScope: true }`.
 
 Remote workflow fixtures verify transport, authorization headers, request choices and outcomes. They

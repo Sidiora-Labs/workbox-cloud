@@ -433,7 +433,7 @@ describe("resolveProjectInfo", () => {
     tempDirs.push(tempDir);
 
     // #383: compose lives outside the repo root (#330) and declares a required
-    // variable. The user supplied it in the Openship deploy configuration, so
+    // variable. The user supplied it in the Workbox Cloud deploy configuration, so
     // the scan must interpolate it instead of reporting the file as unparseable.
     await mkdir(join(tempDir, "deploy", "docker-compose"), { recursive: true });
     await writeFile(
@@ -719,7 +719,7 @@ describe("resolveProjectInfo", () => {
     await writeFile(join(tempDir, "compose.yaml"), "services: [this is not valid");
     await writeFile(join(tempDir, "apps", "web", ".env"), "LOCAL_DEFAULT=from-dotenv\n");
     await writeFile(
-      join(tempDir, "OpenShip.json"),
+      join(tempDir, "Workbox Cloud.json"),
       JSON.stringify({
         env: {
           PUBLIC_URL: "https://app.example.com",

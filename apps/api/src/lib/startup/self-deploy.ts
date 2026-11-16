@@ -1,7 +1,7 @@
 /**
  * Deploy the control plane ITSELF as a real, deploy-only app.
  *
- * The Openship self-app (project `appTemplateId === "openship"`) runs as a bare
+ * The Workbox Cloud self-app (project `appTemplateId === "openship"`) runs as a bare
  * host process supervised by `openship up` (launchd/systemd). To make it a
  * genuine deployment — real row + `activeDeploymentId` + routes/SSL owned by the
  * normal pipeline — without a SECOND process binding the port, we create an
@@ -153,7 +153,7 @@ export async function ensureAdoptDeployment(
       // No caps: this is the control plane on the operator's own host, and
       // BareRuntime is a host process — it has no cgroup to apply them to
       // anyway. The old hardcoded 0.5-core/512 MB literal read like a real
-      // limit on Openship itself, which it never was.
+      // limit on Workbox Cloud itself, which it never was.
       resources: { ...UNLIMITED_RESOURCES },
       adopt: true,
     });
@@ -167,7 +167,7 @@ export async function ensureAdoptDeployment(
     { containerId, durationMs: 0 },
   );
 
-  // A containerized install (`openship up` on Linux) runs Openship as a compose
+  // A containerized install (`openship up` on Linux) runs Workbox Cloud as a compose
   // stack; link those containers to this project so its Apps & Services tab shows
   // the real thing instead of "No apps or services yet". Best-effort + idempotent
   // — a bare install has nothing to link and this no-ops.
@@ -213,7 +213,7 @@ async function foreignProxyBlocksEdge(
     // Returned as well as logged so the caller's structured failure carries the SAME
     // sentence the live log shows — not a second wording of it.
     const detail =
-      `Not issuing TLS: ${owner} still owns ports 80/443, so Openship isn't the reverse proxy yet — ` +
+      `Not issuing TLS: ${owner} still owns ports 80/443, so Workbox Cloud isn't the reverse proxy yet — ` +
       `an ACME challenge would hit it, not us. Re-run setup (or Domains → migrate) to take over.`;
     log?.(detail, "error");
     return { blocked: true, owner, detail };
@@ -492,7 +492,7 @@ export function registerSelfAdoptReconcile(): void {
       //      ensureAdoptDeployment early-returns for an install that already has
       //      one, so an existing install would otherwise never get its services —
       //      which is exactly the "No apps or services yet" a CLI-installed box
-      //      showed while five Openship containers were running. Also keeps the
+      //      showed while five Workbox Cloud containers were running. Also keeps the
       //      image tags current after an upgrade.
       const activeDeploymentId = (await repos.project.findById(project.id))?.activeDeploymentId ?? null;
       await linkSelfAppServices(project.id, activeDeploymentId).catch((err) =>

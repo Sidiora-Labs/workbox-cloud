@@ -107,7 +107,7 @@ const defaultDependencies: BuildCacheGcDependencies = {
 
 /**
  * One target per configured Docker host. Local aliases collapse to one entry;
- * remote server ids remain distinct because that is OpenShip's physical target
+ * remote server ids remain distinct because that is Workbox Cloud's physical target
  * identity everywhere else too. The platform runtime decides whether the local
  * socket is a Docker target, including when its last project has been deleted
  * and there is no auto-registered server row (or project row) left to infer from.

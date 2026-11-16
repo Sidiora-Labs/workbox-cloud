@@ -90,7 +90,7 @@ export const cloudflareDnsProvider: DnsProvider = {
     name: "cloudflare",
     displayName: "Cloudflare",
     description:
-      "Openship writes your domain's DNS records for you, so a new custom domain verifies and gets its certificate without you leaving the page.",
+      "Workbox Cloud writes your domain's DNS records for you, so a new custom domain verifies and gets its certificate without you leaving the page.",
     requiredScopes: ["Zone:Zone:Read", "Zone:DNS:Edit"],
     tokenUrl: "https://dash.cloudflare.com/profile/api-tokens",
   },
@@ -233,7 +233,7 @@ export const cloudflareDnsProvider: DnsProvider = {
     }
 
     // Nothing was there, so this record IS ours — mark it, and only this branch
-    // does, which is what makes the marker mean "Openship created this".
+    // does, which is what makes the marker mean "Workbox Cloud created this".
     const created = await cfFetch<CfDnsRecordItem>(
       credentials.apiToken,
       `/zones/${encodeURIComponent(zoneId)}/dns_records`,

@@ -44,7 +44,7 @@ export async function Hero() {
       {/* ═══════════════ Content ═══════════════ */}
       <div className="hero-content relative z-20 mx-auto w-full max-w-[860px] px-6 text-center">
         <Link href="/pricing" className="hero-cloud-price animate-fade-in-up">
-          <span>OpenShip Cloud</span>
+          <span>Workbox Cloud</span>
           {from && (
             <strong>
               {copy.rich("From <price>{amount}</price>/month", {
@@ -68,7 +68,7 @@ export async function Hero() {
 
         <p className="hero-description animate-fade-in-up animate-delay-200 mx-auto mt-6 max-w-[520px] text-[16px] leading-[1.65] th-text-body">
           {copy(
-            "Run your apps, databases, and workflows from one place. Start on OpenShip Cloud or connect your own servers.",
+            "Run your apps, databases, and workflows from one place. Start on Workbox Cloud or connect your own servers.",
           )}
         </p>
 

@@ -29,7 +29,7 @@ export default function DesktopGuidePage() {
             </li>
             <li>
               <strong>{copy("Password")}</strong>{" "}
-              {copy(" - from your OpenShip admin Overview tab.")}
+              {copy(" - from your Workbox Cloud admin Overview tab.")}
             </li>
             <li>
               <strong>{copy("IMAP server / port / security")}</strong> {copy(" - typically port")}{" "}

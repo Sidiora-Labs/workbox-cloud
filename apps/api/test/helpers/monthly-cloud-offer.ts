@@ -1,6 +1,6 @@
 import type { OblienEntitlement, OblienSubscription } from "@repo/platform/engine/lib/oblien-billing-api";
 
-/** OpenShip saved v9 terms, independent of today's catalog and provider wire names. */
+/** Workbox Cloud saved v9 terms, independent of today's catalog and provider wire names. */
 export function monthlyCloudBilling(organizationId = "org_1", namespace = "os-customer") {
   const periodStart = "2026-10-01T00:00:00Z";
   const periodEnd = "2026-11-01T00:00:00Z";
@@ -9,7 +9,7 @@ export function monthlyCloudBilling(organizationId = "org_1", namespace = "os-cu
     tierId: "reseller", status: "active", billingInterval: "monthly",
     periodStart, periodEnd, cancelAtPeriodEnd: false, canceledAt: null,
     offer: {
-      reference: "openship:pro:v9", name: "Openship Pro", unitAmount: 3900, currency: "usd",
+      reference: "openship:pro:v9", name: "Workbox Cloud Pro", unitAmount: 3900, currency: "usd",
       billingMode: "monthly", credits: 0, capacity: pool,
       resourceLimits: { max_workspaces: 1, max_vcpus: 4, max_ram_mb: 16384, max_disk_gb: 128,
         max_total_vcpus: 4, max_total_ram_mb: 16384, max_total_disk_gb: 128 },

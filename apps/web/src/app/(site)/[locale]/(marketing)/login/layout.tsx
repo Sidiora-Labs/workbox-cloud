@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "Sign in",
-  description: "Sign in to your OpenShip account.",
+  description: "Sign in to your Workbox Cloud account.",
   robots: { index: false, follow: false, nocache: true },
   alternates: { canonical: "https://app.openship.io/login" },
 };

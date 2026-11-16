@@ -95,7 +95,7 @@ export function describeAssistantTool(tool: AssistantTool): { title: string; ico
   if (name === "wait") return { title: "Wait for tool results", icon: "clock" };
   return (
     definitions[name] ?? {
-      title: outputLabel(name.replace(/_by_[^_]+/g, "")) || "OpenShip tool",
+      title: outputLabel(name.replace(/_by_[^_]+/g, "")) || "Workbox Cloud tool",
       icon: name.includes("logs") ? "terminal" : name.includes("permission") ? "shield" : "code",
     }
   );

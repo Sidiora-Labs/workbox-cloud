@@ -11,7 +11,7 @@ async function empty() {
   assert.equal((await scanOpenshipEdgeStrict(executor)).loopbackUpstreamPorts.size, 0);
 }
 async function reject(name: string) {
-  await assert.rejects(scanOpenshipEdgeStrict(executor), /Cannot read Openship edge routes/);
+  await assert.rejects(scanOpenshipEdgeStrict(executor), /Cannot read Workbox Cloud edge routes/);
   cases.push(name);
 }
 if (process.argv[2] === "unprivileged") {
@@ -19,7 +19,7 @@ if (process.argv[2] === "unprivileged") {
   // passing because the unprivileged process cannot reach Docker at all.
   const daemon = spawnSync("docker", ["info"], { encoding: "utf8" });
   assert.equal(daemon.status, 0, daemon.stderr);
-  await assert.rejects(scanOpenshipEdgeStrict(executor), /Cannot read Openship edge routes/);
+  await assert.rejects(scanOpenshipEdgeStrict(executor), /Cannot read Workbox Cloud edge routes/);
   process.exit(0);
 }
 await empty();

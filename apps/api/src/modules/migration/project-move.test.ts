@@ -51,7 +51,7 @@ const plan = (over: Partial<Parameters<typeof planProjectMove>[0]> = {}) =>
 
 describe("planProjectMove refusals", () => {
   it("refuses the control plane", () => {
-    // Openship would be stopping the API running the migration.
+    // Workbox Cloud would be stopping the API running the migration.
     expect(() => plan({ isControlPlane: true })).toThrow(/control plane/i);
     expect(() => plan({ isControlPlane: true })).toThrow(ProjectMoveRefused);
   });

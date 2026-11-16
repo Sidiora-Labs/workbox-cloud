@@ -327,7 +327,7 @@ export interface RuntimeAdapter {
    * Every container on this runtime's host (running or not), label-agnostic —
    * the raw `docker ps -a` view. The live service-state read matches these
    * against the project's service rows by identity (labels, container name,
-   * tracked id), so a container Openship adopted in place — carrying another
+   * tracked id), so a container Workbox Cloud adopted in place — carrying another
    * project's labels — still reports its true state. Only present when
    * `supports("hostContainerQuery")`.
    */
@@ -600,7 +600,7 @@ export interface MultiServiceDeployConfig {
   forcePull?: boolean;
   /** The exact image reference was produced/pinned by the orchestrator or was
    * already pulled during cohort preparation. Docker must not infer this from
-   * the tag text: a registry image can legitimately use Openship's tag shape. */
+   * the tag text: a registry image can legitimately use Workbox Cloud's tag shape. */
   imageAlreadyPrepared?: boolean;
   /** Extended compose fields (healthcheck, …). Docker honors them; runtimes
    *  that can't (cloud) warn-and-drop. See ComposeAdvanced in @repo/core. */
@@ -768,10 +768,10 @@ export function isMultiServiceRuntime(
 
 // ─── Docker discovery (label-agnostic inspection) ─────────────────────────────
 //
-// DTOs for MIGRATING an existing Docker deployment into Openship. The
+// DTOs for MIGRATING an existing Docker deployment into Workbox Cloud. The
 // label-scoped queries elsewhere in DockerRuntime only see `openship.*`
 // containers; these enumerate the WHOLE daemon so we can adopt containers
-// Openship never created (a hand-run `docker run`, or a `docker compose` stack).
+// Workbox Cloud never created (a hand-run `docker run`, or a `docker compose` stack).
 // All fields are plain/serializable — they cross the API→dashboard boundary.
 
 export interface DockerMount {

@@ -10,7 +10,7 @@ Only projects visible to the caller are included.
 
 Security checks are notice-only by default. The public feed is signed and contains
 declarative image/runtime targets, never shell commands. Inventory stays in your
-Openship installation. Existing verified notification channels receive matching
+Workbox Cloud installation. Existing verified notification channels receive matching
 security alerts by default; Settings → Notifications controls each channel.
 
 ```ts
@@ -54,10 +54,10 @@ await ship.updates.securityPolicy("proj_123", { autoRefresh: false });
 
 The shared backend cache polls each public GitHub feed every five minutes with a
 usable GitHub credential, or hourly without one, using conditional requests and
-rate-limit backoff. Checks run only while Openship is running. Missing inventory
+rate-limit backoff. Checks run only while Workbox Cloud is running. Missing inventory
 is reported as unknown rather than safe.
 
-Openship reuses existing deployed image digests and keeps one current runtime
+Workbox Cloud reuses existing deployed image digests and keeps one current runtime
 observation per project. New or changed runtime advisory rules, a deployment
 change, an explicit check, or patch admission refresh that observation. Ordinary
 page reads and feed-signature renewals reuse it; there is no timed container scan.

@@ -1,7 +1,7 @@
 /**
  * MigrationOrchestrator — drives a full Docker migration:
  *
- *   adopt  → create the Openship `services` project from the selected stack
+ *   adopt  → create the Workbox Cloud `services` project from the selected stack
  *   moving_data → quiesce (stop) the originals on the source; copy volumes and
  *                 app-data bind mounts through the shared transfer adapters.
  *                 The storage plan maps source paths to project-owned target data.
@@ -17,7 +17,7 @@
  *                 restart the originals on the source. Never destroys A.
  *
  * A dedicated FSM (not the backup/restore orchestrators) because the source has
- * no Openship deployment to resolve an executor from, the target is
+ * no Workbox Cloud deployment to resolve an executor from, the target is
  * container-less pre-deploy, and we require no configured backup destination.
  */
 
@@ -306,10 +306,10 @@ export interface PendingItem {
  * `ServiceHandle` passed to `listSources()` — NOT null unless we genuinely
  * never scanned one. `listSources()` treats a null containerId as "not
  * deployed yet" and falls back to GUESSING the volume name from
- * `service.volumes` + `namespaceVolumes` (the name OpenShip's OWN deploy
+ * `service.volumes` + `namespaceVolumes` (the name Workbox Cloud's OWN deploy
  * pipeline would assign) — correct for the backup/restore use case
  * `listSources` was built for, but wrong for an adopted source service (e.g.
- * from Coolify), which was never namespaced by OpenShip: the guess doesn't
+ * from Coolify), which was never namespaced by Workbox Cloud: the guess doesn't
  * match any volume that actually exists on the source, and enumeration
  * silently produces a name the source (or target) rejects with "no such
  * volume". Passing the real id makes `listSources` inspect the live
@@ -948,7 +948,7 @@ class MigrationOrchestratorImpl {
     if (selected.length === 0) {
       throw new Error("None of the selected services were found on the server.");
     }
-    // Never adopt the edge proxy (traefik/nginx/… on 80/443) — Openship's
+    // Never adopt the edge proxy (traefik/nginx/… on 80/443) — Workbox Cloud's
     // OpenResty replaces it. Drop it from the workload set and leave it
     // UNTOUCHED (absent from scannedContainerIds, so moveData won't stop it):
     // we never blind-stop the user's proxy. It's reclaimed later — with
@@ -957,14 +957,14 @@ class MigrationOrchestratorImpl {
     let chosen = selected.filter((s) => !s.proxyKind);
     if (chosen.length === 0) {
       throw new Error(
-        "Only a reverse proxy was selected. Openship installs its own edge on 80/443 — pick the app services to migrate instead.",
+        "Only a reverse proxy was selected. Workbox Cloud installs its own edge on 80/443 — pick the app services to migrate instead.",
       );
     }
     // The SAME gate adoptServerStack applies, applied HERE too — this set is not
     // adopt's. It decides `scannedContainerIds`, and moveData's first act is
     // `rtA.stop(cid)` on every id in it. A name-only client cannot tell the user's
     // `postgres` from the control plane's, so without this the run would stop
-    // Openship's own database to copy its volume (#584). Also fails a genuine
+    // Workbox Cloud's own database to copy its volume (#584). Also fails a genuine
     // re-import before any container is touched, rather than after.
     chosen = await excludeAlreadyManaged(chosen, organizationId);
     const blocked = chosen.filter((s) => Boolean(s.build) && !s.image);
@@ -2295,7 +2295,7 @@ class MigrationOrchestratorImpl {
         if (remainder) throw new Error(remainder);
         // A project move also has to leave the OLD EDGE. Door A never needs this: an
         // adopted stack sat behind the operator's own proxy, which the migration
-        // deliberately never touches. Ours was served by Openship's edge on the source,
+        // deliberately never touches. Ours was served by Workbox Cloud's edge on the source,
         // and destroying a container does not remove the vhost pointing at it.
         if (claimed.mode === "project_move" && claimed.projectId) {
           await this.retireSourceRoutes(

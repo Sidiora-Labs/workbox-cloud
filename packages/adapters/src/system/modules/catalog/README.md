@@ -14,7 +14,7 @@ into `catalog-embedded.ts` so an air-gapped instance can still migrate. It is
 verified at load time exactly like the remote catalog (`catalog-source.ts`) — the
 signature is embedded too, so there is **no unsigned execution path**.
 
-`catalog.json` is signed at release time with the Openship offline ed25519 key
+`catalog.json` is signed at release time with the Workbox Cloud offline ed25519 key
 (CI secret); the public half is baked into `verify.ts` (`CATALOG_PUBKEYS`). Until
 that key exists the `.sig` is empty and the framework is inert in production
 (fail-closed) — dev uses `OPENSHIP_MODULE_CATALOG_INSECURE=1`.

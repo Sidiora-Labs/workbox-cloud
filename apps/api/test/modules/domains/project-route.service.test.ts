@@ -523,7 +523,7 @@ describe("reapplyProjectLiveRoutes static (path-targeted) routes", () => {
     },
   );
 
-  it("syncs the free domain of a static project on Openship Cloud's edge", async () => {
+  it("syncs the free domain of a static project on Workbox Cloud's edge", async () => {
     // The other half of the same bug: the edge route is `<slug>.opsh.io` → this
     // server's :80. What the vhost then does with the request is a local matter,
     // so excluding path targets here left static free domains with no edge route.
@@ -858,7 +858,7 @@ describe("deriveNextProjectRouteState custom-hostname gate", () => {
 });
 
 /**
- * Issue #618: a project MIGRATED into Openship (adopted in place) verified its
+ * Issue #618: a project MIGRATED into Workbox Cloud (adopted in place) verified its
  * domain, took a certificate — and never got a vhost. Both re-attach paths store
  * the COMPOSE_SENTINEL in `deployment.container_id` (migrate.service.ts →
  * reattachRuntime / attachLiveRuntime), and this re-apply treated that as "there is

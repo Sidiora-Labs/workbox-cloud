@@ -40,7 +40,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ loc
     })
     .join("\n");
   return new Response(
-    `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>${escapeXml(copy("OpenShip Blog"))}</title><link>${blogUrl}</link><description>${escapeXml(copy("Engineering, product updates, and guides from OpenShip."))}</description><language>${locale}</language><atom:link href="${feedUrl}" rel="self" type="application/rss+xml"/>${items}</channel></rss>`,
+    `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>${escapeXml(copy("Workbox Cloud Blog"))}</title><link>${blogUrl}</link><description>${escapeXml(copy("Engineering, product updates, and guides from Workbox Cloud."))}</description><language>${locale}</language><atom:link href="${feedUrl}" rel="self" type="application/rss+xml"/>${items}</channel></rss>`,
     {
       headers: {
         "Content-Type": "application/rss+xml; charset=utf-8",

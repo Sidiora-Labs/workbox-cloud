@@ -118,13 +118,13 @@ const UNSUPPORTED: readonly HostName[] = [
 const CALLS: Readonly<Record<keyof HostCommands, (ops: EnvOps) => Answer<unknown>>> = {
   pkgInstall: (ops) => ops.pkgInstall(["git", "rsync"]),
   // Python is the real divergence: three package names on apt, two on dnf, and a name
-  // Openship hasn't picked on apk. The refusal is part of the fixture.
+  // Workbox Cloud hasn't picked on apk. The refusal is part of the fixture.
   pkgInstallVariants: (ops) =>
     ops.pkgInstallVariants({
       apt: answered(["python3", "python3-pip", "python3-venv"]),
       dnf: answered(["python3", "python3-pip"]),
       yum: answered(["python3", "python3-pip"]),
-      apk: refused("Openship has no apk package set for Python."),
+      apk: refused("Workbox Cloud has no apk package set for Python."),
       pacman: answered(["python", "python-pip"]),
       brew: answered(["python@3.12"]),
     }),
@@ -703,7 +703,7 @@ describe("envOps paths and arch", () => {
     expect(envOps(HOSTS.macos).scratchDir()).toBe("/Users/dev/.openship");
   });
 
-  // `scratchDir` follows the login user; Openship's state does NOT. The journal's wrapper
+  // `scratchDir` follows the login user; Workbox Cloud's state does NOT. The journal's wrapper
   // goes up over SFTP, which has no shell and so cannot be elevated at all — a
   // root-anchored base is simply unwritable there on a non-root login. Everything else
   // runs elevated against root-owned files, so deriving `stateDir` from `home()` would

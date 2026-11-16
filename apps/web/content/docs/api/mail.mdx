@@ -5,18 +5,18 @@ description: Set up and operate a self-hosted mail server.
 
 import { TypeTable } from 'fumadocs-ui/components/type-table';
 
-The Mail API drives Openship's self-hosted email feature: it installs an [iRedMail](https://www.iredmail.org)
+The Mail API drives Workbox Cloud's self-hosted email feature: it installs an [iRedMail](https://www.iredmail.org)
 stack on one of your servers over SSH, tracks the wizard's progress, then exposes an admin panel for the
 running server — domains, mailboxes, stats, backups, DNS health, and per-component control — plus a one-click
 webmail deploy. In the dashboard this is the **Emails** page.
 
 <Callout title="Self-hosted only">
-Every route here is gated by `localOnly` and is **never mounted in Openship Cloud** — the module is
+Every route here is gated by `localOnly` and is **never mounted in Workbox Cloud** — the module is
 dynamically imported only on self-hosted instances. On a cloud instance these paths return `404`.
 </Callout>
 
 <Callout title="Every route is server-scoped" type="info">
-Most paths carry a `:serverId` (or take one in the body / `?serverId=`). Openship checks that the server
+Most paths carry a `:serverId` (or take one in the body / `?serverId=`). Workbox Cloud checks that the server
 belongs to your organization on every call — a `mail_server` grants SSH-level reach into the box, so a
 `serverId` outside your org returns `404`, indistinguishable from one that doesn't exist.
 </Callout>
@@ -34,7 +34,7 @@ POST /api/mail/setup
 
 <TypeTable
   type={{
-    serverId: { type: 'string', description: 'The Openship server to install onto.', required: true },
+    serverId: { type: 'string', description: 'The Workbox Cloud server to install onto.', required: true },
     domain: { type: 'string', description: 'The mail domain, e.g. example.com. Mail is served from mail.<domain>.', required: true },
     startStep: { type: 'number', description: 'Step to start/resume from (clamped to 1..total).', default: '1' },
     config: { type: 'IRedMailConfig', description: 'Optional install config (see below).' },
@@ -99,7 +99,7 @@ The same `{ serverId }` body applies to `POST /api/mail/scan`, `POST /api/mail/a
 
 ## Adopt an existing install
 
-If Openship lost its record of a mail server (rebuilt desktop, wiped DB), scan the server, then adopt it —
+If Workbox Cloud lost its record of a mail server (rebuilt desktop, wiped DB), scan the server, then adopt it —
 no reinstall, nothing changes on the box.
 
 ```
@@ -251,8 +251,8 @@ POST /api/mail/webmail/deploy-project
 
 `target` is one of:
 
-- `{ "kind": "self", "serverId": "srv_123" }` — self-hosted on one of your Openship servers.
-- `{ "kind": "cloud", "serverId": "srv_managed" }` — on a selected managed Openship Cloud server.
+- `{ "kind": "self", "serverId": "srv_123" }` — self-hosted on one of your Workbox Cloud servers.
+- `{ "kind": "cloud", "serverId": "srv_managed" }` — on a selected managed Workbox Cloud server.
 
 Both targets need a real server ID. Use `GET /api/system/servers/destinations` to list accessible servers.
 For a Cloud server that is not connected to this installation yet, use
@@ -292,7 +292,7 @@ destination cannot be adopted through this path.
 
 ### Replacing a pre-catalog webmail
 
-Openship 0.6.1 and earlier shipped webmail as a prebuilt bundle rather than an image. Those installs can't be
+Workbox Cloud 0.6.1 and earlier shipped webmail as a prebuilt bundle rather than an image. Those installs can't be
 redeployed — they have to be **replaced** by the catalog app. `GET /api/mail/status` reports one as
 `webmail.legacy: true`, and a deploy over it is refused with `409` and `"code": "LEGACY_WEBMAIL"` until you
 retry the same request with `replaceLegacy: true`.
@@ -333,7 +333,7 @@ webmail's sessions and per-user settings.
 </Callout>
 
 <Callout title="502 — Scan / adopt failed" type="warn">
-Openship couldn't reach the server over SSH, or the probe threw. Check the server is online and its SSH
+Workbox Cloud couldn't reach the server over SSH, or the probe threw. Check the server is online and its SSH
 credentials are valid, then retry.
 </Callout>
 
@@ -362,7 +362,7 @@ Use `--schema` for JSON configuration commands. Mail is a remote, self-hosted fe
 | --- | --- | --- |
 | List all setup steps and the total count. | `mail.getSteps()`<br />Remote client | `GET /api/mail/steps`<br />`mail_server:read` · Self-hosted |
 | Current setup progress for a server (rendered from its on-server state file). | `mail.getStatus(input?)`<br />Remote client | `GET /api/mail/status`<br />`mail_server:read` · Self-hosted |
-| List every server Openship has provisioned (or is provisioning) mail on. | `mail.listServers()`<br />Remote client | `GET /api/mail/servers`<br />`mail_server:list` · Self-hosted |
+| List every server Workbox Cloud has provisioned (or is provisioning) mail on. | `mail.listServers()`<br />Remote client | `GET /api/mail/servers`<br />`mail_server:list` · Self-hosted |
 | Probe a server for an existing iRedMail install + its on-server state (read-only). | `mail.scan(input)`<br />Remote client | `POST /api/mail/scan`<br />`mail_server:write` · Self-hosted |
 | Re-adopt a scanned server whose orchestrator state was lost. | `mail.adopt(input)`<br />Remote client | `POST /api/mail/adopt`<br />`mail_server:write` · Self-hosted |
 | Cancel the running setup. | `mail.cancelSetup()`<br />Remote client | `POST /api/mail/setup/cancel`<br />`mail_server:write` · Self-hosted |
@@ -377,7 +377,7 @@ Use `--schema` for JSON configuration commands. Mail is a remote, self-hosted fe
 | Mail daemons, outbound delivery, and cached public-port reachability (TCP 25/465/587/993). | `mail.getHealth(id, input?)`<br />Remote client | `GET /api/mail/health/:serverId`<br />`mail_server:read` · Self-hosted |
 | Read the mail certificate, SMTP/IMAP TLS checks and automatic renewal settings. | `mail.getCertificate(id)`<br />Remote client | `GET /api/mail/admin/:serverId/certificate`<br />`mail_server:read` · Self-hosted |
 | Recheck the certificate on disk and served by SMTP/IMAP without issuing a certificate or sending email. | `mail.checkCertificate(id)`<br />Remote client | `POST /api/mail/admin/:serverId/certificate/check`<br />`mail_server:write` · Self-hosted |
-| Renew a due mail certificate through Openship Edge and reload Postfix/Dovecot, reusing a still-valid certificate and repairing its service configuration. | `mail.renewCertificate(id)`<br />Remote client | `POST /api/mail/admin/:serverId/certificate/renew`<br />`mail_server:admin` · Self-hosted |
+| Renew a due mail certificate through Workbox Cloud Edge and reload Postfix/Dovecot, reusing a still-valid certificate and repairing its service configuration. | `mail.renewCertificate(id)`<br />Remote client | `POST /api/mail/admin/:serverId/certificate/renew`<br />`mail_server:admin` · Self-hosted |
 | Set `autoRenew` to enable or disable automatic mail certificate renewal. Monitoring continues when renewal is disabled. | `mail.updateCertificate(id, input)`<br />Remote client | `PATCH /api/mail/admin/:serverId/certificate`<br />`mail_server:admin` · Self-hosted |
 | List mail domains on the server. | `mail.listDomains(id)`<br />Remote client | `GET /api/mail/admin/:serverId/domains`<br />`mail_server:list` · Self-hosted |
 | Add a mail domain. | `mail.createDomain(id, input)`<br />Remote client | `POST /api/mail/admin/:serverId/domains`<br />`mail_server:write` · Self-hosted |

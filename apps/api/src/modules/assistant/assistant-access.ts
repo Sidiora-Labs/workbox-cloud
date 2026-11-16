@@ -37,7 +37,7 @@ export function requireAssistantSession(ctx: RequestContext) {
     );
   if (!isAssistantUserSession(ctx))
     throw assistantError(
-      "Use your OpenShip session to manage the assistant.",
+      "Use your Workbox Cloud session to manage the assistant.",
       403,
       "ASSISTANT_SESSION_REQUIRED",
     );
@@ -64,7 +64,7 @@ export async function beginAssistantAuthorization(
   const target = await resolveAssistantTarget(ctx, targetId);
   if (target && new URL(origin).protocol !== "https:")
     throw assistantError(
-      "Remote assistants require your OpenShip API to be reachable over HTTPS.",
+      "Remote assistants require your Workbox Cloud API to be reachable over HTTPS.",
       400,
     );
   return withAssistantLock(`connection:${ownerKey(ctx)}`, async () => {
@@ -72,7 +72,7 @@ export async function beginAssistantAuthorization(
     const state = randomBytes(32).toString("base64url");
     const prepared = await prepareMcpConsent(ctx, {
       origin,
-      name: "OpenShip Assistant",
+      name: "Workbox Cloud Assistant",
       redirectUri,
       state,
     });

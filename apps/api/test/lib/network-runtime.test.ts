@@ -25,7 +25,7 @@ distinguished_name=dn
 x509_extensions=ca
 prompt=no
 [dn]
-CN=Openship runtime test CA
+CN=Workbox Cloud runtime test CA
 [ca]
 basicConstraints=critical,CA:TRUE
 keyUsage=critical,keyCertSign,cRLSign

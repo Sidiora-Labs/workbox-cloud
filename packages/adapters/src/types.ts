@@ -418,7 +418,7 @@ export interface DeployConfig {
    * runtime that supports adoption (currently Bare) skips build promotion and
    * the supervisor start entirely — it only health-probes `port` and returns a
    * running result. Used to model an externally-supervised process (e.g. the
-   * Openship control plane launched by `openship up`) as a real deployment so
+   * Workbox Cloud control plane launched by `openship up`) as a real deployment so
    * the normal routing/SSL pipeline owns it, without a second process binding
    * the port. No-op for runtimes that don't advertise adoption.
    */
@@ -606,7 +606,7 @@ interface BaseRouteConfig {
   tls: boolean;
   /**
    * TLS for this host terminates on THIS box (we hold or will hold its cert),
-   * rather than at an upstream ingress or Openship Cloud's edge.
+   * rather than at an upstream ingress or Workbox Cloud's edge.
    *
    * When set, the routing provider guarantees a :443 listener for the host from
    * the moment the route exists — serving a temporary self-signed cert until the
@@ -623,7 +623,7 @@ interface BaseRouteConfig {
   terminatesTlsLocally?: boolean;
   /**
    * When set, adds a `/_openship/hooks/` location that proxies
-   * webhook requests to the Openship API at this URL.
+   * webhook requests to the Workbox Cloud API at this URL.
    * Example: "http://127.0.0.1:4000/api/webhooks/"
    */
   webhookProxy?: string;
@@ -693,7 +693,7 @@ export interface StaticRouteConfig extends BaseRouteConfig {
   notFound?: never;
   /**
    * This root is being ADOPTED from a proxy we're taking over, not produced by an
-   * Openship build.
+   * Workbox Cloud build.
    *
    * Openship-managed roots are confined to {@link MANAGED_STATIC_BASE}: a route we
    * generate must never be able to publish an arbitrary host directory, so a bad or

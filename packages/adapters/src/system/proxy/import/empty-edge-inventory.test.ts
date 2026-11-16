@@ -35,23 +35,23 @@ describe("strict inventory on a fresh private deployment host", () => {
   });
   it.each(["", "partial", new Error("Docker inspect unavailable")])(
     "rejects an absent or failed dormant-ingress proof (%s)", async (proof) => {
-      await expect(scanOpenshipEdgeStrict(executor(proof))).rejects.toThrow("no running Openship edge");
+      await expect(scanOpenshipEdgeStrict(executor(proof))).rejects.toThrow("no running Workbox Cloud edge");
     },
   );
   it.each([80, 443])("rejects an occupied port %s", async (occupied) => {
     h.ports.mockImplementation(async (_exec, port) => port === occupied);
-    await expect(scanOpenshipEdgeStrict(executor())).rejects.toThrow("no running Openship edge");
+    await expect(scanOpenshipEdgeStrict(executor())).rejects.toThrow("no running Workbox Cloud edge");
   });
   it("rejects an unreadable socket table", async () => {
     h.ports.mockResolvedValue(null);
-    await expect(scanOpenshipEdgeStrict(executor())).rejects.toThrow("no running Openship edge");
+    await expect(scanOpenshipEdgeStrict(executor())).rejects.toThrow("no running Workbox Cloud edge");
   });
   it("rejects Swarm ingress even without a local listening socket", async () => {
     h.swarm.mockResolvedValue(new Map([[80, "foreign-service"]]));
-    await expect(scanOpenshipEdgeStrict(executor())).rejects.toThrow("no running Openship edge");
+    await expect(scanOpenshipEdgeStrict(executor())).rejects.toThrow("no running Workbox Cloud edge");
   });
   it("rejects unreadable Swarm state", async () => {
     h.swarm.mockRejectedValueOnce(new Error("manager unavailable"));
-    await expect(scanOpenshipEdgeStrict(executor())).rejects.toThrow("no running Openship edge");
+    await expect(scanOpenshipEdgeStrict(executor())).rejects.toThrow("no running Workbox Cloud edge");
   });
 });

@@ -153,7 +153,7 @@ export function InfrastructureTab() {
   return (
     <SettingsSection icon={"server-settings"} title={copy.title} description={copy.description}>
       <div className="space-y-5">
-        {/* #527: let OpenShip deploy to the machine it runs on. Server-host (VPS)
+        {/* #527: let Workbox Cloud deploy to the machine it runs on. Server-host (VPS)
             only — desktop derives "here" without a row and the SaaS control plane
             is never its own target, so the toggle would be meaningless there. */}
         {isServerHost && (

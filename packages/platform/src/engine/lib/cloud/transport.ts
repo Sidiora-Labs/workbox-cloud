@@ -1,6 +1,6 @@
 /**
  * Cloud transport — the authenticated wire from a self-hosted instance to
- * api.openship.io. Auth is fully server-side: the user's Openship Cloud
+ * api.openship.io. Auth is fully server-side: the user's Workbox Cloud
  * session lives (encrypted) in `user_settings.cloud_session_token`; this layer
  * reads it, presents it as a Bearer, and forwards the call.
  *
@@ -188,7 +188,7 @@ function pinnedCloudStream(response: Response, userId: string, identity: CloudId
 
 /**
  * THE org→cloud-owner resolver: the userId of the org owner who has linked
- * Openship Cloud (`findOrgOwnerCloudLink` filters on a non-empty session
+ * Workbox Cloud (`findOrgOwnerCloudLink` filters on a non-empty session
  * token), or null. Every org-scoped cloud path — the proxied fetch, the
  * cache-key resolution, the token mint, and the connection check — goes
  * through this single function so they all agree on the SAME owner identity.
@@ -213,7 +213,7 @@ export async function resolveOrgCloudUserId(organizationId: string): Promise<str
  * cloud bridge function uses this — "any member of the org gets to act with the
  * owner's SaaS identity for org-scoped operations".
  *
- * Returns null when no member of the org has linked Openship Cloud.
+ * Returns null when no member of the org has linked Workbox Cloud.
  */
 export async function cloudFetchAsOrgOwner(
   organizationId: string,

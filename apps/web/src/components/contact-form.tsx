@@ -156,7 +156,7 @@ export function ContactForm({ siteKey }: { siteKey: string }) {
           <Check size={24} />
         </span>
         <h2>{copy("Request received")}</h2>
-        <p>{copy("Your request is saved for the OpenShip team. We’ll reply by email.")}</p>
+        <p>{copy("Your request is saved for the Workbox Cloud team. We’ll reply by email.")}</p>
         <p>
           {copy("Reference: ")}
           <strong>{copy(receipt?.id)}</strong>

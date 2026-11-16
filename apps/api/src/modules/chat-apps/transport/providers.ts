@@ -50,7 +50,7 @@ const silentLogger = {
 };
 export { silentLogger };
 
-/** Converts advertised native commands to the one shared OpenShip command parser. */
+/** Converts advertised native commands to the one shared Workbox Cloud command parser. */
 export function commandText(
   c: ChatAppConnection,
   config: BotConfiguration,

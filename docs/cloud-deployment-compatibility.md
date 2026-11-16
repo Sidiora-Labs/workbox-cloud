@@ -1,6 +1,6 @@
 # Managed Cloud deployment compatibility
 
-Openship Cloud builds and runs applications on isolated containers and serves static output through Pages. Importing `vercel.json` is a configuration compatibility feature; it does not provide Vercel's Functions, Edge runtime or storage APIs.
+Workbox Cloud builds and runs applications on isolated containers and serves static output through Pages. Importing `vercel.json` is a configuration compatibility feature; it does not provide Vercel's Functions, Edge runtime or storage APIs.
 
 ## Automatic Node behavior
 

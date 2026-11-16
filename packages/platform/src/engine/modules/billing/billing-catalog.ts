@@ -22,7 +22,7 @@ import type { OblienCapacityCatalog } from "../../lib/oblien-capacity";
 import { getOblienBillingApi } from "../../lib/oblien-client";
 import { isDeepStrictEqual } from "node:util";
 
-// Read compatibility for subscriptions sold before Openship owned its offers.
+// Read compatibility for subscriptions sold before Workbox Cloud owned its offers.
 // New checkouts never use these platform catalog IDs.
 const LEGACY_PLAN_IDS: Readonly<Partial<Record<PlanTierId, string>>> = {
   free: "free", starter: "hobby", pro: "pro", team: "scale", enterprise: "enterprise",
@@ -79,7 +79,7 @@ export function savedResourceLimits(tier: PlanTierId, offer: OblienOffer): Retur
 
 function invalidContract(): never {
   throw new AppError(
-    "This organization's saved Cloud offer could not be verified. Contact Openship support.",
+    "This organization's saved Cloud offer could not be verified. Contact Workbox Cloud support.",
     502,
     "OBLIEN_RESELLER_CONTRACT_INVALID",
   );
@@ -92,7 +92,7 @@ export function subscriptionPlan(subscription: OblienSubscription, organizationI
   if (subscription?.tierId !== "reseller") {
     const providerTier = subscription?.tierId;
     const tier = providerTier == null ? "free" : PLAN_IDS.find(id => LEGACY_PLAN_IDS[id] === providerTier);
-    if (!tier) throw new AppError("This cloud plan is not supported by this Openship version", 503, "OBLIEN_PLAN_UNSUPPORTED");
+    if (!tier) throw new AppError("This cloud plan is not supported by this Workbox Cloud version", 503, "OBLIEN_PLAN_UNSUPPORTED");
     // Platform subscriptions predate explicit service ceilings; retain their
     // preset rather than applying a new retail offer to an existing customer.
     return { tier, limits: { ...planLimits(tier), ...(tier !== "free" ? { maxProjects: null, runningServices: null, concurrentBuilds: null } : {}), maxServiceResources: undefined }, resourceLimits: inheritedResourceLimits(tier) };
@@ -129,7 +129,7 @@ export function subscriptionPlan(subscription: OblienSubscription, organizationI
   return { tier, limits: parsed.data, resourceLimits: savedResourceLimits(tier, offer) };
 }
 
-/** Openship controls retail price and copy; Oblien purchases the resource pool. */
+/** Workbox Cloud controls retail price and copy; Oblien purchases the resource pool. */
 export function subscriptionOffer(tier: PlanTierId, interval: "monthly" | "annual"): OblienOffer {
   const raw = PRICING.plans.find(plan => plan.id === tier);
   if (raw?.availableForPurchase === false)
@@ -142,7 +142,7 @@ export function subscriptionOffer(tier: PlanTierId, interval: "monthly" | "annua
   }
   const plan = resolvePlan(tier);
   return {
-    reference: offerReference(tier), name: raw.billing.checkoutName ?? `Openship ${plan.name}`,
+    reference: offerReference(tier), name: raw.billing.checkoutName ?? `Workbox Cloud ${plan.name}`,
     description: raw.billing.checkoutDescription ?? plan.description,
     unitAmount: amount, currency: "usd", billingMode: "monthly", credits: 0,
     capacity: monthlyCapacity(cloudNamespaceLimits(tier)),
@@ -181,7 +181,7 @@ export function topupOffer(packId: string): OblienOffer {
     throw new AppError("This credit pack is no longer available", 404, "BILLING_PACK_NOT_FOUND");
   return {
     reference: `openship:${pack.id}:v${TOPUP_OFFER_VERSION}`,
-    name: "Openship compute credits",
+    name: "Workbox Cloud compute credits",
     description: `${toOblienCredits(pack.creditsMilli).toLocaleString("en-US")} additional credits for your namespace`,
     unitAmount: pack.priceCents,
     currency: "usd",

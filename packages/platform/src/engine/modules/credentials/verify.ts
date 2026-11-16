@@ -61,7 +61,7 @@ function registryConnectionFailure(target: string, error: unknown): VerifyResult
     ) {
       return {
         ok: false,
-        reason: `${target} failed TLS certificate verification. Check its hostname, certificate expiry, and the CA trusted by the Openship API.`,
+        reason: `${target} failed TLS certificate verification. Check its hostname, certificate expiry, and the CA trusted by the Workbox Cloud API.`,
       };
     }
     cause = nested;
@@ -193,7 +193,7 @@ const verifyDockerRegistry: Verifier = async ({ selector, publicFields, secrets 
 
   return {
     ok: false,
-    reason: `${registry} answered ${probe.status} and did not offer a login method Openship understands.`,
+    reason: `${registry} answered ${probe.status} and did not offer a login method Workbox Cloud understands.`,
   };
 };
 
@@ -326,7 +326,7 @@ export async function verifyCredentialValues(
 ): Promise<VerifyResult> {
   const verifier = VERIFIERS[provider.id];
   if (!verifier) {
-    return { ok: false, reason: `Openship cannot verify ${provider.label} credentials yet.` };
+    return { ok: false, reason: `Workbox Cloud cannot verify ${provider.label} credentials yet.` };
   }
   try {
     return await verifier(args);

@@ -78,7 +78,7 @@ export async function getTargetsHandler(c: Context) {
  * IDs so the dashboard can redirect to /build/[deploymentId] and subscribe to
  * the standard SSE endpoint.
  *
- * A webmail deployed by an older Openship can't be redeployed, only replaced, so
+ * A webmail deployed by an older Workbox Cloud can't be redeployed, only replaced, so
  * it answers 409 `LEGACY_WEBMAIL` until `replaceLegacy` says yes — never on the
  * first call, which is what keeps a destructive upgrade out of a plain retry.
  *

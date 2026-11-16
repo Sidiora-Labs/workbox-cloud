@@ -291,7 +291,7 @@ function readActiveDeploymentSummary(dep: Deployment | null | undefined): {
      * WHY they didn't sync, in the server's own words (`routeIssuesWarning`).
      *
      * The flag alone was not enough, and the gap showed: the banner had one hardcoded sentence
-     * about a free `.opsh.io` URL failing to route through Openship Cloud's edge, and showed it
+     * about a free `.opsh.io` URL failing to route through Workbox Cloud's edge, and showed it
      * for every cause. A self-hosted project with three CUSTOM domains waiting on certificates
      * was told its free domain hadn't routed through a cloud it doesn't use — while the accurate
      * sentence ("routed but no HTTPS certificate yet — point DNS here, then Verify") sat unread
@@ -321,7 +321,7 @@ function readEnabled(p: Project): { enabled: boolean } {
  *  only signal the dashboard needs — `deployTarget === "cloud"` IS
  *  the cloud-project test; the dashboard combines it with its own
  *  CloudContext.connected state to decide whether to render the
- *  "Reconnect Openship Cloud" gate. No duplicate booleans here. */
+ *  "Reconnect Workbox Cloud" gate. No duplicate booleans here. */
 export async function enrichProject(p: Project) {
   const production = p.resources as ResourceConfig | null;
   const build = p.buildResources as ResourceConfig | null;
@@ -1048,7 +1048,7 @@ async function createProductionProject(
 
   // Atomic free-domain gate — same rule and shape as updateProject. When the
   // caller EXPLICITLY sends endpoints, a free (*.opsh.io) route only resolves
-  // behind the Openship Cloud edge, so refuse BEFORE any group/project row is
+  // behind the Workbox Cloud edge, so refuse BEFORE any group/project row is
   // written on a disconnected instance (no dead "Pending" route persisted). The
   // auto-derived default (data.publicEndpoints undefined) is deliberately NOT
   // gated — that path must keep working on a self-hosted instance.
@@ -1104,7 +1104,7 @@ async function createProductionProject(
 
 /**
  * Create a `services` project while PRESERVING an explicit project id — the
- * re-import path (recovering an Openship project from a server's manifest). The
+ * re-import path (recovering a Workbox Cloud project from a server's manifest). The
  * preserved id means the server's still-running containers (labelled
  * `openship.project=<id>`) re-attach immediately: teardown/reclaim/network
  * reconcile recognize them, and a later redeploy replaces same-id containers
@@ -1510,7 +1510,7 @@ async function findProjectByAppSlug(
 /**
  * Enforce the project cap before creating one.
  *
- * On Openship Cloud the cap comes from the org's PLAN (`limits.maxProjects` in
+ * On Workbox Cloud the cap comes from the org's PLAN (`limits.maxProjects` in
  * the pricing catalog). It used to be a single env value,
  * `CLOUD_MAX_PROJECTS_PER_USER` (default 2), applied to every cloud org
  * regardless of tier — so a customer paying $99 was capped at two projects
@@ -2061,7 +2061,7 @@ async function updateProjectUnlocked(
       const routeWarnings = await reapplyCompleteProjectRouting(refreshed, previousHostnames, {
         managedEdgeSyncedByCaller: true,
       });
-      // A free (*.opsh.io) domain resolves only through Openship Cloud's edge.
+      // A free (*.opsh.io) domain resolves only through Workbox Cloud's edge.
       // reapplyProjectLiveRoutes handles the self-hosted OpenResty side; the
       // managed edge must be re-registered too or an edited/added free URL
       // 404s with no signal. Only meaningful once deployed (no live target

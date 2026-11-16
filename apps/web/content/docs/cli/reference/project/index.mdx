@@ -8,7 +8,7 @@ See the [workflow guide](/docs/cli/projects) for examples. Global flags such as 
 
 ## openship project
 
-Manage Openship projects
+Manage Workbox Cloud projects
 
 ```text
 openship project|projects [options] [command]
@@ -28,7 +28,7 @@ openship project|projects [options] [command]
 | [`enable <id>`](/docs/cli/reference/project#openship-project-enable) | Start a stopped project |
 | [`disable <id>`](/docs/cli/reference/project#openship-project-disable) | Stop a running project |
 | [`sleep-mode <id> <mode>`](/docs/cli/reference/project#openship-project-sleep-mode) | Set the project sleep mode |
-| [`transfer <id> <direction>`](/docs/cli/reference/project#openship-project-transfer) | Promote a project to Openship Cloud, or bring it back (self-hosted only) |
+| [`transfer <id> <direction>`](/docs/cli/reference/project#openship-project-transfer) | Promote a project to Workbox Cloud, or bring it back (self-hosted only) |
 | [`logs [options] <id>`](/docs/cli/reference/project#openship-project-logs) | View project logs |
 | [`server-logs [options] <id>`](/docs/cli/reference/project#openship-project-server-logs) | Show or stream HTTP request logs (edge/OpenResty) |
 | [`cluster`](/docs/cli/reference/project#openship-project-cluster) | Configure cluster placement and scale a deployed workload |
@@ -39,7 +39,7 @@ openship project|projects [options] [command]
 | [`clear-build-cache [options] <id>`](/docs/cli/reference/project#openship-project-clear-build-cache) | Clear the host build cache used by this project; other projects on that host share it |
 | [`deployments [options] <id>`](/docs/cli/reference/project#openship-project-deployments) | Read full project deployment records with pagination |
 | [`clone-token`](/docs/cli/reference/project#openship-project-clone-token) | Manage this project's explicit clone credential |
-| [`local`](/docs/cli/reference/project#openship-project-local) | Manage folders on the Openship instance; use deploy --folder for this machine's files |
+| [`local`](/docs/cli/reference/project#openship-project-local) | Manage folders on the Workbox Cloud instance; use deploy --folder for this machine's files |
 | [`routing`](/docs/cli/reference/project/routing#openship-project-routing) | Manage project routing rules and retry route synchronization |
 | [`update <id> <file>`](/docs/cli/reference/project#openship-project-update) | Patch a project's build and runtime configuration |
 | [`environment\|environments`](/docs/cli/reference/project#openship-project-environment) | Manage isolated project environments (each has its own project ID) |
@@ -510,7 +510,7 @@ openship project list|ls [options]
 
 ## openship project local
 
-Manage folders on the Openship instance; use deploy --folder for this machine's files
+Manage folders on the Workbox Cloud instance; use deploy --folder for this machine's files
 
 ```text
 openship project local [options] [command]
@@ -845,7 +845,7 @@ openship project storage unbind [options] <id>
 
 ## openship project transfer
 
-Promote a project to Openship Cloud, or bring it back (self-hosted only)
+Promote a project to Workbox Cloud, or bring it back (self-hosted only)
 
 ```text
 openship project transfer [options] <id> <direction>

@@ -105,7 +105,7 @@ async function handleInstallationCreated(
   const accountLogin = payload.installation.account.login.toLowerCase();
   const accountType = payload.installation.account.type;
 
-  // Installation webhooks carry no Openship workspace binding and can arrive
+  // Installation webhooks carry no Workbox Cloud workspace binding and can arrive
   // before or after the browser setup redirect. They may refresh a row that the
   // verified claim callback already owns, but must never invent one by guessing
   // from sender membership order.

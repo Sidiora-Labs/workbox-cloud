@@ -56,7 +56,7 @@ export type DeployTarget = "local" | "server" | "cloud" | "cluster";
  * A provider resource kind used by the external deployment layer.
  *
  * This is deliberately separate from DeployTarget: the existing target union
- * describes Openship's host runtimes, while these values describe provider
+ * describes Workbox Cloud's host runtimes, while these values describe provider
  * resources with different lifecycle and persistence semantics.
  */
 export type ExternalWorkloadKind =
@@ -208,7 +208,7 @@ export type ComposeGpuConfig = Pick<ComposeAdvanced, "gpus" | "runtime">;
  * both @repo/db (storage) and @repo/adapters (runtime) can share one definition.
  */
 /**
- * Openship's own DEPLOY-TIME readiness gate — the sibling of, and NOT the same
+ * Workbox Cloud's own DEPLOY-TIME readiness gate — the sibling of, and NOT the same
  * thing as, `ComposeHealthcheck` above.
  *
  *   ComposeHealthcheck  = the Docker HEALTHCHECK directive. An arbitrary command

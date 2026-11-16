@@ -102,7 +102,7 @@ export function AssistantAgents({ id }: { id?: string }) {
           <div className="py-16 text-center">
             <h2 className="text-xl font-medium">Connect your assistant first</h2>
             <p className="my-4 text-sm text-muted-foreground">
-              Agents use your connected AI and approved OpenShip access.
+              Agents use your connected AI and approved Workbox Cloud access.
             </p>
             <Button onClick={navigation?.close}>
               Set up assistant <Icon name="arrow-right" />

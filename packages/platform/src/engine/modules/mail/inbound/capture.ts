@@ -183,7 +183,7 @@ export async function ensureCollectorMailbox(
     buildUpsertMailboxSql({
       username,
       passwordHash: hash,
-      name: "Openship inbound capture",
+      name: "Workbox Cloud inbound capture",
       domain: d,
       storagebasedirectory: layout.storagebasedirectory,
       storagenode: layout.storagenode,

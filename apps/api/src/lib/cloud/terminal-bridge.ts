@@ -33,7 +33,7 @@ export async function prepareCloudTerminal(ctx: ExecutionContext, kind: Terminal
   const response = await cloudFetchAsOrgOwner(ctx.organizationId, `${terminalPath(kind)}/ticket`, {
     method: "POST", body: JSON.stringify({ [`${kind}Id`]: id }),
   }, identity);
-  if (!response) throw new AppError("Openship Cloud is unreachable", 503, "CLOUD_UNREACHABLE");
+  if (!response) throw new AppError("Workbox Cloud is unreachable", 503, "CLOUD_UNREACHABLE");
   const body = await response.json().catch((diagnosticFailure) => { observeCaughtError(diagnosticFailure, "api/lib/cloud/terminal-bridge"); return null; }) as { token?: unknown; success?: unknown; error?: unknown; code?: unknown } | null;
   if (!response.ok) throw new AppError(typeof body?.error === "string" ? body.error : "Cloud terminal is unavailable", response.status,
     typeof body?.code === "string" ? body.code : "CLOUD_TERMINAL_UNAVAILABLE");

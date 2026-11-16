@@ -1,4 +1,4 @@
-<h1 align="center">Openship</h1>
+<h1 align="center">Workbox Cloud</h1>
 
 <p align="center">
   Yerleşik CI/CD özelliklerine sahip, açık kaynaklı ve kendi sunucunuzda barındırabileceğiniz dağıtım platformu.<br>
@@ -34,7 +34,7 @@
 </p>
 
 <p align="center">
-  <img src="../../apps/web/public/screenshots/tr/deploy.webp" alt="Openship kontrol paneli" width="800" />
+  <img src="../../apps/web/public/screenshots/tr/deploy.webp" alt="Workbox Cloud kontrol paneli" width="800" />
 </p>
 
 ---
@@ -45,7 +45,7 @@
 
 ### Tek başınıza — masaüstü uygulaması
 
-Kontrol düzlemi bilgisayarınızda çalışır ve sunucularınızı SSH üzerinden yönetir; Openship'in hiçbir bileşeni herkese açık hâle getirilmez. İndirin ve açın; terminal kullanmanız gerekmez:
+Kontrol düzlemi bilgisayarınızda çalışır ve sunucularınızı SSH üzerinden yönetir; Workbox Cloud'in hiçbir bileşeni herkese açık hâle getirilmez. İndirin ve açın; terminal kullanmanız gerekmez:
 
 | Platform                  | İndirme                                                                                                      |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------ |
@@ -58,7 +58,7 @@ Linux: `chmod +x Openship.AppImage && ./Openship.AppImage`. Bağlantılar her za
 
 ### Ekip veya kesintisiz çalışma — sunucuda CLI
 
-API ve kontrol panelini birlikte içeren CLI'ı kurup **`openship`** komutunu çalıştırın. Etkileşimli sihirbaz ilk yöneticiyi oluşturur, alan adınızı yapılandırır ve Openship'i açılışta çalışan bir servis olarak kurar. Kurulumu daha sonra yönetmek için aynı komutu yeniden çalıştırabilirsiniz.
+API ve kontrol panelini birlikte içeren CLI'ı kurup **`openship`** komutunu çalıştırın. Etkileşimli sihirbaz ilk yöneticiyi oluşturur, alan adınızı yapılandırır ve Workbox Cloud'i açılışta çalışan bir servis olarak kurar. Kurulumu daha sonra yönetmek için aynı komutu yeniden çalıştırabilirsiniz.
 
 ```bash
 curl -fsSL https://get.openship.io | sh             # kurulum (alternatif: npm i -g openship)
@@ -101,7 +101,7 @@ docker compose up -d
 
 ## Ne Yapar?
 
-Bir depoyu seçin. Openship teknoloji yığınınızı algılar, derler, yapılandırır ve dağıtır; yapılandırma dosyaları, işlem hatları veya YAML yazmanız gerekmez.
+Bir depoyu seçin. Workbox Cloud teknoloji yığınınızı algılar, derler, yapılandırır ve dağıtır; yapılandırma dosyaları, işlem hatları veya YAML yazmanız gerekmez.
 
 Veritabanları, alan adları, SSL, CDN, e-posta ve yedeklemeler tek bir yerden yönetilir.
 
@@ -129,7 +129,7 @@ Yan projelerini dağıtan bireysel geliştiriciler ile canlı ortamları yönete
 
 ## İstediğiniz Yere Dağıtın
 
-- **Openship Cloud** — yönetilen, otomatik ölçeklenen ve kurulum gerektirmeyen ortam
+- **Workbox Cloud** — yönetilen, otomatik ölçeklenen ve kurulum gerektirmeyen ortam
 - **Herhangi bir VPS** — Hetzner, DigitalOcean, Linode, OVH ve diğerleri
 - **Fiziksel sunucular** — bare metal, veri merkezi veya ev laboratuvarı
 - **Çoklu sunucu** — iş yüklerini birden fazla makineye dağıtma
@@ -197,6 +197,6 @@ Bir güvenlik açığı mı buldunuz? Lütfen bunu herkese açık bir issue, PR 
 
 ## Lisans
 
-Openship, [Apache License 2.0](../../LICENSE) kapsamında lisanslanan **açık kaynaklı** bir yazılımdır.
+Workbox Cloud, [Apache License 2.0](../../LICENSE) kapsamında lisanslanan **açık kaynaklı** bir yazılımdır.
 
 Apache 2.0 koşulları kapsamında ticari ve kapalı kaynaklı ürünler dâhil olmak üzere yazılımı kullanabilir, çalıştırabilir, değiştirebilir, kendi sunucunuzda barındırabilir ve dağıtabilirsiniz. Ayrıntılar için [LICENSE](../../LICENSE) dosyasına bakın.

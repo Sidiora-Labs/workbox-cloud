@@ -95,7 +95,7 @@ export type TlsIssuedElsewhere = "external_ingress" | "manual_cert" | "managed_e
  *   manualSsl       → operator-uploaded cert (BYO / Cloudflare Origin CA). certbot
  *                     never issued it, so `renew` would error and flip it to
  *                     "error".
- *   free            → a managed `*.opsh.io` host: Openship Cloud's edge terminates
+ *   free            → a managed `*.opsh.io` host: Workbox Cloud's edge terminates
  *                     TLS and forwards to plain :80 here. The box usually has no
  *                     public A record for the name at all, so HTTP-01 cannot pass.
  */
@@ -136,7 +136,7 @@ export function describeTlsIssuedElsewhere(where: TlsIssuedElsewhere, hostname: 
     case "manual_cert":
       return `${hostname} serves an uploaded certificate — certbot is not run for it.`;
     default:
-      return `TLS for ${hostname} is handled by Openship Cloud — no local certificate needed.`;
+      return `TLS for ${hostname} is handled by Workbox Cloud — no local certificate needed.`;
   }
 }
 
@@ -623,7 +623,7 @@ RECORD_NAME="_acme-challenge.\${DOMAIN}"
 case "$DOMAIN" in ''|*[!A-Za-z0-9.-]*) echo "Invalid ACME domain" >&2; exit 1;; esac
 case "$CERTBOT_VALIDATION" in ''|*[!A-Za-z0-9_-]*) echo "Invalid ACME validation value" >&2; exit 1;; esac
 DNS_PAYLOAD=$(printf '%s' '{"type":"TXT","name":"' "$RECORD_NAME" \\
-  '","content":"\\"' "$CERTBOT_VALIDATION" '\\"","ttl":60,"comment":"Managed by Openship"}')
+  '","content":"\\"' "$CERTBOT_VALIDATION" '\\"","ttl":60,"comment":"Managed by Workbox Cloud"}')
 RES=$(curl -s -S --connect-timeout 5 --max-time 15 -X POST "https://api.cloudflare.com/client/v4/zones/${manager.zone.id}/dns_records" \\
   -H "Authorization: Bearer ${manager.credentials.apiToken}" \\
   -H "Content-Type: application/json" \\

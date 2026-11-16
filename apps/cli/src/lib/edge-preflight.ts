@@ -158,7 +158,7 @@ export interface EdgePreflightDeps {
 function privilegeClause(privilegeDegraded: boolean): string {
   if (!privilegeDegraded) return "";
   return (
-    " — and Openship could not run the stop as root on this host (see the privilege " +
+    " — and Workbox Cloud could not run the stop as root on this host (see the privilege " +
     "warning above), so stopping it was almost certainly refused rather than too slow. " +
     "Retrying as this user will fail the same way: re-run as root, or as a user with " +
     "passwordless sudo"
@@ -674,7 +674,7 @@ export async function confirmEdgeAction(info: {
             {
               value: "migrate" as const,
               label: `Migrate ${importable} site${importable === 1 ? "" : "s"} & take over`,
-              hint: "import the existing sites into Openship's edge, then take 80/443",
+              hint: "import the existing sites into Workbox Cloud's edge, then take 80/443",
             },
           ]
         : []),
@@ -686,7 +686,7 @@ export async function confirmEdgeAction(info: {
       { value: "cancel" as const, label: "Cancel — leave it running" },
     ],
     // Default to MIGRATE whenever there are sites we can import: it's the only
-    // option that both gets Openship onto 80/443 and keeps the operator's
+    // option that both gets Workbox Cloud onto 80/443 and keeps the operator's
     // existing sites served, so it's the choice they almost always want and
     // the one that loses nothing on a reflexive Enter.
     // With nothing importable there's no safe default: a known proxy falls
@@ -795,9 +795,9 @@ function defaultDeps(): EdgePreflightDeps {
     edgeServedHostnames,
     confirmStoppedImport: async ({ proxy, count }) => {
       const take = await select({
-        message: `${proxy} is stopped but still has ${count} site(s) not served by Openship — import them?`,
+        message: `${proxy} is stopped but still has ${count} site(s) not served by Workbox Cloud — import them?`,
         options: [
-          { value: "import", label: `Import ${count} site(s)`, hint: "serve them from Openship's edge" },
+          { value: "import", label: `Import ${count} site(s)`, hint: "serve them from Workbox Cloud's edge" },
           { value: "skip", label: "Skip", hint: "leave them unserved" },
         ],
         initialValue: "import",

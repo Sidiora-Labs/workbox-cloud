@@ -236,7 +236,7 @@ async function requireWebmailTemplate(organizationId: string): Promise<AppTempla
   const template = await getTemplateForOrg(organizationId, WEBMAIL_TEMPLATE_ID);
   if (!template) {
     throw new AppError(
-      "The webmail app isn't in this instance's app catalog. Update Openship, then install webmail again.",
+      "The webmail app isn't in this instance's app catalog. Update Workbox Cloud, then install webmail again.",
       409,
     );
   }
@@ -933,7 +933,7 @@ async function withMailVpsPlatform<T>(
  */
 function legacyReplaceConsentRequired(project: Pick<Project, "name">): AppError {
   return new AppError(
-    `"${project.name}" was deployed by an older Openship that shipped webmail as a prebuilt bundle instead of an image, so it can't be redeployed — it has to be replaced by the webmail app. Retry with replaceLegacy to do that now: the old webmail is removed and reinstalled from the image at the same hostname. Mailboxes and mail data live on the mail server and are untouched; the old webmail's sign-in sessions and per-user settings are not.`,
+    `"${project.name}" was deployed by an older Workbox Cloud that shipped webmail as a prebuilt bundle instead of an image, so it can't be redeployed — it has to be replaced by the webmail app. Retry with replaceLegacy to do that now: the old webmail is removed and reinstalled from the image at the same hostname. Mailboxes and mail data live on the mail server and are untouched; the old webmail's sign-in sessions and per-user settings are not.`,
     409,
     LEGACY_WEBMAIL_ERROR_CODE,
   );

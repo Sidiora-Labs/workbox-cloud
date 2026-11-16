@@ -27,7 +27,7 @@ export async function chatAssistantAccess(
     !identity.assistantAuthority
   )
     throw fail(
-      "Enable your assistant for this connection in OpenShip → Settings → Chat apps.",
+      "Enable your assistant for this connection in Workbox Cloud → Settings → Chat apps.",
       403,
     );
   if (

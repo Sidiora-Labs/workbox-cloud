@@ -1,6 +1,6 @@
 /**
  * Proxy config import — read an existing reverse proxy's configuration and
- * normalize its sites so a migrate/takeover can re-register them as Openship
+ * normalize its sites so a migrate/takeover can re-register them as Workbox Cloud
  * routes. All parsing is read-only and best-effort (warnings, never throws).
  */
 
@@ -20,7 +20,7 @@ import { scanTraefik } from "./traefik";
  *
  * OpenResty ON THE HOST is included, and that is the point: our edge is a
  * CONTAINER now, so a host OpenResty is a proxy to migrate FROM like any other —
- * including one an older Openship installed itself. This list used to exclude
+ * including one an older Workbox Cloud installed itself. This list used to exclude
  * `/usr/local/openresty/...` as "ours", which was true only while the bare edge WAS
  * us; the container edge's own config lives inside the image, and its host-side
  * state is the `/var/lib/openship/edge` bind mount, so a file at these paths means
@@ -93,7 +93,7 @@ export async function scanImportableSites(
     case "traefik":
       return scanTraefik(executor);
     case "openresty":
-      // A host OpenResty is a MIGRATION SOURCE — a legacy bare Openship edge or a
+      // A host OpenResty is a MIGRATION SOURCE — a legacy bare Workbox Cloud edge or a
       // hand-rolled one. Dump its fully-resolved config so vhosts are found wherever
       // the install `include`s them; the fixed-glob read missed a non-default layout
       // and the migrate offer collapsed to takeover-only (dropping every live site).

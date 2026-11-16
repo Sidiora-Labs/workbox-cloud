@@ -410,7 +410,7 @@ describe("project pause / resume", () => {
     expect(h.project.disabledAt).toBeInstanceOf(Date);
   });
 
-  it("refuses to pause the Openship control plane", async () => {
+  it("refuses to pause the Workbox Cloud control plane", async () => {
     h.project.appTemplateId = "openship";
     const { disableProject } = await load();
 

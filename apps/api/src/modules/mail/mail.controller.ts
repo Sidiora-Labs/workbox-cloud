@@ -321,7 +321,7 @@ export async function getStatus(c: Context) {
       let observationError: string | undefined;
       const engine = found ? await detectMailEngine(executor).catch((diagnosticFailure) => {
         observeCaughtError(diagnosticFailure, "api/modules/mail/mail.controller");
-        observationError = "Openship could not check the mail engine. Its current health is unknown.";
+        observationError = "Workbox Cloud could not check the mail engine. Its current health is unknown.";
         return null;
       }) : null;
       return { state: found, engine, observationError };
@@ -348,7 +348,7 @@ export async function getStatus(c: Context) {
     observeCaughtError(diagnosticFailure, "api/modules/mail/mail.controller");
     return c.json({
       code: "MAIL_STATUS_UNAVAILABLE",
-      message: "Openship could not read this mail server's status. Its health is unknown. Check the connection and retry.",
+      message: "Workbox Cloud could not read this mail server's status. Its health is unknown. Check the connection and retry.",
     }, 503);
   }
 }
@@ -547,7 +547,7 @@ export async function adoptMailServer(c: Context) {
       return c.json(
         {
           error: iredmailInstalled
-            ? "A mail stack is running but no Openship state file was found — re-run setup to manage it."
+            ? "A mail stack is running but no Workbox Cloud state file was found — re-run setup to manage it."
             : "No mail server found on this server.",
         },
         404,

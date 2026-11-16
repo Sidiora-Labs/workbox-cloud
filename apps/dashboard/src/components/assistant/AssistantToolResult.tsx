@@ -33,9 +33,9 @@ export function AssistantToolResult({
           ? "The operation could not be completed"
           : tool.output === undefined
             ? state === "running"
-              ? "Waiting for OpenShip…"
+              ? "Waiting for Workbox Cloud…"
               : "No result was received before this turn ended."
-            : "Result from OpenShip"}
+            : "Result from Workbox Cloud"}
       </p>
       {tool.output !== undefined && (
         <div className="min-w-0">

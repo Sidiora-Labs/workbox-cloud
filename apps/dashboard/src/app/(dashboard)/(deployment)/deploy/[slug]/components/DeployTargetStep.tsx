@@ -359,8 +359,8 @@ const DeployTargetStep: React.FC<DeployTargetStepProps> = ({ serverSelection, ru
     },
     {
       value: "api-host",
-      // The "api host" is the machine running Openship: the user's own device in
-      // desktop mode, the Openship orchestrator when self-hosted. Not the cloud —
+      // The "api host" is the machine running Workbox Cloud: the user's own device in
+      // desktop mode, the Workbox Cloud orchestrator when self-hosted. Not the cloud —
       // so no cloud icon, and a label that says which machine it actually is.
       icon: <UiIcon name="cpu" className="size-5" />,
       label: isDesktop ? ts.clone.apiHostDesktopLabel : ts.clone.apiHostServerLabel,
@@ -478,7 +478,7 @@ const DeployTargetStep: React.FC<DeployTargetStepProps> = ({ serverSelection, ru
         <h1 className="text-2xl font-medium">Deploy to server cluster</h1>
         {backButton}
       </header>
-      <p className="text-sm leading-relaxed text-muted-foreground">This project uses the cluster and instance count saved in its Scale controls. OpenShip builds or reuses the application image, starts the instances, and checks their health before switching traffic.</p>
+      <p className="text-sm leading-relaxed text-muted-foreground">This project uses the cluster and instance count saved in its Scale controls. Workbox Cloud builds or reuses the application image, starts the instances, and checks their health before switching traffic.</p>
       <Button onClick={onContinue}>Continue</Button>
     </div>
   );

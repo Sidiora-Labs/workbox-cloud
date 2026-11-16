@@ -1,4 +1,4 @@
-# Openship SDK and CLI
+# Workbox Cloud SDK and CLI
 
 The `openship` distribution contains Ship SDK and the CLI. Version 0.8.0 and later includes native and remote SDK entries, TypeScript declarations, and ESM/CommonJS support on Node.js 22+.
 
@@ -10,7 +10,7 @@ npm install openship
 
 Upgrade an older CLI-only dependency with `npm install openship@latest`. The [Ship SDK guide](https://openship.io/docs/api/sdk) covers remote connections, native embedding, deployment workflows, scaling, and the shared SDK/REST reference. Contributors can build with `bun run build:sdk`, run `npm pack` in this directory, and install the printed tarball to test unpublished changes.
 
-Use a remote client with a cloud or self-hosted Openship installation:
+Use a remote client with a cloud or self-hosted Workbox Cloud installation:
 
 ```ts
 import { OpenshipClient } from "openship/client";
@@ -22,7 +22,7 @@ const ship = new OpenshipClient({
 });
 const submitted = await ship.deploy({
   name: "generated-app",
-  source: { type: "files", files: { "index.html": "<h1>Hello from Openship</h1>" } },
+  source: { type: "files", files: { "index.html": "<h1>Hello from Workbox Cloud</h1>" } },
 });
 console.log(await ship.deployment(submitted.deployment_id).wait());
 ```

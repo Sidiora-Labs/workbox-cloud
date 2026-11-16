@@ -4,7 +4,7 @@ import { RESOURCE_TIER_ORDER } from "../resources";
 
 /**
  * Shape gate for `pricing.json` — the one editable source of every price,
- * allowance and limit Openship Cloud sells.
+ * allowance and limit Workbox Cloud sells.
  *
  * The catalog is a COMMITTED file, not user input, so `parse` (throw) is the
  * right failure mode: a malformed edit must break the build everywhere rather
@@ -44,7 +44,7 @@ export const planLimitsSchema = z.object({
   runningServices: limitNumber,
   /** Active deployment build slots. Absent on existing paid offers. */
   concurrentBuilds: limitNumber.optional(),
-  /** Projects (project groups). Oblien has no project concept — Openship gates it. */
+  /** Projects (project groups). Oblien has no project concept — Workbox Cloud gates it. */
   maxProjects: limitNumber,
   /** Preset ceiling for saved offers without explicit service resources. */
   maxResourceTier: z.enum(RESOURCE_TIER_ORDER).nullable(),

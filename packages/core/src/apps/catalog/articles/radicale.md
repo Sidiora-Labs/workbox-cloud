@@ -1,6 +1,6 @@
 ## Calendars and contacts for your mailboxes
 
-Radicale adds CalDAV calendars and CardDAV address books alongside OpenShip Mail. It is an optional app: install it on the mail server or another server, then manage its deployments, settings, and storage under Apps.
+Radicale adds CalDAV calendars and CardDAV address books alongside Workbox Cloud Mail. It is an optional app: install it on the mail server or another server, then manage its deployments, settings, and storage under Apps.
 
 It uses Radicale's built-in IMAP authentication. Users sign in with their **full mailbox email address and mailbox password**, including mailboxes on additional domains hosted by that IMAP server. There is no second account database or administrator password to synchronize. Each mailbox can access only its own collections.
 
@@ -17,7 +17,7 @@ The app can also use an existing external IMAPS server. That server must allow p
 
 Add a **CalDAV account** for calendars and a **CardDAV account** for contacts. Enter the Radicale server hostname, enable SSL/TLS, use port **443**, and supply your full mailbox email address and password. In DAVx⁵, use “Login with URL and user name” and enter the full HTTPS URL. For clients that require a collection URL, copy it from Radicale's collection manager.
 
-Radicale serves `/.well-known/caldav` and `/.well-known/carddav` on its own hostname. OpenShip's standard HTTPS routing passes these requests and DAV methods to the app. Entering the DAV hostname lets compatible clients discover the collections without a custom path.
+Radicale serves `/.well-known/caldav` and `/.well-known/carddav` on its own hostname. Workbox Cloud's standard HTTPS routing passes these requests and DAV methods to the app. Entering the DAV hostname lets compatible clients discover the collections without a custom path.
 
 For clients that discover a server from the **email domain alone**, publish these optional DNS records for each mailbox domain (replace the target with your DAV hostname):
 
@@ -36,6 +36,6 @@ Successful logins are not cached. Changing a mailbox password or disabling its I
 
 Collections live in the app's persistent `radicale_data` volume under `/var/lib/radicale/collections`, and survive deployments and container replacement. Include that volume in your backup plan. Removing a mailbox does not erase its stored collections; deleting and recreating the same mailbox address gives it access to those collections again. Renaming an address does not move its collections. Export or remove the old collections before reassigning an address.
 
-The included web page manages collections and imports/exports. Calendar and contacts views inside OpenShip Webmail are a separate feature; this app does not add JMAP or change email delivery.
+The included web page manages collections and imports/exports. Calendar and contacts views inside Workbox Cloud Webmail are a separate feature; this app does not add JMAP or change email delivery.
 
 See the [Radicale documentation](https://radicale.org/v3.html) for client setup and collection management.

@@ -426,7 +426,7 @@ async function scanSecurityAdvisoriesWork(
           idempotencyKey: `security:${key(project.id, finding.id, finding.revision, finding.serviceId)}`,
           payload: {
             projectName: project.name,
-            message: `${finding.title}\n${finding.message}\nDetected: ${finding.evidence.join(", ")}\n${finding.canRefresh ? "Open the security banner in Openship and choose Review affected apps to inspect and refresh runtime images." : "Review the advisory and update the service configuration."}`,
+            message: `${finding.title}\n${finding.message}\nDetected: ${finding.evidence.join(", ")}\n${finding.canRefresh ? "Open the security banner in Workbox Cloud and choose Review affected apps to inspect and refresh runtime images." : "Review the advisory and update the service configuration."}`,
             serviceName: finding.serviceName,
             url: finding.url,
             advisoryId: finding.id,
@@ -504,7 +504,7 @@ async function scanSecurityAdvisoriesWork(
             eventType: "security.advisory",
             idempotencyKey: `security:host:${key(server.id, finding.id, finding.revision)}`,
             payload: {
-              message: `${status.name}: ${finding.title}\n${finding.message}\n${finding.evidence.join(", ")}\nReview this server's Runs in Openship.`,
+              message: `${status.name}: ${finding.title}\n${finding.message}\n${finding.evidence.join(", ")}\nReview this server's Runs in Workbox Cloud.`,
               url: finding.url,
               advisoryId: finding.id,
               durable: true,

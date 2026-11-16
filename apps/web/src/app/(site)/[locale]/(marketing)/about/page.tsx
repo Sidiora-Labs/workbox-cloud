@@ -13,21 +13,21 @@ import { IllustratedLink } from "@/components/marketing/illustrated-link";
 
 const PAGE_TITLE = "About";
 const PAGE_DESCRIPTION =
-  "OpenShip is an open-source deployment platform built and maintained by the team at Oblien. Apache 2.0, source on GitHub, yours to run anywhere.";
+  "Workbox Cloud is an open-source deployment platform built and maintained by the team at Oblien. Apache 2.0, source on GitHub, yours to run anywhere.";
 
 const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
   alternates: { canonical: "/about" },
   openGraph: {
-    title: `${PAGE_TITLE} - OpenShip`,
+    title: `${PAGE_TITLE} - Workbox Cloud`,
     description: PAGE_DESCRIPTION,
     url: "/about",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${PAGE_TITLE} - OpenShip`,
+    title: `${PAGE_TITLE} - Workbox Cloud`,
     description: PAGE_DESCRIPTION,
   },
 };
@@ -47,7 +47,7 @@ export default function AboutPage() {
       <Navbar />
       <main className="marketing-page">
         <MarketingIntro
-          eyebrow="About OpenShip"
+          eyebrow="About Workbox Cloud"
           title={
             <>
               {copy("Built in the open.")}
@@ -70,7 +70,7 @@ export default function AboutPage() {
                 illustration="deploy-anywhere"
                 title={copy("Choose where it runs")}
                 description={copy(
-                  "Use OpenShip Cloud or connect your own infrastructure. Manage apps, data, domains, and backups together.",
+                  "Use Workbox Cloud or connect your own infrastructure. Manage apps, data, domains, and backups together.",
                 )}
                 href="/features/deploy-anywhere"
               />
@@ -92,12 +92,12 @@ export default function AboutPage() {
             <div className="marketing-prose">
               <p>
                 {copy(
-                  "OpenShip is open source under the Apache License 2.0. The dashboard, CLI, and platform code are public on GitHub, so you can inspect how it works and contribute improvements.",
+                  "Workbox Cloud is open source under the Apache License 2.0. The dashboard, CLI, and platform code are public on GitHub, so you can inspect how it works and contribute improvements.",
                 )}
               </p>
               <p>
                 {copy(
-                  "Deployments use standard containers. Self-host the platform on your own infrastructure, or choose OpenShip Cloud when you want managed hosting.",
+                  "Deployments use standard containers. Self-host the platform on your own infrastructure, or choose Workbox Cloud when you want managed hosting.",
                 )}
               </p>
               <a href="https://github.com/oblien/openship" className="marketing-text-link">
@@ -113,10 +113,10 @@ export default function AboutPage() {
           >
             <div className="marketing-prose">
               <p>
-                {copy("OpenShip is built by ")}
+                {copy("Workbox Cloud is built by ")}
                 <a href="https://oblien.com">{copy("Oblien LLC")}</a>
                 {copy(
-                  ", a team working on cloud and developer infrastructure. We also operate OpenShip Cloud.",
+                  ", a team working on cloud and developer infrastructure. We also operate Workbox Cloud.",
                 )}
               </p>
               <p>
@@ -138,7 +138,7 @@ export default function AboutPage() {
             <div className="marketing-grid">
               <IllustratedLink
                 illustration="configuration-as-code"
-                title={copy("Contribute to OpenShip")}
+                title={copy("Contribute to Workbox Cloud")}
                 description={copy(
                   "Report a bug, suggest a feature, improve a guide, or send a pull request.",
                 )}

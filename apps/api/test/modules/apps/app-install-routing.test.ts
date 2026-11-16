@@ -390,7 +390,7 @@ describe("app install — routing comes from the operator's choice", () => {
     ]);
   });
 
-  it("gates a chosen free route on Openship Cloud BEFORE anything is written", async () => {
+  it("gates a chosen free route on Workbox Cloud BEFORE anything is written", async () => {
     requireCloudMock.mockRejectedValue(new Error("cloud-required"));
     await expect(install([{ service: "backend", port: 3210, mode: "free" }])).rejects.toThrow(
       /cloud-required/,

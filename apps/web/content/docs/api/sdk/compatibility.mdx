@@ -18,7 +18,7 @@ application request:
 { "sdk": { "protocol": 1, "fixedOrganizationScope": true } }
 ```
 
-The client sends `X-Organization-Id` and `X-Openship-Scope: fixed`. The API authenticates the caller,
+The client sends `X-Organization-Id` and `X-Workbox Cloud-Scope: fixed`. The API authenticates the caller,
 checks current membership and grants, and keeps access inside that organization. Request headers cannot
 override the client's configured scope.
 

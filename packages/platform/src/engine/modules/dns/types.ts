@@ -1,7 +1,7 @@
 /**
  * DNS provider abstraction — automated record management for custom domains.
  *
- * Openship already computes the exact records a domain needs (`buildRecords` in
+ * Workbox Cloud already computes the exact records a domain needs (`buildRecords` in
  * the domains module). A connected provider turns that list from instructions
  * into an action: we write the A/CNAME and `_openship-challenge` TXT ourselves,
  * and the domain verifies without the operator leaving the page.
@@ -28,11 +28,11 @@ export type DnsProviderName = "cloudflare" | "digitalocean";
 export type DnsRecordType = "A" | "AAAA" | "CNAME" | "TXT" | "MX" | "NS" | "SRV";
 
 /**
- * Written into the provider's record comment so cleanup can tell "Openship put
+ * Written into the provider's record comment so cleanup can tell "Workbox Cloud put
  * this here" from "the operator has run their mail on this zone for six years".
  * Changing this string orphans every record written under the old one.
  */
-export const OPENSHIP_RECORD_COMMENT = "Managed by Openship";
+export const OPENSHIP_RECORD_COMMENT = "Managed by Workbox Cloud";
 
 export interface DnsRecordInput {
   /** Record type: A, CNAME, TXT, etc. */
@@ -151,7 +151,7 @@ export interface DnsProvider {
 
   /**
    * Remove ownership bookkeeping at `name` whose record no longer exists (deleted
-   * outside Openship, or a delete whose bookkeeping cleanup failed). Only providers
+   * outside Workbox Cloud, or a delete whose bookkeeping cleanup failed). Only providers
    * that keep the marker beside the record, rather than on it, need this.
    */
   pruneOrphanedMarkers?(
@@ -202,7 +202,7 @@ export class DnsRecordConflictError extends AppError {
   ) {
     super(
       `${existingCount} existing ${recordType} records already answer for "${recordName}". ` +
-        `Openship won't rewrite records it didn't create — remove or consolidate them first.`,
+        `Workbox Cloud won't rewrite records it didn't create — remove or consolidate them first.`,
       409,
       "DNS_RECORD_CONFLICT",
     );

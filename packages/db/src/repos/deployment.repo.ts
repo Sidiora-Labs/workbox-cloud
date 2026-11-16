@@ -1545,7 +1545,7 @@ export function createDeploymentRepo(db: Database, encryption: ConfigurationEncr
 
     /**
      * Total build time (ms) an org consumed in a window — sum of build-session
-     * `durationMs` for the org's deployments started in [from, to]. Openship's
+     * `durationMs` for the org's deployments started in [from, to]. Workbox Cloud's
      * own metric (Oblien does not meter build separately). Bounded by period.
      */
     async sumBuildMillisForOrg(organizationId: string, from: Date, to: Date, workspaceId?: string | null): Promise<number> {

@@ -491,7 +491,7 @@ describe("isDockerHostPortAvailable", () => {
 });
 
 describe("ensurePortAvailable — docker-published port (#628)", () => {
-  test("a stale Openship container is stopped by id, and the daemon is never touched", async () => {
+  test("a stale Workbox Cloud container is stopped by id, and the daemon is never touched", async () => {
     let stopped = false;
     const host = recordingHost(() => [
       [`sport = :${PORT}`, stopped ? "" : SS_DOCKER_PROXY],
@@ -515,7 +515,7 @@ describe("ensurePortAvailable — docker-published port (#628)", () => {
 
     expect(spy.calls).toHaveLength(1);
     const prompt = spy.calls[0]!;
-    expect(prompt.actions[0]!.label).toBe("Stop Openship Container & Continue");
+    expect(prompt.actions[0]!.label).toBe("Stop Workbox Cloud Container & Continue");
     expect(prompt.details).toMatchObject({
       stopTarget: "container",
       containerId: CID,
@@ -684,7 +684,7 @@ describe("ensurePortAvailable — docker-published port (#628)", () => {
 });
 
 describe("ensurePortAvailable — systemd occupants keep working", () => {
-  test("Openship's own deployment unit is still stopped by name", async () => {
+  test("Workbox Cloud's own deployment unit is still stopped by name", async () => {
     const UNIT = "openship-dep_Ab3xY9zQ.service";
     let stopped = false;
     const host = recordingHost(() => [
@@ -694,7 +694,7 @@ describe("ensurePortAvailable — systemd occupants keep working", () => {
       ],
       ["-p 700 -o args=", "node /srv/app/server.js"],
       ["/proc/700/cgroup", `0::/system.slice/${UNIT}`],
-      ["--property=Description", "Openship deployment dep_Ab3xY9zQ"],
+      ["--property=Description", "Workbox Cloud deployment dep_Ab3xY9zQ"],
     ]);
     const { logger } = fakeLogger();
     const spy = promptSpy("free_port");
@@ -708,7 +708,7 @@ describe("ensurePortAvailable — systemd occupants keep working", () => {
     await expect(
       ensurePortAvailable(host.executor, PORT, logger, spy.promptUser),
     ).resolves.toBeUndefined();
-    expect(spy.calls[0]!.actions[0]!.label).toBe("Stop Openship Deployment & Continue");
+    expect(spy.calls[0]!.actions[0]!.label).toBe("Stop Workbox Cloud Deployment & Continue");
     expect(spy.calls[0]!.details).toMatchObject({
       stopTarget: "unit",
       isManagedDeployment: true,
@@ -767,7 +767,7 @@ describe("ensurePortAvailable — systemd occupants keep working", () => {
       [`sport = :${PORT}`, `LISTEN 0 511 *:${PORT} *:* users:(("bun",pid=900,fd=20))`],
       ["-p 900 -o args=", "bun run apps/api/src/index.ts"],
       ["/proc/900/cgroup", "0::/system.slice/openship-dev.service"],
-      ["--property=Description", "Openship (dev)"],
+      ["--property=Description", "Workbox Cloud (dev)"],
     ]);
     const { logger } = fakeLogger();
     const spy = promptSpy("free_port");
@@ -789,7 +789,7 @@ describe("ensurePortAvailable — systemd occupants keep working", () => {
       ],
       ["-p 701 -o args=", "node /srv/app/server.js"],
       ["/proc/701/cgroup", `0::/system.slice/${UNIT}`],
-      ["--property=Description", "Openship deployment"],
+      ["--property=Description", "Workbox Cloud deployment"],
       // No docker on this box at all: "couldn't ask" must stay inert.
       [`--filter publish=${PORT}`, null],
     ]);
@@ -815,7 +815,7 @@ describe("ensurePortAvailable — systemd occupants keep working", () => {
       [`sport = :${PORT}`, `LISTEN 0 511 *:${PORT} *:* users:(("node",pid=702,fd=18))`],
       ["-p 702 -o args=", "next-server (v16.3.1)"],
       ["/proc/702/cgroup", "0::/system.slice/openship-dep_Old1.service"],
-      ["--property=Description", "Openship deployment dep_Old1"],
+      ["--property=Description", "Workbox Cloud deployment dep_Old1"],
     ]);
     const { logger } = fakeLogger();
     const spy = promptSpy("free_port");
@@ -829,12 +829,12 @@ describe("ensurePortAvailable — systemd occupants keep working", () => {
     expect(forbiddenCommands(host.seen)).toEqual([]);
   });
 
-  test("another Openship deployment on the port is still prompted for", async () => {
+  test("another Workbox Cloud deployment on the port is still prompted for", async () => {
     const host = recordingHost(() => [
       [`sport = :${PORT}`, `LISTEN 0 511 *:${PORT} *:* users:(("node",pid=703,fd=18))`],
       ["-p 703 -o args=", "node /srv/other/server.js"],
       ["/proc/703/cgroup", "0::/system.slice/openship-dep_Other.service"],
-      ["--property=Description", "Openship deployment dep_Other"],
+      ["--property=Description", "Workbox Cloud deployment dep_Other"],
     ]);
     const { logger } = fakeLogger();
     const spy = promptSpy("abort");
@@ -960,7 +960,7 @@ describe("ensurePortAvailable — the fixes the adversarial review found", () =>
     expect(forbiddenCommands(host.seen)).toEqual([]);
   });
 
-  test("Openship's OWN control-plane container is never a stop target", async () => {
+  test("Workbox Cloud's OWN control-plane container is never a stop target", async () => {
     // `openship up` runs the api as a compose service on 4000. It carries no
     // openship.project label, so without the platform check it reads as an ordinary
     // foreign container and a deploy on 4000 would offer to stop the API serving it.
@@ -982,7 +982,7 @@ describe("ensurePortAvailable — the fixes the adversarial review found", () =>
     expect(host.seen.some((c) => c.includes("docker stop"))).toBe(false);
     expect(spy.calls[0]!.details).toMatchObject({ platformContainer: true, stopTarget: "none" });
     // Asserting the MESSAGE, not just the details bag: the first version of this refusal
-    // fell through to the docker-blind copy, which claimed Openship "couldn't identify"
+    // fell through to the docker-blind copy, which claimed Workbox Cloud "couldn't identify"
     // a container it had just named and told the operator to `docker stop` it — the API
     // serving the deploy. Only a message assertion catches that.
     expect(spy.calls[0]!.message).toContain("openship-api-1");

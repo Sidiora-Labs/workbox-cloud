@@ -510,7 +510,7 @@ async function cmdRevoke({ positionals, flags }: Args): Promise<void> {
 
 function printHelp(): void {
   const restrictable = RESTRICTABLE_TIERS.map((tier) => `\n                           ${tier} → ${priceEnvFor(tier)}`).join("");
-  console.log(`Openship promo codes — Stripe coupons + promotion codes, managed from the API container.
+  console.log(`Workbox Cloud promo codes — Stripe coupons + promotion codes, managed from the API container.
 
 Usage
   ${INVOCATION} <command> [flags]

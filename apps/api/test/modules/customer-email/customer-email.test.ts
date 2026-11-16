@@ -88,11 +88,11 @@ describe("Cloud customer email delivery with real SQL", () => {
         to: signup.email,
         customerSender: "support",
         replyTo: "support@openship.io",
-        subject: "Welcome to OpenShip",
+        subject: "Welcome to Workbox Cloud",
         messageId: expect.stringContaining("@openship.io>"),
       }),
     );
-    expect(send.mock.calls[0][0].text).toContain("explore OpenShip Cloud whenever you're ready");
+    expect(send.mock.calls[0][0].text).toContain("explore Workbox Cloud whenever you're ready");
     await provisionUser(signup);
     await worker().flush();
     expect(send).toHaveBeenCalledOnce();
@@ -149,7 +149,7 @@ describe("Cloud customer email delivery with real SQL", () => {
     const welcome = send.mock.calls
       .map(([mail]) => mail)
       .find((mail) => mail.customerSender === "support");
-    expect(invoice.subject).toBe("Your OpenShip invoice — $24.00");
+    expect(invoice.subject).toBe("Your Workbox Cloud invoice — $24.00");
     expect(invoice.replyTo).toBeUndefined();
     expect(invoice.text).toContain(
       `/billing/payment?organizationId=${f.orgId}&workspaceId=${f.workspace.id}`,
@@ -301,7 +301,7 @@ describe("Cloud customer email delivery with real SQL", () => {
       expect(send).toHaveBeenCalledOnce();
       expect(send.mock.calls[0][0]).toMatchObject({
         customerSender: "billing",
-        subject: "Your OpenShip invoice — $12.50",
+        subject: "Your Workbox Cloud invoice — $12.50",
       });
     },
   );
@@ -474,9 +474,9 @@ describe("subscription cancellation email", () => {
       to: (await repos.user.findById(f.userId))!.email,
       customerSender: "support",
       replyTo: "support@openship.io",
-      subject: "Your OpenShip subscription update",
+      subject: "Your Workbox Cloud subscription update",
     });
-    expect(mail.text).toContain("Renewal has been canceled for OpenShip Cloud — Production");
+    expect(mail.text).toContain("Renewal has been canceled for Workbox Cloud — Production");
     expect(mail.text).toContain("UTC");
     expect(mail.text).toContain("What worked well, and what could we do better?");
     expect(mail.text).toContain("just reply");
@@ -548,7 +548,7 @@ describe("subscription cancellation email", () => {
     });
     expect(await worker().flush()).toMatchObject({ sent: 1 });
     expect(send.mock.calls[0][0].text).toContain(
-      "Your subscription to OpenShip Cloud — Production has ended.",
+      "Your subscription to Workbox Cloud — Production has ended.",
     );
     expect(send.mock.calls[0][0].text).not.toContain("scheduled to end");
   });
@@ -591,7 +591,7 @@ describe("subscription cancellation email", () => {
     await commit(cancellationEvent(f, { scope: "management", workspaceId: undefined }));
     readSubscription.mockResolvedValue(subscription());
     await worker().flush();
-    expect(send.mock.calls[0][0].text).toContain("OpenShip managed service");
+    expect(send.mock.calls[0][0].text).toContain("Workbox Cloud managed service");
     expect(send.mock.calls[0][0].text).toContain(`/billing/manage?organizationId=${f.orgId}`);
     expect(send.mock.calls[0][0].text).not.toContain("workspaceId=");
   });

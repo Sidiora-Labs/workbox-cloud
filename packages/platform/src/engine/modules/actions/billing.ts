@@ -45,7 +45,7 @@ export class ActionCredits {
         idempotencyKey: `openship-actions:${id}`,
         offer: {
           reference: `actions-deposit-v${PRICING.actions.version}-${amountCents}`,
-          name: "Openship Actions funds",
+          name: "Workbox Cloud Actions funds",
           description: "Prepaid Actions budget. Separate from managed server subscriptions.",
           unitAmount: amountCents,
           currency: "usd",

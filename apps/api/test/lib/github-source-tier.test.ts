@@ -130,7 +130,7 @@ describe("every content-serving github route declares a source tier", () => {
 
     expect(sourceRoutes).toHaveLength(9);
     for (const route of sourceRoutes) {
-      expect(route.spec.localOnly, `${routeKey(route)} must not exist on Openship Cloud`).toBe(
+      expect(route.spec.localOnly, `${routeKey(route)} must not exist on Workbox Cloud`).toBe(
         true,
       );
       expect(route.spec.tag, `${routeKey(route)} must require GitHub administration`).toBe(

@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const copy = await getCopy();
   const source = getMigrationSource((await params).slug);
   if (!source) notFound();
-  const title = copy("Migrate from {name} to OpenShip", { name: source.name });
+  const title = copy("Migrate from {name} to Workbox Cloud", { name: source.name });
   const url = `/migrate/${source.slug}`;
   return localizedMetadata(
     await {

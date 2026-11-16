@@ -1,7 +1,7 @@
 /**
  * The single owner of the `/root/.openship/` folder on a target server.
  *
- * Everything Openship persists ON a server (mail state, the project manifest)
+ * Everything Workbox Cloud persists ON a server (mail state, the project manifest)
  * lives in this one root-only directory so it's the server's self-describing
  * source of truth — survive-the-orchestrator state for disaster recovery.
  *
@@ -47,7 +47,7 @@ function sq(v: string): string {
  * user EVERY operation here needs elevation — not just the writes. It used to need none
  * because the login was assumed to be root: `mkdir -p /root/.openship` is the first
  * thing such a server hits, and a `cat` of a file it could never have written returns
- * "" — indistinguishable from "this server has no Openship state", which is what `scan`
+ * "" — indistinguishable from "this server has no Workbox Cloud state", which is what `scan`
  * reads to re-import our own projects.
  *
  * The PATH does not move for a non-root login, unlike the remote journal's: elevation is
@@ -83,7 +83,7 @@ function cannotAttemptRead(p: Privileged): Error | null {
   // release before the resolver existed simply tried. Refusing on this arm would turn a
   // readable manifest into a missing one on any chatty box, which is the regression
   // `onRefusedHost: "proceed"` is documented to prevent — and `scan` reads a missing
-  // manifest as "this server has no Openship projects".
+  // manifest as "this server has no Workbox Cloud projects".
   if (p.profile.probeError || p.profile.forcedCommand) return null;
 
   // Measured, and measured as having no route to root: an unsupported distro or arch whose
@@ -106,7 +106,7 @@ async function mkdirOpenship(e: CommandExecutor): Promise<void> {
  * The non-throwing contract is deliberate (see `readOpenshipFile`) and callers
  * depend on it — but a REFUSED read and an ABSENT file must not be silently the
  * same event. The value has to stay ambiguous; the log must not. Without this,
- * a host that merely denies elevation reads as a host with no Openship state,
+ * a host that merely denies elevation reads as a host with no Workbox Cloud state,
  * which is the exact confusion this module's header says it exists to end.
  */
 function unreadable<T>(name: string, err: unknown, fallback: T): T {
@@ -122,7 +122,7 @@ function unreadable<T>(name: string, err: unknown, fallback: T): T {
  * place the folder is created — callers never `mkdir` it themselves.
  */
 export async function ensureOpenshipDir(exec: CommandExecutor): Promise<void> {
-  await mkdirOpenship((await storeExecutor(exec, "Writing Openship server state")).executor);
+  await mkdirOpenship((await storeExecutor(exec, "Writing Workbox Cloud server state")).executor);
 }
 
 /**
@@ -140,7 +140,7 @@ export async function ensureOpenshipDir(exec: CommandExecutor): Promise<void> {
 export async function readOpenshipFile(exec: CommandExecutor, name: string, options: { strict?: boolean } = {}): Promise<string> {
   const path = `${OPENSHIP_DIR}/${name}`;
   try {
-    const p = await storeExecutor(exec, "Reading Openship server state");
+    const p = await storeExecutor(exec, "Reading Workbox Cloud server state");
     const blocked = cannotAttemptRead(p);
     if (blocked) {
       if (options.strict) throw blocked;
@@ -176,7 +176,7 @@ export async function writeOpenshipFile(
   // No `cannotAttemptRead` gate here on purpose: a write that cannot be elevated must
   // FAIL, and it does — `mkdir -p /root/.openship` throws on its own. Only the reads
   // have a non-throwing contract to protect, and only they can be fooled by it.
-  const { executor: e } = await storeExecutor(exec, "Writing Openship server state");
+  const { executor: e } = await storeExecutor(exec, "Writing Workbox Cloud server state");
   await mkdirOpenship(e);
   await e.writeFile(tmp, content);
   await e.exec(`mv -f ${sq(tmp)} ${sq(path)} && chmod 0600 ${sq(path)}`);
@@ -185,7 +185,7 @@ export async function writeOpenshipFile(
 /** Remove a file (and any stale temp) from `.openship`. Idempotent. */
 export async function removeOpenshipFile(exec: CommandExecutor, name: string): Promise<void> {
   const path = `${OPENSHIP_DIR}/${name}`;
-  const { executor: e } = await storeExecutor(exec, "Removing Openship server state");
+  const { executor: e } = await storeExecutor(exec, "Removing Workbox Cloud server state");
   await e.exec(`rm -f ${sq(path)} ${sq(`${path}.tmp`)}`);
 }
 
@@ -196,7 +196,7 @@ export async function removeOpenshipFile(exec: CommandExecutor, name: string): P
 export async function openshipFileExists(exec: CommandExecutor, name: string): Promise<boolean> {
   const path = `${OPENSHIP_DIR}/${name}`;
   try {
-    const p = await storeExecutor(exec, "Reading Openship server state");
+    const p = await storeExecutor(exec, "Reading Workbox Cloud server state");
     const blocked = cannotAttemptRead(p);
     if (blocked) return unreadable(name, blocked, false);
     return (await p.executor.exec(`test -f ${sq(path)} && echo yes || echo no`)).trim() === "yes";

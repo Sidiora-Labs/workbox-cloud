@@ -11,7 +11,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "../../../..");
 const RUNNER = `openship-e2e-dovecot-${process.pid.toString(36)}`;
 const PREPARE = "bash /prepare-dovecot-runtime.sh";
 // The production mail image uses Debian 12's Dovecot. Install those real
-// collaborators without a full iRedMail build or a published Openship image.
+// collaborators without a full iRedMail build or a published Workbox Cloud image.
 const CONFIG = `protocols = imap pop3
 listen = 127.0.0.1
 ssl = no

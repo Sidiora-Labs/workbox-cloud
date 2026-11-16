@@ -2,9 +2,9 @@
  * @module edge-orphans.service
  *
  * The I/O half of the edge-orphan sweep: read what the local edge serves, read
- * what Openship tracks, and hand both to the pure diff in `@repo/core`.
+ * what Workbox Cloud tracks, and hand both to the pure diff in `@repo/core`.
  *
- * Why an orphan exists at all — record-only delete ("Remove from Openship only")
+ * Why an orphan exists at all — record-only delete ("Remove from Workbox Cloud only")
  * promises the workload keeps running, which explicitly includes NOT removing the
  * route. So the vhost outlives its DB rows by design. A port-based leftover 502s
  * and announces itself; a STATIC leftover keeps serving the old project's files
@@ -43,7 +43,7 @@ export interface EdgeOrphanScan {
 }
 
 /**
- * Resolve the edge owned by this Openship instance.
+ * Resolve the edge owned by this Workbox Cloud instance.
  *
  * A compose install deliberately keeps the API image small: it mounts the edge's
  * sites tree and Docker socket, but does not ship the Docker CLI. The generic edge
@@ -69,7 +69,7 @@ async function localEdgeProxy() {
 }
 
 /**
- * Every hostname Openship believes it should be serving on this box.
+ * Every hostname Workbox Cloud believes it should be serving on this box.
  *
  * Assembled from the SAME producers that write vhosts, so the sweep doesn't flag
  * live infrastructure:
@@ -116,7 +116,7 @@ function hostnameFromUrl(value: string | undefined): string | null {
 }
 
 /**
- * Compare the local edge's vhosts against what Openship tracks.
+ * Compare the local edge's vhosts against what Workbox Cloud tracks.
  *
  * Fails SOFT in every direction: no edge, a foreign edge, or a read error all
  * return `scanned: false` with a reason rather than throwing. This runs from a
@@ -142,7 +142,7 @@ export async function scanEdgeOrphans(): Promise<EdgeOrphanScan> {
   // A foreign proxy's vhosts are not ours to call orphaned — the operator may run
   // unrelated sites on it, and the takeover/import flow is what reasons about those.
   if (!api.ours) {
-    return empty(`The edge on this machine is ${api.kind}, not Openship's — nothing to reconcile.`);
+    return empty(`The edge on this machine is ${api.kind}, not Workbox Cloud's — nothing to reconcile.`);
   }
 
   const comparison = await Promise.all([
@@ -162,7 +162,7 @@ export async function scanEdgeOrphans(): Promise<EdgeOrphanScan> {
 }
 
 /**
- * Is a vhost already serving `hostname` that Openship has no record of?
+ * Is a vhost already serving `hostname` that Workbox Cloud has no record of?
  *
  * Used by the domain-claim path. Returns null when the hostname is fine to claim
  * (nothing there, already tracked, foreign edge, or unreadable) — the claim must

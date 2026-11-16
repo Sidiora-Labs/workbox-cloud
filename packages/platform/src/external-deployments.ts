@@ -22,7 +22,7 @@ import {
   type ScopedServices,
 } from "./resource-operations";
 
-/** Context passed to an external provider adapter after Openship authorization. */
+/** Context passed to an external provider adapter after Workbox Cloud authorization. */
 export interface ExternalProviderContext {
   readonly organizationId: string;
   readonly actorId?: string;

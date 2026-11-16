@@ -206,7 +206,7 @@ async function discover(access: ProviderAccess, source: PlatformMigrationSource)
       source.environmentId === "production" ? "Production" : `Preview · ${branch ?? "latest"}`,
     services,
     warnings: [
-      "Repository access is checked through your existing Openship GitHub connection. Custom domains move only after you verify the new deployment.",
+      "Repository access is checked through your existing Workbox Cloud GitHub connection. Custom domains move only after you verify the new deployment.",
     ],
   };
 }

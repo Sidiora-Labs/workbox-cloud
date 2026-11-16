@@ -2,7 +2,7 @@
  * `openship update` — update the globally-installed CLI (which bundles the
  * self-hosted API server) to the latest published release.
  *
- * Talks to GitHub (releases/latest), NOT the Openship API. The version gate +
+ * Talks to GitHub (releases/latest), NOT the Workbox Cloud API. The version gate +
  * install-command are pure functions in @repo/core (`resolveCliUpdatePlan` /
  * `cliInstallCommand`), unit-tested there. The command dispatches on how the CLI
  * was delivered (tarball / from-source / npm-package — see the branches below),
@@ -311,7 +311,7 @@ function detectPackageManager(override?: string): CliPackageManager {
 }
 
 export const updateCommand = new Command("update")
-  .description("Update the Openship CLI + bundled server to the latest release")
+  .description("Update the Workbox Cloud CLI + bundled server to the latest release")
   .option("--check", "Only report the current + latest version; don't install")
   .option("--via <manager>", "Package manager to update with: bun | npm")
   .option("--rebuild", "From-source installs: rebuild even if already at the remote tip")

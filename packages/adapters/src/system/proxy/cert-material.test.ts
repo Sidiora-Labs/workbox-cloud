@@ -154,7 +154,7 @@ describe("readDeclaredPair", () => {
     expect(await readDeclaredPair(e, "/c.pem", "/k.pem")).toBeNull();
   });
 
-  it("refuses Openship's OWN placeholder cert, without reading it", async () => {
+  it("refuses Workbox Cloud's OWN placeholder cert, without reading it", async () => {
     // A bootstrap cert is real-looking material: right hostname, unexpired, so it
     // passes validateCertFor — but its issuer is self-signed, so it'd be classified
     // renewable:false and adopted as a bring-your-own cert certbot never reissues.

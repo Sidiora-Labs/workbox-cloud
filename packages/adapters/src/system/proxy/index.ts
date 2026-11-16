@@ -153,7 +153,7 @@ function sysLog(message: string, level: SystemLog["level"] = "info"): SystemLog 
  * takeover result and lets the caller decide).
  */
 /**
- * The SINGLE "ensure Openship owns the edge" orchestrator every caller should use
+ * The SINGLE "ensure Workbox Cloud owns the edge" orchestrator every caller should use
  * (deploy pipeline, server-setup, self-app, mail). You supply how to install the
  * edge feature for your target — `install(promptUser)` — which, if a foreign proxy
  * holds 80/443, raises the `edge_conflict` consent prompt through `promptUser`

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const OG_SIZE = { width: 1200, height: 630 } as const;
-export const OG_ALT = "OpenShip - Open Source, Self-Hostable Deployment Platform";
+export const OG_ALT = "Workbox Cloud - Open Source, Self-Hostable Deployment Platform";
 
 /** Accent palette for the aurora glow, footer dot, and eyebrow tint.
  *  `glow` is a bare "r,g,b" triple (used inside rgba()). Defaults to brand green. */
@@ -68,7 +68,7 @@ export function renderOgImage({
               border: "4px solid #FFFFFF",
             }}
           />
-          <div style={{ fontSize: 36, fontWeight: 600, letterSpacing: -0.5 }}>OpenShip</div>
+          <div style={{ fontSize: 36, fontWeight: 600, letterSpacing: -0.5 }}>Workbox Cloud</div>
         </div>
         {logos.length > 0 && (
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>

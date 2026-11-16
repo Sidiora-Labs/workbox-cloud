@@ -109,7 +109,7 @@ export async function handleMcpTokenRequest(request: Request): Promise<Response>
     return response;
   } catch (error) {
     reportCaughtError(error, "api/modules/auth/mcp-token.handler");
-    // A token without a recorded receipt cannot authenticate to Openship. Do
+    // A token without a recorded receipt cannot authenticate to Workbox Cloud. Do
     // not return a successful-looking grant that immediately fails at the API.
     return Response.json(
       {

@@ -23,7 +23,7 @@
  *   Install (host-side): `up`/`install` ensures the edge is serving and, with
  *     --monitoring, provisions the bundled API on embedded PGlite (the same
  *     `openship up --bare` pipeline) so analytics have a place to land. Detect-first:
- *     an existing Openship install is reused untouched.
+ *     an existing Workbox Cloud install is reused untouched.
  *
  * The edge itself is a CONTAINER the compose stack owns (`openship up` brings it
  * up on :80/:443). This command deliberately does NOT reimplement that install —
@@ -70,7 +70,7 @@ const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
 /** The containerized edge (and :80/:443 contention) is a Linux-only concept. */
 function requireLinux(): void {
   if (process.platform === "linux") return;
-  err("  The Openship edge runs as a Linux container — this command only works on the host that runs it.");
+  err("  The Workbox Cloud edge runs as a Linux container — this command only works on the host that runs it.");
   process.exit(1);
 }
 
@@ -204,7 +204,7 @@ async function runUp(opts: { migrate?: boolean; takeover?: boolean }): Promise<n
 
   if (!diag.containerExists) {
     printDiagnosis(diag);
-    err("\n  No Openship edge container on this box.");
+    err("\n  No Workbox Cloud edge container on this box.");
     info("  Install the stack first — `openship up` brings up the edge (OpenResty on :80/:443).");
     process.exit(1);
   }
@@ -414,7 +414,7 @@ async function panelUp(): Promise<void> {
   }
   printDiagnosis(diag);
   if (!diag.containerExists) {
-    log.warn("No Openship edge container on this box — run `openship up` to install the stack.");
+    log.warn("No Workbox Cloud edge container on this box — run `openship up` to install the stack.");
     return;
   }
   let mode: RepairMode;
@@ -462,7 +462,7 @@ async function panelSites(): Promise<void> {
 async function panelMonitoring(): Promise<void> {
   const existing = await detectExistingInstall();
   if (existing.present) {
-    ok("  ✓ Openship is already installed — monitoring is available through the running instance.");
+    ok("  ✓ Workbox Cloud is already installed — monitoring is available through the running instance.");
     await ensureEdgeBestEffort();
     return;
   }
@@ -833,7 +833,7 @@ function edgeHeader(diag: EdgeDiagnosis | null, apiLive: boolean, domainsLabel: 
 }
 
 async function edgePanel(): Promise<void> {
-  intro(`${chalk.bgCyan(chalk.black(" Openship "))}${chalk.dim(" edge")}`);
+  intro(`${chalk.bgCyan(chalk.black(" Workbox Cloud "))}${chalk.dim(" edge")}`);
   for (;;) {
     const diag = IS_LINUX ? await diagnoseEdge().catch((diagnosticFailure) => { observeCaughtError(diagnosticFailure, "cli/commands/edge"); return null; }) : null;
     const apiLive = await apiLivePing();
@@ -880,7 +880,7 @@ async function edgePanel(): Promise<void> {
     // absent (API down) or restricted (real auth needed).
     if (!apiLive) {
       note(
-        `The Openship API isn't answering at ${getRemoteClient().http.apiUrl}.\n` +
+        `The Workbox Cloud API isn't answering at ${getRemoteClient().http.apiUrl}.\n` +
           "Domains, traffic & analytics need it — start the stack with `openship up`.",
         "API offline",
       );
@@ -1359,7 +1359,7 @@ interface InstallOpts {
 }
 
 /**
- * Is a full Openship already installed on this box? Reuses the same primitives the
+ * Is a full Workbox Cloud already installed on this box? Reuses the same primitives the
  * rest of the CLI trusts — a bare service unit, a recorded compose install, or a
  * live API answering on the configured loopback port. Any one = "already here".
  */
@@ -1412,13 +1412,13 @@ function printMonitoringNextSteps(): void {
 }
 
 /**
- * Stand up monitoring by installing the standard bare Openship service (embedded
+ * Stand up monitoring by installing the standard bare Workbox Cloud service (embedded
  * PGlite) — the exact `openship up --bare` pipeline, no new data layer. Prompts for
  * admin credentials on a TTY; headless requires --admin-email + a password
  * (flag or OPENSHIP_ADMIN_PASSWORD). Exits when done.
  */
 /**
- * Stand up monitoring by installing the standard bare Openship service (embedded
+ * Stand up monitoring by installing the standard bare Workbox Cloud service (embedded
  * PGlite) — the exact `openship up --bare` pipeline, no new data layer. Prompts for
  * admin credentials on a TTY; headless requires --admin-email + a password (flag or
  * OPENSHIP_ADMIN_PASSWORD). Returns true when installed, false when the operator
@@ -1473,7 +1473,7 @@ async function runMonitoringInstall(opts: InstallOpts): Promise<boolean> {
     adminPassword,
   } as unknown as Parameters<typeof up.startService>[0];
 
-  const sp = spin("Installing the built-in Openship service (embedded database)…");
+  const sp = spin("Installing the built-in Workbox Cloud service (embedded database)…");
   let started: { port: string; dashPort: string };
   try {
     started = await up.startService(monOpts, { quiet: true });
@@ -1502,7 +1502,7 @@ async function provisionMonitoring(opts: InstallOpts): Promise<never> {
 /**
  * `edge up`/`install`: ensure the edge is serving, and — when asked — turn on
  * monitoring by reusing the bare-install pipeline. Detect-first: if a full
- * Openship already exists, monitoring is already available and we change nothing.
+ * Workbox Cloud already exists, monitoring is already available and we change nothing.
  */
 async function runInstall(opts: InstallOpts): Promise<never> {
   requireLinux();
@@ -1517,8 +1517,8 @@ async function runInstall(opts: InstallOpts): Promise<never> {
   if (existing.present) {
     // Interactive but monitoring wasn't requested → this is just an edge repair.
     if (!explicit) return runUp(opts);
-    // Explicit --monitoring on a box that already has Openship: nothing to provision.
-    ok("  ✓ Openship is already installed — monitoring is available through the running instance.");
+    // Explicit --monitoring on a box that already has Workbox Cloud: nothing to provision.
+    ok("  ✓ Workbox Cloud is already installed — monitoring is available through the running instance.");
     info(
       `    Install: ${existing.method ?? "service"}${existing.apiLive ? ", API live" : existing.running ? ", running" : ""}`,
     );
@@ -1527,7 +1527,7 @@ async function runInstall(opts: InstallOpts): Promise<never> {
     process.exit(0);
   }
 
-  // No Openship yet.
+  // No Workbox Cloud yet.
   if (explicit) {
     await ensureEdgeBestEffort();
     return provisionMonitoring(opts);
@@ -1535,7 +1535,7 @@ async function runInstall(opts: InstallOpts): Promise<never> {
   // Interactive, no flag, no install → offer monitoring.
   const yes = await confirm({
     message:
-      "Enable monitoring (traffic + per-domain analytics)? Installs the built-in Openship service with an embedded database.",
+      "Enable monitoring (traffic + per-domain analytics)? Installs the built-in Workbox Cloud service with an embedded database.",
     initialValue: false,
   });
   if (isCancel(yes) || !yes) return runUp(opts);
@@ -1557,7 +1557,7 @@ const upCmd = new Command("up")
   .option("--takeover", "On a port conflict, stop whatever holds :80/:443 (its sites drop)")
   // Declare --monitoring BEFORE --no-monitoring so the default stays undefined
   // (tri-state): unset = decide, --monitoring = true, --no-monitoring = false.
-  .option("--monitoring", "Also enable monitoring: install the built-in Openship service + embedded DB for analytics")
+  .option("--monitoring", "Also enable monitoring: install the built-in Workbox Cloud service + embedded DB for analytics")
   .option("--no-monitoring", "Edge only — skip the monitoring prompt (the headless default)")
   .option("--admin-name <name>", "Admin display name for a fresh monitoring install")
   .option("--admin-email <email>", "Admin email for a fresh monitoring install (required when headless)")

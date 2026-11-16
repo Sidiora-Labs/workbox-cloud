@@ -1,6 +1,7 @@
 import { useCopy } from "@/i18n/use-copy";
 
 import { Link } from "@/i18n/Link";
+import { WorkboxLogo } from "../workbox-logo";
 
 const footerLinks = {
   Product: [
@@ -42,12 +43,9 @@ export function Footer() {
           {/* Brand column */}
           <div className="lg:col-span-1">
             <Link href="/" className="flex items-center gap-2.5">
-              <div
-                className="h-7 w-7 shrink-0 rounded-full border-[2px] border-[var(--th-text-heading)]"
-                aria-hidden="true"
-              />
+              <WorkboxLogo size={28} />
               <span className="th-text-heading text-base font-semibold tracking-tight">
-                OpenShip
+                Workbox Cloud
               </span>
             </Link>
             <p className="th-text-muted mt-4 max-w-xs text-sm leading-relaxed">

@@ -37,7 +37,7 @@ for (const path of ["/", "/login", "/accept-invite/:id"]) {
           <head>
             <meta charset="utf-8" />
             <meta name="viewport" content="width=device-width,initial-scale=1" />
-            <title>Open in Openship Desktop</title>
+            <title>Open in Workbox Cloud Desktop</title>
             <style>
               :root {
                 color-scheme: light dark;
@@ -135,12 +135,12 @@ for (const path of ["/", "/login", "/accept-invite/:id"]) {
           </head>
           <body>
             <main>
-              <small>Openship</small>
+              <small>Workbox Cloud</small>
               <h1>${id ? "Join your team in Desktop" : "Your instance is online"}</h1>
               <p>
-                Open this instance in Desktop, then sign in${id ? " or create your invited account. Review the workspace and role before joining" : " with your account"}.
+                Open this instance in Workbox Cloud Desktop, then sign in${id ? " or create your invited account. Review the workspace and role before joining" : " with your account"}.
               </p>
-              ${desktopLink ? html`<a href="${desktopLink}" rel="noreferrer">Open in Openship Desktop</a>` : ""}
+              ${desktopLink ? html`<a href="${desktopLink}" rel="noreferrer">Open in Workbox Cloud Desktop</a>` : ""}
               <p>
                 Desktop didn't open? Copy the address below. In
                 <strong>Settings → Instance</strong>, open More instance options and choose
@@ -151,7 +151,7 @@ for (const path of ["/", "/login", "/accept-invite/:id"]) {
                 class="download"
                 href="https://openship.io/download"
                 rel="noreferrer"
-                >Get Openship Desktop</a
+                >Get Workbox Cloud Desktop</a
               >
             </main>
           </body>

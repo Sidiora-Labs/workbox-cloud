@@ -6,17 +6,17 @@
 // hostnames and we don't want them baked in at build time. Browsers
 // resolve relative URLs against the current origin - exactly what we
 // want for og:image, canonical, etc.
-const TITLE = 'OpenShip Mail';
+const TITLE = 'Workbox Cloud Mail';
 const DESCRIPTION = 'Your self-hosted mailbox.';
 
 export const siteConfig = {
   title: TITLE,
   description: DESCRIPTION,
   icons: {
-    icon: '/favicon.ico',
+    icon: '/brand/wb_cloud_dark.webp',
   },
-  applicationName: 'OpenShip Mail',
-  creator: 'OpenShip',
+  applicationName: 'Workbox Cloud Mail',
+  creator: 'Workbox Cloud',
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,

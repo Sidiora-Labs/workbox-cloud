@@ -1,10 +1,10 @@
 /**
- * `openship install` — lazy-download and install the Openship desktop app for
+ * `openship install` — lazy-download and install the Workbox Cloud desktop app for
  * the current OS/arch.
  *
- * This talks to GitHub, NOT the Openship API: assets are published to
+ * This talks to GitHub, NOT the Workbox Cloud API: assets are published to
  * github.com/oblien/openship/releases (asset names match the desktop updater,
- * apps/desktop/src/main/updater.ts — Openship-arm64.dmg / Openship-x64.dmg /
+ * apps/desktop/src/main/updater.ts — legacy Openship-arm64.dmg / Openship-x64.dmg /
  * Openship.AppImage, plus Openship-win32-x64.zip for the CLI install path).
  *
  * Flow: resolve tag (--version, else releases/latest) → download the asset and
@@ -126,7 +126,7 @@ function launch(kind: AssetKind, target: string): void {
 }
 
 export const installCommand = new Command("install")
-  .description("Download and install the Openship desktop app for this OS")
+  .description("Download and install the Workbox Cloud desktop app for this OS")
   .option("--version <tag>", "Release tag to install (e.g. v1.2.3)")
   .option("--latest", "Install the latest release (default)")
   .option("--force", "Re-download even if a verified copy is cached")
@@ -257,6 +257,6 @@ export const installCommand = new Command("install")
     if (isJsonMode()) {
       printJson({ tag, asset: asset.name, path: target, cached: !downloaded, launched: willLaunch });
     } else {
-      ok(`\n  Openship ${tag} is installed.${willLaunch ? " Launching…" : ""}\n`);
+      ok(`\n  Workbox Cloud ${tag} is installed.${willLaunch ? " Launching…" : ""}\n`);
     }
   });

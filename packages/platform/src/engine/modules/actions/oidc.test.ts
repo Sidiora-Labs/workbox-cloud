@@ -98,7 +98,7 @@ async function request(
   );
 }
 
-describe("Openship Actions OIDC", () => {
+describe("Workbox Cloud Actions OIDC", () => {
   it("keeps public verification available but refuses to replace an imported identity without credentials", async () => {
     const f = fixture();
     const original = await f.service.jwks();

@@ -9,7 +9,7 @@ import { edgeDefaultCatchAllConf } from "../../infra/openresty-lua";
 import type { CommandExecutor } from "../../types";
 
 /**
- * These cover the three guards that decide whether Openship tears down a working
+ * These cover the three guards that decide whether Workbox Cloud tears down a working
  * edge — the place where a wrong answer is an outage, not a warning.
  *
  * `sanitizeEdgeVhosts` is exercised with a REAL LocalExecutor against REAL files in

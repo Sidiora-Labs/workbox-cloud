@@ -15,7 +15,7 @@ afterEach(() => vi.unstubAllEnvs());
 
 describe("Cloudflare executable policy", () => {
   it("resolves the bundled Windows client without splitting paths containing spaces", () => {
-    const path = "C:\\Program Files (x86)\\OpenShip\\cloudflared.exe";
+    const path = "C:\\Program Files (x86)\\Workbox Cloud\\cloudflared.exe";
     const options = { platform: "win32" as const, env: { OPENSHIP_CLOUDFLARED_PATH: path }, isFile: (p: string) => p === path };
     expect(resolveCloudflaredExecutable(options)).toBe(path);
     expect(buildCloudflareProxyCommand("ssh.example.com", options)).toBe('"C:/Program Files (x86)/OpenShip/cloudflared.exe" access ssh --hostname ssh.example.com');

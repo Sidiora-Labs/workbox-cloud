@@ -75,7 +75,7 @@ function OnboardingInner() {
       <div className="ob-top-bar">
         <div className="ob-logo">
           <div className="ob-logo-circle" aria-hidden="true" />
-          <span className="ob-logo-text">OpenShip</span>
+          <span className="ob-logo-text">Workbox Cloud</span>
         </div>
         <div className="ob-top-bar-links">
           <button

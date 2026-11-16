@@ -140,7 +140,7 @@
       "addCustom": "Özel ekle",
       "howToAddApp": "Nasıl uygulama eklenir",
       "removeCustomApp": "Özel uygulamayı kaldır",
-      "needsUpdateDesc": "Bu uygulamayı yüklemek için OpenShip örneğinizi güncelleyin.",
+      "needsUpdateDesc": "Bu uygulamayı yüklemek için Workbox Cloud örneğinizi güncelleyin.",
       "needsUpdateBadge": "Güncelleme gerekli",
       "needsVersionBadge": "v{version} gerekli",
       "removedToast": "\"{name}\" kaldırıldı.",
@@ -257,14 +257,14 @@
     "deploymentPrompt": "Başarısız dağıtımı incele: {deploymentId}.",
     "issuePrompt": "Uygulama sorununu incele: {issueId}.",
     "appContext": "Uygulama kimliği: {projectId}.",
-    "instructions": "Mevcut durumu ve ilgili günlükleri incelemek için OpenShip araçlarını kullan. Olası nedeni kanıtlarla açıkla ve sonraki adımı öner. Önce incele, hiçbir değişiklik yapma. Erişim eksikse gereken belirli izinleri iste.",
+    "instructions": "Mevcut durumu ve ilgili günlükleri incelemek için Workbox Cloud araçlarını kullan. Olası nedeni kanıtlarla açıkla ve sonraki adımı öner. Önce incele, hiçbir değişiklik yapma. Erişim eksikse gereken belirli izinleri iste.",
     "fixAction": "Yapay zekâyla düzelt",
     "fixTitle": "Uygulama sorununu düzelt",
-    "securityPrompt": "Bu uygulama için {advisoryId} güvenlik uyarısını araştır ve gider. Güncel OpenShip bulgularını ve resmî yönergeleri oku, etkilenen hizmetleri ve etkin yapılandırmalarını incele, ardından onaylı erişim kapsamında kalıcı bir düzeltme uygula. Gerektiğinde etkilenen çalışanları yeniden dağıt ve sonucu doğrula. Eşleşen çalışma zamanı sürümü tek başına uygulamanın istismar edilebilir olduğunu kanıtlamaz. Kanıt olmadan uyarıyı gizleme veya düzeltildiğini iddia etme. Önce uyarının geçerli olup olmadığını belirle. Geçerli değilse kanıtları bildir ve hizmetleri değiştirme.",
+    "securityPrompt": "Bu uygulama için {advisoryId} güvenlik uyarısını araştır ve gider. Güncel Workbox Cloud bulgularını ve resmî yönergeleri oku, etkilenen hizmetleri ve etkin yapılandırmalarını incele, ardından onaylı erişim kapsamında kalıcı bir düzeltme uygula. Gerektiğinde etkilenen çalışanları yeniden dağıt ve sonucu doğrula. Eşleşen çalışma zamanı sürümü tek başına uygulamanın istismar edilebilir olduğunu kanıtlamaz. Kanıt olmadan uyarıyı gizleme veya düzeltildiğini iddia etme. Önce uyarının geçerli olup olmadığını belirle. Geçerli değilse kanıtları bildir ve hizmetleri değiştirme.",
     "fixPrompt": "{issueId} uygulama sorununu araştır ve düzelt.",
-    "fixInstructions": "Güncel sorunu, durumu ve ilgili günlükleri OpenShip araçlarıyla incele. Nedeni bul, onaylanan erişimin kapsamında uygun bir düzeltme uygula ve sonucu doğrula. Erişim veya gerekli bir karar eksikse ilgili incelemeyi sohbet içinde sun. Değişiklikleri ve kalan sorunları bildir; yalnızca gözlemlenen kanıtlarla kurtarmayı doğrula.",
+    "fixInstructions": "Güncel sorunu, durumu ve ilgili günlükleri Workbox Cloud araçlarıyla incele. Nedeni bul, onaylanan erişimin kapsamında uygun bir düzeltme uygula ve sonucu doğrula. Erişim veya gerekli bir karar eksikse ilgili incelemeyi sohbet içinde sun. Değişiklikleri ve kalan sorunları bildir; yalnızca gözlemlenen kanıtlarla kurtarmayı doğrula.",
     "reportAction": "Yapay zekâ durum raporu",
     "reportTitle": "Çalışma alanı durum raporu",
-    "reportPrompt": "OpenShip izleme ve durum araçlarıyla bu çalışma alanındaki uygulamaların, dağıtımların, hizmetlerin ve erişilebilir sunucuların güncel durumunu incele. Nelerin sağlıklı olduğunu, nelerin dikkat gerektirdiğini, kanıtları ve yararlı sonraki adımları özetle. Eski veya kullanılamayan izleme verilerini ve erişim sınırlarını belirt. Boş bir sorun listesi sağlıklı durumun kanıtı değildir. Bu salt okunur bir rapordur: kaynakları değiştirme veya örnek genelinde yönetici tanılamaları isteme."
+    "reportPrompt": "Workbox Cloud izleme ve durum araçlarıyla bu çalışma alanındaki uygulamaların, dağıtımların, hizmetlerin ve erişilebilir sunucuların güncel durumunu incele. Nelerin sağlıklı olduğunu, nelerin dikkat gerektirdiğini, kanıtları ve yararlı sonraki adımları özetle. Eski veya kullanılamayan izleme verilerini ve erişim sınırlarını belirt. Boş bir sorun listesi sağlıklı durumun kanıtı değildir. Bu salt okunur bir rapordur: kaynakları değiştirme veya örnek genelinde yönetici tanılamaları isteme."
   }
 }

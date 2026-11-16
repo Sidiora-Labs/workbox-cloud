@@ -185,7 +185,7 @@ async function proposeAndMerge(path: string, format: "dockerfile" | "compose") {
   const saved = await api<{ content: string }>(`/contents/${path}?ref=${branch}`);
   expect(Buffer.from(saved.content, "base64").toString()).toBe(preview.after);
   expect((await repos.project.findById(project.id))!.activeDeploymentId).toBeNull();
-  console.info("[live-source] draft PR created through Openship; reviewed and merged by test", {
+  console.info("[live-source] draft PR created through Workbox Cloud; reviewed and merged by test", {
     url: published.pullRequestUrl,
     author: pr.user.login,
     file: path,

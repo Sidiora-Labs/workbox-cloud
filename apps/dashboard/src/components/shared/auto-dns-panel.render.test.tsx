@@ -137,7 +137,7 @@ describe("AutoDnsView", () => {
       }),
     );
     expect(out).toContain("Conflict");
-    expect(out).toContain("Not managed by OpenShip");
+    expect(out).toContain("Not managed by Workbox Cloud");
   });
 
   it("renders the outcome log after apply, not the plan", () => {
@@ -150,7 +150,7 @@ describe("AutoDnsView", () => {
           type: "A",
           outcome: "failed",
           action: "conflict",
-          error: "Existing records here are not managed by OpenShip.",
+          error: "Existing records here are not managed by Workbox Cloud.",
         },
       ],
     };
@@ -165,7 +165,7 @@ describe("AutoDnsView", () => {
     );
     expect(out).toContain("Applied");
     expect(out).toContain("Failed");
-    expect(out).toContain("not managed by OpenShip");
+    expect(out).toContain("not managed by Workbox Cloud");
     // A partial apply reports it needs attention, not "done".
     expect(out).toContain("Some records need attention");
   });

@@ -146,7 +146,7 @@ r.public(
     const raw = await json(c);
     if (raw?.source === "support")
       throw new AppError(
-        "Sign in to Openship Cloud to open a support request.",
+        "Sign in to Workbox Cloud to open a support request.",
         401,
         "SUPPORT_SESSION_REQUIRED",
       );

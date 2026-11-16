@@ -265,7 +265,7 @@ it("keeps earned funds requestable when there are no programs for new links", as
 it("keeps enrollment distinct from an empty member account", async () => {
   h.request.mockResolvedValue({ ...state(), member: null });
   await render();
-  expect(host.textContent).toContain("Share OpenShip. Earn on renewals.");
+  expect(host.textContent).toContain("Share Workbox Cloud. Earn on renewals.");
   expect(host.textContent).not.toContain("$65.00");
   expect(button("Join the program").disabled).toBe(true);
 });

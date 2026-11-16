@@ -63,7 +63,7 @@ private tickets. A teammate without a personal link can open Support in Cloud an
 sign in there. Disconnected installations offer Settings and Cloud Support links.
 
 The local client reads `/session` first, then sends the returned `account.key` in
-`X-Openship-Support-Account` on every ticket request. This value identifies the
+`X-Workbox Cloud-Support-Account` on every ticket request. This value identifies the
 connection and is not a credential. The relay rejects old or missing bindings with
 `409 SUPPORT_ACCOUNT_CHANGED` and discards responses from a replaced connection.
 The UI clears private state when the account changes and keeps drafts after transient
@@ -86,7 +86,7 @@ SMTP_HOST=mail.oblien.com
 SMTP_PORT=587
 SMTP_USER=support@openship.io
 SMTP_PASS=<mailbox-password>
-SMTP_FROM=Openship Support <support@openship.io>
+SMTP_FROM=Workbox Cloud Support <support@openship.io>
 ```
 
 Use credentials appropriate to the actual mail server; keep them in deployment

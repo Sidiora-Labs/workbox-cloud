@@ -12,21 +12,21 @@ in another terminal affects the next command, including while this command pagin
 
 ## Choose where to connect
 
-The same CLI works on your laptop and on an Openship server:
+The same CLI works on your laptop and on a Workbox Cloud server:
 
 | Destination | Authentication | Start here |
 | --- | --- | --- |
-| Openship installed on this server | Automatic for the installation owner, using its protected local credential | `openship --local project list` |
+| Workbox Cloud installed on this server | Automatic for the installation owner, using its protected local credential | `openship --local project list` |
 | A remote self-hosted installation | Sign in once with a personal access token | `openship login --api-url https://ship.example.com --context production` |
-| Openship Cloud | Sign in once with a Cloud personal access token | `openship login --cloud` |
+| Workbox Cloud | Sign in once with a Cloud personal access token | `openship login --cloud` |
 
 On a fresh machine, `openship` offers Cloud, an existing self-hosted installation, or installing
-Openship on this machine. Choosing a connection does not start a local server. `openship login`
+Workbox Cloud on this machine. Choosing a connection does not start a local server. `openship login`
 also offers a guided Cloud/self-hosted choice when no endpoint is saved.
 
 ## On the installation server
 
-Run the CLI as the OS account that installed Openship. Ordinary resource commands discover the
+Run the CLI as the OS account that installed Workbox Cloud. Ordinary resource commands discover the
 installed service when there is no remote connection configured. Use `--local` to choose it explicitly,
 including after signing into Cloud or another server:
 

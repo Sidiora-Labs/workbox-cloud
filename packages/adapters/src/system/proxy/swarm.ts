@@ -69,7 +69,7 @@ export function assertNoSwarmEdge(status: Pick<EdgeStatus, "occupants">): void {
   const occupant = status.occupants.find((item) => item.swarmService);
   if (occupant)
     throw new AppError(
-      `Port ${occupant.port} is controlled by ${occupant.swarmService}. Change its published ports through the Swarm manager; Openship cannot take over Swarm ingress.`,
+      `Port ${occupant.port} is controlled by ${occupant.swarmService}. Change its published ports through the Swarm manager; Workbox Cloud cannot take over Swarm ingress.`,
       409,
       "SWARM_SERVICE_OWNED",
     );

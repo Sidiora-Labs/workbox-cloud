@@ -1,12 +1,12 @@
 ---
 title: Connect to Cloud & migrate
-description: Link the copy of Openship you run yourself to Openship Cloud, move a single project up or bring it home, and (at a high level) open your instance up to a whole team.
+description: Link the copy of Workbox Cloud you run yourself to Workbox Cloud, move a single project up or bring it home, and (at a high level) open your instance up to a whole team.
 ---
 
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-Openship can run in two places. One is **your own instance** — the copy you installed and manage yourself.
-The other is **Openship Cloud** — the managed version, where we run the servers, SSL, and the global network
+Workbox Cloud can run in two places. One is **your own instance** — the copy you installed and manage yourself.
+The other is **Workbox Cloud** — the managed version, where we run the servers, SSL, and the global network
 for you. Think of it like a workshop: you can build things in your own garage, or rent a fully-equipped bench
 at a shared makerspace. This guide is about connecting the two, and moving work between them.
 
@@ -17,13 +17,13 @@ There are three separate things people mix up, so let's name them up front:
 - **Team-mode migration** — turn your whole single-user instance into a shared, multi-user setup.
 
 <Callout title="What you need first">
-- Your own Openship instance, up and running (you can see the dashboard). The **Cloud** settings tab only
+- Your own Workbox Cloud instance, up and running (you can see the dashboard). The **Cloud** settings tab only
   appears on self-hosted instances — on Cloud itself there's nothing to connect.
 - To be the **workspace owner**. Connecting and disconnecting Cloud is an owner-only action.
-- An Openship Cloud account. You sign in — or create one — in the window that opens during the connect step, so you don't need one beforehand.
+- A Workbox Cloud account. You sign in — or create one — in the window that opens during the connect step, so you don't need one beforehand.
 </Callout>
 
-## Connect your instance to Openship Cloud
+## Connect your instance to Workbox Cloud
 
 This links your instance to a Cloud account. Existing Cloud projects, apps and managed servers appear
 alongside your local resources. Connecting does not move projects or duplicate their settings.
@@ -35,7 +35,7 @@ alongside your local resources. Connecting does not move projects or duplicate t
 ### Open the Cloud settings
 
 In the dashboard, go to **Settings** and choose the **Cloud** tab from the left. You'll see a card that says
-**Connect to Cloud** with a **Connect to Openship Cloud** button.
+**Connect to Cloud** with a **Connect to Workbox Cloud** button.
 
 </Step>
 
@@ -43,7 +43,7 @@ In the dashboard, go to **Settings** and choose the **Cloud** tab from the left.
 
 ### Sign in and give consent
 
-Press **Connect to Openship Cloud**. A window opens on Openship Cloud and asks you to sign in.
+Press **Connect to Workbox Cloud**. A window opens on Workbox Cloud and asks you to sign in.
 Review the account and active **Organization** on the consent screen before pressing **Authorize**.
 Use **Switch** beside the account to sign in with another account, or beside Organization to choose
 another workspace. Switching keeps the connection request and requires you to authorize again.
@@ -75,7 +75,7 @@ Once connected, you can hand a single self-hosted project to Cloud to run — th
 can also pull a cloud project back down to your own instance — **bringing it home**.
 
 <Callout title="Who owns a cloud project?" type="warn">
-This is the important boundary. **Once a project lives on Openship Cloud, Cloud owns it** — the cloud copy is
+This is the important boundary. **Once a project lives on Workbox Cloud, Cloud owns it** — the cloud copy is
 the one true copy. Your instance keeps a pointer to it and acts as a gateway in front of it, so it still shows
 up in your dashboard, but the real project lives on Cloud. Bringing it home reverses that and makes your
 instance the owner again. For the full picture, see [Cloud as source](/docs/architecture/cloud-as-source).
@@ -85,7 +85,7 @@ Today this move is done from the **CLI**. Both directions are self-hosted-only, 
 connected to Cloud first (from the section above).
 
 ```bash
-# Promote a project up to Openship Cloud (Cloud runs it from now on)
+# Promote a project up to Workbox Cloud (Cloud runs it from now on)
 openship project transfer <project-id> to-cloud
 
 # Bring a cloud project back to your own instance
@@ -102,29 +102,29 @@ managed Cloud server, then choose API-only access through Desktop or API + dashb
 Your workspaces and credentials move together while existing apps stay on their servers.
 The Team tab links to this same flow; there is no separate migration chooser.
 
-Moving a control plane is separate from transferring a project to Openship Cloud. Your
+Moving a control plane is separate from transferring a project to Workbox Cloud. Your
 Cloud-owned projects continue to be managed by Cloud, and the transferred Cloud connection
 keeps them accessible from the relocated instance.
 
-See [Move your Openship instance](/docs/guides/migrate-control-plane) for prerequisites,
+See [Move your Workbox Cloud instance](/docs/guides/migrate-control-plane) for prerequisites,
 recovery, and moving the latest data back to Desktop. Team members can connect their own
 Desktop without becoming instance administrators.
 
 ## Troubleshooting
 
 <Callout title="There's no Cloud tab in Settings" type="warn">
-The **Cloud** tab only shows on a self-hosted instance. If you're already using Openship Cloud, there's
+The **Cloud** tab only shows on a self-hosted instance. If you're already using Workbox Cloud, there's
 nothing to connect — cloud features are on by default. If you *are* self-hosting and still don't see it, make
 sure you're signed in as the workspace **owner**.
 </Callout>
 
-<Callout title="“This organization is not connected to Openship Cloud”" type="error">
+<Callout title="“This organization is not connected to Workbox Cloud”" type="error">
 A `transfer` or a Cloud migration ran before the instance was linked. Connect first in **Settings → Cloud**
 (you must be the owner), then run the command again.
 </Callout>
 
 <Callout title="The connect window closes but the card still says “Connect”" type="error">
-The sign-in or consent step didn't finish. Press **Connect to Openship Cloud** again and complete both the
+The sign-in or consent step didn't finish. Press **Connect to Workbox Cloud** again and complete both the
 sign-in and the **Authorize** step in the popup. If your browser blocks pop-ups, allow them for the dashboard
 and retry.
 </Callout>

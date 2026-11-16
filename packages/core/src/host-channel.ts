@@ -33,7 +33,7 @@ export const HOST_CHANNEL_UNAFFECTED =
 /** Everything that genuinely stops working. Verified against the call sites, not guessed. */
 export const HOST_CHANNEL_BLOCKED: readonly string[] = [
   "the host terminal, host system info and host port scans",
-  "taking over :80/:443 from a proxy OpenShip didn't start",
+  "taking over :80/:443 from a proxy Workbox Cloud didn't start",
   "installing or updating the mail engine",
   "deploying a catalog app that needs a generated config file on the host (Supabase's kong.yml, say)",
 ];
@@ -83,7 +83,7 @@ export const HOST_CHANNEL_NOT_PROVISIONED =
  * the instruction (a status row) or both (a banner, a boot log).
  */
 export const HOST_CHANNEL_UNPROVISIONED =
-  "Openship is running in a container with no host channel — OPENSHIP_HOST_SSH_HOST is " +
+  "Workbox Cloud is running in a container with no host channel — OPENSHIP_HOST_SSH_HOST is " +
   "unset, so there is no address to reach the host at and nothing has been dialed.";
 
 /**
@@ -134,7 +134,7 @@ export function hostChannelAccount(env: {
  * a file that was already correct — the same mistake #490 made with firewalls.
  */
 export const HOST_CHANNEL_AUTH_REJECTED =
-  "The host accepted the connection and then refused Openship's key. Either the key is " +
+  "The host accepted the connection and then refused Workbox Cloud's key. Either the key is " +
   "no longer in the target account's `authorized_keys`, or sshd does not permit that " +
   "account to log in at all (for a root channel, check `sshd -T | grep -i permitrootlogin`).";
 
@@ -259,7 +259,7 @@ export function explainHostChannelCause(
       };
     case "unresolved":
       return {
-        headline: `"${ctx.host ?? at}" didn't resolve inside the Openship container${suffix}`,
+        headline: `"${ctx.host ?? at}" didn't resolve inside the Workbox Cloud container${suffix}`,
         body:
           "The host alias needs `extra_hosts: host.docker.internal:host-gateway` and Docker " +
           "20.10+; under rootless Docker the host gateway isn't provided at all. Re-run " +
@@ -268,7 +268,7 @@ export function explainHostChannelCause(
       };
     case "no_route":
       return {
-        headline: `${at} — no route from the Openship container${suffix}`,
+        headline: `${at} — no route from the Workbox Cloud container${suffix}`,
         body:
           "The address the channel was provisioned with isn't reachable on this box's " +
           "networks. Re-run `openship up` to reprovision it, or point " +
@@ -317,7 +317,7 @@ export const DOCKER_DEFAULT_POOL_CIDR = "172.16.0.0/12";
  * `iptables-persistent` is a Debian package name, and it was printed to every host —
  * including the RHEL boxes where the package is `iptables-services` and the save step is
  * a separate command. `suse`/`arch`/`unknown` get the generic sentence on purpose: those
- * are hosts Openship either refuses or hasn't identified, and naming a package that may
+ * are hosts Workbox Cloud either refuses or hasn't identified, and naming a package that may
  * not exist there is worse than naming none.
  */
 const PERSIST_IPTABLES: Readonly<Record<DistroFamily, string>> = {

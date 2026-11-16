@@ -80,7 +80,7 @@ import { MigrationIllustration } from "@/components/migration/MigrationIllustrat
 
 /** Platforms whose Docker/Compose apps this flow can adopt — shown as faint,
  *  clean brand marks under the intro (decorative). Only brands with a crisp
- *  simpleicons mark (blurry favicon sources dropped); the Openship circle is
+ *  simpleicons mark (blurry favicon sources dropped); the Workbox Cloud circle is
  *  appended as the destination. */
 const MIGRATE_SOURCES = ["coolify", "caprover", "docker"] as const;
 const EMPTY_SELECTION = { id: "", name: "", services: new Set<string>() };
@@ -179,7 +179,7 @@ interface RepoLink {
 }
 
 /**
- * One Openship project to create from the scan. Services may come from multiple
+ * One Workbox Cloud project to create from the scan. Services may come from multiple
  * groups; `bound` only supplies the initial project name (null until the first pick).
  */
 interface ImportProject {
@@ -212,7 +212,7 @@ interface MigrateItem {
   /** Container ids of the picked services (`svcUid`). Sent alongside the names so the
    *  server resolves the selection by IDENTITY: a compose service name is only unique
    *  within its own stack, so a name-only migrate also matched same-named containers
-   *  from every other stack on the host — including Openship's own `postgres` (#584). */
+   *  from every other stack on the host — including Workbox Cloud's own `postgres` (#584). */
   serviceContainerIds?: string[];
   /** serviceName → "copy" (only copy entries are sent; reuse is the default). */
   volumeStrategies: Record<string, VolumeStrategy>;
@@ -245,7 +245,7 @@ function autoMatchCompose(discoveredName: string, composeNames: string[]): strin
 }
 
 /**
- * Migrate existing Docker deployment(s) into Openship: pick a server → inspect →
+ * Migrate existing Docker deployment(s) into Workbox Cloud: pick a server → inspect →
  * organise the discovered stack into one or more PROJECTS (tabs) → migrate.
  * Each project reuses the existing named volumes in place. Multiple projects run
  * sequentially, each with its own cutover.
@@ -324,7 +324,7 @@ export function ServerMigrationWizard({
   const [serverName, setServerName] = useState<string | null>(null);
   const [scanning, setScanning] = useState(false);
   // "Flat Docker" scan mode: ignore openship.* labels so managed workloads adopt
-  // as plain compose/standalone (no re-import). Off = Openship-aware (default).
+  // as plain compose/standalone (no re-import). Off = Workbox Cloud-aware (default).
   const [flatDocker, setFlatDocker] = useState(!selfHosted);
   const [scanStatus, setScanStatus] = useState<string>("");
   const [stack, setStack] = useState<DiscoveredStack | null>(null);
@@ -872,7 +872,7 @@ export function ServerMigrationWizard({
     stack?.adoptable &&
     stack.groups.some((group) => group.services.some((service) => !isExcluded(service))),
   );
-  // Openship projects on the server that this instance doesn't know → re-importable.
+  // Workbox Cloud projects on the server that this instance doesn't know → re-importable.
   const orphanedOpenship = useMemo(
     () => stack?.openshipProjects?.filter((p) => !p.knownHere) ?? [],
     [stack],

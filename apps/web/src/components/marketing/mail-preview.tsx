@@ -22,7 +22,7 @@ export function MailPreview({
           <img
             className={styles.admin}
             src={`/screenshots/${locale}/mail-control-panel.webp`}
-            alt={copy("OpenShip Mail control panel showing mailbox accounts, quotas, and administration tabs.")}
+            alt={copy("Workbox Cloud Mail control panel showing mailbox accounts, quotas, and administration tabs.")}
             width={2400}
             height={1520}
             loading={priority ? "eager" : "lazy"}

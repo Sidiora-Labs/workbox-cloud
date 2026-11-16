@@ -79,7 +79,7 @@ export interface UploadTarget {
    * relay route is permission-checked like any other (send the same
    * `Authorization: Bearer …` you used to open the session, or the session
    * cookie). False for an external target, which carries its own token in
-   * `headers` and must never see Openship credentials.
+   * `headers` and must never see Workbox Cloud credentials.
    */
   requiresAuth: boolean;
   /** Send the browser's session cookie? true for the same-origin API relay,

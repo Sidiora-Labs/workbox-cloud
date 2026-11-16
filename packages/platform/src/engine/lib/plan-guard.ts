@@ -8,7 +8,7 @@ import { isCustomerServer, isCustomerProject } from "../modules/billing/manageme
  * corresponding plan allowances.
  *
  * SCOPE — cloud only, and deliberately `env.CLOUD_MODE`:
- *   Self-hosted Openship is free and unmetered; that's the product promise, so
+ *   Self-hosted Workbox Cloud is free and unmetered; that's the product promise, so
  *   every gate below returns immediately when CLOUD_MODE is false. It must NOT
  *   use `platform().target` (reads "cloud" for a self-hosted box carrying Oblien
  *   credentials) and must NOT use `requireCloud()` — that helper asserts "this
@@ -18,7 +18,7 @@ import { isCustomerServer, isCustomerProject } from "../modules/billing/manageme
  *   and change nothing.
  *
  * Oblien enforces credit limits and subscription suspension. These gates
- * enforce Openship application allowances using the verified subscription.
+ * enforce Workbox Cloud application allowances using the verified subscription.
  */
 
 import {
@@ -223,7 +223,7 @@ export async function assertPlanAllowsServices(organizationId: string, workspace
  * Refuse a machine size larger than the tier allows.
  *
  * Oblien enforces the VM and namespace allocation; several Docker services
- * can share one VM. Openship also enforces the selected per-service tier inside
+ * can share one VM. Workbox Cloud also enforces the selected per-service tier inside
  * that host, so a container cannot silently exceed its service configuration.
  *
  * Named presets and custom sizes are compared on CPU and RAM against the
@@ -403,7 +403,7 @@ export async function assertCloudRuntimeLimits(organizationId: string,
 /**
  * The tier's project ceiling, or null when the plan doesn't cap them.
  *
- * Openship owns this outright — Oblien has no project concept. Returned rather
+ * Workbox Cloud owns this outright — Oblien has no project concept. Returned rather
  * than asserted because the existing `assertProjectQuota` already counts project
  * groups and raises its own error; it just had no idea a plan existed (every
  * cloud org, free or enterprise, got the same `CLOUD_MAX_PROJECTS_PER_USER` of 2,

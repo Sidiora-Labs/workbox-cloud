@@ -9,7 +9,7 @@ import { cloudNamespaceLimits, initialCloudNamespaceLimits, readCloudCapacity, r
 
 beforeEach(() => {
   vi.resetAllMocks();
-  h.quota.mockImplementation(() => { throw new Error("Openship must not calculate provider capacity"); });
+  h.quota.mockImplementation(() => { throw new Error("Workbox Cloud must not calculate provider capacity"); });
   h.get.mockResolvedValue({ data: { id: "ns-a", slug: "tenant-a", resource_limits: null } });
   h.update.mockImplementation(async (_id, input) => ({ data: { id: "ns-a", slug: "tenant-a", ...input,
     effective_resource_limits: { max_vms: 52, max_vcpus: 32, max_ram_mb: 65536, max_disk_gb: 1024 },

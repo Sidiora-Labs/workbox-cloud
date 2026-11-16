@@ -53,9 +53,9 @@ describe("the fallback copy names no single cause", () => {
     }
   });
 
-  it("does not send a self-hosted operator to OpenShip Cloud", () => {
+  it("does not send a self-hosted operator to Workbox Cloud", () => {
     // The old description did exactly that, for a project that may never touch the cloud.
-    expect(r.description).not.toMatch(/OpenShip Cloud/i);
+    expect(r.description).not.toMatch(/Workbox Cloud/i);
   });
 
   it("still offers a remedy", () => {

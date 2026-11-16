@@ -1,9 +1,9 @@
 ---
 title: "セルフホスティング vs. マネージド プラットフォーム: 実際のコストの内訳"
-description: "Vercel、AWS、および自己ホスト型 OpenShip セットアップで本番環境 Next.js アプリを実行する実際のコストを比較しました。この数字に驚かれるかもしれません。"
+description: "Vercel、AWS、および自己ホスト型 Workbox Cloud セットアップで本番環境 Next.js アプリを実行する実際のコストを比較しました。この数字に驚かれるかもしれません。"
 date: "2026-03-05"
 category: "Guide"
-author: "OpenShip Team"
+author: "Workbox Cloud Team"
 ---
 
 請求書が届くまでは、「Vercel を使用してください」が良いアドバイスです。同じ Next.js アプリを 3 つのセットアップで実行し、30 日間すべてのコストを追跡しました。
@@ -19,7 +19,7 @@ author: "OpenShip Team"
 
 ## 結果
 
-| | Vercel プロ | AWS (ECS + RDS) | OpenShip (自己ホスト型) |
+| | Vercel プロ | AWS (ECS + RDS) | Workbox Cloud (自己ホスト型) |
 |---|---|---|---|
 |コンピューティング | $150/月 | $85/月 | $24/月 |
 |データベース | $50/月 (ネオン) | $45/月 |含まれています |
@@ -27,13 +27,13 @@ author: "OpenShip Team"
 | SSL/ドメイン |含まれています | 1 ドル/月 |含まれています |
 | **合計** | **$320/月** | **$176/月** | **$24/月** |
 
-セルフホスト型 OpenShip セットアップは、単一の Hetzner VPS (CPX31: 4 vCPU、8GB RAM、160GB SSD) 上で実行されます。
+セルフホスト型 Workbox Cloud セットアップは、単一の Hetzner VPS (CPX31: 4 vCPU、8GB RAM、160GB SSD) 上で実行されます。
 
 ## トレードオフ
 
 マネージド プラットフォームではゼロオペレーションが実現します。コードをプッシュすると、それがデプロイされます。それが本当の価値です。
 
-しかし、OpenShip によってその差は大幅に縮まります。
+しかし、Workbox Cloud によってその差は大幅に縮まります。
 - **AI が構成を処理** - ビルド検出、Docker ファイル生成、および SSL は自動です。
 - **1 つのコマンドでデプロイ** - `openship deploy` も同様に高速です。
 - **組み込みの監視** - すぐに使えるログ、メトリクス、アラート。

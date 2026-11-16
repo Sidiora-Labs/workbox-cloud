@@ -8,7 +8,7 @@
     <html lang="en">
       <head>
         <meta charset="UTF-8"/>
-        <title>Openship - Sitemap</title>
+        <title>Workbox Cloud - Sitemap</title>
         <meta name="robots" content="noindex"/>
         <style>
           :root {
@@ -168,7 +168,7 @@
         <div class="wrap">
           <a class="brand" href="/">
             <span class="brand-mark"></span>
-            Openship
+            Workbox Cloud
           </a>
 
           <xsl:choose>
@@ -212,7 +212,7 @@
               </div>
               <h1>URLs<span class="count"><xsl:value-of select="count(sm:urlset/sm:url)"/> entries</span></h1>
               <p class="lede">
-                Every URL below is part of the public Openship site. Crawlers ingest these to keep search results fresh.
+                Every URL below is part of the public Workbox Cloud site. Crawlers ingest these to keep search results fresh.
               </p>
               <table>
                 <thead>

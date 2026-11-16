@@ -98,7 +98,7 @@ def inspect(c, base):
     links = run_json(['ip', '-d', '-j', 'addr', 'show'])
     own = next((link for link in links if link['ifname'] == iface), None)
     if own and (not owned or owned.get('managedId') != c['managedId'] or own.get('linkinfo', {}).get('info_kind') != 'wireguard'):
-        raise RuntimeError('The proposed interface already exists without an OpenShip ownership receipt. Choose a new managed network.')
+        raise RuntimeError('The proposed interface already exists without a Workbox Cloud ownership receipt. Choose a new managed network.')
     interfaces = sorted([{
         'name': link['ifname'], 'mtu': link['mtu'], 'up': 'UP' in link.get('flags', []),
         'kind': link.get('linkinfo', {}).get('info_kind'),
@@ -353,14 +353,14 @@ try:
             common = {'managedId': managed_id, 'interfaceName': interface_name, 'stateDir': c['stateDir']}
             def exec_line(verb, data):
                 # systemd does not use a shell. JSON is escaped as one argument, and
-                # all identity/path fields are controlled by OpenShip.
+                # all identity/path fields are controlled by Workbox Cloud.
                 arg = json.dumps(data, separators=(',', ':')).replace('\\', '\\\\').replace('"', '\\"')
                 return '/usr/bin/env python3 ' + str(script) + ' ' + verb + ' "' + arg + '"'
-            write(unit_path('.service'), '[Unit]\nDescription=OpenShip managed private network\nAfter=network-online.target docker.service nftables.service netfilter-persistent.service\nWants=network-online.target\nStartLimitIntervalSec=0\n[Service]\nType=oneshot\nRemainAfterExit=yes\nRestart=on-failure\nRestartSec=10\nExecStart=' + exec_line('boot', common) + '\n[Install]\nWantedBy=multi-user.target\n')
+            write(unit_path('.service'), '[Unit]\nDescription=Workbox Cloud managed private network\nAfter=network-online.target docker.service nftables.service netfilter-persistent.service\nWants=network-online.target\nStartLimitIntervalSec=0\n[Service]\nType=oneshot\nRemainAfterExit=yes\nRestart=on-failure\nRestartSec=10\nExecStart=' + exec_line('boot', common) + '\n[Install]\nWantedBy=multi-user.target\n')
             timer_data = dict(common, operationId=c['operationId'], generation=c['generation'])
-            write(unit_path('-rollback.service'), '[Unit]\nDescription=Restore an uncommitted OpenShip network\nStartLimitIntervalSec=0\n[Service]\nType=oneshot\nRestart=on-failure\nRestartSec=10\nExecStart=' + exec_line('timer', timer_data) + '\n')
+            write(unit_path('-rollback.service'), '[Unit]\nDescription=Restore an uncommitted Workbox Cloud network\nStartLimitIntervalSec=0\n[Service]\nType=oneshot\nRestart=on-failure\nRestartSec=10\nExecStart=' + exec_line('timer', timer_data) + '\n')
             deadline = datetime.datetime.fromtimestamp(receipt['deadline'], datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')
-            write(unit_path('-rollback.timer'), '[Unit]\nDescription=OpenShip network rollback deadline\n[Timer]\nOnCalendar=' + deadline + '\nPersistent=true\nAccuracySec=1s\n[Install]\nWantedBy=timers.target\n')
+            write(unit_path('-rollback.timer'), '[Unit]\nDescription=Workbox Cloud network rollback deadline\n[Timer]\nOnCalendar=' + deadline + '\nPersistent=true\nAccuracySec=1s\n[Install]\nWantedBy=timers.target\n')
             commands([c['services']['reload']], 'Reload network service definitions')
             commands([c['services']['armTimer']], 'Arm network rollback timer')
         elif action == 'status':

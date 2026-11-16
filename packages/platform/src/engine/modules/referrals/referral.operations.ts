@@ -45,7 +45,7 @@ async function invoke(
     );
     if (!response)
       throw new AppError(
-        "Connect your OpenShip Cloud account to manage referrals",
+        "Connect your Workbox Cloud account to manage referrals",
         403,
         "CLOUD_NOT_CONNECTED",
       );

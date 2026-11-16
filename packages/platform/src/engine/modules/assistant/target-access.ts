@@ -11,7 +11,7 @@ import { assertDeploymentServer, assertServerExecution } from "../system/server-
 export const localAssistantTarget = (): AssistantTarget => ({
   id: "local",
   kind: "local",
-  name: env.DEPLOY_MODE === "desktop" ? "This computer" : "This OpenShip host",
+  name: env.DEPLOY_MODE === "desktop" ? "This computer" : "This Workbox Cloud host",
 });
 
 /** Host installation is an explicit server-admin action, independent of the narrower MCP tool grant. */
@@ -61,7 +61,7 @@ export async function assistantTargets(ctx: ExecutionContext): Promise<Assistant
           workspace.planTierId === "free"
         )
           continue;
-        result.push({ id: server.id, name: workspace.name || "OpenShip Cloud", kind: "cloud" });
+        result.push({ id: server.id, name: workspace.name || "Workbox Cloud", kind: "cloud" });
       } else {
         result.push({ id: server.id, name: server.name || "Server", kind: "server" });
       }

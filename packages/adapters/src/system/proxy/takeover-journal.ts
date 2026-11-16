@@ -165,7 +165,7 @@ export async function readJournal(
     if (listed?.trim()) {
       onLog?.(
         log(
-          `An unfinished edge takeover is recorded at ${JOURNAL_PATH}, but Openship could not ` +
+          `An unfinished edge takeover is recorded at ${JOURNAL_PATH}, but Workbox Cloud could not ` +
             `read it as this user — the previous proxy will NOT be restored automatically. ` +
             `Re-run as root, or restore it by hand.`,
           "error",
@@ -212,7 +212,7 @@ export async function rollback(
     purpose: "Restarting the proxy that was holding ports 80/443",
     consequence:
       "Restarting and re-enabling it will likely be refused — so if :80 is served after " +
-      "this, it is because nothing was ever stopped, not because Openship put it back.",
+      "this, it is because nothing was ever stopped, not because Workbox Cloud put it back.",
     report: (message) => onLog(log(message, "warn")),
   });
   // Release 80/443 from OUR edge first, or every restore below fails to bind and
@@ -253,7 +253,7 @@ export async function rollback(
     } else {
       onLog(
         log(
-          `Starting ${c.name} without setting a restart policy — Openship never managed to ` +
+          `Starting ${c.name} without setting a restart policy — Workbox Cloud never managed to ` +
             `read the one it had. Confirm it still comes back on reboot.`,
           "warn",
         ),

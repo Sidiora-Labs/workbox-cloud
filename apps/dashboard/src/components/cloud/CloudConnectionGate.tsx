@@ -4,16 +4,16 @@ import { Icon as UiIcon } from "@repo/ui/icons";
 
 /**
  * CloudConnectionGate — overlay shown on cloud-bound project pages
- * when the user's Openship Cloud session is missing.
+ * when the user's Workbox Cloud session is missing.
  *
  * Renders children normally when:
  *   - The project isn't cloud-bound (`deployTarget !== "cloud"`), OR
- *   - The user IS connected to Openship Cloud
+ *   - The user IS connected to Workbox Cloud
  *
  * Otherwise blurs the children and overlays a CTA. Clicking the CTA
  * starts the existing connect flow (`useCloud().startConnect`) — the
  * connect-handoff endpoint now redirects through the SaaS login when
- * needed, so the user is taken to "sign in to Openship Cloud" without
+ * needed, so the user is taken to "sign in to Workbox Cloud" without
  * any "No active session" errors.
  *
  * Where to mount: project layout's children wrapper. Specifically

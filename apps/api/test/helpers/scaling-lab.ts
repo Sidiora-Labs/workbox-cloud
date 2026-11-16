@@ -395,7 +395,7 @@ export class ScalingLab {
     if (options.edge === false) return;
     // Build the actual shipped Edge image/config/Lua; only the external ACME
     // service is out of scope (the fixture domain deliberately uses HTTP).
-    console.info("[scaling-e2e] Nodes are ready. Building the shipped OpenShip Edge image.");
+    console.info("[scaling-e2e] Nodes are ready. Building the shipped Workbox Cloud Edge image.");
     this.edgeImage = `openship-e2e:${this.id}-edge`;
     const build = await this.docker.buildImage(
       {
@@ -431,7 +431,7 @@ export class ScalingLab {
       pinPaths: true,
     });
     await eventually(
-      "OpenShip Edge",
+      "Workbox Cloud Edge",
       () => this.executor.exec("openresty -t"),
       () => true,
     );
@@ -484,7 +484,7 @@ export class ScalingLab {
           response.once("end", () => resolve({ status: response.statusCode!, body }));
         },
       );
-      req.setTimeout(5000, () => req.destroy(new Error("OpenShip Edge request timed out")));
+      req.setTimeout(5000, () => req.destroy(new Error("Workbox Cloud Edge request timed out")));
       req.once("error", reject);
       req.end();
     });

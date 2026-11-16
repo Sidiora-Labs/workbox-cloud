@@ -70,7 +70,7 @@ Trusted host code may enable `administration` to access:
 
 Identity mappings and namespaces persist. Email equality does not link existing accounts; linking requires an explicit `userId`. Existing identity mappings do not gain instance-admin privileges when ensured again. Membership changes cannot remove the final organization owner.
 
-A namespace maps to an Openship organization. Projects belong to that organization and follow the existing role/grant model. Create resources under a customer by obtaining a verified identity, selecting its organization with `ship.scope`, then invoking `customer.projects.create` or `customer.deploy`. The operator is never included in the customer's scoped client.
+A namespace maps to a Workbox Cloud organization. Projects belong to that organization and follow the existing role/grant model. Create resources under a customer by obtaining a verified identity, selecting its organization with `ship.scope`, then invoking `customer.projects.create` or `customer.deploy`. The operator is never included in the customer's scoped client.
 
 Every call asks the trusted adapter to revalidate the assertion and rereads membership/grants. The adapter must observe session/token revocation; a permanently cached successful assertion is not an authentication service. Removing membership invalidates an already-created scope. The assertion cannot pick its own role or organization authority. Fixed scopes cannot access another organization's resources even if the same user belongs to both.
 

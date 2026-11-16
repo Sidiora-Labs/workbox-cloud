@@ -58,7 +58,7 @@ export function prepareStorageAddon(
   config: ClusterStorageConfig,
 ) {
   validateClusterStorage(config);
-  // File management stays in OpenShip. The bundled infrastructure dashboard is
+  // File management stays in Workbox Cloud. The bundled infrastructure dashboard is
   // unnecessary and must not add another exposed management surface.
   const result = structuredClone(documents).filter(
     (object) =>

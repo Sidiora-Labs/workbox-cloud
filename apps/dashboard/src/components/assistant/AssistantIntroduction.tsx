@@ -41,7 +41,7 @@ export function AssistantIntroduction({ children }: { children: ReactNode }) {
               Build with your agent
             </h3>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Use Codex or Claude Code in OpenShip, or Grok through a custom API.
+              Use Codex or Claude Code in Workbox Cloud, or Grok through a custom API.
             </p>
             <div className="mt-6">{children}</div>
           </div>

@@ -34,14 +34,14 @@ vi.mock("./useUpdates", () => ({
 }));
 
 describe("UpdateCenter changelog links", () => {
-  it("sends the post-update toast to that version on the OpenShip website", () => {
+  it("sends the post-update toast to that version on the Workbox Cloud website", () => {
     const html = renderToStaticMarkup(
       <I18nProvider>
         <UpdateCenter />
       </I18nProvider>,
     );
 
-    expect(html).toContain("Updated to OpenShip 0.6.9");
+    expect(html).toContain("Updated to Workbox Cloud 0.6.9");
     expect(html).toContain('href="https://openship.io/changelog/v0-6-9"');
     expect(html).not.toContain("github.com/oblien/openship");
   });

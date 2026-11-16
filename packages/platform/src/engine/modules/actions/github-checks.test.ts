@@ -94,7 +94,7 @@ function pullRequestRun(): ActionRun {
 const identity = {
   id: 42,
   external_id: "openship-action:run-one:job-one",
-  name: "Openship / CI / test",
+  name: "Workbox Cloud / CI / test",
   head_sha: prHead,
 };
 function prTransport(
@@ -294,7 +294,7 @@ jobs:
       expect(h.request.mock.calls.at(-1)?.[0]).toMatchObject({
         method: "POST",
         params: {
-          name: "Openship / CI / Build after tests",
+          name: "Workbox Cloud / CI / Build after tests",
           conclusion: status,
           output: { title: "CI · Build after tests" },
         },

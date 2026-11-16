@@ -259,7 +259,7 @@ describe("workflow Checks setup", () => {
   });
   it("keeps standalone results local without querying GitHub", async () => {
     await render({ repository: null, github: false, independent: true });
-    expect(host.textContent).toContain("Job and step results stay in OpenShip.");
+    expect(host.textContent).toContain("Job and step results stay in Workbox Cloud.");
     expect(h.checks).not.toHaveBeenCalled();
   });
 });

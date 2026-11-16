@@ -80,7 +80,7 @@ describe("GET /api/system/health — host channel", () => {
       ok: false,
       code: "not_configured",
       hint:
-        "Openship is running in a container with no host channel — OPENSHIP_HOST_SSH_HOST is " +
+        "Workbox Cloud is running in a container with no host channel — OPENSHIP_HOST_SSH_HOST is " +
         "unset, so there is no address to reach the host at and nothing has been dialed. " +
         "Re-run `openship up` to provision the host channel. `openship doctor` reports whether it worked.",
     });

@@ -1,7 +1,7 @@
 /**
  * @module @/lib/api
  *
- * Centralised API layer for the Openship dashboard.
+ * Centralised API layer for the Workbox Cloud dashboard.
  *
  * Usage:
  *   import { projectsApi, deployApi, githubApi } from "@/lib/api";

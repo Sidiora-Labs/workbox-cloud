@@ -142,7 +142,7 @@ function amavisConf(
   if (found) return { write: found, engine: found };
   throw new Error(
     `Could not find amavis's configuration on this mail server. Looked for ` +
-      `${HOST_AMAVIS_CONF_CANDIDATES.map((c) => c.path).join(", ")}. Openship will not ` +
+      `${HOST_AMAVIS_CONF_CANDIDATES.map((c) => c.path).join(", ")}. Workbox Cloud will not ` +
       `write DKIM directives to a path amavis doesn't read — that signs nothing and ` +
       `reports success.`,
   );
@@ -501,7 +501,7 @@ export async function stepOpenMailFirewall(
       stepId,
       "warn",
       `This host filters with ${profile.firewall}, whose rules live in the running ruleset ` +
-        `only — Openship won't add one that quietly disappears at the next reboot. Run these ` +
+        `only — Workbox Cloud won't add one that quietly disappears at the next reboot. Run these ` +
         `yourself, wherever this box restores its ruleset from:\n${script}`,
     );
     return {

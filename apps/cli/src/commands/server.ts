@@ -12,7 +12,7 @@ import { exitCommand, rethrowCommandExit } from "../lib/command-exit";
  *   ssh / terminal    → single-use terminal ticket + WebSocket PTY
  *
  * The API authorizes the selected server, including paid customer-owned hosts
- * managed by Openship Cloud. Operator-host access remains unavailable in SaaS.
+ * managed by Workbox Cloud. Operator-host access remains unavailable in SaaS.
  */
 import { randomUUID } from "node:crypto";
 import { Command, Option } from "commander";

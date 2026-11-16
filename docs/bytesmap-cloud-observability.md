@@ -1,6 +1,6 @@
-# OpenShip Cloud operational telemetry in BytesMap
+# Workbox Cloud operational telemetry in BytesMap
 
-OpenShip Cloud uses the single `bytesmap` npm SDK (`bytesmap/events/server`) for
+Workbox Cloud uses the single `bytesmap` npm SDK (`bytesmap/events/server`) for
 traces, logs and errors. BytesMap owns OpenTelemetry internally and exports to
 the configured BytesMap ingestion origin; OpenShip has no direct OpenTelemetry
 dependencies, providers or exporters. The existing structured-error reporter supplies one

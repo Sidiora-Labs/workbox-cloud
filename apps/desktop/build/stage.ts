@@ -62,7 +62,7 @@ const TARGET_ARCH = process.env.FORGE_ARCH || process.arch; // "x64" | "arm64"
 const pkg = JSON.parse(
   readFileSync(join(DESKTOP_DIR, "package.json"), "utf8"),
 ) as { productName?: string; name?: string; version?: string };
-const APP_NAME = pkg.productName ?? pkg.name ?? "Openship";
+const APP_NAME = pkg.productName ?? pkg.name ?? "Workbox Cloud";
 const APP_VERSION = pkg.version ?? "0.0.0";
 const TARGET = `${process.platform}/${TARGET_ARCH}`;
 

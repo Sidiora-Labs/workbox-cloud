@@ -8,6 +8,7 @@ import { CLOUD_DASHBOARD_URL } from "@repo/core";
 import { reportCaughtError } from "@repo/core/diagnostics";
 import { withoutLocale } from "@/i18n/routing";
 import { LanguageSwitcher } from "./language-switcher";
+import { WorkboxLogo } from "../workbox-logo";
 import { useLocale } from "next-intl";
 
 type NavLink = { label: string; href: string; hint?: string };
@@ -32,7 +33,7 @@ const NAV: NavEntry[] = [
     items: [
       { label: "Blog", href: "/blog", hint: "Guides and product news" },
       { label: "Changelog", href: "/changelog", hint: "What shipped, release by release" },
-      { label: "Support", href: "/support", hint: "Talk to the OpenShip team" },
+      { label: "Support", href: "/support", hint: "Talk to the Workbox Cloud team" },
     ],
   },
 ];
@@ -155,8 +156,8 @@ export function Navbar() {
         }).format(stars);
   const githubDescription =
     stars === null
-      ? copy("Star OpenShip on GitHub")
-      : copy("OpenShip on GitHub — {count} stars", { count: stars.toLocaleString(locale) });
+      ? copy("Star Workbox Cloud on GitHub")
+      : copy("Workbox Cloud on GitHub — {count} stars", { count: stars.toLocaleString(locale) });
 
   useEffect(() => {
     const controller = new AbortController();
@@ -197,16 +198,7 @@ export function Navbar() {
       <div className="site-container site-nav-bar">
         {/* ── Logo ────────────────────────────────────────────── */}
         <Link href="/" className="relative z-10 flex items-center gap-2.5">
-          <div
-            className="h-[30px] w-[30px] shrink-0 rounded-full"
-            style={{
-              borderWidth: "2.5px",
-              borderStyle: "solid",
-              borderColor: dark ? "rgba(255,255,255,.9)" : "var(--th-text-heading)",
-              transition: "border-color .3s",
-            }}
-            aria-hidden="true"
-          />
+          <WorkboxLogo size={30} dark={dark} />
           <span
             className="text-[16px] font-semibold tracking-[-0.01em]"
             style={{
@@ -214,7 +206,7 @@ export function Navbar() {
               transition: "color .3s",
             }}
           >
-            OpenShip
+            Workbox Cloud
           </span>
         </Link>
 

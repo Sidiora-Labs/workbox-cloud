@@ -1,6 +1,6 @@
 /**
  * Docker migration controller — inspect an existing Docker deployment on a
- * server so it can be adopted as an Openship project.
+ * server so it can be adopted as a Workbox Cloud project.
  *
  * Connected and managed destinations share the same migration engine. Cloud
  * accepts external SSH connections only as migration sources.
@@ -329,7 +329,7 @@ export async function revealServiceEnv(c: Context) {
 /**
  * POST /migration/adopt  { serverId, projectName, serviceNames[] }
  *
- * Create an Openship `services` project from the selected discovered services.
+ * Create a Workbox Cloud `services` project from the selected discovered services.
  * Re-discovers server-side (server truth, not client-sent config). Records only
  * — reuses the existing named volumes in place; deploy + cutover is separate.
  */
@@ -403,7 +403,7 @@ export async function adoptServer(c: Context) {
 /**
  * POST /migration/reimport  { serverId, projectId, projectName?, serviceNames? }
  *
- * Recover an ORPHANED Openship project (DR / cross-instance) from a server,
+ * Recover an ORPHANED Workbox Cloud project (DR / cross-instance) from a server,
  * preserving its original id so the running containers re-attach. Records only —
  * the user redeploys from the project to finalize. `organizationId` comes from
  * the request context, never from server-supplied data.
@@ -653,7 +653,7 @@ async function assertProjectMoveAllowed(
  * POST /migration/project  { projectId, targetServerId, transferMode?, transferCompression?,
  *                            conflictResolution?, customPaths? }
  *
- * Move a project Openship already owns onto another server. Same pipeline, same run row and
+ * Move a project Workbox Cloud already owns onto another server. Same pipeline, same run row and
  * same `{ migrationId, confirmationToken }` contract as `/migrate`, so the client opens the
  * existing run panel by id and confirms the cutover the existing way.
  *

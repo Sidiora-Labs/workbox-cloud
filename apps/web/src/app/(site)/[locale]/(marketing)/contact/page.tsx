@@ -8,21 +8,21 @@ import { ContactPage as ContactPageLayout } from "@/components/marketing/contact
 
 const PAGE_TITLE = "Contact Us";
 const PAGE_DESCRIPTION =
-  "Get in touch with the OpenShip team. Send us a message and we'll get back to you as soon as possible.";
+  "Get in touch with the Workbox Cloud team. Send us a message and we'll get back to you as soon as possible.";
 
 const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
   alternates: { canonical: "/contact" },
   openGraph: {
-    title: `${PAGE_TITLE} - OpenShip`,
+    title: `${PAGE_TITLE} - Workbox Cloud`,
     description: PAGE_DESCRIPTION,
     url: "/contact",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${PAGE_TITLE} - OpenShip`,
+    title: `${PAGE_TITLE} - Workbox Cloud`,
     description: PAGE_DESCRIPTION,
   },
 };
@@ -48,7 +48,7 @@ export default function ContactPage() {
         </>
       }
       description={copy(
-        "Questions about OpenShip, your next project, or working together? Send a message to the team. We’ll reply by email.",
+        "Questions about Workbox Cloud, your next project, or working together? Send a message to the team. We’ll reply by email.",
       )}
       links={[
         {

@@ -285,7 +285,7 @@ describe("signed Actions payment delivery and recurring recovery", () => {
         url: "https://checkout.stripe.com/test-secret",
       };
     });
-    // The event can arrive before Openship has saved the returned checkout ID.
+    // The event can arrive before Workbox Cloud has saved the returned checkout ID.
     expect(
       (
         await deliver(f.namespace, {
@@ -447,7 +447,7 @@ describe("Actions namespace preparation before checkout", () => {
     const f = await order({ saveCheckout: false });
     await ensureActionsBillingNamespace(f.actor.orgId);
     expect(provider.ensureNamespace).toHaveBeenCalledExactlyOnceWith({
-      name: "Openship Actions",
+      name: "Workbox Cloud Actions",
       slug: f.namespace,
       resource_limits: {
         max_vms: 0,

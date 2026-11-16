@@ -42,7 +42,7 @@ async function responseScope(project: Awaited<ReturnType<typeof localProject>>, 
     if (project.workspaceId || project.clusterId || target.deployTarget === "cloud" ||
         domain.externalIngress || domain.domainType === "free" || domain.redirectTo ||
         (process.env.OPENSHIP_NATIVE === "true" && process.env.OPENSHIP_NATIVE_ROUTING === "none"))
-      throw new AppError("Static responses require a domain served by the OpenShip edge. Cloud, external ingress, cluster, and redirect-only domains are not supported.", 400, "EDGE_RESPONSE_UNSUPPORTED");
+      throw new AppError("Static responses require a domain served by the Workbox Cloud edge. Cloud, external ingress, cluster, and redirect-only domains are not supported.", 400, "EDGE_RESPONSE_UNSUPPORTED");
   }
   return path === "/" ? null : path;
 }

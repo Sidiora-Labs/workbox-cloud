@@ -23,7 +23,7 @@ export async function syncActionCheck(run: ActionRun, job: ActionJob) {
   const { owner, repo } = run.configuration;
   if (!owner || !repo) return { id: null, error: null, unavailable: true };
   const jobName = actionJobName(run.plan, job);
-  const name = `Openship / ${run.plan.name} / ${jobName}`.slice(0, 255);
+  const name = `Workbox Cloud / ${run.plan.name} / ${jobName}`.slice(0, 255);
   const externalId = `openship-action:${run.id}:${job.id}`;
   const id = job.checkRunId;
   try {
@@ -62,7 +62,7 @@ export async function syncActionCheck(run: ActionRun, job: ActionJob) {
                 `Pull request #${pr.number}; ${closed ? "commit" : "merge"} revision ${run.revision}.`,
               ]
             : []),
-          job.error?.slice(0, 4096) || `Openship Actions: ${job.status}.`,
+          job.error?.slice(0, 4096) || `Workbox Cloud Actions: ${job.status}.`,
         ].join("\n\n"),
       },
     };

@@ -21,7 +21,7 @@ export default function DocsRootLayout({ children }: { children: ReactNode }) {
         nav={{
           mode: "top",
           title: (
-            // Same mark as the marketing navbar: a ring + wordmark.
+            // Same mark as the marketing navbar: the supplied Workbox Cloud mark + wordmark.
             //
             // INLINE STYLES, not Tailwind utilities: this document loads ONLY
             // fumadocs' standalone Tailwind build (see (docs)/layout.tsx), which
@@ -31,19 +31,16 @@ export default function DocsRootLayout({ children }: { children: ReactNode }) {
             // wordmark showed alone. `currentColor` keeps the ring tracking the nav
             // text through the light/dark toggle.
             <span style={{ display: "inline-flex", alignItems: "center", gap: 9 }}>
-              <span
-                aria-hidden
-                style={{
-                  width: 22,
-                  height: 22,
-                  flexShrink: 0,
-                  borderRadius: 9999,
-                  borderWidth: 2.5,
-                  borderStyle: "solid",
-                  borderColor: "currentColor",
-                }}
-              />
-              <span style={{ fontWeight: 600 }}>OpenShip</span>
+              <span style={{ width: 28, height: 28, flexShrink: 0, overflow: "hidden", position: "relative", display: "inline-block" }}>
+                <img
+                  src="/brand/wb_cloud.webp"
+                  alt=""
+                  width={35}
+                  height={35}
+                  style={{ position: "absolute", inset: -3.5, maxWidth: "none" }}
+                />
+              </span>
+              <span style={{ fontWeight: 600 }}>Workbox Cloud</span>
             </span>
           ),
           url: "/",

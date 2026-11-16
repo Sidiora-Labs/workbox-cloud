@@ -453,7 +453,7 @@ describe("parseOpenshipConfig", () => {
 
     it("is not confused with a compose service's docker healthcheck", () => {
       // Different layers, similar names: `services[].healthcheck` is the Docker
-      // HEALTHCHECK directive; top-level `readiness` is Openship's deploy gate.
+      // HEALTHCHECK directive; top-level `readiness` is Workbox Cloud's deploy gate.
       const { config, errors } = parseOpenshipConfig({
         readiness: { enabled: true },
         services: [{ name: "db", image: "postgres:16", healthcheck: { test: "pg_isready" } }],

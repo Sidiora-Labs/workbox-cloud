@@ -25,7 +25,7 @@ export { BUILD_METADATA_POLICY_VERSION, BUILD_METADATA_IPV4, BUILD_METADATA_IPV6
   buildMetadataFirewallScript, buildKitGuardEntrypoint, isProtectedBuildKitConfig } from "./build-metadata-policy";
 
 /**
- * A firewall Openship can drive.
+ * A firewall Workbox Cloud can drive.
  *
  * Derived from `SystemFirewall` rather than restated, minus the two members that are
  * answers about *looking* rather than managers: `none` (we looked, nothing is enforcing)
@@ -184,7 +184,7 @@ export function firewallManager(firewall: SystemFirewall): Answer<FirewallManage
       );
     case "unknown":
       return refused(
-        "Openship could not determine which firewall this host runs, so it will not " +
+        "Workbox Cloud could not determine which firewall this host runs, so it will not " +
           "guess at a rule — applying an iptables rule where firewalld is managing the " +
           "chains looks like it worked and is gone after a reload.",
       );
@@ -210,7 +210,7 @@ const PERSISTS: Readonly<Record<SystemFirewall, boolean>> = {
 };
 
 /**
- * True when Openship may apply a rule and expect it to still be there tomorrow.
+ * True when Workbox Cloud may apply a rule and expect it to still be there tomorrow.
  *
  * The CLI refused to apply an unpersisted rule while the API applied one, so the same box
  * got a different answer depending on which surface asked. This is that one answer.
@@ -278,7 +278,7 @@ if action != 'down':
             raise RuntimeError('Additional nftables input/output base chains need a custom firewall adapter.')
     for rule in rules:
         if not owned(rule) and prefix in json.dumps(rule):
-            raise RuntimeError('A foreign nftables rule refers to an OpenShip-owned chain.')
+            raise RuntimeError('A foreign nftables rule refers to a Workbox Cloud-owned chain.')
 def clean(value):
     if isinstance(value, list): return [clean(item) for item in value]
     if isinstance(value, dict): return {key: clean(item) for key, item in value.items() if key not in ('handle', 'index', 'position', 'packets', 'bytes')}
@@ -413,7 +413,7 @@ export function managedNetworkFirewall(
   }
   if (manager !== "iptables")
     return refused(
-      `Managed networking currently supports unfiltered hosts, iptables, and nftables with inet filter input/output chains. This host uses ${manager}; its firewall needs an owned-rule adapter before OpenShip can safely manage it.`,
+      `Managed networking currently supports unfiltered hosts, iptables, and nftables with inet filter input/output chains. This host uses ${manager}; its firewall needs an owned-rule adapter before Workbox Cloud can safely manage it.`,
     );
   const input = `OSWG_${identity.slice(0, 16)}_I`;
   const output = `OSWG_${identity.slice(0, 16)}_O`;

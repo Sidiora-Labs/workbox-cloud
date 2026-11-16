@@ -12,7 +12,7 @@ export function MailServer() {
     <section id="mail" className="ms-section" aria-labelledby="mail-spotlight-title">
       <div className="site-container ms-grid">
         <div className="ms-lead">
-          <p className="ms-eyebrow">OpenShip Mail</p>
+          <p className="ms-eyebrow">Workbox Cloud Mail</p>
           <h2 id="mail-spotlight-title" className="ms-title">
             {copy("Your email.")}
             <br />
@@ -39,7 +39,7 @@ export function MailServer() {
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
           </div>
-          <p className="ms-availability">{copy("Mail server management for Desktop and self-hosted OpenShip.")}</p>
+          <p className="ms-availability">{copy("Mail server management for Desktop and self-hosted Workbox Cloud.")}</p>
         </div>
         <MailPreview />
       </div>

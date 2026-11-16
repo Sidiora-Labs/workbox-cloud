@@ -24,19 +24,19 @@ export default function HomeContent() {
     <>
       <main className="marketing-page mail-page">
         <MarketingIntro
-          eyebrow={<><FeatureIllustration name="mail" className="marketing-illustration" />OpenShip Mail</>}
+          eyebrow={<><FeatureIllustration name="mail" className="marketing-illustration" />Workbox Cloud Mail</>}
           title={<>{copy("Your email.")}<br /><span>{copy("Your control panel.")}</span></>}
           description="Team inboxes and transactional email on your own server. Manage accounts, delivery, and backups alongside your apps."
         >
           <div className="mail-actions">
             <Link href="/download" className="th-btn rounded-full px-6 py-3 text-[14px]">
-              {copy("Get OpenShip")}<ArrowRight className="size-4" aria-hidden="true" />
+              {copy("Get Workbox Cloud")}<ArrowRight className="size-4" aria-hidden="true" />
             </Link>
             <Link href="#control-panel" className="marketing-text-link">
               {copy("Explore the panel")}<ArrowRight className="size-4" aria-hidden="true" />
             </Link>
           </div>
-          <span>{copy("Mail server management for Desktop and self-hosted OpenShip.")}</span>
+          <span>{copy("Mail server management for Desktop and self-hosted Workbox Cloud.")}</span>
         </MarketingIntro>
 
         <div className="site-container mail-hero-preview">
@@ -91,7 +91,7 @@ export default function HomeContent() {
               <article>
                 <FeatureIllustration name="server-management" className="marketing-illustration" />
                 <h3>{copy("Your own mail server")}</h3>
-                <p>{copy("Use Desktop or self-hosted OpenShip to set up mail on a connected server. Your mailboxes and stored messages live there.")}</p>
+                <p>{copy("Use Desktop or self-hosted Workbox Cloud to set up mail on a connected server. Your mailboxes and stored messages live there.")}</p>
                 <Link href="/docs/guides/email-webmail" className="marketing-text-link">
                   {copy("Set up a mail server")}<ArrowRight className="size-4" aria-hidden="true" />
                 </Link>
@@ -99,7 +99,7 @@ export default function HomeContent() {
               <article>
                 <FeatureIllustration name="deploy-anywhere" className="marketing-illustration" />
                 <h3>{copy("Webmail on Cloud")}</h3>
-                <p>{copy("Host the webmail app on OpenShip Cloud and connect an existing IMAP/SMTP provider. Your provider keeps the mailboxes and handles delivery.")}</p>
+                <p>{copy("Host the webmail app on Workbox Cloud and connect an existing IMAP/SMTP provider. Your provider keeps the mailboxes and handles delivery.")}</p>
                 <a href={new URL("/apps/new/webmail", CLOUD_DASHBOARD_URL).toString()} className="marketing-text-link">
                   {copy("Connect existing mail")}<ArrowRight className="size-4" aria-hidden="true" />
                 </a>

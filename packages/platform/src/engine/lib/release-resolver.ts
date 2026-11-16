@@ -276,7 +276,7 @@ export async function resolveLatestReleaseVersion(
 /**
  * Resolve the version a deployment should ship. Explicit webhook/manual input
  * wins, then a configured pin, then the latest upstream release. An unavailable
- * arbitrary upstream never silently borrows Openship's own API version.
+ * arbitrary upstream never silently borrows Workbox Cloud's own API version.
  */
 export async function resolveReleaseVersion(
   source: ReleaseSource,

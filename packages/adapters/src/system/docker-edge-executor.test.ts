@@ -439,7 +439,7 @@ describe("socket edge port inventory", () => {
   ])("rejects an empty or ambiguous resolved dump (%s)", async (dump) => {
     const { reader, host } = inventory(dump);
     await expect(reader.listLoopbackUpstreamPortsStrict()).rejects.toThrow(
-      /Cannot (read|inventory) Openship edge routes/,
+      /Cannot (read|inventory) Workbox Cloud edge routes/,
     );
     expect(host.exec).not.toHaveBeenCalled();
   });

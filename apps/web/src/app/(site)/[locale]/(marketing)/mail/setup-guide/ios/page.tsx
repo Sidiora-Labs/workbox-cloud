@@ -18,7 +18,7 @@ export default function IosGuidePage() {
       <GuideSection title={copy("Before you start")}>
         <p className="text-sm leading-relaxed text-white/70">
           {copy(
-            "You need the username and password from your OpenShip admin Overview tab, plus the IMAP / SMTP host and port shown in the right rail. iOS will auto-fill some fields after you enter your email - double-check them against the values here before tapping Done.",
+            "You need the username and password from your Workbox Cloud admin Overview tab, plus the IMAP / SMTP host and port shown in the right rail. iOS will auto-fill some fields after you enter your email - double-check them against the values here before tapping Done.",
           )}
         </p>
       </GuideSection>

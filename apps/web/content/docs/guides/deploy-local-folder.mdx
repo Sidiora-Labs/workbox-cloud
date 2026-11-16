@@ -6,19 +6,19 @@ description: Put an app online straight from a folder on your computer — no Gi
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
 Not everything lives on GitHub. Sometimes the code is just a folder on your laptop — one you cloned ages
-ago, downloaded, or started from scratch. Openship can take that folder and put it online, no git remote
+ago, downloaded, or started from scratch. Workbox Cloud can take that folder and put it online, no git remote
 needed. Think of it like mailing a parcel instead of a letter: you hand over the whole box of files, and
-Openship unpacks it, figures out what's inside, builds it, and gives you back a real web address.
+Workbox Cloud unpacks it, figures out what's inside, builds it, and gives you back a real web address.
 
 <Callout title="What you need first">
-- Openship up and running (you can see the dashboard). If not, start with [Installation](/docs/getting-started/installation).
+- Workbox Cloud up and running (you can see the dashboard). If not, start with [Installation](/docs/getting-started/installation).
 - A folder on disk with your app in it — a website, an API, anything.
-- You do **not** need Docker, a server config, or any special files. Openship reads your folder and works out the rest.
+- You do **not** need Docker, a server config, or any special files. Workbox Cloud reads your folder and works out the rest.
 </Callout>
 
 ## What actually gets uploaded
 
-Openship sends your **source files** — the code you wrote — and nothing else. The heavy, rebuildable stuff
+Workbox Cloud sends your **source files** — the code you wrote — and nothing else. The heavy, rebuildable stuff
 is skipped: `node_modules`, `.git`, and build output like `dist` and `.next` never go over the wire. Your
 dependencies get reinstalled fresh during the build, so leaving them behind is exactly what you want. It
 keeps the upload small and your build clean.
@@ -29,7 +29,7 @@ The **desktop app** is the exception: it reads your folder straight from disk an
 
 Open the **Library** page (the **New project** button lands you here too) and choose the **Folder** tab.
 
-What you see next depends on how you're using Openship. The **desktop app** can read a folder directly off
+What you see next depends on how you're using Workbox Cloud. The **desktop app** can read a folder directly off
 your computer. A **web browser** (talking to a self-hosted or cloud instance) can't peek at your filesystem,
 so it uploads a copy of the folder instead. Pick the tab that matches you.
 
@@ -56,12 +56,12 @@ projects yet" and an **Import Project** button. Once you've added some, the pane
 
 ### Pick your folder
 
-A folder picker opens. Browse to your project folder and select it — that's all Openship needs.
+A folder picker opens. Browse to your project folder and select it — that's all Workbox Cloud needs.
 
 <Callout title="No folder picker?" type="info">
 On some setups the native picker isn't available. Instead you'll see an **Import from folder** form: type the
 folder's full absolute path (like `/Users/you/projects/my-app`), or press **Browse**, then press **Scan**.
-Openship shows the **Detected** stack and an editable **Project name** — press **Import Project** to add it to
+Workbox Cloud shows the **Detected** stack and an editable **Project name** — press **Import Project** to add it to
 your Local Projects list, then deploy it from there.
 </Callout>
 
@@ -71,7 +71,7 @@ your Local Projects list, then deploy it from there.
 
 ### Press Deploy and watch it go live
 
-Openship takes you to the deploy screen with the detected stack already filled in — the framework, the
+Workbox Cloud takes you to the deploy screen with the detected stack already filled in — the framework, the
 package manager, and the build and start commands. For most apps there's nothing to change. Press **Deploy**
 and the build screen streams the logs live. When it finishes, you get a link — click it and your app is
 online. 🎉
@@ -84,7 +84,7 @@ online. 🎉
 
 <Tab value="Web browser">
 
-In a browser, Openship can't see your disk — so you tell it what you're deploying, then hand it the folder
+In a browser, Workbox Cloud can't see your disk — so you tell it what you're deploying, then hand it the folder
 and it packs and uploads a copy.
 
 <Steps>
@@ -94,7 +94,7 @@ and it packs and uploads a copy.
 ### Pick your stack
 
 The Folder tab asks **"What are you deploying?"** Choose the tile that matches your app (for example Next.js,
-Vite, or Express). This tells Openship which build environment to prepare.
+Vite, or Express). This tells Workbox Cloud which build environment to prepare.
 
 </Step>
 
@@ -112,7 +112,7 @@ folder name and how many files it contains.
 
 ### Press Continue
 
-Openship packs the folder **in your browser** and uploads it, then takes you to the deploy screen. The button
+Workbox Cloud packs the folder **in your browser** and uploads it, then takes you to the deploy screen. The button
 shows a short **Packing folder…** then **Uploading…** while it works — bigger folders take a little longer.
 
 </Step>
@@ -145,7 +145,7 @@ openship deploy --folder --name my-app --watch
 ```
 
 - `--name` sets the project's name (without it, the folder's name is used).
-- `--watch` follows the build logs in your terminal until it finishes. Leave it off and Openship prints a
+- `--watch` follows the build logs in your terminal until it finishes. Leave it off and Workbox Cloud prints a
   command to follow the logs later.
 
 <Callout title="Deploying inside a git repo?" type="info">
@@ -157,7 +157,7 @@ to keep staging archives outside the source tree. If `TMPDIR` is inside your app
 
 ### Deploy to the same project again
 
-Openship matches your folder to a project by **name**. Run `openship deploy --name my-app` a second time from
+Workbox Cloud matches your folder to a project by **name**. Run `openship deploy --name my-app` a second time from
 the same folder and it updates *that* project instead of making a new one — so repeat deploys just ship new
 versions.
 
@@ -182,7 +182,7 @@ no source in it. Choose the folder that actually contains your app's code — th
 </Callout>
 
 <Callout title="The browser upload can't find your folder's path" type="warn">
-A web browser only gives Openship the folder's **name**, not its full location on disk. When the form asks
+A web browser only gives Workbox Cloud the folder's **name**, not its full location on disk. When the form asks
 for a path, type the full absolute path (like `/Users/you/projects/my-app`) and press **Scan**. Or use the
 desktop app, which can open the folder directly.
 </Callout>

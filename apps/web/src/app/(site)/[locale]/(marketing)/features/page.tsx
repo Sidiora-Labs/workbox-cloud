@@ -14,21 +14,21 @@ import "./features.css";
 
 const PAGE_TITLE = "Features";
 const PAGE_DESCRIPTION =
-  "Explore OpenShip's deployment, CI, runners, apps, backups, migration, networking, monitoring, and team access features, with detailed guides and availability.";
+  "Explore Workbox Cloud's deployment, CI, runners, apps, backups, migration, networking, monitoring, and team access features, with detailed guides and availability.";
 
 const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
   alternates: { canonical: "/features" },
   openGraph: {
-    title: `${PAGE_TITLE} — OpenShip`,
+    title: `${PAGE_TITLE} — Workbox Cloud`,
     description: PAGE_DESCRIPTION,
     url: "/features",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${PAGE_TITLE} — OpenShip`,
+    title: `${PAGE_TITLE} — Workbox Cloud`,
     description: PAGE_DESCRIPTION,
   },
 };
@@ -57,7 +57,7 @@ export default function FeaturesPage() {
             </>
           }
           description={copy(
-            "Deploy applications, run data services, automate delivery, and keep production healthy. All from OpenShip.",
+            "Deploy applications, run data services, automate delivery, and keep production healthy. All from Workbox Cloud.",
           )}
         >
           <span>

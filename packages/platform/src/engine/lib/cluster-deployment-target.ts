@@ -36,7 +36,7 @@ export async function requireClusterDeploymentTarget(
 ) {
   if (env.CLOUD_MODE)
     throw new AppError(
-      "Server clusters are available on self-hosted OpenShip.",
+      "Server clusters are available on self-hosted Workbox Cloud.",
       404,
       "CAPABILITY_UNAVAILABLE",
     );

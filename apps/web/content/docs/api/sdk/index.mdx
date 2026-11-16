@@ -1,9 +1,9 @@
 ---
 title: Ship SDK
-description: Deploy and manage Openship from JavaScript or TypeScript.
+description: Deploy and manage Workbox Cloud from JavaScript or TypeScript.
 ---
 
-Ship SDK lets you deploy and operate OpenShip from JavaScript or TypeScript. The `openship` package
+Ship SDK lets you deploy and operate Workbox Cloud from JavaScript or TypeScript. The `openship` package
 includes remote clients, an embeddable native engine, and the CLI. Native SDK calls and HTTP
 controllers use the same shared core.
 
@@ -11,8 +11,8 @@ controllers use the same shared core.
 
 | Mode | Use when | Start here |
 | --- | --- | --- |
-| **Remote client** | Openship already runs on a server or in Cloud. | [Connect to an API](/docs/api/sdk/client) |
-| **Native SDK** | Your Node application owns storage, providers, and the installation lifecycle. | [Embed Openship](/docs/api/sdk/native) |
+| **Remote client** | Workbox Cloud already runs on a server or in Cloud. | [Connect to an API](/docs/api/sdk/client) |
+| **Native SDK** | Your Node application owns storage, providers, and the installation lifecycle. | [Embed Workbox Cloud](/docs/api/sdk/native) |
 
 Both modes expose the same named operation groups. A configured provider and the caller's permissions
 determine which operations can run.
@@ -29,7 +29,7 @@ See [installation](/docs/api/sdk/installation) for ESM, CommonJS, and upgrading 
 
 ## Deploy your application
 
-Replace the URL with your OpenShip API, set `OPENSHIP_TOKEN` and `OPENSHIP_ORGANIZATION_ID` for an
+Replace the URL with your Workbox Cloud API, set `OPENSHIP_TOKEN` and `OPENSHIP_ORGANIZATION_ID` for an
 organization where you can create and deploy projects, and put your application in `./app`.
 The installation must already have a configured deployment target.
 
@@ -76,7 +76,7 @@ import type { OpenshipClient, ScopedShip } from "openship";
 export async function deploySite(ship: OpenshipClient | ScopedShip) {
   const submitted = await ship.deploy({
     name: "my-site",
-    source: { type: "files", files: { "index.html": "<h1>Hello from Openship</h1>" } },
+    source: { type: "files", files: { "index.html": "<h1>Hello from Workbox Cloud</h1>" } },
   });
   const outcome = await ship.deployment(submitted.deployment_id).wait({ timeoutMs: 120_000 });
   if (!outcome.success) throw new Error(outcome.message ?? outcome.status);

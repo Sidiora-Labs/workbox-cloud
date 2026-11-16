@@ -1732,7 +1732,7 @@ describe("triggerDeployment", () => {
     ]);
     resolveProjectInfo.mockRejectedValueOnce(
       new ComposeConfigurationError(
-        "The Docker Compose file declares options Openship can't deploy faithfully: build.target",
+        "The Docker Compose file declares options Workbox Cloud can't deploy faithfully: build.target",
       ),
     );
 

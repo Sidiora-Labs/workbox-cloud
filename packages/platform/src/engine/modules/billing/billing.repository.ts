@@ -136,7 +136,7 @@ export async function getCreditAlerts(orgId: string) {
 
 // ─── getBillingState ─────────────────────────────────────────────────────────
 
-/** Mirror fresh provider entitlement and add Openship application usage. */
+/** Mirror fresh provider entitlement and add Workbox Cloud application usage. */
 export async function getBillingState(orgId: string, workspaceId?: CloudWorkspaceScope): Promise<BillingState> {
   await ensureNamespace(orgId, workspaceId);
   const { owner, entitlement, tier, limits: planLimitsForTier, subscription: providerSubscription, grant, managed, state } = await readBillingCreditState(orgId, workspaceId);

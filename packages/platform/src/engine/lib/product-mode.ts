@@ -2,7 +2,7 @@
  * THE product-mode resolver — which product this instance presents itself as.
  *
  *   "platform" → the full deploy platform (default)
- *   "mail"     → Openship Mail: the dashboard's left rail becomes the mail
+ *   "mail"     → Workbox Cloud Mail: the dashboard's left rail becomes the mail
  *                control plane and the platform nav is hidden
  *
  * Precedence:

@@ -130,7 +130,7 @@ export async function getHome(ctx: ExecutionContext) {
     accounts,
     repos,
     installUrl,
-    // cloud-app mode + SaaS down: the card shows "Openship Cloud
+    // cloud-app mode + SaaS down: the card shows "Workbox Cloud
     // unreachable" instead of a dead install button (installUrl is "").
     cloudUnreachable,
     capabilities,
@@ -146,7 +146,7 @@ export async function getHome(ctx: ExecutionContext) {
 const CLOUD_UNREACHABLE_CONNECT = {
   error: "cloud_unreachable",
   message:
-    "Openship Cloud is unreachable, so GitHub can't be connected right now. GitHub connection runs through Openship Cloud — reconnect it in Settings or check your network, then try again.",
+    "Workbox Cloud is unreachable, so GitHub can't be connected right now. GitHub connection runs through Workbox Cloud — reconnect it in Settings or check your network, then try again.",
 } as const;
 
 async function installationRedirect(ctx: ExecutionContext) {
@@ -167,7 +167,7 @@ async function connectCloudApp(
 ) {
   if (input.source === "cli")
     throw new AppError(
-      "Use a GitHub App or personal token on Openship Cloud.",
+      "Use a GitHub App or personal token on Workbox Cloud.",
       400,
       "NOT_SUPPORTED",
     );
@@ -275,8 +275,8 @@ export async function connect(ctx: ExecutionContext, input: NonNullable<Paramete
   if (mode === "cloud-app") await assertCloudTenantScope(ctx);
 
   // Optional `source` discriminator from the dashboard's dual-source
-  // (Openship App vs gh CLI) settings panel. When the user explicitly
-  // clicks "Connect Openship App", source="oauth" forces the App
+  // (Workbox Cloud GitHub App vs gh CLI) settings panel. When the user explicitly
+  // clicks "Connect Workbox Cloud GitHub App", source="oauth" forces the App
   // install flow regardless of whether gh CLI is already authenticated;
   // otherwise the two buttons would be indistinguishable to the server
   // and both would short-circuit on the cli token.
@@ -555,7 +555,7 @@ export async function pollConnect(ctx: ExecutionContext, input?: Parameters<GitH
  */
 export async function setInstanceToken(ctx: ExecutionContext, input: NonNullable<Parameters<GitHubOperations["setInstanceToken"]>[0]>) {
   if (env.CLOUD_MODE) {
-    throw responseError({ error: "Not available on Openship Cloud", code: "NOT_SUPPORTED" }, 400);
+    throw responseError({ error: "Not available on Workbox Cloud", code: "NOT_SUPPORTED" }, 400);
   }
   const body = input;
   const token = body?.token?.trim();
@@ -592,7 +592,7 @@ export async function setInstanceToken(ctx: ExecutionContext, input: NonNullable
   // …and record the operator opt-in `tokenFor` gates the stored-credential branch
   // on. Nothing ever set that flag, so a pasted token was stored, the UI said
   // "Connected", and the next deploy still reported "no App/PAT token is
-  // available". Pasting a credential into Openship IS the explicit act the flag
+  // available". Pasting a credential into Workbox Cloud IS the explicit act the flag
   // was designed to capture.
   await settingsService.setGhCliOperatorOptedIn(ctx.userId, true);
 
@@ -759,7 +759,7 @@ export async function getCloneToken(ctx: ExecutionContext, input: NonNullable<Pa
   if (!token) {
     throw responseError({
         error:
-          "No GitHub App installation token is available for this owner. Connect the Openship GitHub App (cloud) for this account to use a clone token.",
+          "No GitHub App installation token is available for this owner. Connect the Workbox Cloud GitHub App (cloud) for this account to use a clone token.",
       }, 409);
   }
 

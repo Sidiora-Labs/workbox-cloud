@@ -1,5 +1,5 @@
 /**
- * Lazy-download of the Openship dashboard (Next standalone) so `openship up`
+ * Lazy-download of the Workbox Cloud dashboard (Next standalone) so `openship up`
  * can serve a local browser UI without bloating the npm package. Mirrors the
  * desktop-app download in `openship install`: fetch the release asset, verify
  * its sha256 sidecar, extract, and cache under ~/.openship/cache/dashboard/<tag>/.

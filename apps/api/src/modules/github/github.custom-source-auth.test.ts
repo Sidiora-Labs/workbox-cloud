@@ -155,7 +155,7 @@ describe("mixed custom and legacy GitHub source resolution", () => {
     );
   });
 
-  it("keeps Openship Cloud authoritative for an owner not covered by the custom App", async () => {
+  it("keeps Workbox Cloud authoritative for an owner not covered by the custom App", async () => {
     h.cloudConnected.mockResolvedValue(true);
     h.cloudInstallations.mockResolvedValue([
       { id: 99, login: "legacy-owner", avatarUrl: "", type: "Organization" },

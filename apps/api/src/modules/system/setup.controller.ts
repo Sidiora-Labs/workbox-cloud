@@ -312,7 +312,7 @@ export async function bootstrapAdmin(c: Context) {
   // Register "This Server" NOW that a founding admin exists. The boot hook already
   // ran and bailed for want of one (the API comes up before the CLI calls this), and
   // nothing else re-runs it — so without this a freshly installed box showed
-  // "No servers yet" until the API happened to restart, even though Openship itself
+  // "No servers yet" until the API happened to restart, even though Workbox Cloud itself
   // was listed under Apps. Best-effort: a failure here must not fail the bootstrap,
   // since the boot hook will still catch it on the next restart.
   await ensureLocalServer().catch((err) =>

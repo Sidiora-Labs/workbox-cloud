@@ -10,7 +10,7 @@ export function localConnectionEndpoints(): { apiUrl: string; dashboardUrl: stri
   const dashboard = storedDashboardPort();
   for (const value of [port, dashboard]) {
     if (!Number.isInteger(value) || value < 1 || value > 65535)
-      throw new Error("Invalid stored Openship port. Check this installation's ports.json.");
+      throw new Error("Invalid stored Workbox Cloud port. Check this installation's ports.json.");
   }
   return {
     apiUrl: `http://127.0.0.1:${port}`,

@@ -5,7 +5,7 @@ import type { IconName } from "@repo/ui/icons";
  *
  * Two products share one shell:
  *   - `getNavSections()`     → the full deploy platform.
- *   - `getMailNavSections()` → Openship Mail: /emails' ten admin tabs promoted
+ *   - `getMailNavSections()` → Workbox Cloud Mail: /emails' ten admin tabs promoted
  *                              to rail entries across three headings, plus the
  *                              host and settings rows an operator still needs.
  *
@@ -40,7 +40,7 @@ export interface NavItem {
   tab?: string;
   /**
    * Extra pathnames this item also owns, for the active highlight only — `href`
-   * stays the canonical link. Openship Mail renders the mail console at `/` as
+   * stays the canonical link. Workbox Cloud Mail renders the mail console at `/` as
    * well as /emails (`(dashboard)/page.tsx`), and `/` is where login lands; with
    * no entry claiming it the operator arrives on a rail highlighting nothing.
    */
@@ -117,7 +117,7 @@ export function getNavSections(
 }
 
 /* ------------------------------------------------------------------ */
-/*  Openship Mail                                                      */
+/*  Workbox Cloud Mail                                                      */
 /* ------------------------------------------------------------------ */
 
 /**

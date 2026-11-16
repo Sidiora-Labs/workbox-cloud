@@ -10,21 +10,21 @@ import { CLOUD_SLA } from "@/lib/cloud-service";
 
 const PAGE_TITLE = "Terms of Service";
 const PAGE_DESCRIPTION =
-  "Terms governing OpenShip Cloud and OpenShip Business. The self-hosted platform itself is governed by the Apache 2.0 license. Plain language, no surprises.";
+  "Terms governing Workbox Cloud and Workbox Cloud Business. The self-hosted platform itself is governed by the Apache 2.0 license. Plain language, no surprises.";
 
 const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
   alternates: { canonical: "/terms" },
   openGraph: {
-    title: `${PAGE_TITLE} - OpenShip`,
+    title: `${PAGE_TITLE} - Workbox Cloud`,
     description: PAGE_DESCRIPTION,
     url: "/terms",
     type: "article",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${PAGE_TITLE} - OpenShip`,
+    title: `${PAGE_TITLE} - Workbox Cloud`,
     description: PAGE_DESCRIPTION,
   },
 };
@@ -43,10 +43,10 @@ function getSections(copy: Copy) {
       title: copy("Agreement"),
       body: [
         copy(
-          "These terms govern your use of OpenShip Cloud (the hosted service) and OpenShip Business (managed Cloud and connected servers). The self-hosted platform itself is governed by the Apache 2.0 license that ships with the source.",
+          "These terms govern your use of Workbox Cloud (the hosted service) and Workbox Cloud Business (managed Cloud and connected servers). The self-hosted platform itself is governed by the Apache 2.0 license that ships with the source.",
         ),
         copy(
-          "By creating an account you agree to these terms. If you're using OpenShip on behalf of an organisation, you confirm you have authority to bind that organisation.",
+          "By creating an account you agree to these terms. If you're using Workbox Cloud on behalf of an organisation, you confirm you have authority to bind that organisation.",
         ),
       ],
     },
@@ -58,7 +58,7 @@ function getSections(copy: Copy) {
           "We provide infrastructure to build, ship, and run your applications - managed databases, mail, storage, routing, and the platform tooling around it.",
         ),
         copy(
-          "OpenShip Cloud resource pool plans cover purchased CPU, RAM and storage for the paid period. Separately priced services and retained storage after that period follow the terms shown in Billing. Existing metered subscriptions keep their saved terms. Self-hosted use is free under the Apache 2.0 license.",
+          "Workbox Cloud resource pool plans cover purchased CPU, RAM and storage for the paid period. Separately priced services and retained storage after that period follow the terms shown in Billing. Existing metered subscriptions keep their saved terms. Self-hosted use is free under the Apache 2.0 license.",
         ),
         copy(
           "We may improve the service, fix bugs, or evolve features at any time. Material breaking changes get at least 30 days' notice.",
@@ -109,7 +109,7 @@ function getSections(copy: Copy) {
       title: copy("Billing"),
       body: [
         copy(
-          "OpenShip Cloud plan prices are published on our pricing page. Paid plans are billed monthly in advance and you may cancel at any time; cancellation takes effect at the end of the period you have already paid for. Self-hosted use is free.",
+          "Workbox Cloud plan prices are published on our pricing page. Paid plans are billed monthly in advance and you may cancel at any time; cancellation takes effect at the end of the period you have already paid for. Self-hosted use is free.",
         ),
         copy(
           "We accept major cards via Stripe. Price changes to a plan you are on are announced at least 30 days in advance and apply from your next billing period. A failed payment triggers retries and email notice before any suspension.",
@@ -121,11 +121,11 @@ function getSections(copy: Copy) {
       title: copy("Uptime and SLA"),
       body: [
         copy(
-          "OpenShip Cloud guarantees {value0}% monthly uptime for each paid Cloud Space, on every Cloud plan, whether billed monthly or annually. No enterprise plan or SLA add-on is required. The guarantee covers OpenShip-managed infrastructure, including infrastructure providers we choose to operate the service. It does not cover servers you host or connect yourself, free trials, or features expressly identified as preview or beta.",
+          "Workbox Cloud guarantees {value0}% monthly uptime for each paid Cloud Space, on every Cloud plan, whether billed monthly or annually. No enterprise plan or SLA add-on is required. The guarantee covers Workbox Cloud-managed infrastructure, including infrastructure providers we choose to operate the service. It does not cover servers you host or connect yourself, free trials, or features expressly identified as preview or beta.",
           { value0: String(CLOUD_SLA.monthlyUptimePercent) },
         ),
         copy(
-          "Downtime is a period when a failure of OpenShip-managed compute, storage, networking, routing, or control-plane services prevents your Cloud Space from running or serving otherwise working workloads, or prevents deployment and lifecycle operations such as starting or restarting workloads. A cosmetic dashboard issue alone is not downtime when those operations and workloads remain available.",
+          "Downtime is a period when a failure of Workbox Cloud-managed compute, storage, networking, routing, or control-plane services prevents your Cloud Space from running or serving otherwise working workloads, or prevents deployment and lifecycle operations such as starting or restarting workloads. A cosmetic dashboard issue alone is not downtime when those operations and workloads remain available.",
         ),
         copy(
           "We calculate uptime separately for each Cloud Space and each UTC calendar month: uptime percentage = 100 × (eligible minutes − downtime minutes) ÷ eligible minutes. Eligible minutes are the minutes your paid subscription and this SLA were both in effect during that month, excluding the periods described below. Excluded periods are removed from both the eligible time and downtime calculations. Overlapping incidents count once. We use the unrounded percentage to select a credit tier; a month with no eligible minutes has no SLA credit.",
@@ -173,7 +173,7 @@ function getSections(copy: Copy) {
           "Only the highest applicable tier is awarded for each Cloud Space and month. Multiple incidents or claims do not stack, and the total SLA credit cannot exceed 100% of that Cloud Space’s applicable monthly subscription fee. Unaffected Cloud Spaces are calculated separately.",
         ),
         copy(
-          "Approved credits are added to your account within {value0} days after approval and offset your next eligible OpenShip Cloud subscription invoice, including an annual renewal. Credits are not a cash refund and cannot be transferred to another account. These credits are the remedy provided by this SLA; they do not limit rights that cannot be excluded by applicable law. A separate written SLA takes precedence only where its terms expressly differ.",
+          "Approved credits are added to your account within {value0} days after approval and offset your next eligible Workbox Cloud subscription invoice, including an annual renewal. Credits are not a cash refund and cannot be transferred to another account. These credits are the remedy provided by this SLA; they do not limit rights that cannot be excluded by applicable law. A separate written SLA takes precedence only where its terms expressly differ.",
           { value0: String(CLOUD_SLA.creditIssueDays) },
         ),
       ],
@@ -212,7 +212,7 @@ function getSections(copy: Copy) {
       title: copy("Data portability"),
       body: [
         copy(
-          "Every deployment on OpenShip is a plain container image and standard manifests. You can leave any day and re-run on your own infrastructure without rewriting code.",
+          "Every deployment on Workbox Cloud is a plain container image and standard manifests. You can leave any day and re-run on your own infrastructure without rewriting code.",
         ),
         copy(
           "On request we provide a full export of your databases, secrets, and configuration in standard formats. We do not charge for exports.",

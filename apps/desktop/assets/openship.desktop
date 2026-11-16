@@ -1,8 +1,8 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=Openship
-Comment=Manage deployments with Openship
+Name=Workbox Cloud
+Comment=Manage deployments with Workbox Cloud
 Exec=openship %U
 Icon=openship
 Terminal=false

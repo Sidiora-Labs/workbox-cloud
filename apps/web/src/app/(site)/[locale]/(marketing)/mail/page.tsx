@@ -7,7 +7,7 @@ import HomeContent from "./_components/home/HomeContent";
 
 const TITLE = "Mail — Your email control panel";
 const DESCRIPTION =
-  "Manage domains, mailboxes, aliases, delivery, and backups on your own mail server with OpenShip. Connect existing mailboxes through webmail on Cloud.";
+  "Manage domains, mailboxes, aliases, delivery, and backups on your own mail server with Workbox Cloud. Connect existing mailboxes through webmail on Cloud.";
 
 const metadata: Metadata = {
   title: "Mail",
@@ -48,11 +48,11 @@ export async function generateMetadata(
 const serviceLd = {
   "@context": "https://schema.org",
   "@type": "Service",
-  name: "OpenShip Mail",
+  name: "Workbox Cloud Mail",
   serviceType: "Email Hosting",
   provider: {
     "@type": "Organization",
-    name: "OpenShip",
+    name: "Workbox Cloud",
     url: "https://openship.io",
   },
   description: DESCRIPTION,

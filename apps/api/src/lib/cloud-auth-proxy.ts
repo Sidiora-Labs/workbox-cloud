@@ -1,5 +1,5 @@
 /**
- * Cloud auth proxy - shared utilities for Openship Cloud authentication.
+ * Cloud auth proxy - shared utilities for Workbox Cloud authentication.
  *
  * Used by:
  *   - Desktop mode: cloud-callback exchanges a one-time code for a local session
@@ -225,7 +225,7 @@ async function exchangeHandoffCode(
 }
 
 /**
- * Exchange a one-time code with the Openship Cloud API.
+ * Exchange a one-time code with the Workbox Cloud API.
  * Shared by desktop cloud-callback and self-hosted connect-callback.
  *
  * @param codeVerifier - PKCE code_verifier (plain). Required when the

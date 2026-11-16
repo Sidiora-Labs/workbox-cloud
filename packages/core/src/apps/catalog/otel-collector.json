@@ -48,7 +48,7 @@
   ],
   "connection": {
     "title": "Connect your telemetry clients",
-    "description": "Use otel-collector:4317 for OTLP gRPC or http://otel-collector:4318 for OTLP HTTP from a service in the same project. Edit the mounted collector configuration in OpenShip service settings and redeploy to set your exporters. The default debug exporter writes received telemetry to service logs; the collector is a pipeline, not persistent storage.",
+    "description": "Use otel-collector:4317 for OTLP gRPC or http://otel-collector:4318 for OTLP HTTP from a service in the same project. Edit the mounted collector configuration in Workbox Cloud service settings and redeploy to set your exporters. The default debug exporter writes received telemetry to service logs; the collector is a pipeline, not persistent storage.",
     "outputs": []
   },
   "files": [

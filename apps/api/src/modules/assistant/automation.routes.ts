@@ -84,7 +84,7 @@ r.get(
     tag: "settings:read",
     mcp: {
       description:
-        "Read the exact saved remediation proposal for an automation run, including a proposed repository patch. Approval must be given by the user in OpenShip.",
+        "Read the exact saved remediation proposal for an automation run, including a proposed repository patch. Approval must be given by the user in Workbox Cloud.",
     },
   },
   async (c) => c.json({ data: await flows.proposal(ctx(c), c.req.param("id")!) }),
@@ -131,7 +131,7 @@ r.patch(
     body: AssistantAutomationSettingsInput,
     mcp: {
       description:
-        "Pause all your assistant automations in this workspace with paused=true. Resuming requires the user in OpenShip.",
+        "Pause all your assistant automations in this workspace with paused=true. Resuming requires the user in Workbox Cloud.",
     },
   },
   async (c) => c.json({ data: await flows.pause(ctx(c), (await c.req.json()).paused) }),
@@ -143,7 +143,7 @@ r.post(
     body: AssistantAutomationDecisionInput,
     mcp: {
       description:
-        "Cancel pending automation work with decision=cancel. decision=approve is reserved for the user's OpenShip session; an agent can never approve its own proposed fix.",
+        "Cancel pending automation work with decision=cancel. decision=approve is reserved for the user's Workbox Cloud session; an agent can never approve its own proposed fix.",
     },
   },
   async (c) =>

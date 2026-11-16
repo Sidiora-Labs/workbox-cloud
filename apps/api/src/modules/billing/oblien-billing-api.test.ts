@@ -346,7 +346,7 @@ describe("Oblien billing SDK and transport contract", () => {
       successUrl: "https://app.openship.io", cancelUrl: "https://app.openship.io", idempotencyKey: "attempt",
     }).catch(error => error);
     expect(error).toMatchObject({ statusCode: 503, code: "OBLIEN_CHECKOUT_UNAVAILABLE",
-      message: "Cloud payments require an account configuration update by Openship. Contact Openship support.",
+      message: "Cloud payments require an account configuration update by Workbox Cloud. Contact Workbox Cloud support.",
       details: { providerCode: "reseller_enterprise_required", checkoutRejected: true },
     });
     expect(JSON.stringify(error)).not.toMatch(/private|accountTier/);
@@ -357,7 +357,7 @@ describe("Oblien billing SDK and transport contract", () => {
     [409, "capacity_checkout_pending", "complete or cancel it"],
     [429, "capacity_checkout_limit", "complete or cancel an existing purchase"],
     [409, "capacity_resource_update_pending", "Wait for the current operation to finish"],
-    [409, "billing_payment_mismatch", "Contact Openship support before making another payment"],
+    [409, "billing_payment_mismatch", "Contact Workbox Cloud support before making another payment"],
     [409, "checkout_cancellation_pending", "Refresh its status before starting another checkout"],
   ] as const)(
     "explains %s/%s without discarding pending payments or exposing provider data",
@@ -461,7 +461,7 @@ describe("Oblien billing SDK and transport contract", () => {
       })
       .catch((error) => error);
     expect(error).toMatchObject({ statusCode: 503, code: "OBLIEN_CHECKOUT_UNAVAILABLE",
-      message: "Cloud billing is unavailable. Contact Openship support. Reference: billing-support-123.",
+      message: "Cloud billing is unavailable. Contact Workbox Cloud support. Reference: billing-support-123.",
       details: { providerCode: "billing_database_collation_error", details: { reference: "billing-support-123", retryable: false } },
     });
     expect(errorDiagnostics.warn).toHaveBeenCalledExactlyOnceWith(expect.any(String), "[oblien:billing] Provider request failed", {
@@ -526,7 +526,7 @@ describe("Oblien billing SDK and transport contract", () => {
       successUrl: "https://app.openship.io", cancelUrl: "https://app.openship.io", idempotencyKey: "attempt",
     }).catch(error => error);
     expect(error).toMatchObject({ statusCode: 503, code: "OBLIEN_CHECKOUT_UNAVAILABLE",
-      message: "Cloud server purchases are temporarily unavailable. Contact Openship support.",
+      message: "Cloud server purchases are temporarily unavailable. Contact Workbox Cloud support.",
       details: { providerCode: "insufficient_redeemable_balance" },
     });
     expect(error.details.checkoutRejected).toBe(status === 402 ? true : undefined);

@@ -6,7 +6,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { NextRequest } from "next/server";
 import proxy from "../src/proxy";
 import { APP_LOCALES } from "@repo/core/locale";
-import { createCopy, messageKey, translateCopyData } from "../src/i18n/copy";
+import { createCopy, legacyMessageKeys, messageKey, translateCopyData } from "../src/i18n/copy";
 import {
   isLocalizedPath,
   languageAlternates,
@@ -93,7 +93,7 @@ describe("translation catalogs", () => {
       const messages: Record<string, Record<string, string>> = catalogs[locale];
       const copy = createCopy(createTranslator({ locale, messages, namespace: "Copy" }));
       expect(copy("Openship Cloud")).toBe(copy("OpenShip Cloud"));
-      expect(copy("OpenShip Cloud")).toContain("OpenShip");
+      expect(copy("OpenShip Cloud")).toBe("Workbox Cloud");
       expect(copy("Openship-arm64.dmg")).toBe("Openship-arm64.dmg");
       for (const name of ["Python", "Go", "Rust", "Bun", "Rails", "Laravel", "Django"])
         expect(copy(name)).toBe(name);
@@ -115,7 +115,7 @@ describe("translation catalogs", () => {
   test("stable keys have no source collisions or normalization drift", () => {
     for (const namespace of ["Copy", "ReleaseNotes"] as const) {
       for (const [key, source] of Object.entries(english[namespace]))
-        expect(messageKey(source)).toBe(key);
+        expect(legacyMessageKeys(source)).toContain(key);
     }
     expect(messageKey("  Deploy   anything. ")).toBe(messageKey("Deploy anything."));
   });

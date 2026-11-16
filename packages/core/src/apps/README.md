@@ -1,6 +1,6 @@
 # Apps — the curated catalog
 
-This directory is Openship's **App catalog**: the one-click installs in the dashboard's **Apps** tab.
+This directory is Workbox Cloud's **App catalog**: the one-click installs in the dashboard's **Apps** tab.
 An App is **metadata over the normal services deploy** — it already knows the images, how the
 services wire together, which secrets to generate (and keep in sync), what to expose, and what to
 show afterwards. Same engine underneath (a repo-less `services` project marked `isApp`); a much

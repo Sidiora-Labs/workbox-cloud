@@ -57,7 +57,7 @@ export function GitHubConnection() {
   const [installUrl, setInstallUrl] = useState<string | null>(null);
   const [capabilities, setCapabilities] = useState<GitHubCapabilities | null>(null);
   // Workspace-owned Apps are created, installed, edited and removed by the
-  // source manager above this card. This flag prevents the legacy Openship App
+  // source manager above this card. This flag prevents the legacy Workbox Cloud App
   // controls from impersonating those sources (especially its OAuth-only
   // "Disconnect", which cannot remove a custom source).
   const [customSourcesConfigured, setCustomSourcesConfigured] = useState(false);
@@ -159,7 +159,7 @@ export function GitHubConnection() {
   );
 
   // The backend decides whether the App is operator-owned locally or proxied
-  // through Openship Cloud. The dashboard only follows `requiresCloud`.
+  // through Workbox Cloud. The dashboard only follows `requiresCloud`.
   const { connected: cloudConnected, startConnect: startCloudConnect } = useCloud();
   const { showModal, hideModal } = useModal();
   const { selfHosted: isSelfHosted, deployMode } = usePlatform();
@@ -527,7 +527,7 @@ export function GitHubConnection() {
         </div>
       ) : (
         /* Nothing connected. Signing in with GitHub is the default because it
-           needs no app registration, no Openship account and no shell on the box;
+           needs no app registration, no Workbox Cloud account and no shell on the box;
            everything else is a deliberate choice behind the disclosure.
 
            When a credential IS stored and merely failed its check, the chooser
@@ -837,7 +837,7 @@ function MethodDisclosure(props: { summary: string; children: React.ReactNode })
 function MethodChooser(props: {
   /** Backend-declared availability per method — never re-derived here. */
   can: (kind: "device" | "token" | "app" | "ssh-key" | "forwarding") => boolean;
-  /** Backend-declared: does the App need an Openship Cloud link on this install? */
+  /** Backend-declared: does the App need a Workbox Cloud link on this install? */
   appRequiresCloud: boolean;
   cloudConnected: boolean;
   connecting: boolean;

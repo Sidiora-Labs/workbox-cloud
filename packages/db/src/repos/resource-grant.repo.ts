@@ -275,7 +275,7 @@ export function createResourceGrantRepo(db: Pick<Database, "select" | "insert" |
     /**
      * Delete ALL GitHub access grants (github / github_installation /
      * github_repository) for an org. Called when the org disconnects
-     * Openship Cloud — the org loses its GitHub App identity entirely, so
+     * Workbox Cloud — the org loses its GitHub App identity entirely, so
      * every member-level GitHub grant is moot. Returns rows removed.
      */
     async deleteAllGitHubGrants(organizationId: string): Promise<number> {

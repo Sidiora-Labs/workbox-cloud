@@ -602,7 +602,7 @@ export function createHostExecutor(): CommandExecutor {
       throw new HostChannelUnavailableError(
         "not_configured",
         "This operation targets the HOST machine, but no host channel is configured " +
-          "(OPENSHIP_HOST_SSH_HOST is unset) and Openship is running in a container — " +
+          "(OPENSHIP_HOST_SSH_HOST is unset) and Workbox Cloud is running in a container — " +
           "so it would have run inside the container instead, against the wrong " +
           `filesystem. ${HOST_CHANNEL_NOT_PROVISIONED}`,
       );

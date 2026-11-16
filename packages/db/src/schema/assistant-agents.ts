@@ -4,7 +4,7 @@ import { user } from "./auth";
 import { organization } from "./organization";
 import { servers } from "./servers";
 
-/** OpenShip owns authority; the selected host's native bot owns its instructions and chats. */
+/** Workbox Cloud owns authority; the selected host's native bot owns its instructions and chats. */
 export const assistantAgent = pgTable(
   "assistant_agent",
   {

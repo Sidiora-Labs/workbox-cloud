@@ -11,7 +11,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
  *     `openship.*` labels — so a name-based selection matched them and the gate
  *     refused the user's whole migration, unretryably (#584).
  *
- * Job 2 is why this excludes rather than throws: adopting Openship into a user
+ * Job 2 is why this excludes rather than throws: adopting Workbox Cloud into a user
  * project is forbidden outright (`assertNotControlPlane`), so there is no decision
  * for the operator — drop it and migrate the rest.
  */
@@ -65,25 +65,25 @@ beforeEach(() => {
   );
   findProject.mockImplementation(async (id: string) =>
     id === "prj_openship"
-      ? { id, name: "Openship", appTemplateId: "openship", deletedAt: null }
+      ? { id, name: "Workbox Cloud", appTemplateId: "openship", deletedAt: null }
       : { id, name: "dependabot", appTemplateId: null, deletedAt: null },
   );
 });
 
 describe("excludeAlreadyManaged — the control plane is not a re-import (#584)", () => {
-  it("drops Openship's own container and keeps the user's stack", async () => {
+  it("drops Workbox Cloud's own container and keeps the user's stack", async () => {
     findByContainerIds.mockResolvedValue([row("c-openship-pg", "dep_openship")]);
     const kept = await excludeAlreadyManaged(WITH_OURS, ORG);
     expect(kept.map((s) => s.containerId)).toEqual(["c-web", "c-dependabot-pg"]);
   });
 
-  it("does not throw when only Openship's container matched", async () => {
+  it("does not throw when only Workbox Cloud's container matched", async () => {
     // The exact #584 failure: this used to abort the whole migration.
     findByContainerIds.mockResolvedValue([row("c-openship-pg", "dep_openship")]);
     await expect(excludeAlreadyManaged(WITH_OURS, ORG)).resolves.toHaveLength(2);
   });
 
-  it("errors usefully when the selection matched NOTHING but Openship", async () => {
+  it("errors usefully when the selection matched NOTHING but Workbox Cloud", async () => {
     findByContainerIds.mockResolvedValue([row("c-openship-pg", "dep_openship")]);
     await expect(
       excludeAlreadyManaged([svc("postgres", "c-openship-pg")], ORG),
@@ -108,7 +108,7 @@ describe("excludeAlreadyManaged — a genuine re-import is still refused", () =>
     );
   });
 
-  it("refuses even when an Openship container matched in the same batch", async () => {
+  it("refuses even when a Workbox Cloud container matched in the same batch", async () => {
     // Excluding ours must not swallow a real conflict found alongside it.
     findByContainerIds.mockResolvedValue([
       row("c-openship-pg", "dep_openship"),
@@ -166,7 +166,7 @@ describe("excludeAlreadyManaged takes no exemption", () => {
     expect(excludeAlreadyManaged.length).toBe(2);
   });
 
-  it("still drops Openship's own containers rather than refusing over them", async () => {
+  it("still drops Workbox Cloud's own containers rather than refusing over them", async () => {
     // Unchanged by the above: the control-plane rule was never the flag's business.
     findByContainerIds.mockResolvedValue([row("c-openship-pg", "dep_openship")]);
     const kept = await excludeAlreadyManaged(WITH_OURS, ORG);

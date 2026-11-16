@@ -40,7 +40,7 @@ describe("probeEdge classification", () => {
   });
 
   test("known when a DEPRECATED bare host OpenResty owns the ports (a migration source)", async () => {
-    // The edge is a CONTAINER. A bare host OpenResty — even one an older Openship
+    // The edge is a CONTAINER. A bare host OpenResty — even one an older Workbox Cloud
     // apt-installed, with our Lua still on disk — is therefore a proxy to MIGRATE
     // FROM, exactly like a distro nginx: `known` (recognized AND importable), never
     // `ours`. Calling it ours is what returned canProceedClean, so the consent gate

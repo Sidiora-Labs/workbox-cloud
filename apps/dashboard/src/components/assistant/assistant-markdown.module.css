@@ -133,7 +133,7 @@
   background: transparent;
   overflow-wrap: normal;
 }
-/* Streamdown supplies Shiki's two palettes. OpenShip also has a dim theme. */
+/* Streamdown supplies Shiki's two palettes. Workbox Cloud also has a dim theme. */
 :global([data-theme="dim"]) .markdown [style*="--shiki-dark"],
 :global([data-theme="dark"]) .markdown [style*="--shiki-dark"] {
   color: var(--shiki-dark, inherit);

@@ -288,7 +288,7 @@ export class ClusterDatabaseAdapter {
       config.storageClass === "openship-local" &&
       (storage.provisioner !== "openship.io/local-path" || storage.reclaimPolicy !== "Retain")
     )
-      throw conflict("The OpenShip storage class configuration changed.");
+      throw conflict("The Workbox Cloud storage class configuration changed.");
   }
 
   manifest(): KubernetesObject {
@@ -434,7 +434,7 @@ export class ClusterDatabaseAdapter {
           image: DATABASE_IMAGES.redis,
           imagePullPolicy: "IfNotPresent",
           // The operator copies CR annotations into its pod templates. Keep
-          // OpenShip's stale-operation fence on the CR without rolling every
+          // Workbox Cloud's stale-operation fence on the CR without rolling every
           // existing data pod while a partition resize is in progress.
           ignoreAnnotations: ["openship.io/generation"],
           resources,
@@ -642,7 +642,7 @@ export class ClusterDatabaseAdapter {
     });
     if (existing.data?.password !== secret.password)
       throw conflict(
-        "The database credentials changed outside OpenShip. Restore the saved credential before retrying.",
+        "The database credentials changed outside Workbox Cloud. Restore the saved credential before retrying.",
       );
     if (this.target.backupStorage)
       await this.archive.secret("backup-destination", this.target.backupStorage);

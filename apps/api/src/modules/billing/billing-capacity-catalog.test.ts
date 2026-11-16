@@ -180,7 +180,7 @@ describe("funded Cloud offers and isolated capacity", () => {
   it("keeps v3 paid service limits, price, credits and capacity unchanged after new offers are published", async () => {
     const subscription: NonNullable<OblienSubscription> = {
       ...savedPro(),
-      offer: { reference: "openship:pro:v3", name: "Openship Pro", currency: "usd", unitAmount: 4000, credits: 3500,
+      offer: { reference: "openship:pro:v3", name: "Workbox Cloud Pro", currency: "usd", unitAmount: 4000, credits: 3500,
         policy: { overdraft: 0, suspendThreshold: 0, onOverdraftAction: "stop_workspaces" },
         resourceLimits: { max_workspaces: 1, max_vcpus: 2, max_ram_mb: 8192, max_disk_gb: 32,
           max_total_vcpus: 4, max_total_ram_mb: 8192, max_total_disk_gb: 128 } },

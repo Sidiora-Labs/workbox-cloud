@@ -173,7 +173,7 @@ async function CloudPlans({
     return (
       <div className="pp-unavailable" role="status">
         <h3>{copy("Current plans are temporarily unavailable.")}</h3>
-        <p>{copy("View the latest prices in OpenShip Cloud.")}</p>
+        <p>{copy("View the latest prices in Workbox Cloud.")}</p>
         <a href={CLOUD_CTA_HREF} className="pp-solid-cta">
           {copy("Open Cloud ")}
           <ArrowRight className="size-4" aria-hidden="true" />
@@ -284,7 +284,7 @@ function ManagementPlans({ pricing }: { pricing: CloudPricing }) {
       name: copy("Manage"),
       price: management.monthlyCents,
       support: "Email support",
-      description: copy("Manage your own servers from OpenShip Cloud."),
+      description: copy("Manage your own servers from Workbox Cloud."),
     },
     ...(management.priorityMonthlyCents != null
       ? [
@@ -322,7 +322,7 @@ function ManagementPlans({ pricing }: { pricing: CloudPricing }) {
                     amount: money(management.extraServerMonthlyCents),
                   }),
                 },
-                { label: "Control plane", value: "Managed by OpenShip" },
+                { label: "Control plane", value: "Managed by Workbox Cloud" },
                 { label: "Compute & storage", value: "Your infrastructure" },
               ]}
             />
@@ -370,7 +370,7 @@ function InfrastructurePlans({ pricing }: { pricing: CloudPricing }) {
         billingNote="Quoted for your requirements"
         href={
           pricing.management
-            ? `mailto:${pricing.management.dedicatedContact}?subject=Dedicated%20Openship%20hosting`
+            ? `mailto:${pricing.management.dedicatedContact}?subject=Dedicated%20Workbox Cloud%20hosting`
             : "/support"
         }
         cta="Request a quote"
@@ -467,7 +467,7 @@ export default async function PricingPage() {
             <header className="pp-section-heading">
               <div>
                 <h2 id="management-title">{copy("Manage your own servers")}</h2>
-                <p>{copy("Use OpenShip Cloud to manage infrastructure you already own.")}</p>
+                <p>{copy("Use Workbox Cloud to manage infrastructure you already own.")}</p>
               </div>
             </header>
             <ManagementPlans pricing={pricing} />

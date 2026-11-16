@@ -95,7 +95,7 @@ export function codexToolFlags(listing: string): string[] {
     "--enable",
     "skip_host_skill_discovery",
     // Models using Code Mode route even MCP calls through this sandboxed runtime.
-    // Disabling it advertises exec but makes every invocation fail before reaching OpenShip.
+    // Disabling it advertises exec but makes every invocation fail before reaching Workbox Cloud.
     "--enable",
     "code_mode_host",
     "-c",
@@ -168,7 +168,7 @@ export async function inspectHarness(
       const servers: unknown = JSON.parse(configured);
       if (!Array.isArray(servers) || servers.length)
         return unavailable(
-          "This Codex installation adds external MCP servers. OpenShip requires a profile containing only its scoped workspace tools.",
+          "This Codex installation adds external MCP servers. Workbox Cloud requires a profile containing only its scoped workspace tools.",
           version,
         );
     } else {
@@ -226,7 +226,7 @@ export function harnessWrapper(directory: string, probe: HarnessProbe, node = pr
   const guard = posix.join(directory, "codex-guard.mjs");
   let script = "#!/bin/bash\nset -e\n";
   if (!probe.path || !probe.available)
-    script += 'echo "This harness is unavailable for OpenShip scoped tools." >&2\nexit 78\n';
+    script += 'echo "This harness is unavailable for Workbox Cloud scoped tools." >&2\nexit 78\n';
   else {
     const binary = quote(probe.path);
     script +=
@@ -256,7 +256,7 @@ export function scopedTurnOptions(
     systemPrompt:
       OPENSHIP_TOOL_INSTRUCTIONS +
       (chat ? `\n\n${OPENSHIP_CHAT_INSTRUCTIONS}` : "") +
-      `\n\nThe user’s OpenShip language is ${locale}. Reply in that language unless the user asks otherwise. Keep command syntax, identifiers and code unchanged.`,
+      `\n\nThe user’s Workbox Cloud language is ${locale}. Reply in that language unless the user asks otherwise. Keep command syntax, identifiers and code unchanged.`,
     settings: {
       ...(model ? { model } : {}),
       ...(provider === "codex"

@@ -38,7 +38,7 @@ export function describeSshAuthFailure(config: SshConfig, originalMessage: strin
   // the generic key branch below would otherwise claim it first and win every time.
   if (config.hostChannel) {
     return (
-      `${HOST_CHANNEL_AUTH_REJECTED} Dialed ${target} from inside the Openship API ` +
+      `${HOST_CHANNEL_AUTH_REJECTED} Dialed ${target} from inside the Workbox Cloud API ` +
       `container. ${HOST_CHANNEL_ROW_CREDENTIALS_UNUSED} ${HOST_CHANNEL_NOT_PROVISIONED} ` +
       `(${originalMessage})`
     );
@@ -84,7 +84,7 @@ export function describeSshConnectFailure(config: SshConfig, originalMessage: st
   // ufw form — as this did — left every RHEL-family host with advice it can't run.
   if (config.hostChannel) {
     return (
-      `Cannot reach the host SSH endpoint ${target} from inside the Openship API container. ` +
+      `Cannot reach the host SSH endpoint ${target} from inside the Workbox Cloud API container. ` +
       `Host control is configured, but the connection never completed. The usual cause is a ` +
       `host firewall dropping traffic from the Docker bridge to the host's SSH port — allow ` +
       `it with:\n${hostFirewallRule("unknown", [], port)}\n` +
@@ -94,13 +94,13 @@ export function describeSshConnectFailure(config: SshConfig, originalMessage: st
 
   if (config.sshTransport === "cloudflare") {
     return (
-      `Cannot reach ${target} over SSH. Check the network connection and cloudflared sign-in on the machine running Openship, ` +
+      `Cannot reach ${target} over SSH. Check the network connection and cloudflared sign-in on the machine running Workbox Cloud, ` +
       `the Access policy, and the tunnel's SSH origin. (${originalMessage})`
     );
   }
 
   return (
-    `Cannot reach ${target} over SSH. Check the network connection on the machine running Openship, ` +
+    `Cannot reach ${target} over SSH. Check the network connection on the machine running Workbox Cloud, ` +
     `then check that the host is up, that port ${port} is open, ` +
     `and that no firewall or security group is dropping the connection. (${originalMessage})`
   );

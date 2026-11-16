@@ -15,7 +15,7 @@ The routes are split across a few prefixes: policy **creation and listing** are 
 (`/api/projects/:projectId/backup-policies`), while an **existing** policy, run, or restore is addressed by
 its own id (`/api/backup-policies/:id`, `/api/backup-runs/:id`, `/api/backup-restores/:id`). The inbound
 `POST /api/webhooks/backup` trigger lives on its own unauthenticated prefix. Available on both self-hosted
-and cloud instances; the project-scoped policy and run routes proxy to Openship Cloud for cloud projects.
+and cloud instances; the project-scoped policy and run routes proxy to Workbox Cloud for cloud projects.
 
 ## Create a backup policy
 

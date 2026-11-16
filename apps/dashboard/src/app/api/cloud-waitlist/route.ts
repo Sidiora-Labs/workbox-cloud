@@ -2,7 +2,7 @@ import { reportCaughtError as observeCaughtError } from "@repo/core/diagnostics"
 import { NextResponse } from "next/server";
 
 // TODO: removed — temporary Cloud-waitlist forwarder for the SaaS deploy gate.
-// Delete when Openship Cloud launches (along with CloudWaitlistModal + the gate).
+// Delete when Workbox Cloud launches (along with CloudWaitlistModal + the gate).
 
 /**
  * Cloud "notify me" waitlist submit. Forwards the email to the external

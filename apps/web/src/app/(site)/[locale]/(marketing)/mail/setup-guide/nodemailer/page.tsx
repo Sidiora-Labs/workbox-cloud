@@ -153,7 +153,7 @@ err := smtp.SendMail(
             </>,
             <>
               {copy(
-                " Check the Health tab in your OpenShip admin if mail stops sending - the outbound queue lives there. ",
+                " Check the Health tab in your Workbox Cloud admin if mail stops sending - the outbound queue lives there. ",
               )}
             </>,
           ]}

@@ -3,14 +3,14 @@
  *
  * The one-command self-deploy: ask a few questions, then reuse the exact
  * `openship up` pipeline (prebuilt API + dashboard, no build) to install
- * Openship as a boot service, create the first admin, and — reusing Openship's
+ * Workbox Cloud as a boot service, create the first admin, and — reusing Workbox Cloud's
  * OWN app + domain pipeline — register the control plane as an **app** (it shows
  * up under Apps) with a domain:
- *   - Free   name.opsh.io  → Openship Cloud edge (Oblien); connects Cloud in-flow
+ *   - Free   name.opsh.io  → Workbox Cloud edge (Oblien); connects Cloud in-flow
  *   - Custom your-domain   → OpenResty + a free Let's Encrypt cert on this box
  *   - BYO    your-domain   → you run your own reverse proxy in front
  *
- * No new deploy machinery — Openship deploys itself with its own tools.
+ * No new deploy machinery — Workbox Cloud deploys itself with its own tools.
  * UI is @clack/prompts (modern, keyboard-driven).
  */
 
@@ -114,21 +114,21 @@ const b64url = (buf: Buffer) =>
   buf.toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 
 /**
- * Connect the org owner to Openship Cloud via the browser PKCE handshake, then
+ * Connect the org owner to Workbox Cloud via the browser PKCE handshake, then
  * finalize on the loopback API (internal-token gated). Returns the linked cloud
  * account (its email) on success, or null when not linked.
  */
 async function connectOpenshipCloud(port: string, token?: string): Promise<{ email: string | null } | null> {
   const already = await internalGet(port, "/api/system/cloud-status");
   if (already?.connected) {
-    log.success(`Already connected to Openship Cloud${already.user?.email ? ` as ${already.user.email}` : ""}.`);
+    log.success(`Already connected to Workbox Cloud${already.user?.email ? ` as ${already.user.email}` : ""}.`);
     return { email: already.user?.email ?? null };
   }
 
   const capsEnv = await internalGet(port, "/api/health/env");
   const cloudApiUrl: string | undefined = capsEnv?.cloudApiUrl;
   if (!cloudApiUrl) {
-    log.error("Couldn't discover the Openship Cloud URL — free domain unavailable. Use a custom domain instead.");
+    log.error("Couldn't discover the Workbox Cloud URL — free domain unavailable. Use a custom domain instead.");
     return null;
   }
 
@@ -151,18 +151,18 @@ async function connectOpenshipCloud(port: string, token?: string): Promise<{ ema
       signal: AbortSignal.timeout(10_000),
     });
     if (!res.ok) {
-      log.error("Couldn't start the Openship Cloud device authorization. Update this instance and try again.");
+      log.error("Couldn't start the Workbox Cloud device authorization. Update this instance and try again.");
       return null;
     }
     const data: unknown = await res.json();
     if (!isCloudDeviceAuthorization(data)) {
-      log.error("Openship Cloud returned an invalid device authorization. Try again.");
+      log.error("Workbox Cloud returned an invalid device authorization. Try again.");
       return null;
     }
     device = data;
   } catch (diagnosticFailure) {
     observeCaughtError(diagnosticFailure, "cli/commands/wizard");
-    log.error("Couldn't reach Openship Cloud to start the device authorization. Try again.");
+    log.error("Couldn't reach Workbox Cloud to start the device authorization. Try again.");
     return null;
   }
   const state = device.state;
@@ -213,19 +213,19 @@ async function connectOpenshipCloud(port: string, token?: string): Promise<{ ema
   }
 
   if (!code) {
-    s.stop("Openship Cloud wasn't authorized in time — re-run the connect step to try again.", 1);
+    s.stop("Workbox Cloud wasn't authorized in time — re-run the connect step to try again.", 1);
     return null;
   }
   s.stop("Authorized.");
 
   const linking = spinner();
-  linking.start("Linking this instance to Openship Cloud");
+  linking.start("Linking this instance to Workbox Cloud");
   const res = await internalPost(port, "/api/system/cloud-connect", { code, codeVerifier: verifier }, token);
   if (!res.ok) {
-    linking.stop(`Couldn't link Openship Cloud: ${res.data?.error || "failed"}`, 1);
+    linking.stop(`Couldn't link Workbox Cloud: ${res.data?.error || "failed"}`, 1);
     return null;
   }
-  linking.stop(`Connected to Openship Cloud${res.data?.email ? ` as ${res.data.email}` : ""}.`);
+  linking.stop(`Connected to Workbox Cloud${res.data?.email ? ` as ${res.data.email}` : ""}.`);
   return { email: res.data?.email ?? null };
 }
 
@@ -360,7 +360,7 @@ function wizardInputs(
   }
 }
 
-/** Shared "Openship is live" summary + clear the in-progress marker + outro. */
+/** Shared "Workbox Cloud is live" summary + clear the in-progress marker + outro. */
 function finishSetup(opts: {
   liveUrl: string;
   dashPort: string;
@@ -373,7 +373,7 @@ function finishSetup(opts: {
   saveInstanceUrl(opts.liveUrl);
   markSetupDone();
   const pad = (label: string) => chalk.dim(label.padEnd(11));
-  log.success(chalk.bold("Openship is live"));
+  log.success(chalk.bold("Workbox Cloud is live"));
   log.message(
     `${pad("URL")}${chalk.bold(opts.liveUrl)}\n` +
       `${pad("Dashboard")}http://localhost:${opts.dashPort}\n` +
@@ -385,8 +385,8 @@ function finishSetup(opts: {
       `${pad("Status")}${chalk.green("running")} ${chalk.dim(opts.method === "compose" ? "· Docker Compose stack (restarts on boot)" : "· service (restarts on boot)")}`,
   );
   log.message(
-    chalk.dim("Sign in with the email + password you just set. Openship appears under your Apps.\n") +
-      chalk.dim("Change the domain, Openship Cloud, team, and everything else anytime in Settings.\n") +
+    chalk.dim("Sign in with the email + password you just set. Workbox Cloud appears under your Apps.\n") +
+      chalk.dim("Change the domain, Workbox Cloud, team, and everything else anytime in Settings.\n") +
       chalk.dim(`Locked out? Run ${chalk.reset("openship reset-admin-password")}${chalk.dim(" on this machine — resets your login without signing in.")}`),
   );
   outro(opts.byo ? chalk.dim("Point your reverse proxy at the dashboard port above.") : chalk.green("Happy shipping."));
@@ -394,7 +394,7 @@ function finishSetup(opts: {
 
 /**
  * Shared local-edge preflight for a BARE install. A foreign proxy on 80/443 must
- * be dealt with before Openship can own the edge — and this is domain-AGNOSTIC:
+ * be dealt with before Workbox Cloud can own the edge — and this is domain-AGNOSTIC:
  * a custom domain terminates TLS here, and a FREE domain has Cloud forward to :80
  * here, so BOTH need the local edge (and the same migrate/take-over/cancel
  * choice). This is the bare-mode twin of `openship up`'s compose `planAndApplyHostEdge`.
@@ -453,7 +453,7 @@ async function promptLocalEdgeTakeover(port: string): Promise<{
 
 export async function runWizard(): Promise<void> {
   const resuming = isSetupInProgress();
-  intro(`${chalk.bgCyan(chalk.black(" Openship "))}${chalk.dim(" setup")}`);
+  intro(`${chalk.bgCyan(chalk.black(" Workbox Cloud "))}${chalk.dim(" setup")}`);
   if (resuming) {
     log.warn(
       "Your last setup didn't finish — picking it back up. Re-enter your details to complete it (or run `openship up` to just keep the server running).",
@@ -461,17 +461,17 @@ export async function runWizard(): Promise<void> {
   }
   log.message(
     chalk.dim(
-      "Deploy Openship on this machine — a few questions, then it installs itself\nas a service, registers as an app, and prints the URL to log in.",
+      "Deploy Workbox Cloud on this machine — a few questions, then it installs itself\nas a service, registers as an app, and prints the URL to log in.",
     ),
   );
 
   // 1. First-time admin — ALWAYS a local email + password, and the FIRST thing we
-  //    ask. This is your instance login; the domain, Openship Cloud link, and every
-  //    setting configured afterwards hang off this account. (Connecting Openship
+  //    ask. This is your instance login; the domain, Workbox Cloud link, and every
+  //    setting configured afterwards hang off this account. (Connecting Workbox Cloud
   //    Cloud later only attaches the free domain + mail — it never becomes sign-in.)
-  log.message(chalk.dim("First, your instance login (email + password) — this is how you sign in. Domain and Openship Cloud come next and never replace it."));
+  log.message(chalk.dim("First, your instance login (email + password) — this is how you sign in. Domain and Workbox Cloud come next and never replace it."));
   const admin = await promptLocalAdmin();
-  // Openship Cloud account attached for the free domain — display only, never the login.
+  // Workbox Cloud account attached for the free domain — display only, never the login.
   let cloudEmail: string | null = null;
 
   let publicUrl: string | undefined;
@@ -555,7 +555,7 @@ export async function runWizard(): Promise<void> {
           message: "How do you want a domain + HTTPS?",
           initialValue: "free",
           options: [
-            { value: "free", label: "Free domain", hint: "name.opsh.io via Openship Cloud — HTTPS handled for you" },
+            { value: "free", label: "Free domain", hint: "name.opsh.io via Workbox Cloud — HTTPS handled for you" },
             ...(canManage
               ? [{ value: "custom", label: "Custom domain", hint: "your domain + free Let's Encrypt on this box" }]
               : []),
@@ -586,8 +586,8 @@ export async function runWizard(): Promise<void> {
       const host = await resolvePublicHost();
       note(
         `${chalk.cyan(`https://${slug}.opsh.io`)}\n\n` +
-          `  ${chalk.dim("served via")}  Openship Cloud edge  ${chalk.dim("→")}  ${chalk.cyan(host)}\n\n` +
-          chalk.dim("Openship Cloud terminates HTTPS and forwards to this server."),
+          `  ${chalk.dim("served via")}  Workbox Cloud edge  ${chalk.dim("→")}  ${chalk.cyan(host)}\n\n` +
+          chalk.dim("Workbox Cloud terminates HTTPS and forwards to this server."),
         "Confirm free domain",
       );
       const go = ensure(
@@ -689,7 +689,7 @@ export async function runWizard(): Promise<void> {
     break planning;
   }
 
-  // 3. Choose how to run Openship. On a Linux server use the Docker Compose stack
+  // 3. Choose how to run Workbox Cloud. On a Linux server use the Docker Compose stack
   //    (containerized edge on 80/443 that hosts apps on THIS box, with real
   //    image-pull progress) — the same install `openship up` picks — auto-installing
   //    Docker via the same toolchain the deploy pipeline uses. macOS/Windows (no
@@ -713,11 +713,11 @@ export async function runWizard(): Promise<void> {
       if (gap.hint) log.info(gap.hint);
       method = "bare";
     } else if (!preview.wouldInstall) {
-      // A host Openship recognizes and won't guess at (openSUSE, Arch, an unidentified
+      // A host Workbox Cloud recognizes and won't guess at (openSUSE, Arch, an unidentified
       // ID). Naming the reason beats the generic "couldn't install it automatically"
       // this used to fall through to after trying.
       log.warn(`${gap.summary} — using the bare process service instead.`);
-      log.info(preview.unsupportedReason ?? "Openship can't install Docker on this host.");
+      log.info(preview.unsupportedReason ?? "Workbox Cloud can't install Docker on this host.");
       method = "bare";
     } else {
       log.step(`${gap.summary} — installing with \`${preview.installCommand}\`…`);
@@ -733,18 +733,18 @@ export async function runWizard(): Promise<void> {
   // the image, so only the bare path pulls the dist (Compose shows pull progress).
   if (method === "bare") {
     const dl = spinner();
-    dl.start("Pulling the Openship dist from GitHub");
+    dl.start("Pulling the Workbox Cloud dist from GitHub");
     try {
       await ensureDashboard({
         tag: uiTag,
         onProgress: (received, total) => {
-          if (total) dl.message(`Pulling the Openship dist from GitHub — ${Math.round((received / total) * 100)}%`);
+          if (total) dl.message(`Pulling the Workbox Cloud dist from GitHub — ${Math.round((received / total) * 100)}%`);
         },
       });
-      dl.stop("Openship dist ready.");
+      dl.stop("Workbox Cloud dist ready.");
     } catch (e) {
       observeCaughtError(e, "cli/commands/wizard");
-      dl.stop(`Couldn't pull the Openship dist: ${(e as Error).message}`, 1);
+      dl.stop(`Couldn't pull the Workbox Cloud dist: ${(e as Error).message}`, 1);
       log.info("Check your network / that this release published its dashboard asset, then re-run `openship`.");
       process.exit(1);
     }
@@ -774,7 +774,7 @@ export async function runWizard(): Promise<void> {
     allowHostControl =
       ensure(
         await select({
-          message: "Let Openship operate this machine's OS?",
+          message: "Let Workbox Cloud operate this machine's OS?",
           initialValue: "allow",
           options: [
             {
@@ -811,7 +811,7 @@ export async function runWizard(): Promise<void> {
     // #486: refuse a pinned image tag the registry doesn't have yet, before touching
     // the box — named images and a way forward instead of docker's `manifest unknown`.
     if (!pinnedImagesReady({ version: __CLI_VERSION__ })) {
-      cancel("The pinned Openship image tag isn't in the registry yet — nothing on this box was changed.");
+      cancel("The pinned Workbox Cloud image tag isn't in the registry yet — nothing on this box was changed.");
       process.exit(1);
     }
 
@@ -840,7 +840,7 @@ export async function runWizard(): Promise<void> {
     // a failed pull takes their sites down for a problem that never reached them.
     log.step(
       sourceBuildDir()
-        ? "Building the Openship images before touching :80/:443 (first run takes a few minutes)…"
+        ? "Building the Workbox Cloud images before touching :80/:443 (first run takes a few minutes)…"
         : "Pulling images before touching :80/:443…",
     );
     const fetched = composePrefetch({
@@ -852,7 +852,7 @@ export async function runWizard(): Promise<void> {
       noHostControl: !allowHostControl,
     });
     if (!fetched.ok) {
-      cancel("Couldn't fetch the Openship images — nothing on this box was changed.");
+      cancel("Couldn't fetch the Workbox Cloud images — nothing on this box was changed.");
       process.exit(1);
     }
 
@@ -898,9 +898,9 @@ export async function runWizard(): Promise<void> {
     }
     started = { port: up.apiPort, dashPort: up.dashPort, publicUrl };
     provisionToken = composeInternalToken() ?? undefined;
-    s.start("Waiting for the Openship API");
+    s.start("Waiting for the Workbox Cloud API");
   } else {
-    s.start("Installing Openship as a service");
+    s.start("Installing Workbox Cloud as a service");
     try {
       started = await startService(
         { publicUrl, trustProxy: behindProxy, managedEdge, acmeEmail: managedEdge ? admin.email : undefined, uiVersion: uiTag },
@@ -913,11 +913,11 @@ export async function runWizard(): Promise<void> {
       log.info("Run `openship up --foreground` to run it attached and see the error.");
       process.exit(1);
     }
-    s.message("Waiting for the Openship API");
+    s.message("Waiting for the Workbox Cloud API");
   }
 
   if (!(await waitHealthy(started.port))) {
-    s.stop("Openship didn't become healthy in time.", 1);
+    s.stop("Workbox Cloud didn't become healthy in time.", 1);
     if (method === "compose" && edgeAction && (await rollbackHostEdge())) {
       log.warn("Restored the previous proxy on 80/443 — your existing sites are serving again.");
     }
@@ -937,9 +937,9 @@ export async function runWizard(): Promise<void> {
 
   if (method === "compose") {
     // Reuse the SAME provision pipe as `openship up` (admin + domain via
-    // self-register against the running stack). Keep the interactive Openship
+    // self-register against the running stack). Keep the interactive Workbox Cloud
     // Cloud connect for a free domain; the container edge owns HTTPS.
-    s.message("Starting the Openship dashboard");
+    s.message("Starting the Workbox Cloud dashboard");
     await waitDashboard(started.dashPort);
     s.stop("Deployed.");
 
@@ -977,7 +977,7 @@ export async function runWizard(): Promise<void> {
       if (cloud) cloudEmail = cloud.email;
       else
         log.warn(
-          "Openship Cloud wasn't connected — skipping the free domain. Your local admin login still works; add it later in Settings → Cloud.",
+          "Workbox Cloud wasn't connected — skipping the free domain. Your local admin login still works; add it later in Settings → Cloud.",
         );
     }
     const result = await headlessProvision({
@@ -1037,7 +1037,7 @@ export async function runWizard(): Promise<void> {
   }
 
   // Always create the local admin now — before any cloud connect — so the instance
-  // login is the email + password you set, never derived from Openship Cloud.
+  // login is the email + password you set, never derived from Workbox Cloud.
   s.message("Creating your admin account");
   const adminRes = await bootstrapAdmin(started.port, admin);
   if (!adminRes.ok) {
@@ -1049,7 +1049,7 @@ export async function runWizard(): Promise<void> {
     // bootstrap-admin is one-shot and won't touch it, so force the box to LOCAL
     // login with the credentials just entered — reset sets the password, revokes
     // stale sessions, and flips authMode back to local. Without this, a box that
-    // was previously cloud-linked keeps showing "Sign in with Openship" instead of
+    // was previously cloud-linked keeps showing "Sign in with Workbox Cloud" instead of
     // the email + password form.
     s.message("Applying your admin login");
     const rr = await internalPost(started.port, "/api/system/reset-admin-password", {
@@ -1066,24 +1066,24 @@ export async function runWizard(): Promise<void> {
 
   // The dist is already cached, so the dashboard only has to boot. Wait for it so
   // "live" is truthful (best-effort — the API already serves regardless).
-  s.message("Starting the Openship dashboard");
+  s.message("Starting the Workbox Cloud dashboard");
   await waitDashboard(started.dashPort);
   s.stop("Deployed.");
 
-  // 4. Register the control plane as an app + attach its domain (reuse Openship's
+  // 4. Register the control plane as an app + attach its domain (reuse Workbox Cloud's
   //    own app + domain pipeline). Runs for every mode so it shows under Apps.
   let liveUrl = publicUrl ?? `http://localhost:${started.dashPort}`;
   const port = started.port;
 
   if (domainPlan.type === "free") {
-    // Connect Openship Cloud — a SEPARATE step from login. Authorize in the browser
+    // Connect Workbox Cloud — a SEPARATE step from login. Authorize in the browser
     // (link printed on the terminal); it only attaches the free .opsh.io domain +
     // mail. The backend links it to the local admin already created above WITHOUT
     // changing the login method. If declined, the box still works on your local
     // login — we just skip the free domain.
     const cloud = await connectOpenshipCloud(port);
     if (!cloud) {
-      log.warn("Openship Cloud wasn't connected — skipping the free domain. Your local admin login still works; add the domain later in Settings → Cloud.");
+      log.warn("Workbox Cloud wasn't connected — skipping the free domain. Your local admin login still works; add the domain later in Settings → Cloud.");
       await internalPost(port, "/api/system/self-register", { domainType: "byo" });
     } else {
       cloudEmail = cloud.email;
@@ -1095,7 +1095,7 @@ export async function runWizard(): Promise<void> {
       if (!edge.proceed) {
         log.warn(
           "Left the existing proxy on 80/443 running — a free domain forwards to :80 here, so it " +
-            "won't serve until Openship owns that port. Re-run setup and choose migrate / take over.",
+            "won't serve until Workbox Cloud owns that port. Re-run setup and choose migrate / take over.",
         );
       }
       // Reuse the SAME provision pipe as `openship up` + the compose wizard: its
@@ -1150,7 +1150,7 @@ export async function runWizard(): Promise<void> {
     // leaving a deployed-but-unregistered box. The warn below tells the operator.
     if (!proceedCustom) {
       log.warn(
-        "Left the existing proxy on 80/443 running. Registering Openship without managed HTTPS — " +
+        "Left the existing proxy on 80/443 running. Registering Workbox Cloud without managed HTTPS — " +
           "front it with your proxy, or re-run setup to take over.",
       );
       await internalPost(port, "/api/system/self-register", {
@@ -1224,14 +1224,14 @@ export async function runControl(): Promise<void> {
   // The real front door: the public domain if one was set, else the local dashboard.
   const primaryUrl = publicUrl && !/^https?:\/\/localhost/i.test(publicUrl) ? publicUrl : dashUrl;
 
-  intro(`${chalk.bgCyan(chalk.black(" Openship "))}${chalk.dim(" control")}`);
+  intro(`${chalk.bgCyan(chalk.black(" Workbox Cloud "))}${chalk.dim(" control")}`);
   note(
     `${chalk.dim("URL".padEnd(11))}${chalk.bold(primaryUrl)}\n` +
       `${chalk.dim("Service".padEnd(11))}${running ? chalk.green("running") : chalk.yellow("stopped")}\n` +
       `${chalk.dim("Dashboard".padEnd(11))}${dashUrl}\n` +
       (ports.api ? `${chalk.dim("API".padEnd(11))}http://localhost:${ports.api}\n` : "") +
       `${chalk.dim("Manager".padEnd(11))}${managerLabel}`,
-    "Openship is installed",
+    "Workbox Cloud is installed",
   );
 
   // Crash-looping on a corrupt DB is the one case where "Start" won't help —

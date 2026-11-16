@@ -175,12 +175,12 @@ export function chatAppSetup(
     steps: [
       "Open the connection form and enter bot credentials there, never in this conversation.",
       "Choose the allowed channels or chats, then save. New connections start paused.",
-      "Enable the saved connector when ready. Each sender runs /openship link and completes the normal OpenShip permission review and verification.",
+      "Enable the saved connector when ready. Each sender runs /openship link and completes the normal Workbox Cloud permission review and verification.",
       purpose === "commands"
         ? "Use /openship help for deployment commands. The control plane does not need AI, Mindwire, or an assistant connection."
         : "Each sender connects their own assistant separately. Assistant access and chat-command permissions remain separate.",
       transport === "outbound"
-        ? "This uses a direct outbound connection. No public OpenShip URL is needed; keep OpenShip online."
+        ? "This uses a direct outbound connection. No public Workbox Cloud URL is needed; keep Workbox Cloud online."
         : "This transport requires a reachable public HTTPS webhook endpoint.",
     ],
   };

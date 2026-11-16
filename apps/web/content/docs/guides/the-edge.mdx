@@ -1,11 +1,11 @@
 ---
 title: The edge
-description: Openship's built-in reverse proxy — how your apps get a public address and HTTPS, how you protect a route, where your traffic numbers come from, and how to take over a proxy that's already running on a server.
+description: Workbox Cloud's built-in reverse proxy — how your apps get a public address and HTTPS, how you protect a route, where your traffic numbers come from, and how to take over a proxy that's already running on a server.
 ---
 
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-Every request from the internet has to land *somewhere* first, before Openship knows which of your apps it's
+Every request from the internet has to land *somewhere* first, before Workbox Cloud knows which of your apps it's
 for. That somewhere is the **edge** — a reverse proxy that sits on ports `80` and `443` and acts as the front
 door for the whole box. It answers the connection, sorts out HTTPS, works out which app the hostname belongs
 to, forwards the request to that app's container, and counts it on the way past.
@@ -16,7 +16,7 @@ moments — when you're moving an existing server across, when you want to route
 you need to rate-limit or block something, or when you're asking "where is my traffic actually coming from?"
 
 <Callout title="The edge vs. the server" type="info">
-Two different things run on a box, and it's worth keeping them straight. The **server** is Openship itself —
+Two different things run on a box, and it's worth keeping them straight. The **server** is Workbox Cloud itself —
 the API and dashboard, the control room. The **edge** is the public reverse proxy in front of your apps — the
 front door. `openship up` installs both together; a visitor's request only ever touches the edge, never the
 server.
@@ -38,17 +38,17 @@ Four jobs, all on the request path:
 <Callout title="What you need first">
 - A Linux server — the edge is a Linux reverse proxy. On macOS/Windows you can still *read* an edge's domains and
   traffic from the CLI, but installing and taking over the proxy happens on the Linux box.
-- Openship installed on that box (`openship up`). The edge comes with it.
+- Workbox Cloud installed on that box (`openship up`). The edge comes with it.
 - For anything that reads data on a CLI-installed instance, a login: run `openship login` once with a token
   from the dashboard.
 </Callout>
 
 ## Self-hosted vs Cloud
 
-A self-hosted deployment uses an edge on your own server. Openship Cloud uses
+A self-hosted deployment uses an edge on your own server. Workbox Cloud uses
 a managed edge. Review these differences when moving a project between them.
 
-| Feature | Self-hosted edge | Openship Cloud |
+| Feature | Self-hosted edge | Workbox Cloud |
 | --- | --- | --- |
 | Proxy settings (`routingConfig.proxy`) | Supported, subject to validation and the proxy's capabilities. | New or changed nonempty proxy settings are rejected with `CLOUD_PROXY_SETTINGS_UNSUPPORTED`. Unchanged legacy settings may be carried forward; this does not make them supported. |
 | Domain redirects | Applied through the server's edge configuration. | Applied through the managed Cloud edge. |
@@ -98,7 +98,7 @@ must belong to the same project, and redirect cycles are rejected. See
 ## Taking over a server that's already serving
 
 This is the headline case. You have a server that's *already* running nginx, Apache, or Caddy on `:80/:443`
-with real sites on it, and you want Openship to run the front door instead — without a flag day where nothing
+with real sites on it, and you want Workbox Cloud to run the front door instead — without a flag day where nothing
 is served.
 
 The edge does this as a **migration**: it reads the existing proxy's sites, registers each one on the edge so
@@ -138,7 +138,7 @@ the old proxy without importing anything.
 </Steps>
 
 <Callout title="You don't have to go looking for this" type="info">
-When a foreign proxy is holding `:80/:443`, Openship raises the same "there's another proxy here — take over
+When a foreign proxy is holding `:80/:443`, Workbox Cloud raises the same "there's another proxy here — take over
 and migrate its sites?" prompt **automatically** during `openship up` and in the bare `openship` control panel.
 The commands above are the manual version of that same offer, for when you want to run it on demand.
 </Callout>

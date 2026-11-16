@@ -97,7 +97,7 @@ export function AutomationRunReview({
             ? "This restarts the active deployment’s containers and can interrupt running services."
             : run.action === "redeploy"
               ? "This rebuilds the current commit through the normal deployment pipeline. Services can be interrupted during cutover."
-              : "Review every changed file below. OpenShip publishes this exact patch in one commit on a new branch. Repository CI may run when the branch or draft PR is created."}
+              : "Review every changed file below. Workbox Cloud publishes this exact patch in one commit on a new branch. Repository CI may run when the branch or draft PR is created."}
         </p>
         {proposal.loading && (
           <p role="status" className="text-sm text-muted-foreground">

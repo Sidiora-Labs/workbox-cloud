@@ -146,7 +146,7 @@ for (const [base, prefix] of [
         base === "/networks"
           ? {
               description:
-                "Plan an Openship-managed WireGuard network change without applying it. Returns an expiring planHash, host changes and firewall requirements. Reuse requestId for the same intent; inspect the plan before calling operations/apply.",
+                "Plan a Workbox Cloud-managed WireGuard network change without applying it. Returns an expiring planHash, host changes and firewall requirements. Reuse requestId for the same intent; inspect the plan before calling operations/apply.",
             }
           : undefined,
       mcpExcluded: "Compatibility alias for /api/system/networks; use the canonical network tools.",
@@ -494,7 +494,7 @@ r.delete(
     body: Type.Omit(NetworkCollectionSchemas.removeNetwork.input, ["networkId"]),
     mcp: {
       description:
-        "Remove a native private-network record using its current revision. Dependencies block removal. For an Openship-managed WireGuard network, prepare and apply a removal plan first; this call does not force-delete host networking.",
+        "Remove a native private-network record using its current revision. Dependencies block removal. For a Workbox Cloud-managed WireGuard network, prepare and apply a removal plan first; this call does not force-delete host networking.",
     },
   },
   networks.remove,
@@ -635,7 +635,7 @@ r.get(
     authorizationHandledByOperation: true,
     mcp: {
       description:
-        "List saved SSH port-forwarding tunnels for this server and their current state. Tunnels run from this Openship controller, not from the MCP client.",
+        "List saved SSH port-forwarding tunnels for this server and their current state. Tunnels run from this Workbox Cloud controller, not from the MCP client.",
     },
   },
   tunnels.listTunnels,
@@ -649,7 +649,7 @@ r.post(
     auditHandledByOperation: true,
     mcp: {
       description:
-        "Save an SSH port-forwarding tunnel configuration. Start it separately; its local bind address belongs to the Openship controller.",
+        "Save an SSH port-forwarding tunnel configuration. Start it separately; its local bind address belongs to the Workbox Cloud controller.",
     },
   },
   tunnels.saveTunnel,
@@ -662,7 +662,7 @@ r.post(
     auditHandledByOperation: true,
     mcp: {
       description:
-        "Start this saved tunnel on the Openship controller and return its local address. Read the tunnel list to inspect state.",
+        "Start this saved tunnel on the Workbox Cloud controller and return its local address. Read the tunnel list to inspect state.",
     },
   },
   tunnels.startTunnelHandler,

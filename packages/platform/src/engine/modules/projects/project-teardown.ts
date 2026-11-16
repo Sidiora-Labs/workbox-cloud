@@ -163,7 +163,7 @@ export interface TeardownOptions {
    * Ordinary deletion retains its intent once cleanup starts. */
   failurePolicy?: "retain_intent" | "release_claim";
   /**
-   * Record-only ("soft") delete: drop just the Openship DB record and LEAVE the
+   * Record-only ("soft") delete: drop just the Workbox Cloud DB record and LEAVE the
    * server workload + data + on-server manifest intact, so the project can be
    * re-imported later. Self-hosted only — IGNORED for a cloud project (its
    * resources live on Oblien and must be reclaimed). Enforced in teardownProject.
@@ -227,7 +227,7 @@ async function teardownProjectLocked(
     return s;
   };
 
-  // The Openship control plane is the host service, not a torn-down workload —
+  // The Workbox Cloud control plane is the host service, not a torn-down workload —
   // refuse BEFORE claiming the lock so we never mangle its row. (The controller
   // guards this too; this is defense-in-depth for any other caller.)
   const preload = await repos.project.findById(projectId);
@@ -248,7 +248,7 @@ async function teardownProjectLocked(
     push({
       step: "guard_control_plane",
       status: "failed",
-      error: "The Openship control plane can't be torn down via the API — manage it with the CLI.",
+      error: "The Workbox Cloud control plane can't be torn down via the API — manage it with the CLI.",
     });
     return finalize(steps, false, "control_plane");
   }

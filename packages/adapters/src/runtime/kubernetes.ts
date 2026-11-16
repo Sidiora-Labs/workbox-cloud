@@ -68,7 +68,7 @@ const sleep = (ms: number, signal: AbortSignal) =>
   });
 
 /** Per-release Deployments keep rollback/history honest. Kubernetes Services
- * distribute traffic to ready pods; no OpenShip per-node process scheduler. */
+ * distribute traffic to ready pods; no Workbox Cloud per-node process scheduler. */
 export class KubernetesRuntime implements RuntimeAdapter {
   readonly name = "kubernetes";
   readonly capabilities: ReadonlySet<RuntimeCapability> = new Set([
@@ -186,7 +186,7 @@ export class KubernetesRuntime implements RuntimeAdapter {
       "/api/v1/namespaces",
       projectNamespaceManifest(this.options.projectId, this.options.runtimeId),
     );
-    // Ingress is restricted to this project's pods and its OpenShip Edge host.
+    // Ingress is restricted to this project's pods and its Workbox Cloud Edge host.
     // Existing Docker network links are rejected at preflight until translated.
     await this.create(`/apis/networking.k8s.io/v1/namespaces/${this.namespace}/networkpolicies`, {
       apiVersion: "networking.k8s.io/v1",
@@ -219,7 +219,7 @@ export class KubernetesRuntime implements RuntimeAdapter {
       unsupported("Persistent mounts and process adoption");
     if (clusterWorkloadNeedsOperator(undefined, config.imageRef))
       throw new AppError(
-        "Add this database from the project's topology so OpenShip can prepare its data storage and replicas.",
+        "Add this database from the project's topology so Workbox Cloud can prepare its data storage and replicas.",
         422,
         "CLUSTER_WORKLOAD_UNSUPPORTED",
       );

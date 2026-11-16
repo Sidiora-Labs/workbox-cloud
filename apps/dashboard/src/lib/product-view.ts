@@ -2,7 +2,7 @@
  * Which product SHELL the dashboard draws for THIS user, this request.
  *
  *   "platform" → the full deploy platform rail (Projects, Apps, Deployments, …)
- *   "mail"     → Openship Mail: the rail becomes the mail control plane
+ *   "mail"     → Workbox Cloud Mail: the rail becomes the mail control plane
  *
  * Two inputs, resolved server-side so the very first painted HTML is already the
  * right rail:
@@ -34,7 +34,7 @@ export function isProductView(value: unknown): value is ProductView {
 }
 
 /**
- * The product name to show in chrome: "OpenShip" or "OpenShip Mail". "Mail" is a
+ * The product name to show in chrome: "Workbox Cloud" or "Workbox Cloud Mail". "Mail" is a
  * product suffix, not a translatable word (cf. Google Mail / Yahoo Mail), so it's
  * appended to the single `brand` string rather than forked across 9 dictionaries.
  *

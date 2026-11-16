@@ -69,7 +69,7 @@ r.post("/:id/dns/challenge/check", { tag: "domain:write", auditHandledByOperatio
 r.post("/:id/dns/challenge/cancel", { tag: "domain:write", auditHandledByOperation: true, body: DomainResourceSchemas.cancelDnsChallenge.input, mcp: { description: "Cancel the named manual DNS certificate attempt. Preserves existing certificates and routes. An installation already in progress must finish. Remove only this attempt's TXT value from DNS afterward." } }, ctrl.cancelDnsChallenge);
 r.post("/:id/renew", { tag: "domain:write", auditHandledByOperation: true, mcp: { description: "Renew the domain's SSL certificate." } }, ctrl.renewSsl);
 r.post("/:id/verify-ssl", { tag: "domain:write", auditHandledByOperation: true, mcp: { description: "Check/verify the domain's SSL certificate." } }, ctrl.verifySsl);
-// Self-hosted only: installs a cert into the box's OpenResty. On Openship Cloud
+// Self-hosted only: installs a cert into the box's OpenResty. On Workbox Cloud
 // The shared operation permits certificates only on customer-owned edges.
 r.post(
   "/:id/certificate",

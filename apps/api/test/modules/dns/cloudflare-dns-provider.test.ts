@@ -326,7 +326,7 @@ describe("cloudflareDnsProvider", () => {
     // A single pre-existing record is the normal state of an apex being connected,
     // and it is the operator's. Repointing it is the feature; claiming it is not —
     // the marker is what releaseRecords deletes on, so stamping it here would make
-    // "remove this domain" destroy a record Openship never created.
+    // "remove this domain" destroy a record Workbox Cloud never created.
     it("REPOINTS a single unmarked operator record without claiming ownership", async () => {
       let put: Record<string, unknown> | null = null;
       global.fetch = vi.fn().mockImplementation(async (_url: string, init?: RequestInit) => {

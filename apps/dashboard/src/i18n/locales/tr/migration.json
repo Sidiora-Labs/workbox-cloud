@@ -5,12 +5,12 @@
     "customAction": "DNS’i güncelle",
     "providerAction": "URL’yi değiştir",
     "customHint": "Özel alan adları, ilgili hizmetin Alan adları ve rotalar bölümüne aktarılır. İçe aktarılan uygulamayı kontrol ettikten sonra DNS kayıtlarını inceleyin ve doğrulamayı tamamlayın.",
-    "providerHint": "Sağlayıcıya ait URL’ler OpenShip’e taşınamaz. Yeni bir adres seçin ve eski adresi kullanan uygulama URL’lerini, OAuth geri çağrılarını ve webhook’ları güncelleyin.",
+    "providerHint": "Sağlayıcıya ait URL’ler Workbox Cloud’e taşınamaz. Yeni bir adres seçin ve eski adresi kullanan uygulama URL’lerini, OAuth geri çağrılarını ve webhook’ları güncelleyin.",
     "empty": "Herkese açık alan adı bulunamadı. Dahili hizmetleri özel tutun; yalnızca herkese açık erişim gereken hizmetlere alan adı ekleyin.",
     "next": "Trafik geçişini onaylamadan önce",
     "test": "İçe aktarılan rotaları incelemek için Alan adları ve rotaları açın. Gerekirse bir test alan adı ekleyin ve uygulamayı ve verilerini kontrol edin.",
     "dns": "Alan adları ve rotalar bölümünde özel alan adlarınızı inceleyin ve eksik olanları ekleyin. Ardından gösterilen DNS kayıtlarını DNS sağlayıcınızda aynen uygulayın veya desteklenen bir bağlantıyla otomatik DNS yapılandırmasını inceleyin. Eski yönlendirme kayıtlarını değiştirin; diğer kayıtları koruyun.",
-    "verify": "OpenShip’te DNS ve HTTPS’i doğrulayın, ardından tamamlandığını onaylamadan önce herkese açık URL’leri test edin.",
+    "verify": "Workbox Cloud’te DNS ve HTTPS’i doğrulayın, ardından tamamlandığını onaylamadan önce herkese açık URL’leri test edin.",
     "openDomains": "Alan adlarını ve DNS’i incele"
   },
   "wizard": {
@@ -20,7 +20,7 @@
       "warnings": "{count} keşif bildirimini inceleyin"
     },
     "title": "Uygulamaları taşı",
-    "intro": "Bu sunucunun Docker yapısını inceleyin ve konteynerlerini bir OpenShip projesine aktarın. İnceleme salt okunurdur — siz dağıtım yapana kadar sunucuda hiçbir şey değişmez.",
+    "intro": "Bu sunucunun Docker yapısını inceleyin ve konteynerlerini bir Workbox Cloud projesine aktarın. İnceleme salt okunurdur — siz dağıtım yapana kadar sunucuda hiçbir şey değişmez.",
     "selectServer": "Bir sunucu seçin",
     "scan": "Docker'ı İncele",
     "scanning": "İnceleniyor…",
@@ -121,13 +121,13 @@
       "deployActionPull": "Çekilecek"
     },
     "flatDocker": "Düz liste",
-    "flatDockerHint": "OpenShip etiketlerini yoksay — her şeyi (OpenShip tarafından yönetilen kapsayıcılar dahil) düz Docker olarak dahil et.",
-    "flatDockerShort": "OpenShip tarafından yönetilen kapsayıcıları da dahil et."
+    "flatDockerHint": "Workbox Cloud etiketlerini yoksay — her şeyi (Workbox Cloud tarafından yönetilen kapsayıcılar dahil) düz Docker olarak dahil et.",
+    "flatDockerShort": "Workbox Cloud tarafından yönetilen kapsayıcıları da dahil et."
   },
   "run": {
     "title": "Teknoloji yığınınız taşınıyor",
     "queued": "Sıraya alındı…",
-    "adopting": "OpenShip projesi oluşturuluyor…",
+    "adopting": "Workbox Cloud projesi oluşturuluyor…",
     "moving_data": "Disk birimi verileri hedefe taşınıyor…",
     "deploying": "Hedef sunucuya dağıtılıyor…",
     "verifying": "Yeni dağıtım doğrulanıyor…",
@@ -160,8 +160,8 @@
   },
   "discover": {
     "buildBlocked": "Kaynaktan derlenmiş — henüz taşınamıyor (önce bir imaj yayınlayın)",
-    "proxyExcluded": "Reverse proxy ({ports}) — içe aktarılmadı; yerini OpenShip'in edge servisi alacak.",
-    "edgePortReserved": "{ports} portları OpenShip'in edge servisi için ayrılmıştır; yayınlanmadı.",
+    "proxyExcluded": "Reverse proxy ({ports}) — içe aktarılmadı; yerini Workbox Cloud'in edge servisi alacak.",
+    "edgePortReserved": "{ports} portları Workbox Cloud'in edge servisi için ayrılmıştır; yayınlanmadı.",
     "nothing": "Bu sunucuda aktarılabilecek Docker konteyneri bulunamadı.",
     "servicesTitle": "Servisler",
     "volumesTitle": "Disk Birimleri (Volumes)",
@@ -188,14 +188,14 @@
     "reused": "yerinde yeniden kullanıldı",
     "volumeReuse": "Devral",
     "volumeCopy": "Kopyala",
-    "volumeCopyHint": "Devralma, mevcut disk birimini yerinde yeniden kullanır. Kopyalama ise bunu yeni bir OpenShip disk birimine kopyalar ve orijinale dokunmaz (ek disk kullanır).",
+    "volumeCopyHint": "Devralma, mevcut disk birimini yerinde yeniden kullanır. Kopyalama ise bunu yeni bir Workbox Cloud disk birimine kopyalar ve orijinale dokunmaz (ek disk kullanır).",
     "bind": "sunucu yolu",
     "nVolumes": "{n} disk birimi",
     "nEnv": "{n} ortam değişkeni",
     "envFromImage": "{n} değişken imajdan geliyor",
     "envFromImageHint": "Yapılandırma olarak içe aktarılmadı — imaj bunları çalışma zamanında sağlıyor. Kaynaktan yeniden derlemeden önce değerleri sabitlemek için içe aktarın.",
     "envFromImageImport": "Yine de içe aktar",
-    "alreadyManaged": "OpenShip tarafından zaten yönetilen {count} konteyner atlandı.",
+    "alreadyManaged": "Workbox Cloud tarafından zaten yönetilen {count} konteyner atlandı.",
     "chooseProject": "İçe aktarılacakları seçin",
     "chooseHint": "Bir Compose projesi veya ayrı hizmetler seçin.",
     "topology": "Topoloji",
@@ -212,8 +212,8 @@
     "expandProject": "{name} hizmetleri"
   },
   "reimport": {
-    "title": "OpenShip projeleri bulundu",
-    "intro": "Bu OpenShip projeleri sunucuda çalışıyor ancak bu kurulumda kayıtlı değil (veritabanı sıfırlanmış veya sunucu başka bir OpenShip kurulumundan gelmiş olabilir). Kurtarmak için yeniden içe aktarın — özgün kimlik korunur ve çalışan konteynerler tekrar bağlanır.",
+    "title": "Workbox Cloud projeleri bulundu",
+    "intro": "Bu Workbox Cloud projeleri sunucuda çalışıyor ancak bu kurulumda kayıtlı değil (veritabanı sıfırlanmış veya sunucu başka bir Workbox Cloud kurulumundan gelmiş olabilir). Kurtarmak için yeniden içe aktarın — özgün kimlik korunur ve çalışan konteynerler tekrar bağlanır.",
     "services": "{n} servis",
     "action": "Tekrar içe aktar",
     "working": "Tekrar içe aktarılıyor…",
@@ -224,7 +224,7 @@
     "failed": "Tekrar içe aktarma başarısız oldu",
     "review": "Projeyi kurtar",
     "reviewNamed": "{name} projesini kurtar",
-    "groupLabel": "OpenShip projesi",
+    "groupLabel": "Workbox Cloud projesi",
     "recoverHint": "Ayarları geri yükleyin ve çalışan kapsayıcıları yeniden bağlayın.",
     "configuration": "Yapılandırma",
     "snapshot": "Kayıtlı anlık görüntü",
@@ -239,7 +239,7 @@
   "adoptFailed": "Proje oluşturulamadı",
   "entry": {
     "cardTitle": "Mevcut servisler",
-    "cardDesc": "Çalışan bir Docker veya Compose dağıtımını OpenShip'e taşıyın.",
+    "cardDesc": "Çalışan bir Docker veya Compose dağıtımını Workbox Cloud'e taşıyın.",
     "action": "Uygulamaları taşı",
     "tab": "Mevcut projeyi içe aktar",
     "comingSoon": "Docker taşıma özelliği yakında geliyor"
@@ -247,7 +247,7 @@
   "tab": {
     "new": "Yeni geçiş",
     "empty": "Henüz geçiş yok",
-    "emptyDesc": "Bu sunucuda çalışan bir Docker veya Compose yığınını OpenShip'e taşıyın ya da başka bir sunucudan içeri aktarın.",
+    "emptyDesc": "Bu sunucuda çalışan bir Docker veya Compose yığınını Workbox Cloud'e taşıyın ya da başka bir sunucudan içeri aktarın.",
     "close": "Kapat",
     "sessionLog": "Oturum günlüğü",
     "noLogs": "Henüz günlük çıktısı yok.",
@@ -299,7 +299,7 @@
     "disconnect": "Kaynak bağlantısını kes",
     "empty": "İçe aktarmak istediğiniz sunucuyu bağlayın.",
     "hint": "Yalnızca taşıma için. İşiniz bittiğinde bağlantıyı kaldırabilirsiniz.",
-    "importHint": "Uygulamaları ve verileri yönetilen bir OpenShip sunucusuna kopyalayın. Geçişi onaylayana kadar kaynak korunur."
+    "importHint": "Uygulamaları ve verileri yönetilen bir Workbox Cloud sunucusuna kopyalayın. Geçişi onaylayana kadar kaynak korunur."
   },
   "review": {
     "progress": "İçe aktarma ilerlemesi",

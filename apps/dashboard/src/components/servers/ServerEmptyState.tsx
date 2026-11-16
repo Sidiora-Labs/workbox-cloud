@@ -14,7 +14,7 @@ export function ServerEmptyState({
   onAdd: () => void;
   managed?: boolean;
   /** Present only on a server-host with host control on — offers registering the
-   *  box OpenShip runs on right from the empty state (#527). */
+   *  box Workbox Cloud runs on right from the empty state (#527). */
   onAddThisMachine?: () => void;
 }) {
   const { t } = useI18n();

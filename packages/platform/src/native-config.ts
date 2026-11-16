@@ -9,7 +9,7 @@ export interface NativePlatformOptions {
   storage:
     | { driver: "pglite"; dataDir: string; migrations?: "apply" | "verify" }
     | { driver: "postgres"; url: string; migrations?: "apply" | "verify" };
-  /** Persistent UTF-8 secret, 32–4096 bytes. Uses Openship's existing SHA-256/AES-GCM format. */
+  /** Persistent UTF-8 secret, 32–4096 bytes. Uses Workbox Cloud's existing SHA-256/AES-GCM format. */
   encryptionKey: string;
   runtime: "docker" | "bare" | "cloud";
   /** Bare runtimes may explicitly omit managed routing/TLS. */

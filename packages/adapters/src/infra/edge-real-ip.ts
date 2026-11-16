@@ -125,7 +125,7 @@ export function edgeRealIpConf(): string {
   const extra = edgeTrustedProxies();
 
   const lines: string[] = [
-    "# Openship — recover the real client address from a trusted front proxy.",
+    "# Workbox Cloud — recover the real client address from a trusted front proxy.",
     "#",
     "# GENERATED. Source: packages/adapters/src/infra/edge-real-ip.ts",
     "#",
@@ -210,7 +210,7 @@ export function edgeContainerRealIpConf(): string {
   const header = edgeRealIpHeader();
   const extra = edgeTrustedProxies();
   const lines: string[] = [
-    "# Openship — operator-declared front proxies for the containerized edge.",
+    "# Workbox Cloud — operator-declared front proxies for the containerized edge.",
     "#",
     "# GENERATED on every routing apply. Source: packages/adapters/src/infra/edge-real-ip.ts",
     "#",
@@ -232,7 +232,7 @@ export function edgeContainerRealIpConf(): string {
 }
 
 /**
- * Header Openship Cloud's edge names the client in.
+ * Header Workbox Cloud's edge names the client in.
  *
  * Not CF-Connecting-IP: the Cloud edge is a proxy in its own right, and the header it
  * OVERWRITES on the way to the origin is `X-Real-IP`. Two different fronts, two
@@ -242,7 +242,7 @@ export function edgeContainerRealIpConf(): string {
 export const CLOUD_EDGE_REAL_IP_HEADER = "X-Real-IP";
 
 /**
- * Is this hostname one Openship Cloud's shared edge fronts?
+ * Is this hostname one Workbox Cloud's shared edge fronts?
  *
  * A free `<slug>.opsh.io` host is served by Cloud's edge, which proxies to this box on
  * plain :80 — so for that vhost, and only that vhost, the TCP peer is the Cloud edge
@@ -280,7 +280,7 @@ export function isCloudFrontedHost(hostname: string): boolean {
  */
 export function cloudEdgeRealIpConf(indent = "    "): string {
   const lines: string[] = [
-    "# Openship Cloud's edge fronts this free host, so the peer is the edge and the",
+    "# Workbox Cloud's edge fronts this free host, so the peer is the edge and the",
     "# visitor is named in X-Real-IP (which that front OVERWRITES). The http-scope block",
     "# reads CF-Connecting-IP for Cloudflare-fronted custom domains, and there is one",
     "# real_ip_header per scope — hence this override.",

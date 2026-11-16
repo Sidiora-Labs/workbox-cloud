@@ -92,7 +92,7 @@ export async function resolveGitHubCapabilities(
       available: identityUsable && hasDeviceClientId,
       configured: identityConfigured && identityMethod === "device",
       unavailableReason: !identityUsable
-        ? "Not available on Openship Cloud."
+        ? "Not available on Workbox Cloud."
         : !hasDeviceClientId
           ? "This instance has no GitHub device client id configured."
           : undefined,
@@ -124,7 +124,7 @@ export async function resolveGitHubCapabilities(
       available: platform === "selfhosted",
       configured: false, // per-server state; the Servers page owns the detail
       unavailableReason:
-        platform === "selfhosted" ? undefined : "Openship Cloud manages build hosts for you.",
+        platform === "selfhosted" ? undefined : "Workbox Cloud manages build hosts for you.",
     },
     {
       kind: "forwarding",

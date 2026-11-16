@@ -3,7 +3,7 @@
  * meets Oblien's. Pure (no imports) so it's trivially unit-testable and can't
  * drag env/db/SDK side effects into a test.
  *
- * Openship stores credits in MILLI (1000 milli = 1 credit): that's what
+ * Workbox Cloud stores credits in MILLI (1000 milli = 1 credit): that's what
  * `PLANS[].monthlyCredits`, `credit_pack.credits_milli`, and the dashboard's
  * `formatCredits(÷1000)` all speak. Oblien's `quotaLimit` / `quota_used` are
  * in whole Oblien credits, capped at 10,000,000. Every write divides by 1000;

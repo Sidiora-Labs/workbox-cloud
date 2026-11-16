@@ -161,9 +161,9 @@ const SELF_UPDATE = mk({
   severity: "advisory",
   scope: "platform",
   source: "update",
-  title: "OpenShip",
+  title: "Workbox Cloud",
   message: "0.4.1 → 0.5.0",
-  target: { scope: "platform", id: "openship", name: "OpenShip", href: "/settings?tab=instance" },
+  target: { scope: "platform", id: "openship", name: "Workbox Cloud", href: "/settings?tab=instance" },
 });
 
 const APP_UPDATE = mk({

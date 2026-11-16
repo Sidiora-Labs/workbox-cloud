@@ -98,7 +98,7 @@ describe("source release transfer entry points (#869)", () => {
     await writeFile(input, "{}");
     const invalid = await run("api/scripts/import-instance.ts", ["--in", input]);
     expect(invalid.code).toBe(1);
-    expect(invalid.stderr).toContain("Not an Openship export file");
+    expect(invalid.stderr).toContain("Not a Workbox Cloud export file");
     expect(invalid.stderr).not.toMatch(/pglite.wasm|ASM_CONSTS/);
     const mode = await run("api/scripts/import-instance.ts", ["--in", input, "--mode", "typo"]);
     expect(mode.code).toBe(1);

@@ -17,7 +17,7 @@ interface LibrarySidebarProps {
   selfHosted: boolean;
   /** Canonical GitHub connection state — the only thing this card needs. */
   state: GitHubConnectionState;
-  /** Whether the local instance is connected to Openship Cloud. Drives
+  /** Whether the local instance is connected to Workbox Cloud. Drives
    *  the "safer remote cloning" CTA card. */
   cloudConnected: boolean;
   /** Authoritative owner-wide counts from the server (GitHub's real totals).
@@ -45,7 +45,7 @@ export function LibrarySidebar({
   return (
     <div className="space-y-4 lg:sticky lg:top-6 lg:self-start">
       {/* ── Connection status ─────────────────────────────────────
-          SaaS mode (!selfHosted) → single card: Openship GitHub App.
+          SaaS mode (!selfHosted) → single card: Workbox Cloud GitHub App.
           Self-hosted/desktop → local identity and the connected App. */}
       {selfHosted ? (
         <SelfHostedConnectionCard

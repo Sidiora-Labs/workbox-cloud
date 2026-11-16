@@ -1,4 +1,4 @@
-<h1 align="center">Openship</h1>
+<h1 align="center">Workbox Cloud</h1>
 
 <p align="center">
   내장 CI/CD를 갖춘 오픈 소스 자체 호스팅 배포 플랫폼입니다.<br>
@@ -39,23 +39,23 @@
 </p>
 
 <p align="center">
-  <img src="../screenshots/screen.png" alt="Openship 대시보드" width="800" />
+  <img src="../screenshots/screen.png" alt="Workbox Cloud 대시보드" width="800" />
 </p>
 
 ---
 
 ## 빠른 시작
 
-먼저 Openship 자체, 즉 control plane을 어떻게 실행할지만 결정하면 됩니다. 이후 과정은 같습니다.
+먼저 Workbox Cloud 자체, 즉 control plane을 어떻게 실행할지만 결정하면 됩니다. 이후 과정은 같습니다.
 
-| 이런 경우                                                                     | Openship 실행 방식                   | 앱 실행 위치                                              |
+| 이런 경우                                                                     | Workbox Cloud 실행 방식                   | 앱 실행 위치                                              |
 | ----------------------------------------------------------------------------- | ------------------------------------ | --------------------------------------------------------- |
-| **개인 개발자, 한 대의 컴퓨터, 운영 부담 없음**                               | **데스크톱 앱**                      | SSH로 연결한 서버 또는 Openship Cloud                     |
+| **개인 개발자, 한 대의 컴퓨터, 운영 부담 없음**                               | **데스크톱 앱**                      | SSH로 연결한 서버 또는 Workbox Cloud                     |
 | **팀 환경, push-to-deploy가 필요하거나 자체 서버에서 앱을 호스팅하려는 경우** | **자체 호스팅 서버** (`openship up`) | 해당 서버(Compose mode) 또는 다른 서버 / Cloud(bare mode) |
-| **아무것도 직접 운영하고 싶지 않은 경우**                                     | **Openship Cloud**                   | 관리형 sandbox, 설정 불필요                               |
+| **아무것도 직접 운영하고 싶지 않은 경우**                                     | **Workbox Cloud**                   | 관리형 sandbox, 설정 불필요                               |
 
 > [!TIP]
-> **개인 개발자라면 데스크톱 앱을 사용하세요.** 앱을 열어 둔 동안에만 내 컴퓨터에서 Openship control plane이 실행됩니다. 상시 실행 서버에 남는 구성 요소도, 외부에 공개되는 부분도 없습니다. **push-to-deploy(CI/CD)**, **팀 접근**, 또는 **그 서버에서 앱 호스팅**처럼 공개된 상시 실행 endpoint가 필요한 기능을 원할 때만 상시 실행 서버 설치가 필요합니다.
+> **개인 개발자라면 데스크톱 앱을 사용하세요.** 앱을 열어 둔 동안에만 내 컴퓨터에서 Workbox Cloud control plane이 실행됩니다. 상시 실행 서버에 남는 구성 요소도, 외부에 공개되는 부분도 없습니다. **push-to-deploy(CI/CD)**, **팀 접근**, 또는 **그 서버에서 앱 호스팅**처럼 공개된 상시 실행 endpoint가 필요한 기능을 원할 때만 상시 실행 서버 설치가 필요합니다.
 
 ### 개인 개발자 — 데스크톱 앱
 
@@ -70,11 +70,11 @@ control plane은 로컬에서 실행되고 SSH를 통해 서버를 제어합니�
 
 Linux에서는 `chmod +x Openship.AppImage && ./Openship.AppImage`를 실행합니다. CLI가 이미 있다면 `openship install`로 앱을 내려받아 실행할 수 있습니다. 링크는 항상 최신 릴리스를 가리킵니다.
 
-데스크톱 앱에서 서버(SSH) 또는 Openship Cloud에 연결해 배포합니다. 앱이 노트북에서 공개 앱을 호스팅하지는 않습니다.
+데스크톱 앱에서 서버(SSH) 또는 Workbox Cloud에 연결해 배포합니다. 앱이 노트북에서 공개 앱을 호스팅하지는 않습니다.
 
 ### 팀 환경 / 상시 실행 — 자체 호스팅 서버
 
-API와 대시보드를 포함한 CLI를 설치한 뒤 **`openship`**을 실행하세요. 대화형 마법사가 첫 관리자를 만들고 도메인을 연결한 뒤 Openship을 부팅 서비스로 설치합니다. 인스턴스를 관리하려면 언제든 같은 명령을 다시 실행하면 됩니다.
+API와 대시보드를 포함한 CLI를 설치한 뒤 **`openship`**을 실행하세요. 대화형 마법사가 첫 관리자를 만들고 도메인을 연결한 뒤 Workbox Cloud을 부팅 서비스로 설치합니다. 인스턴스를 관리하려면 언제든 같은 명령을 다시 실행하면 됩니다.
 
 ```bash
 curl -fsSL https://get.openship.io | sh          # 설치 (또는 npm i -g openship)
@@ -139,7 +139,7 @@ docker compose --env-file .env -f docker/docker-compose.yml up -d
 
 ## 작동 방식
 
-**GitHub 저장소**, **로컬 폴더**, **미리 빌드한 artifact** 가운데 하나를 Openship에 연결하면 한 pipeline에서 끝까지 처리합니다.
+**GitHub 저장소**, **로컬 폴더**, **미리 빌드한 artifact** 가운데 하나를 Workbox Cloud에 연결하면 한 pipeline에서 끝까지 처리합니다.
 
 1. **감지.** `package.json`, framework config, lockfile, `docker-compose.yml` / `openship.json`을 읽어 stack, package manager, build/start 명령, port를 결정합니다. 설정 파일은 필요 없으며, 제어가 필요하면 `openship.json`으로 자동 감지 결과를 덮어쓸 수 있습니다.
 2. **빌드.** 대상 서버나 orchestrator 로컬에서 Docker image나 bare release를 만듭니다. 해석된 config는 snapshot으로 고정되므로 재배포와 롤백도 배포 당시의 설정을 **정확히** 다시 실행합니다.
@@ -186,7 +186,7 @@ docker compose --env-file .env -f docker/docker-compose.yml up -d
 
 ## 어디에나 배포
 
-- **Openship Cloud** — 관리형, auto-scaling, 설정 불필요
+- **Workbox Cloud** — 관리형, auto-scaling, 설정 불필요
 - **모든 VPS** — Hetzner, DigitalOcean, Linode, OVH 등
 - **전용 서버** — bare metal, colo, homelab
 - **다중 서버** — 여러 장비에 workload 분산
@@ -220,6 +220,6 @@ docker compose --env-file .env -f docker/docker-compose.yml up -d
 
 ## 라이선스
 
-Openship은 [Apache License 2.0](../../LICENSE)로 제공되는 **오픈 소스** 소프트웨어입니다.
+Workbox Cloud은 [Apache License 2.0](../../LICENSE)로 제공되는 **오픈 소스** 소프트웨어입니다.
 
 Apache License 2.0의 조건에 따라 상용 및 비공개 소스 제품을 포함해 소프트웨어를 사용, 실행, 수정, 자체 호스팅, 배포할 수 있습니다. 자세한 내용은 [LICENSE](../../LICENSE)를 참고하세요.

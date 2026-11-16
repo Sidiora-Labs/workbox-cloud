@@ -89,11 +89,11 @@ describe("internalFetch", () => {
     // blame the wrong thing entirely. Only internalAuth's own `{"error":"Unauthorized"}`
     // is a token rejection.
     h.tokens = ["first", "second"];
-    fetchStub = stubFetch(() => ({ status: 401, json: { error: "Could not verify with Openship Cloud" } }));
+    fetchStub = stubFetch(() => ({ status: 401, json: { error: "Could not verify with Workbox Cloud" } }));
 
     const res = await internalPost("4000", "/api/system/cloud-connect", { code: "abc" });
     expect(res.ok).toBe(false);
-    expect(res.data.error).toBe("Could not verify with Openship Cloud");
+    expect(res.data.error).toBe("Could not verify with Workbox Cloud");
     expect(sentTokens()).toEqual(["first"]);
   });
 

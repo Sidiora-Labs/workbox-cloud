@@ -198,7 +198,7 @@ describe("release check requests (#661)", () => {
     deployment.selfHosted = false;
     const release = {
       ...critical, id: "legacy-release", severity: "recommended", announce: false, affects: "*",
-      title: "OpenShip 0.9.0 is released", target: { type: "platform" },
+      title: "Workbox Cloud 0.9.0 is released", target: { type: "platform" },
       action: { kind: "open-url", label: "View release notes", url: "https://github.com/oblien/openship/releases/tag/v0.9.0" },
     };
     check.mockResolvedValue({ ...snapshot, manifest: { advisories: [release] } });
@@ -234,7 +234,7 @@ describe("release check requests (#661)", () => {
           {
             id: "control-plane-patch",
             revision: 1,
-            title: "Update OpenShip",
+            title: "Update Workbox Cloud",
             message: "Install the patched control plane.",
             severity: "high",
             url: "https://example.com/security",

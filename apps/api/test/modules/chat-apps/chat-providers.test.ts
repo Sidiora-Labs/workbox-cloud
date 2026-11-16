@@ -36,7 +36,7 @@ const config = (over: Partial<BotConfiguration> = {}): BotConfiguration => ({
 });
 
 describe("chat presentation", () => {
-  it("has complete translations with identical template fields in every OpenShip language", () => {
+  it("has complete translations with identical template fields in every Workbox Cloud language", () => {
     function check(base: any, translated: any) {
       expect(Object.keys(translated).sort()).toEqual(Object.keys(base).sort());
       for (const key of Object.keys(base)) {

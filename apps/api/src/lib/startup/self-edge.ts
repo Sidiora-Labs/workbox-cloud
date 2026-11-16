@@ -10,7 +10,7 @@
  *
  * Single-flight so the boot reconcile + the wizard endpoint never install twice
  * at once. Linux only, and only where the resolver says we can elevate (root or
- * passwordless sudo) on a host family Openship has a package manager for; a no-op
+ * passwordless sudo) on a host family Workbox Cloud has a package manager for; a no-op
  * elsewhere.
  */
 
@@ -48,7 +48,7 @@ export interface SelfEdgeOptions {
   /** Operator accepted reclaiming ports 80/443 from an existing proxy. Without
    *  it, an occupied edge makes the install throw rather than blind-kill. */
   edgeTakeover?: boolean;
-  /** Operator accepted MIGRATING the existing proxy's sites into Openship
+  /** Operator accepted MIGRATING the existing proxy's sites into Workbox Cloud
    *  before taking over (full scan → import → takeover). */
   edgeMigrate?: boolean;
   /** Corrected static roots (keyed by primary hostname) the wizard copied into the
@@ -206,7 +206,7 @@ async function runEnsure(
       }
       const sitesNote = siteCount > 0 ? ` serving ${siteCount} site${siteCount === 1 ? "" : "s"}` : "";
       log(
-        `An existing proxy (${owner})${sitesNote} is using ports 80 and 443. Openship needs its own ` +
+        `An existing proxy (${owner})${sitesNote} is using ports 80 and 443. Workbox Cloud needs its own ` +
           `load balancer (OpenResty) there for managed HTTPS — left it running. Re-run setup and choose ` +
           `migrate or take-over to continue.`,
         "warn",

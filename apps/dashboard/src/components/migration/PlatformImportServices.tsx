@@ -365,7 +365,7 @@ function ImportServiceCard({
               </h4>
               <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
                 Existing values transfer securely. Fill in missing secrets or override a value for
-                OpenShip.
+                Workbox Cloud.
               </p>
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
                 {service.variables.map((variable) => (

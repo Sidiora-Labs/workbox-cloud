@@ -92,7 +92,7 @@
   ],
   "connection": {
     "title": "Sign in to pgAdmin4",
-    "description": "Sign in with the email and generated password below, then add any PostgreSQL server (including another Openship-deployed database's private connection URL) from the app.",
+    "description": "Sign in with the email and generated password below, then add any PostgreSQL server (including another Workbox Cloud-deployed database's private connection URL) from the app.",
     "guide": {
       "defaultMode": "public"
     },

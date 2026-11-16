@@ -120,7 +120,7 @@ describe("the emitted config", () => {
   });
 });
 
-describe("a host fronted by Openship Cloud's edge", () => {
+describe("a host fronted by Workbox Cloud's edge", () => {
   it("recognizes a free <slug>.opsh.io host and nothing else", () => {
     expect(isCloudFrontedHost("myapp.opsh.io")).toBe(true);
     expect(isCloudFrontedHost("MyApp-Web.OPSH.IO.")).toBe(true);
@@ -134,7 +134,7 @@ describe("a host fronted by Openship Cloud's edge", () => {
   });
 
   it("reads X-Real-IP, because that is the header that front overwrites", () => {
-    // CF-Connecting-IP is what the http-scope block reads, and Openship Cloud's edge
+    // CF-Connecting-IP is what the http-scope block reads, and Workbox Cloud's edge
     // does not send it — inheriting that scope is why every free-domain visitor read as
     // the edge: one rate-limit bucket for the planet, bans that ban the edge, and one
     // country for everyone.

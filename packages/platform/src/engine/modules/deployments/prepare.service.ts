@@ -256,7 +256,7 @@ export interface ProjectInfo {
   /** Compose variables the file marks mandatory that no `.env`/caller value
    *  satisfied — the wizard's list to prompt for. Absent when there are none. */
   missingRequiredEnv?: ComposeMissingVariable[];
-  /** Compose keys the file declares that Openship doesn't model — shown so the
+  /** Compose keys the file declares that Workbox Cloud doesn't model — shown so the
    *  user knows what won't carry over. Blocking ones never reach here: they
    *  refuse the scan instead. Absent when there are none. */
   unsupportedCompose?: ComposeUnsupportedField[];
@@ -326,7 +326,7 @@ export type ProjectSourceEnv = Pick<ProjectInfo, "rootEnv" | "openshipEnv">;
  * `errors` are fields the parse refused — or, for a syntax error / non-object
  * root, the whole file. `warnings` are keys it didn't recognize and skipped.
  * Two arrays rather than one list because they read differently: an unrecognized
- * key is usually a typo or a newer Openship's field, a refused one a wrong type.
+ * key is usually a typo or a newer Workbox Cloud's field, a refused one a wrong type.
  */
 export interface OpenshipConfigDiagnostics {
   errors: string[];
@@ -1311,7 +1311,7 @@ function toProjectInfo(
     if (blocking.length > 0) {
       const where = opts?.declaredCompose ? ` at "${projectRoot.rootDirectory || "."}"` : "";
       throw new ComposeConfigurationError(
-        `The Docker Compose file${where} declares options Openship can't deploy faithfully:\n` +
+        `The Docker Compose file${where} declares options Workbox Cloud can't deploy faithfully:\n` +
           describeBlockingComposeFields(blocking),
       );
     }

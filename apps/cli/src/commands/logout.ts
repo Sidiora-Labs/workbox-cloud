@@ -3,7 +3,7 @@ import { clearToken, getActiveContext, readConfig, usesEnvironmentToken } from "
 import { info, isJsonMode, ok, printJson } from "../lib/output";
 
 export const logoutCommand = new Command("logout")
-  .description("Remove the stored Openship token")
+  .description("Remove the stored Workbox Cloud token")
   .option("--context <name>", "Log out of a specific context (defaults to active)")
   .action((opts) => {
     const name: string = opts.context || getActiveContext();

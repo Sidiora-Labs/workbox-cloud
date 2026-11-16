@@ -10,7 +10,7 @@ const locks = new Map<string, Promise<unknown>>();
 export function readBlockScript(script: string) {
   const first = script.split("\n", 1)[0];
   if (!first?.startsWith(MARKER))
-    throw new Error("The sender filter was modified outside Openship; no changes were made");
+    throw new Error("The sender filter was modified outside Workbox Cloud; no changes were made");
   const result = metadata.parse(JSON.parse(first.slice(MARKER.length)));
   if (result.previous === NAME) throw new Error("Invalid sender filter chain");
   return result;

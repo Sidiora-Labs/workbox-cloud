@@ -47,7 +47,7 @@ export type InternalCall =
  *
  * The distinction decides whether the request may be repeated: internalAuth answers
  * before the handler runs, so retrying it with another token repeats nothing — while
- * `/api/system/cloud-connect` answers 401 with "Could not verify with Openship Cloud"
+ * `/api/system/cloud-connect` answers 401 with "Could not verify with Workbox Cloud"
  * AFTER exchanging a single-use PKCE code, where a retry would burn the code and the
  * rewritten message would blame the wrong thing entirely.
  *

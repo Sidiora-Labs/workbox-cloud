@@ -229,7 +229,7 @@ describe("account security through real Better Auth HTTP endpoints", () => {
     );
     const setup = await user.browser.request("/two-factor/enable", { password: PASSWORD });
     expect(setup.status).toBe(200);
-    expect(setup.data.totpURI).toMatch(/^otpauth:\/\/totp\/Openship/);
+    expect(setup.data.totpURI).toMatch(/^otpauth:\/\/totp\/Workbox%20Cloud/);
     expect(setup.data.backupCodes).toHaveLength(10);
     expect((await user.browser.request("/get-session")).data.user.twoFactorEnabled).toBe(false);
     expect(

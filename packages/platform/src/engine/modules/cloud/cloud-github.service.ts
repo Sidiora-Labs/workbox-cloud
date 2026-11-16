@@ -83,7 +83,7 @@ export async function startGithubLinkFromBridgeToken(token: string | undefined):
     const result = await beginRepositoryAuthorization({
       userId: bridge.userId, organizationId: bridge.organizationId, sessionId: session.id,
     }, install.state, "bridge");
-    // This is the only cookie issued to the browser. No Openship session moves
+    // This is the only cookie issued to the browser. No Workbox Cloud session moves
     // from a self-hosted caller into the operator's system browser.
     return {
       kind: "redirect", url: result.url, userId: bridge.userId,
@@ -115,7 +115,7 @@ export async function buildOrgScopedInstallUrl(
     expiresAt: new Date(Date.now() + 10 * 60 * 1000),
   });
   // GitHub sends an already-installed App to its settings page without a setup
-  // callback. Start on Openship so the user can explicitly claim that existing
+  // callback. Start on Workbox Cloud so the user can explicitly claim that existing
   // installation instead of getting stuck waiting for another GitHub install.
   const url = new URL("/api/cloud/github/install-callback", cloudRuntimeTarget.api);
   url.search = new URLSearchParams({ flow: "select", state }).toString();
@@ -157,13 +157,13 @@ export async function getGithubInstallSelection(
 
     const appId = Number(env.GITHUB_APP_ID);
     if (!Number.isSafeInteger(appId) || appId <= 0) {
-      throw new Error("The Openship GitHub App is not configured.");
+      throw new Error("The Workbox Cloud GitHub App is not configured.");
     }
     const available = await listGitHubInstallationsForUser(binding.userId);
     if (!available) {
       return {
         kind: "forbidden",
-        message: "GitHub authorization is missing. Start the connection again from Openship.",
+        message: "GitHub authorization is missing. Start the connection again from Workbox Cloud.",
       };
     }
     const installUrl = new URL(githubAuth.getInstallUrl());
@@ -228,7 +228,7 @@ export async function attributeGithubInstall(input: {
   }
 
   // The callback is intentionally public because GitHub redirects the browser
-  // here without an Openship session. The durable, one-shot state recovers the
+  // here without a Workbox Cloud session. The durable, one-shot state recovers the
   // exact initiating user + workspace and works across SaaS replicas/restarts.
   // Peek first; the atomic claim below consumes only after GitHub verification.
   const stateRow = await repos.githubInstallState.find(state).catch((diagnosticFailure) => { observeCaughtError(diagnosticFailure, "platform/engine/modules/cloud/cloud-github.service"); return null; });
@@ -256,7 +256,7 @@ export async function attributeGithubInstall(input: {
 
   // setup_action="request" means the user lacked admin perms on the org
   // and submitted an approval request instead of installing directly.
-  // The later installation.created webhook has no Openship workspace binding,
+  // The later installation.created webhook has no Workbox Cloud workspace binding,
   // so the user must restart the state-bound install after approval.
   if (setupAction === "request") {
     const consumed = await repos.githubInstallState.pendingApproval(state, userId, organizationId);
@@ -403,7 +403,7 @@ export async function mintOrgInstallationToken(
 
   // Resolve installationId from the workspace row. The owner user remains the
   // background actor, but must not select an installation they connected in a
-  // different Openship workspace.
+  // different Workbox Cloud workspace.
   const installation = await repos.gitInstallation.findByOrgAndOwner(organizationId, owner);
   if (!installation) {
     return { kind: "not-found", owner };

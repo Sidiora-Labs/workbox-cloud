@@ -5,11 +5,11 @@ import type { DiscoveredService } from "@repo/platform/engine/modules/migration/
 
 /**
  * GH-584: migrating a foreign compose stack failed with `already managed here by
- * project "Openship"`, unretryably, on every server running Openship itself.
+ * project "Workbox Cloud"`, unretryably, on every server running Workbox Cloud itself.
  *
  * The cause was a selection resolved by BARE SERVICE NAME against a server-wide
  * pool. A compose service name is unique only within its own project, and
- * Openship's control-plane stack has services named `api`, `dashboard`, `edge`,
+ * Workbox Cloud's control-plane stack has services named `api`, `dashboard`, `edge`,
  * `postgres`, `redis` — so migrating anything with a `postgres` matched a seventh
  * container: ours.
  *
@@ -31,7 +31,7 @@ const svc = (name: string, containerId: string | undefined, project: string): Di
     composeProject: project,
   }) as unknown as DiscoveredService;
 
-/** The reporter's host: their `dependabot` stack + Openship's own control plane. */
+/** The reporter's host: their `dependabot` stack + Workbox Cloud's own control plane. */
 const POOL: DiscoveredService[] = [
   svc("background-tasks", "c-bg", "dependabot"),
   svc("worker", "c-worker", "dependabot"),
@@ -39,7 +39,7 @@ const POOL: DiscoveredService[] = [
   svc("migration", "c-migration", "dependabot"),
   svc("postgres", "c-dependabot-pg", "dependabot"),
   svc("docker", "c-docker", "dependabot"),
-  // Openship itself, on the same box. No `openship.*` labels, so the scan leaves
+  // Workbox Cloud itself, on the same box. No `openship.*` labels, so the scan leaves
   // these in the generic candidate pool.
   svc("api", "c-openship-api", "openship"),
   svc("dashboard", "c-openship-dash", "openship"),
@@ -57,7 +57,7 @@ describe("selectDiscoveredServices — identity scoping (#584)", () => {
       names: DEPENDABOT_NAMES,
     });
     expect(got.map((s) => s.containerId)).toEqual(DEPENDABOT_IDS);
-    // The whole bug in one assertion: Openship's own postgres must not be here.
+    // The whole bug in one assertion: Workbox Cloud's own postgres must not be here.
     expect(got.map((s) => s.containerId)).not.toContain("c-openship-pg");
     expect(got).toHaveLength(6);
   });

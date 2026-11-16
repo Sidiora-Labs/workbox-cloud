@@ -26,7 +26,7 @@ their own internal logs; errors that reach an Openship control-plane adapter are
 
 ## Cloud database destination
 
-OpenShip Cloud can additionally export the same accepted sanitized snapshots,
+Workbox Cloud can additionally export the same accepted sanitized snapshots,
 correlated traces and operational facts to BytesMap. See
 [BytesMap Cloud observability](bytesmap-cloud-observability.md) for the explicit
 Cloud gate, dataset/dashboard setup, sampling and bounded delivery. This observer

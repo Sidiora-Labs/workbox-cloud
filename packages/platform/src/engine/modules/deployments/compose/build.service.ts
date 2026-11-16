@@ -445,7 +445,7 @@ export async function buildComposeImages(opts: {
   snapshot: BuildConfigSnapshotLike;
   buildSessionId: string;
   /** Project-scoped deployment env only. Compose image interpolation must not
-   *  accidentally consume Openship's injected CI/build helper variables. */
+   *  accidentally consume Workbox Cloud's injected CI/build helper variables. */
   composeInterpolationEnv: Record<string, string>;
   buildEnvVars: Record<string, string>;
   buildResources: ResourceConfig;

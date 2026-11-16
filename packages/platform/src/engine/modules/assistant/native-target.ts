@@ -33,7 +33,7 @@ export type AssistantClientFactory = (
   connection: AssistantConnectionRow,
 ) => Promise<AssistantNativeClient>;
 
-/** Mindwire owns native auth and daemon startup; OpenShip supplies scope and private workspaces. */
+/** Mindwire owns native auth and daemon startup; Workbox Cloud supplies scope and private workspaces. */
 
 /**
  * #1614 — on macOS, Claude Code stores its login in the keychain, which macOS
@@ -158,7 +158,7 @@ export async function createAssistantClient(
   // daemon or inspect a native harness unless the SDK implements this contract.
   const profileSupported = target.profileVersion >= 1;
   const updateMessage =
-    "Update the Mindwire SDK to connect local agents. Reinstall OpenShip dependencies and restart the app.";
+    "Update the Mindwire SDK to connect local agents. Reinstall Workbox Cloud dependencies and restart the app.";
   const probes = new Map<AssistantProvider, { result: HarnessProbe; checked: number }>();
   const probing = new Map<AssistantProvider, Promise<HarnessProbe>>();
   async function probe(provider: AssistantProvider) {

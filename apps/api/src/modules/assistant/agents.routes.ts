@@ -29,7 +29,7 @@ r.get(
     tag: "settings:read",
     mcp: {
       description:
-        "List your saved specialist agents and their task conversations in this workspace. Agents perform specific scoped tasks and can be selected by automations. The general OpenShip assistant remains separate. Native provider credentials are never returned.",
+        "List your saved specialist agents and their task conversations in this workspace. Agents perform specific scoped tasks and can be selected by automations. The general Workbox Cloud assistant remains separate. Native provider credentials are never returned.",
     },
   },
   async (c) => c.json({ data: await agents.list(ctx(c)) }),

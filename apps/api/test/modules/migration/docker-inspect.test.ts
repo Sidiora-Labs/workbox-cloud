@@ -89,7 +89,7 @@ const REDIS: DockerContainerDetail = {
   composeService: undefined,
 };
 
-it.each(["com.docker.swarm.service.name", "com.docker.swarm.service.id", "com.docker.swarm.task.id", "com.docker.stack.namespace"])("refuses %s tasks as standalone import candidates, even with Openship labels", label => {
+it.each(["com.docker.swarm.service.name", "com.docker.swarm.service.id", "com.docker.swarm.task.id", "com.docker.stack.namespace"])("refuses %s tasks as standalone import candidates, even with Workbox Cloud labels", label => {
   expect(() => toDiscoveredService({ ...REDIS, labels: { [label]: "swarm-owner", "openship.project": "proj_old" } }, undefined)).toThrow(expect.objectContaining({ code: "SWARM_SERVICE_OWNED" }));
   expect(toDiscoveredService(REDIS, undefined).name).toBe("cache");
 });
@@ -170,7 +170,7 @@ describe("reconcileStack", () => {
   });
 
   it("does not read another stack's declaration for a same-named service", () => {
-    // The #584 host shape: Openship's own stack and the user's stack both declare a
+    // The #584 host shape: Workbox Cloud's own stack and the user's stack both declare a
     // service called `postgres`. With a flat name-keyed map the first file read won for
     // BOTH, so the user's container was reconciled against OUR declaration — importing
     // our depends_on (and our declared-env set, which decides env provenance).

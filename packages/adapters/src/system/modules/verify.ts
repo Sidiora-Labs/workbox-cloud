@@ -1,9 +1,9 @@
 /**
  * Verify-before-execute gate for the native-module migration catalog.
  *
- * Trust model (asymmetric): Openship holds the ed25519 PRIVATE key (CI/offline);
+ * Trust model (asymmetric): Workbox Cloud holds the ed25519 PRIVATE key (CI/offline);
  * only PUBLIC keys are baked here. A signed catalog can therefore be authored
- * only by Openship, while any self-hosted instance can verify it — a compromised
+ * only by Workbox Cloud, while any self-hosted instance can verify it — a compromised
  * box can read the pubkeys but cannot forge a catalog the rest of the fleet would
  * execute as root. This is the apt `signed-by=` trust bootstrap generalized to
  * our own catalog.

@@ -308,7 +308,7 @@ export const SYSTEM_JOB_DEFS: SystemJobDef[] = [
   {
     key: "edge:target-verify",
     label: "Free-domain target verification",
-    // Openship Cloud proves target control ONCE and re-probes the SAME token before
+    // Workbox Cloud proves target control ONCE and re-probes the SAME token before
     // the 90-day expiry, so the standing job is to still be answering then. Deploys
     // re-assert the token already; this covers the box that deploys nothing for three
     // months and loses its host state dir in between — the failure that otherwise
@@ -437,7 +437,7 @@ export const SYSTEM_JOB_DEFS: SystemJobDef[] = [
     // writes at all on a tick where nothing is wrong.
     defaultCron: "* * * * *",
     // Enabled by default on supported installations. Desktop checks run while
-    // Openship is running; saved disable/schedule choices survive reconciliation.
+    // Workbox Cloud is running; saved disable/schedule choices survive reconciliation.
     onDisabled: async () => {
       const { stopAllContainerEventWatchers } = await import("../monitoring/container-events");
       await stopAllContainerEventWatchers();

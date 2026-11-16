@@ -48,7 +48,7 @@ const machineName = resolveMachineName();
 export async function getSystemInfo(): Promise<SystemInfo> {
   // authMode tells the dashboard which login flow to use:
   //   "none"   → zero-auth, auto-provisioned local user (desktop default)
-  //   "cloud"  → external auth on Openship Cloud
+  //   "cloud"  → external auth on Workbox Cloud
   //   "local"  → local Better Auth (self-hosted server / SaaS)
   // authMode comes from getAuthMode() — the ONE canonical resolver — never from a
   // local re-derivation. This endpoint used to compute it itself off
@@ -57,13 +57,13 @@ export async function getSystemInfo(): Promise<SystemInfo> {
   // zero-auth-guard.ts documents what happened last time two of them drifted).
   // It went stale immediately: it ignored OPENSHIP_REQUIRE_AUTH /
   // OPENSHIP_PUBLIC_URL, and it kept handing the dashboard a stale desktop
-  // "cloud" — so the app rendered the Openship Cloud sign-in screen while the API
+  // "cloud" — so the app rendered the Workbox Cloud sign-in screen while the API
   // itself required no login at all. This is the value that decides which login
   // flow the dashboard draws, so it has to agree with the API's real behaviour.
   const authMode = await getAuthMode();
 
   // productMode decides which SHELL the dashboard draws (full platform vs the
-  // Openship Mail rail). Resolved here rather than from the raw env var below so
+  // Workbox Cloud Mail rail). Resolved here rather than from the raw env var below so
   // the operator's instance_settings toggle and the CLOUD_MODE rule live in one
   // place — see lib/product-mode.ts for why this file must not re-derive it.
   const productMode = await resolveProductMode();
@@ -90,7 +90,7 @@ export async function getSystemInfo(): Promise<SystemInfo> {
   return {
     selfHosted: !env.CLOUD_MODE,
     deployMode: env.DEPLOY_MODE,
-    // Server-host ("VPS") mode: OpenShip is installed ON a server (docker/bare
+    // Server-host ("VPS") mode: Workbox Cloud is installed ON a server (docker/bare
     // self-host, not the desktop app, not cloud SaaS). In this mode the host is
     // itself a deployable target and is auto-registered as an isLocal server.
     isServerHost: !env.CLOUD_MODE && env.DEPLOY_MODE !== "desktop",

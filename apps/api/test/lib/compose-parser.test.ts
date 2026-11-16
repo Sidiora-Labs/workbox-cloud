@@ -538,7 +538,7 @@ services:
     expect(service?.buildArgs).toEqual({ UNSET_MAP: null });
   });
 
-  it("blocks Compose build behavior Openship cannot reproduce", () => {
+  it("blocks Compose build behavior Workbox Cloud cannot reproduce", () => {
     const parsed = parseComposeFile(`
 services:
   api:
@@ -1285,7 +1285,7 @@ describe("parseComposeFile — shared namespaces (network_mode / pid)", () => {
 
   it("reports `host` as BLOCKING and stores nothing", () => {
     // The refusal this feature is built around: importing it anyway deploys a
-    // container that bypasses the edge and can reach Openship's own loopback API.
+    // container that bypasses the edge and can reach Workbox Cloud's own loopback API.
     // Blocking (not a warning) because there is nothing the wizard could collect
     // to fix it — the compose file has to change.
     const parsed = parseComposeFile(svc("    network_mode: host\n"));
@@ -1669,7 +1669,7 @@ services:
 
 /**
  * GPU. Docker has no "GPU" field: the container only sees a card if the CREATE carried a device
- * request, and OpenShip used to drop every spelling of it (`devices`/`runtime` were reported as not
+ * request, and Workbox Cloud used to drop every spelling of it (`devices`/`runtime` were reported as not
  * modeled, `deploy.resources.reservations` was never read). So a GPU service deployed fine, ran, and
  * silently fell back to CPU.
  */

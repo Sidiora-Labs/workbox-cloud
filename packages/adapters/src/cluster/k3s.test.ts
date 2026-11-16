@@ -180,7 +180,7 @@ with tempfile.TemporaryDirectory() as folder:
     try:
         ns['owner']()
         raise AssertionError('adopted another runtime')
-    except RuntimeError as error: assert 'different OpenShip runtime' in str(error)
+    except RuntimeError as error: assert 'different Workbox Cloud runtime' in str(error)
 `);
   });
   it("keeps API and kubelet on private addresses and leaves Edge and storage ownership separate", () => {

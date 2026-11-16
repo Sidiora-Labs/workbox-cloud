@@ -703,7 +703,7 @@ export function AutomationEditor({
                   </div>
                   {!channels.some((c) => c.enabled && c.verified) && (
                     <p className="py-3 text-sm text-muted-foreground">
-                      Connect a notification channel to get updates outside OpenShip.
+                      Connect a notification channel to get updates outside Workbox Cloud.
                     </p>
                   )}
                   <p className="mt-3 text-xs leading-5 text-muted-foreground">

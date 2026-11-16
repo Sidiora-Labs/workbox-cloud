@@ -1,7 +1,7 @@
 /**
  * A yes-with-a-value or a no-with-a-reason — and deliberately nothing else.
  *
- * Every "can Openship do X on this host" answer in the provisioning path used to have a
+ * Every "ca Workbox Cloud do X on this host" answer in the provisioning path used to have a
  * third shape: `undefined`, an empty array, a miss on a `Record<string, T>` lookup. That
  * third shape is what a call site reads as "nothing to do here", which is how a host
  * outside a hardcoded allowlist came to finish provisioning with no dockerd and no error

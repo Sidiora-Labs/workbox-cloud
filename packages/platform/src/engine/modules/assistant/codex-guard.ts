@@ -14,7 +14,7 @@ const exited = new Promise(resolve => { child.on('exit', code => resolve(code ??
 const stop = () => child.kill('SIGTERM')
 process.on('SIGTERM', stop)
 process.on('SIGINT', stop)
-const deny = (message) => process.stdout.write(JSON.stringify({ jsonrpc: '2.0', id: message.id, error: { code: -32601, message: 'Unavailable in OpenShip scoped conversations.' } }) + '\n')
+const deny = (message) => process.stdout.write(JSON.stringify({ jsonrpc: '2.0', id: message.id, error: { code: -32601, message: 'Unavailable in Workbox Cloud scoped conversations.' } }) + '\n')
 function restrict(message) {
   if (['config/value/write', 'config/batchWrite', 'command/exec', 'fs/readFile', 'fs/writeFile'].includes(message.method)) return false
   if (!['thread/start', 'thread/resume', 'thread/fork'].includes(message.method)) return true

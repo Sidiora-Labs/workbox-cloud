@@ -119,7 +119,7 @@ export function AssistantRail({
           >
             <AgentAvatar className="size-9 shrink-0" />
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-sm font-medium">OpenShip assistant</span>
+              <span className="block truncate text-sm font-medium">Workbox Cloud assistant</span>
               <span className="mt-1 block truncate text-xs text-muted-foreground">
                 {active(general[0])
                   ? "Working…"

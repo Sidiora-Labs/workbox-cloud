@@ -5,14 +5,14 @@ description: Connect GitHub accounts, repositories, and App sources.
 
 import { TypeTable } from 'fumadocs-ui/components/type-table';
 
-The GitHub API connects an Openship instance to GitHub — via the Openship GitHub App, an OAuth account,
+The GitHub API connects a Workbox Cloud instance to GitHub — via the Workbox Cloud GitHub App, an OAuth account,
 or the local `gh` CLI — and then lets you browse the accounts, repositories, branches and files you can
 deploy from. It also manages the push webhooks that drive [auto-deploy](/docs/guides/deploy-from-github).
 In the dashboard this is the **GitHub** connection card in Settings and the repo picker in the deploy wizard.
 
 <Callout title="Both cloud and self-hosted" type="info">
 This module is mounted on every instance. The local identity routes and every `/api/github/sources` route
-are self-hosted only and return 404 on Openship Cloud. Source management additionally requires the active
+are self-hosted only and return 404 on Workbox Cloud. Source management additionally requires the active
 workspace's `owner` role.
 </Callout>
 
@@ -22,7 +22,7 @@ workspace's `owner` role.
 round trip, filtered to the accounts and repos your member role is allowed to see.
 `GET /api/github/status` is narrower — the Settings card's data source — returning `{ state, accounts,
 installUrl, cloudUnreachable, customSourcesConfigured }`. The last field tells clients that App lifecycle
-controls belong to the workspace source manager rather than the legacy Openship App connection.
+controls belong to the workspace source manager rather than the legacy Workbox Cloud App connection.
 
 <Tabs items={['SDK', 'REST API']} groupId="api-transport" persist>
 <Tab value="SDK">
@@ -56,11 +56,11 @@ reacts to the `flow` field:
 - `{ connected: false, flow: "terminal", command, message }` — run `command` (e.g. `gh auth login`) yourself.
 
 The optional body field `source` (`"oauth"` | `"cli"`) forces a specific path when the dashboard shows both
-the "Connect Openship App" and "Use gh CLI" buttons; omit it to let the server pick based on the instance's
+the "Connect Workbox Cloud App" and "Use gh CLI" buttons; omit it to let the server pick based on the instance's
 auth mode.
 
-On Openship Cloud, repository authorization is separate from the GitHub identity used to sign in.
-The same GitHub user can authorize repository access for multiple Openship accounts. This never moves
+On Workbox Cloud, repository authorization is separate from the GitHub identity used to sign in.
+The same GitHub user can authorize repository access for multiple Workbox Cloud accounts. This never moves
 or disconnects another account's sign-in link. Existing installations are discovered through that user's
 GitHub authorization and verified again when selected.
 
@@ -100,9 +100,9 @@ curl -X POST "$OPENSHIP_URL/api/github/connect" \
 POST /api/github/disconnect
 ```
 
-Body (or `?source=`): `source` is `"oauth"`, `"cli"`, or `"all"` (default `"all"`). This drops Openship's
+Body (or `?source=`): `source` is `"oauth"`, `"cli"`, or `"all"` (default `"all"`). This drops Workbox Cloud's
 stored credentials for that source; it does **not** uninstall the GitHub App — that happens only when you
-remove it from github.com (Openship reacts to the uninstall webhook).
+remove it from github.com (Workbox Cloud reacts to the uninstall webhook).
 
 On Cloud, disconnecting `oauth` clears repository authorization and cancels its pending connection
 attempts. It preserves the account's GitHub sign-in method and any separately saved personal token.
@@ -244,7 +244,7 @@ curl "$OPENSHIP_URL/api/github/repos/acme/my-app/file?file=package.json&branch=m
 
 ## Webhooks
 
-`POST /api/github/repos/:owner/:repo/webhooks` registers the Openship push webhook on the repo (or reuses an
+`POST /api/github/repos/:owner/:repo/webhooks` registers the Workbox Cloud push webhook on the repo (or reuses an
 existing one) so pushes trigger auto-deploy. It takes **no request body** — the target repo comes from the
 path. `GET` lists the repo's hooks. To remove one, `DELETE` with the hook id:
 
@@ -262,7 +262,7 @@ DELETE /api/github/repos/:owner/:repo/webhooks
 
 `GET /api/github/repos/:owner/:repo/clone-token` mints a short-lived (under an hour) GitHub App installation
 token and returns `{ token, cloneUrl, command }` — a ready-to-run `git clone`. This is the same credential
-the build pipeline clones with, and is available only when the Openship GitHub App is installed for the owner.
+the build pipeline clones with, and is available only when the Workbox Cloud GitHub App is installed for the owner.
 
 ## Errors
 
@@ -273,11 +273,11 @@ CLI) is configured. Connect first with `POST /api/github/connect`, then retry.
 
 <Callout title="409 — no installation token" type="warn">
 `clone-token` needs a GitHub App installation for the owner. In `gh` CLI or PAT modes there is no
-installation token, so this route 409s. Install the Openship GitHub App on that account to use clone tokens.
+installation token, so this route 409s. Install the Workbox Cloud GitHub App on that account to use clone tokens.
 </Callout>
 
 <Callout title="503 — cloud_unreachable" type="error">
-On a self-hosted instance connected to Openship Cloud, GitHub OAuth and App-install URLs are resolved
+On a self-hosted instance connected to Workbox Cloud, GitHub OAuth and App-install URLs are resolved
 through openship.io. If the SaaS is unreachable, `connect` returns 503 rather than a dead install link. Check
 network / the cloud connection in Settings, then retry.
 </Callout>

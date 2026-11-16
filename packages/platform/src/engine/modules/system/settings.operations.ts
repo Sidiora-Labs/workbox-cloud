@@ -185,7 +185,7 @@ export async function updateSettings(ctx: ExecutionContext, body: UpdateInstance
   }
   if (body.autoUpdateInfra !== undefined) patch.autoUpdateInfra = Boolean(body.autoUpdateInfra);
   if (body.autoScanInfra !== undefined) patch.autoScanInfra = Boolean(body.autoScanInfra);
-  // Openship Mail. `null` clears the override so OPENSHIP_PRODUCT governs again —
+  // Workbox Cloud Mail. `null` clears the override so OPENSHIP_PRODUCT governs again —
   // that's a meaningful state, not an absent field, so it's accepted explicitly.
   if (body.productMode !== undefined) {
     if (body.productMode !== null && !isProductMode(body.productMode)) {
@@ -193,7 +193,7 @@ export async function updateSettings(ctx: ExecutionContext, body: UpdateInstance
     }
     patch.productMode = body.productMode;
   }
-  // Host control (#527): may OpenShip deploy to the machine it runs on? `null`
+  // Host control (#527): may Workbox Cloud deploy to the machine it runs on? `null`
   // clears the override so OPENSHIP_HOST_CONTROL governs again — a meaningful
   // state, accepted explicitly like productMode.
   //

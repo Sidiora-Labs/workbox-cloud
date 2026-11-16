@@ -3,7 +3,7 @@ import { ENV_MASK } from "@repo/core";
 
 /**
  * DNS credentials now live in the generic `credential` table — `dns_credential` was one of
- * three places Openship kept a third-party secret. These cases still describe DNS
+ * three places Workbox Cloud kept a third-party secret. These cases still describe DNS
  * behaviour (zone matching, auth-failure handling, "re-connect" on an undecryptable token);
  * only the store underneath them changed, so the mock moved with it.
  */
@@ -558,7 +558,7 @@ describe("releaseRecords", () => {
   });
 
   it("reports a reason instead of throwing when the provider is unreachable", async () => {
-    // A domain must stay removable from Openship when Cloudflare is down.
+    // A domain must stay removable from Workbox Cloud when Cloudflare is down.
     provider.listRecords.mockRejectedValue(new DnsApiError("cloudflare", 503, "unavailable"));
 
     const out = await releaseRecords("org_1", "example.com", ["example.com"]);

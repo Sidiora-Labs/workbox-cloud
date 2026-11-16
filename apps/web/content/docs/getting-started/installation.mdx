@@ -1,9 +1,9 @@
 ---
 title: Installation
-description: Every way to get Openship running — the one-line install script, the npm CLI, the desktop app, or a Docker Compose stack.
+description: Every way to get Workbox Cloud running — the one-line install script, the npm CLI, the desktop app, or a Docker Compose stack.
 ---
 
-Openship has a few different front doors, and they all lead to the same place. Think of it like getting a
+Workbox Cloud has a few different front doors, and they all lead to the same place. Think of it like getting a
 new appliance: you can grab the quick-start cable (the install script), unpack it with tools you already
 own (npm), buy the ready-to-use boxed version (the desktop app), or wire it into your workshop for good
 (Docker Compose). Pick the one that fits you — you can always switch later.
@@ -12,7 +12,7 @@ own (npm), buy the ready-to-use boxed version (the desktop app), or wire it into
 - **Just want to try it on your own machine, the fast way?** Use the **install script**.
 - **Already have Node.js and npm?** Use the **npm** CLI.
 - **Want a clickable app with no terminal at all?** Get the **desktop app**.
-- **Running a VPS or server and want it always on? (Recommended)** Install with **Docker** — either the **Docker Compose** stack below or the CLI (`openship up`), which **defaults to Docker/Compose on a Linux VPS**. A **bare** install (no Docker, embedded database) is also fully supported — see [Compose vs bare](#run-openship).
+- **Running a VPS or server and want it always on? (Recommended)** Install with **Docker** — either the **Docker Compose** stack below or the CLI (`openship up`), which **defaults to Docker/Compose on a Linux VPS**. A **bare** install (no Docker, embedded database) is also fully supported — see [Compose vs bare](#run-workbox-cloud).
 </Callout>
 
 ## Install
@@ -23,7 +23,7 @@ own (npm), buy the ready-to-use boxed version (the desktop app), or wire it into
 
 The fastest way. One command installs the `openship` command as a self-contained, checksum-verified
 bundle that runs under **Node** — it uses your system Node when it's recent enough and otherwise fetches
-an official Node build just for Openship, never touching your global tools. No Node or npm setup required.
+an official Node build just for Workbox Cloud, never touching your global tools. No Node or npm setup required.
 
 ```bash
 curl -fsSL https://get.openship.io | sh
@@ -42,11 +42,11 @@ prefix sets the variable only for `curl`; the piped `sh` never sees it.)
 </Callout>
 
 <Callout title="Can't find the openship command afterward?" type="info">
-The installer adds Openship's bin folder to your `PATH`. If your shell still can't find `openship`,
+The installer adds Workbox Cloud's bin folder to your `PATH`. If your shell still can't find `openship`,
 open a new terminal — or on macOS/Linux run `export PATH="$HOME/.openship/bin:$PATH"` — and try again.
 </Callout>
 
-When it finishes you'll have the `openship` command. Now jump to [Run Openship](#run-openship) below.
+When it finishes you'll have the `openship` command. Now jump to [Run Workbox Cloud](#run-workbox-cloud) below.
 
 </Tab>
 
@@ -65,7 +65,7 @@ yarn global add openship  # yarn
 bun add -g openship       # bun
 ```
 
-That gives you the same `openship` command as the install script. Head to [Run Openship](#run-openship).
+That gives you the same `openship` command as the install script. Head to [Run Workbox Cloud](#run-workbox-cloud).
 
 <Callout title="On an older Node? The CLI offers to fix it" type="info">
 This is the one install path that runs on **your** Node — the install script above resolves its
@@ -73,7 +73,7 @@ own (system Node when it's 22+, otherwise it downloads one).
 
 If you run `openship` on something older, it doesn't just refuse. It first looks for a Node 22 this
 machine has already downloaded and quietly uses that; if there isn't one, it offers to fetch an
-official Node 22 (~50 MB, checksum-verified) into `~/.openship/runtime` and use it **for Openship
+official Node 22 (~50 MB, checksum-verified) into `~/.openship/runtime` and use it **for Workbox Cloud
 only** — your system Node is left exactly as it is. Later runs pick it up automatically, so you're
 asked once.
 
@@ -214,7 +214,7 @@ self-hosting, use `docker/docker-compose.yml` above (or just `openship up`).
 
 </Tabs>
 
-## Run Openship
+## Run Workbox Cloud
 
 If you installed the CLI (the install script or npm), the quickest start is the **guided setup** — run:
 
@@ -233,7 +233,7 @@ openship up
 ```
 
 <Callout title="Compose vs bare — picked automatically" type="info">
-However you start it, on **Linux with Docker** Openship installs the container stack (Postgres, Redis, API,
+However you start it, on **Linux with Docker** Workbox Cloud installs the container stack (Postgres, Redis, API,
 dashboard, and the OpenResty edge on :80/:443 — the same stack as the Docker Compose tab above), which can
 **host your deployed apps on this box** with domains and TLS. This is the **recommended mode for a VPS** and the
 CLI default there. Everywhere else (macOS, Windows, or Linux without Docker) it installs a single lightweight
@@ -241,7 +241,7 @@ process with a built-in database — an always-on control plane that deploys app
 Both modes are fully supported; to force the choice, run `openship up --compose` or `openship up --bare`.
 </Callout>
 
-Either way, Openship runs as a **background service that starts on boot and restarts itself if it crashes** —
+Either way, Workbox Cloud runs as a **background service that starts on boot and restarts itself if it crashes** —
 like a delivery truck that always comes back to the depot. It runs the API on `:4000` and the dashboard on
 `:3001`, backed by a built-in database in bare mode (or Postgres + Redis in Compose mode). A CLI instance
 always requires a login — the admin you create during `openship` setup, or the first account you register in
@@ -251,7 +251,7 @@ the dashboard when you run `openship up` directly.
 openship stop              # stop the service — it won't restart or come back on reboot
 openship up --foreground   # run it attached to this terminal instead (a one-off; stop with Ctrl-C)
 openship up --no-ui        # run the API only, without the dashboard
-openship uninstall         # remove Openship + its data (see below)
+openship uninstall         # remove Workbox Cloud + its data (see below)
 ```
 
 ### Host control (hardening)
@@ -299,15 +299,15 @@ sandbox the control plane. Treat dashboard access as host access, and don't expo
 you trust.
 </Callout>
 
-### Removing Openship
+### Removing Workbox Cloud
 
-`openship stop` halts Openship but keeps everything — the database, issued certificates and edge config all
+`openship stop` halts Workbox Cloud but keeps everything — the database, issued certificates and edge config all
 survive, so `openship up` picks up where it left off. To remove it:
 
 ```bash
 openship uninstall                 # asks first; removes the stack, its data, its images and ~/.openship
 openship uninstall --keep-data     # remove the running stack only, keep the database + certificates
-openship uninstall --keep-images   # don't delete the Openship container images
+openship uninstall --keep-images   # don't delete the Workbox Cloud container images
 openship uninstall --yes           # skip the confirmation (scripts)
 ```
 
@@ -315,11 +315,11 @@ Two things it deliberately leaves alone, because a self-hosted box is usually sh
 
 - **Your deployed apps keep running.** Removing the control plane doesn't stop the containers it created —
   `docker ps` still shows them. Delete the projects first if you want those gone too.
-- **Nothing is pruned.** Only Openship's own three images (by exact tag) and this stack's volumes are removed;
+- **Nothing is pruned.** Only Workbox Cloud's own three images (by exact tag) and this stack's volumes are removed;
   your other images, volumes and containers are untouched.
 
-<Callout title="If Openship took over ports 80/443" type="warn">
-When Openship migrated an existing proxy during install, uninstalling frees those ports but can't always
+<Callout title="If Workbox Cloud took over ports 80/443" type="warn">
+When Workbox Cloud migrated an existing proxy during install, uninstalling frees those ports but can't always
 restart what was there before — a completed takeover leaves no record of it. Re-enable your proxy yourself
 (`sudo systemctl enable --now nginx`, or caddy / apache2). Its config was never modified.
 </Callout>
@@ -351,10 +351,10 @@ interactive `openship` wizard). Add `--non-interactive` (alias `--yes`) plus the
 fleets.
 
 The admin bootstrap and the `byo` / `free` / `none` domain steps run on **both** install methods (Compose and
-bare). The one difference is a managed **custom** domain (Openship issues the Let's Encrypt cert itself), which is
+bare). The one difference is a managed **custom** domain (Workbox Cloud issues the Let's Encrypt cert itself), which is
 wired only for the bare install — see below.
 
-**Bare install** (`--bare`, embedded DB, no Docker) — Openship manages the host's OpenResty, so `--domain-kind
+**Bare install** (`--bare`, embedded DB, no Docker) — Workbox Cloud manages the host's OpenResty, so `--domain-kind
 custom` provisions the cert end-to-end:
 
 ```bash
@@ -366,7 +366,7 @@ OPENSHIP_ADMIN_PASSWORD='a-strong-password' openship up --bare --non-interactive
 
 **Compose install** (the default on Linux with Docker) — the edge runs as a container, and takes every domain kind
 the bare install does, including `custom`. If an existing proxy holds `:80/:443`, `--edge` pre-answers what to do
-with it (`migrate` imports its sites into Openship's edge first; `takeover` stops it and its sites stop serving):
+with it (`migrate` imports its sites into Workbox Cloud's edge first; `takeover` stops it and its sites stop serving):
 
 ```bash
 OPENSHIP_ADMIN_PASSWORD='a-strong-password' openship up --non-interactive \
@@ -379,11 +379,11 @@ OPENSHIP_ADMIN_PASSWORD='a-strong-password' openship up --non-interactive \
   `--admin-password` or, preferably, the **`OPENSHIP_ADMIN_PASSWORD`** env var (keeps it out of your shell
   history). Idempotent: re-running resets the existing admin's password instead of failing. Works on both methods.
 - **Domain** — `--domain-kind`:
-  - `byo` — front Openship with your own reverse proxy (`--hostname`, or derived from `--public-url`). Both methods.
-  - `custom` — Openship's edge issues a Let's Encrypt cert for `--hostname`; `--acme-email` and
+  - `byo` — front Workbox Cloud with your own reverse proxy (`--hostname`, or derived from `--public-url`). Both methods.
+  - `custom` — Workbox Cloud's edge issues a Let's Encrypt cert for `--hostname`; `--acme-email` and
     `--edge migrate|takeover|cancel` pre-answer the `:80/:443` takeover. Both methods: the API picks the host
     OpenResty or the container edge from `OPENSHIP_EDGE_MODE`, so the CLI makes the same calls either way.
-  - `free` — a `<slug>.opsh.io` subdomain (`--slug`). **Requires the box to already be connected to Openship
+  - `free` — a `<slug>.opsh.io` subdomain (`--slug`). **Requires the box to already be connected to Workbox Cloud
     Cloud** (the free-domain connect is an interactive browser step) — connect first, then run the headless
     install, or use `byo`.
   - `none` (default when no domain flags) — a private box with no public domain.
@@ -407,15 +407,15 @@ Or check the API's health straight from the terminal:
 openship status
 ```
 
-## Openship Cloud
+## Workbox Cloud
 
-Don't want to run a server at all? [Sign up for Openship Cloud](https://app.openship.io) — the same platform,
+Don't want to run a server at all? [Sign up for Workbox Cloud](https://app.openship.io) — the same platform,
 fully managed for you.
 
 ## Next steps
 
 <Cards>
-  <Card title="Deploy your first app" href="/docs/getting-started/first-deployment" description="Go from an installed Openship to a live, running project." />
+  <Card title="Deploy your first app" href="/docs/getting-started/first-deployment" description="Go from an installed Workbox Cloud to a live, running project." />
   <Card title="Quickstart" href="/docs/getting-started/quickstart" description="The shortest path from zero to a deployed app." />
   <Card title="Deploy from GitHub" href="/docs/guides/deploy-from-github" description="Connect a repository and ship it — click-by-click or one command." />
 </Cards>

@@ -97,7 +97,7 @@ function signHs256Jwt(secret: string, role: string): string {
  *
  * `unlisted` apps are dropped here and only here: they stay installable by id and
  * their wizard still resolves (`catalogEntry` → `getTemplateForOrg`), they just
- * don't get a card. That's how webmail rides along under Openship Mail instead of
+ * don't get a card. That's how webmail rides along under Workbox Cloud Mail instead of
  * sitting beside it as a second, near-identical tile.
  */
 export async function getAppCatalog(ctx: RequestContext) {
@@ -126,8 +126,8 @@ export async function getAppCatalog(ctx: RequestContext) {
     custom: !!t.custom,
     // Not installable this version → dashboard dims it + blocks the click.
     comingSoon: !t.available,
-    // Needs a newer Openship than this instance → dashboard shows a guided
-    // "Requires Openship ≥ X" state; install is refused server-side too.
+    // Needs a newer Workbox Cloud than this instance → dashboard shows a guided
+    // "Requires Workbox Cloud ≥ X" state; install is refused server-side too.
     requiresUpdate: t.requiresUpdate,
     updateAvailable: t.updateAvailable,
     // Exposable endpoints (http/tcp) — parity with the in-package template the
@@ -374,15 +374,15 @@ export async function installApp(
   const template = await getTemplateForOrg(ctx.organizationId, input.templateId);
   if (!template) throw new Error("unknown-app-template");
 
-  // Version gate: an app needing a newer Openship isn't installable here. Refuse
-  // with a guided message (mirrors the dashboard's "Requires Openship ≥ X" card)
+  // Version gate: an app needing a newer Workbox Cloud isn't installable here. Refuse
+  // with a guided message (mirrors the dashboard's "Requires Workbox Cloud ≥ X" card)
   // so a direct API call can't bypass it.
   if (template.requiresUpdate) {
     const v = template.requiresUpdate.minVersion;
     throw new Error(
       v
-        ? `This app requires Openship ${v} or newer. Update your instance to install it.`
-        : `This app requires a newer version of Openship. Update your instance to install it.`,
+        ? `This app requires Workbox Cloud ${v} or newer. Update your instance to install it.`
+        : `This app requires a newer version of Workbox Cloud. Update your instance to install it.`,
     );
   }
 

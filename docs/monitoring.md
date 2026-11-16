@@ -324,7 +324,7 @@ reports the rollback failure and does not reload a partially restored configurat
 
 ### Free `*.opsh.io` domains
 
-A free domain is served by Openship Cloud's own edge, which proxies to your box on plain :80
+A free domain is served by Workbox Cloud's own edge, which proxies to your box on plain :80
 and names the visitor in `X-Real-IP` — a different header from the Cloudflare path, and nginx
 allows one `real_ip_header` per config scope. So those vhosts (and only those) carry their own
 `realip` block, emitted inside the `server { }` by `registerRoute`.
@@ -344,7 +344,7 @@ generated-config fix applying to nothing.
 
 ---
 
-## On Openship Cloud
+## On Workbox Cloud
 
 On the SaaS, traffic analytics live at Oblien's edge and are read through on demand —
 never scraped into a local database. Both the `analytics:scrape` and

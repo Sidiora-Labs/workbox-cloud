@@ -221,7 +221,7 @@ describe("cloud GitHub App installation attribution", () => {
 
     await expect(attributeGithubInstall(callbackInput)).resolves.toEqual({
       kind: "forbidden",
-      message: "You no longer have access to the Openship workspace that started this install.",
+      message: "You no longer have access to the Workbox Cloud workspace that started this install.",
     });
     expect(h.stateFailure).toHaveBeenCalledWith("nonce", "user_1", "org_1", expect.stringContaining("no longer have access"));
     expect(h.verify).not.toHaveBeenCalled();

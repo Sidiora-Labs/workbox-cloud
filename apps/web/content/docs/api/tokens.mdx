@@ -5,7 +5,7 @@ description: Create scoped access tokens and manage MCP client consent.
 
 import { TypeTable } from 'fumadocs-ui/components/type-table';
 
-The Tokens API manages the credentials that authenticate you to Openship: **personal access tokens** (PATs)
+The Tokens API manages the credentials that authenticate you to Workbox Cloud: **personal access tokens** (PATs)
 for the CLI and direct API calls, and the **MCP client** bindings created when an AI assistant connects over
 OAuth. In the dashboard this is the **Settings → Access** area; from the terminal it's the
 [`openship token`](/docs/cli/access) command. Every route is self-scoped — you only ever see and manage your
@@ -62,7 +62,7 @@ Send **exactly one** of `grants` (scoped) or `fullAccess: true` (unscoped). An e
 `grants` with no `fullAccess` returns `400 TOKEN_SCOPE_REQUIRED`; sending both returns
 `400 AMBIGUOUS_TOKEN_SCOPE`.
 
-Openship used to treat an empty `grants` as full access. That made "I want no limits" and "my scoped
+Workbox Cloud used to treat an empty `grants` as full access. That made "I want no limits" and "my scoped
 selection came out empty" the same request — and it failed open for the dangerous one, so a caller
 that meant to restrict a token could silently receive full access. Intent is now explicit.
 </Callout>
@@ -153,8 +153,8 @@ to get valid IDs.
 
 ## MCP clients
 
-When an AI assistant connects to Openship over OAuth, the consent page records what that client is allowed to
-do, then Openship issues it scoped access tokens that run through the **same** scoped-principal path as a PAT.
+When an AI assistant connects to Workbox Cloud over OAuth, the consent page records what that client is allowed to
+do, then Workbox Cloud issues it scoped access tokens that run through the **same** scoped-principal path as a PAT.
 These routes back that flow and the **Settings → Access → Connected clients** list.
 
 ### Authorize a client

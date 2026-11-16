@@ -197,7 +197,7 @@ for conf in /etc/letsencrypt/renewal/*.conf; do
   [ -e "$conf" ] || continue
   lineage=$(basename "$conf" .conf)
   if [ ! "/etc/letsencrypt/live/$lineage/fullchain.pem" -ef ${sq(`/etc/letsencrypt/live/${hostname}/fullchain.pem`)} ]; then
-    echo 'The host Certbot timer also manages other certificates. Migrate that timer before enabling Openship mail renewal; it has been left unchanged.' >&2
+    echo 'The host Certbot timer also manages other certificates. Migrate that timer before enabling Workbox Cloud mail renewal; it has been left unchanged.' >&2
     exit 1
   fi
 done

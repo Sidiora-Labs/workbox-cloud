@@ -367,7 +367,7 @@ function AgentConnection({
                   })
                 }
               >
-                Disconnect from OpenShip
+                Disconnect from Workbox Cloud
               </Button>
             </>
           ) : (

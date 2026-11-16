@@ -1,9 +1,9 @@
 ---
 title: "Auto-hospedagem versus plataformas gerenciadas: a análise real dos custos"
-description: "Comparamos o custo real de execução de um aplicativo de produção Next.js em Vercel, AWS e uma configuração auto-hospedada OpenShip. Os números podem surpreendê-lo."
+description: "Comparamos o custo real de execução de um aplicativo de produção Next.js em Vercel, AWS e uma configuração auto-hospedada Workbox Cloud. Os números podem surpreendê-lo."
 date: "2026-03-05"
 category: "Guide"
-author: "OpenShip Team"
+author: "Workbox Cloud Team"
 ---
 
 "Basta usar Vercel" é um bom conselho - até que sua fatura chegue. Executamos o mesmo aplicativo Next.js em três configurações e rastreamos todos os custos por 30 dias.
@@ -19,7 +19,7 @@ Um aplicativo de produção Next.js 15 com:
 
 ## Os resultados
 
-| | Vercel Profissional | AWS (ECS + RDS) | OpenShip (auto-hospedado) |
+| | Vercel Profissional | AWS (ECS + RDS) | Workbox Cloud (auto-hospedado) |
 |---|---|---|---|
 | Calcular | $ 150/mês | $ 85/mês | $ 24/mês |
 | Banco de dados | $ 50/mês (néon) | $ 45/mês | Incluído |
@@ -27,13 +27,13 @@ Um aplicativo de produção Next.js 15 com:
 | SSL/Domínios | Incluído | US$ 1/mês | Incluído |
 | **Total** | **$320/mês** | **$176/mês** | **$24/mês** |
 
-A configuração auto-hospedada OpenShip é executada em um único Hetzner VPS (CPX31: 4 vCPU, 8 GB de RAM, SSD de 160 GB).
+A configuração auto-hospedada Workbox Cloud é executada em um único Hetzner VPS (CPX31: 4 vCPU, 8 GB de RAM, SSD de 160 GB).
 
 ## As compensações
 
 As plataformas gerenciadas oferecem zero operações. Você envia o código e ele é implantado. Esse é o valor real.
 
-Mas OpenShip diminui significativamente a lacuna:
+Mas Workbox Cloud diminui significativamente a lacuna:
 - **AI lida com configuração** - Detecção de build, Dockergeração de arquivo e SSL são automáticos.
 - **Implantações com um comando** - `openship deploy` é igualmente rápida.
 - **Monitoramento integrado** - Logs, métricas e alertas prontos para uso.

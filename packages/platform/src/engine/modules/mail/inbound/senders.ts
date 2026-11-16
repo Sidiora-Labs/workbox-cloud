@@ -2,7 +2,7 @@
  * The addresses THIS instance sends its own mail from.
  *
  * This exists for exactly one reason: a notification about mail is itself mail. If an
- * inbound rule watches a domain that also receives Openship's own alerts — a support
+ * inbound rule watches a domain that also receives Workbox Cloud's own alerts — a support
  * address on the same engine, a member whose mailbox lives there — then the alert is
  * captured, matched, and emitted again. The loop only stops when a human notices.
  *
@@ -28,7 +28,7 @@ export async function getInstanceSmtpSenders(): Promise<string[]> {
   try {
     const settings = await repos.instanceSettings.get();
     const from = settings?.smtpFrom?.trim().toLowerCase();
-    // smtpFrom may be a display form (`Openship <a@b.com>`), so take the bare address.
+    // smtpFrom may be a display form (`Workbox Cloud <a@b.com>`), so take the bare address.
     if (from) {
       const angled = from.match(/<([^>]+)>/);
       const address = (angled ? angled[1] : from).trim();

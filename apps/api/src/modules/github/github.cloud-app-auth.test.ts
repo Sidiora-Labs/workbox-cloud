@@ -30,7 +30,7 @@ vi.mock("@repo/platform/engine/modules/github/github.http", () => ({
 import { getGitHubAuthMode, resolveGitHubAuthMode } from "@repo/platform/engine/modules/github/github.auth";
 
 describe("Cloud GitHub auth mode", () => {
-  it("cannot be switched away from the canonical Openship App", async () => {
+  it("cannot be switched away from the canonical Workbox Cloud GitHub App", async () => {
     expect(getGitHubAuthMode()).toBe("app");
     await expect(resolveGitHubAuthMode({
       userId: "user_1",

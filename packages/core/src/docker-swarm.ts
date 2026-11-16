@@ -1,6 +1,6 @@
 import { AppError } from "./errors";
 
-/** Swarm task containers belong to the scheduler, even when they also carry Openship labels. */
+/** Swarm task containers belong to the scheduler, even when they also carry Workbox Cloud labels. */
 export function swarmTaskOwner(labels: Record<string, string> | null | undefined): string | null {
   if (!labels) return null;
   const service = labels["com.docker.swarm.service.name"] || labels["com.docker.swarm.service.id"];

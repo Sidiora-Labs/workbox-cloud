@@ -368,7 +368,7 @@ interface ServerConnection {
 }
 
 /**
- * Reserved pool key for the HOST channel — the machine Openship itself runs on.
+ * Reserved pool key for the HOST channel — the machine Workbox Cloud itself runs on.
  *
  * Not a server id: the host channel is needed before any server row exists
  * (startup self-deploy, `selfEdgePreflight`) and is the same connection no matter
@@ -544,7 +544,7 @@ export class SshConnectionManager {
   }
 
   /**
-   * The pooled HOST channel — one connection to the machine Openship runs on,
+   * The pooled HOST channel — one connection to the machine Workbox Cloud runs on,
    * reused by every caller and reclaimed by the same idle timer as a server.
    *
    * Public, and that is the point: this is the ONLY way to obtain this box's
@@ -624,7 +624,7 @@ export class SshConnectionManager {
     // firewall rule reaches the dashboard banner and never the deploy log, which is
     // exactly where an operator is standing when a host op dies.
     const hint =
-      health.hint ?? `Openship can't reach the host channel at ${health.target ?? "this machine"}.`;
+      health.hint ?? `Workbox Cloud can't reach the host channel at ${health.target ?? "this machine"}.`;
     throw new HostChannelUnavailableError(
       "unreachable",
       health.rule ? `${hint}\n${health.rule}` : hint,
