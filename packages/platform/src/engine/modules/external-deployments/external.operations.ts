@@ -6,6 +6,7 @@ import {
   type ExternalCapabilityProfile,
   type ExternalOperation,
   type ExternalOperationStatus,
+  type ExternalOperationListInput,
   type ExternalPlan,
   type ExternalPlanInput,
   type ExternalTargetInput,
@@ -25,7 +26,11 @@ import {
 import type { ExecutionContext } from "../../../context";
 import { repos } from "@repo/db";
 import { readCredentialSecrets } from "../credentials/credential.service";
+import { encryptSecretField, decryptSecretField } from "../../lib/credential-encryption";
 import { createBuiltinExternalProviderRegistry } from "./builtin-registry";
+import { discoverExternalTargets } from "./external.discovery";
+import { catalogIdentity, CATALOG_RESOURCE_KEYS, requiredRecipeCapabilities, resolveCatalogDeployment } from "../apps/catalog-deployment";
+import { createExternalLogReader } from "./external.logs";
 
 const PLAN_TTL_MS = 15 * 60_000;
 const capabilityNames: readonly ExternalCapabilityName[] = [
@@ -58,6 +63,7 @@ const baseCapabilities: Record<ExternalWorkloadKind, readonly ExternalCapability
   "vercel-sandbox": ["discover", "preflight", "apply", "observe", "logs", "exec", "session", "files", "snapshot", "stop", "resume", "destroy", "public-ingress", "private-network", "idle-policy"],
   "fly-machine": ["discover", "preflight", "apply", "observe", "logs", "exec", "session", "stop", "resume", "rollback", "destroy", "public-ingress", "persistent-storage", "private-network"],
   "fly-sprite": ["discover", "preflight", "apply", "observe", "logs", "exec", "session", "files", "checkpoint", "snapshot", "stop", "resume", "destroy", "public-ingress", "private-network", "persistent-storage", "idle-policy"],
+  "blaxel-sandbox": ["discover", "preflight", "apply", "observe", "exec", "destroy", "persistent-storage", "idle-policy"],
   "self-managed-server": capabilityNames,
   "workbox-host": ["discover", "preflight", "apply", "observe", "logs", "destroy", "reconcile", "public-ingress"],
   "workbox-sandbox": ["discover", "preflight", "apply", "observe", "logs", "exec", "session", "files", "checkpoint", "snapshot", "stop", "resume", "destroy", "reconcile", "private-network"],
@@ -86,6 +92,7 @@ function providerForWorkload(kind: ExternalWorkloadKind): ExternalProvider | nul
   if (kind === "railway-sandbox") return "railway";
   if (kind === "vercel-sandbox") return "vercel";
   if (kind === "fly-machine" || kind === "fly-sprite") return "fly";
+  if (kind === "blaxel-sandbox") return "blaxel";
   if (kind === "workbox-host" || kind === "workbox-sandbox") return "workbox";
   if (kind === "self-managed-server") return "self-managed";
   return null;
@@ -134,7 +141,11 @@ async function resolveBuiltinCredential(
   return { id: row.id, publicFields: row.publicFields ?? {}, secrets };
 }
 
-async function ensureTarget(ctx: ExecutionContext, input: ExternalTargetInput) {
+async function ensureTarget(ctx: ExecutionContext, input: ExternalTargetInput, trustedCatalog = false) {
+  if (!trustedCatalog && CATALOG_RESOURCE_KEYS.some(key => key in input.resource))
+    throw new ValidationError("Catalog identity is assigned by the server.");
+  if (Object.prototype.hasOwnProperty.call(input.resource, "config") || hasSecretSelector(input.resource))
+    throw new ValidationError("Put environment values in the deployment environment field, not in target selectors.");
   await loadCredential(ctx, input);
   const fp = fingerprint(input);
   const existing = await repos.externalDeployment.findTargetByFingerprint(ctx.organizationId, fp);
@@ -167,10 +178,45 @@ function targetSnapshot(
     workloadKind: target.workloadKind as ExternalWorkloadKind,
     connectionId: target.credentialId,
     providerIdentity: target.providerIdentity ?? {},
-    resource: Object.fromEntries(Object.entries(target.resource ?? {}).map(([key, value]) => [key, String(value)])),
+    resource: publicResource(target.resource ?? {}),
+    ...(catalogIdentity(target.resource ?? {}) ? { catalog: catalogIdentity(target.resource ?? {}) } : {}),
     ...(capability ? { capability } : {}),
     capturedAt: nowIso(),
   };
+}
+
+const secretSelector = /^(environment|env|envs|variables|secrets|apiKey|apiToken|token|password|authorization)$/i;
+function hasSecretSelector(value: unknown): boolean {
+  if (typeof value === "string") {
+    try { return hasSecretSelector(JSON.parse(value)); } catch { return false; }
+  }
+  if (!value || typeof value !== "object") return false;
+  return Object.entries(value).some(([key, item]) => secretSelector.test(key) || hasSecretSelector(item));
+}
+
+function publicResource(resource: Record<string, unknown>): Record<string, string> {
+  return Object.fromEntries(Object.entries(resource)
+    .filter(([key, value]) => key !== "config" && !secretSelector.test(key) && !hasSecretSelector(value))
+    .map(([key, value]) => [key, String(value)]));
+}
+
+function planFingerprint(input: ExternalPlanInput): string {
+  const canonical = (value: unknown): unknown => {
+    if (Array.isArray(value)) return value.map(canonical);
+    if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).map(([key, item]) => [key, canonical(item)]));
+    return value;
+  };
+  return createHash("sha256").update(JSON.stringify(canonical({ target: input.target, source: input.source ?? null, image: input.image ?? null, environment: input.environment ?? null, workload: input.workload ?? null }))).digest("hex");
+}
+
+function executionEnvironment(request: Record<string, unknown>): Record<string, string> | undefined {
+  if (typeof request.environmentEnc === "string") {
+    const plaintext = decryptSecretField(request.environmentEnc);
+    if (!plaintext) throw new AppError("Deployment environment could not be decrypted.", 409, "EXTERNAL_ENVIRONMENT_UNAVAILABLE");
+    return JSON.parse(plaintext) as Record<string, string>;
+  }
+  // Read plans made before environment encryption was introduced.
+  return request.environment && typeof request.environment === "object" ? request.environment as Record<string, string> : undefined;
 }
 
 function profile(
@@ -206,28 +252,56 @@ function operationOutput(
 ): ExternalOperation {
   if (!row) throw new NotFoundError("External operation", "unknown");
   const status = row.status as ExternalOperationStatus;
+  const lostWorker = row.status === "provisioning" && row.leaseOwner && row.leaseUntil && row.leaseUntil.getTime() <= Date.now();
   return {
     id: row.id,
     organizationId: row.organizationId,
     targetId: row.targetId,
     kind: row.operation as ExternalOperation["kind"],
     workloadKind: row.workloadKind as ExternalWorkloadKind,
-    status,
+    status: lostWorker ? "reconciling" : status,
     idempotencyKey: row.idempotencyKey,
-    target: targetSnapshot(
-      { organizationId: row.organizationId } as ExecutionContext,
-      target,
-      (target.capabilities ?? undefined) as ExternalCapabilityProfile | undefined,
-    ),
+    target: boundOperationTarget(row, target),
     ...(row.providerRequestId ? { providerRequestId: row.providerRequestId } : {}),
     ...(row.providerResourceId ? { providerResourceId: row.providerResourceId } : {}),
     ...(row.providerStatus ? { providerStatus: row.providerStatus } : {}),
-    ...(row.errorMessage ? { message: row.errorMessage } : {}),
+    ...(lostWorker ? { message: "The deployment worker stopped before confirming the provider result. Check the provider status before retrying." }
+      : row.errorMessage ? { message: row.errorMessage } : typeof row.observed?.message === "string" ? { message: row.observed.message } : {}),
     ...(row.errorCode ? { errorCode: row.errorCode } : {}),
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
     ...(row.finishedAt ? { reconciledAt: row.finishedAt.toISOString() } : {}),
   };
+}
+
+/** Keep each operation bound to its own resource, even after later redeploys. */
+function boundOperationTarget(
+  row: NonNullable<Awaited<ReturnType<typeof repos.externalDeployment.findOperationById>>>,
+  target: Awaited<ReturnType<typeof ensureTarget>>,
+): ExternalTargetSnapshot {
+  const snapshot = targetSnapshot({ organizationId: row.organizationId } as ExecutionContext, target,
+    (target.capabilities ?? undefined) as ExternalCapabilityProfile | undefined);
+  const requested = (row.request as { target?: ExternalTargetSnapshot } | null)?.target;
+  if (requested && requested.connectionId === target.credentialId && requested.provider === target.provider) {
+    snapshot.providerIdentity = requested.providerIdentity;
+    snapshot.resource = publicResource(requested.resource);
+    if (requested.capability) snapshot.capability = requested.capability;
+  }
+  const observedResource = row.observed?.resource;
+  if (observedResource && typeof observedResource === "object" && !Array.isArray(observedResource)) {
+    snapshot.resource = { ...snapshot.resource, ...publicResource(observedResource as Record<string, unknown>) };
+  }
+  if (row.providerResourceId) {
+    const key = target.workloadKind === "fly-machine" ? "machineId"
+      : target.workloadKind === "fly-sprite" ? "spriteName"
+      : target.workloadKind === "service" ? "deploymentId"
+      : target.workloadKind === "vercel-sandbox" ? "name" : "sandboxId";
+    snapshot.resource = { ...snapshot.resource, [key]: row.providerResourceId };
+  }
+  const catalog = catalogIdentity(snapshot.resource);
+  if (catalog) snapshot.catalog = catalog;
+  else delete snapshot.catalog;
+  return snapshot;
 }
 
 function planFrom(
@@ -260,7 +334,7 @@ export function createExternalDeploymentDependencies(
     if (adapter) {
       try {
         p = await adapter.capabilities(
-          { organizationId: ctx.organizationId, actorId: ctx.userId, requestId: ctx.traceId },
+          { organizationId: ctx.organizationId, actorId: ctx.userId, requestId: ctx.traceId, executionContext: ctx },
           input,
         );
       } catch {
@@ -285,6 +359,18 @@ export function createExternalDeploymentDependencies(
     ));
   };
 
+  const operations = async (ctx: ExecutionContext, input: ExternalOperationListInput) => {
+    if (input.targetId && !await repos.externalDeployment.findTargetById(ctx.organizationId, input.targetId))
+      throw new NotFoundError("External target", input.targetId);
+    const rows = await repos.externalDeployment.listOperations(ctx.organizationId, input.targetId, input.limit);
+    const targetRows = await repos.externalDeployment.listTargets(ctx.organizationId);
+    const byId = new Map(targetRows.map((target) => [target.id, target]));
+    return rows.flatMap((row) => {
+      const target = byId.get(row.targetId);
+      return target ? [operationOutput(row, target)] : [];
+    });
+  };
+
   const preflight = async (ctx: ExecutionContext, input: ExternalTargetInput) => {
     const target = await ensureTarget(ctx, input);
     const adapter = adapterFor(activeRegistry, input);
@@ -295,7 +381,7 @@ export function createExternalDeploymentDependencies(
     if (adapter) {
       try {
         const providerPlan = await adapter.preflight(
-          { organizationId: ctx.organizationId, actorId: ctx.userId, requestId: ctx.traceId },
+          { organizationId: ctx.organizationId, actorId: ctx.userId, requestId: ctx.traceId, executionContext: ctx },
           input,
         );
         capability = providerPlan.capability;
@@ -328,35 +414,54 @@ export function createExternalDeploymentDependencies(
 
   const plan = async (ctx: ExecutionContext, input: ExternalPlanInput) => {
     assertExternalIdempotencyKey(input.idempotencyKey);
-    const target = await ensureTarget(ctx, input.target);
+    const catalogSelection = !!input.catalog;
+    input = resolveCatalogDeployment(input);
+    const target = await ensureTarget(ctx, input.target, catalogSelection);
     const adapter = adapterFor(activeRegistry, input.target);
     let capability = profile(input.target, adapter);
+    const blockers: string[] = [];
+    const warnings: string[] = [];
+    if (providerForWorkload(input.target.workloadKind) && providerForWorkload(input.target.workloadKind) !== input.target.provider)
+      blockers.push(`Workload ${input.target.workloadKind} is not supported by provider ${input.target.provider}.`);
     if (adapter) {
+      const providerContext = { organizationId: ctx.organizationId, actorId: ctx.userId, requestId: ctx.traceId, executionContext: ctx };
       try {
-        capability = await adapter.capabilities(
-          { organizationId: ctx.organizationId, actorId: ctx.userId, requestId: ctx.traceId },
-          input.target,
-        );
-      } catch {
-        // Keep the bounded static profile; provider reachability is checked by
-        // preflight and the mutation path remains reconciliable.
+        const checked = await adapter.preflight(providerContext, input.target);
+        capability = checked.capability;
+        blockers.push(...checked.blockers);
+        warnings.push(...checked.warnings);
+        if (!checked.accepted && checked.blockers.length === 0) blockers.push("The provider preflight rejected this target.");
+        if (blockers.length === 0) {
+          const planned = await adapter.plan(providerContext, input);
+          capability = planned.capability;
+          blockers.push(...planned.blockers);
+          warnings.push(...planned.warnings);
+          if (!planned.accepted && planned.blockers.length === 0) blockers.push("The provider rejected this deployment plan.");
+        }
+      } catch (error) {
+        blockers.push(normalizeExternalError(error).message);
       }
     }
-    // Optional capability gaps (for example Railway Sandbox exec when only the
-    // GraphQL transport is installed) must remain visible as warnings without
-    // preventing a create/apply operation. Only the two capabilities required
-    // to reach this mutation boundary can make a plan unacceptable.
-    const blockers = capability.unsupported
-      .filter((x) => x.capability === "preflight" || x.capability === "apply")
-      .map((x) => x.reason);
-    const warnings = capability.unsupported
-      .filter((x) => x.capability !== "preflight" && x.capability !== "apply")
-      .map((x) => x.reason);
+    blockers.push(...capability.unsupported
+      .filter((entry) => entry.capability === "preflight" || entry.capability === "apply")
+      .map((entry) => entry.reason));
+    for (const required of requiredRecipeCapabilities(input.target.resource)) {
+      if (!capability.supported.includes(required as ExternalCapabilityName)) blockers.push(`This recipe requires ${required}, which this provider connection does not support.`);
+    }
+    warnings.push(...capability.unsupported
+      .filter((entry) => entry.capability !== "preflight" && entry.capability !== "apply")
+      .map((entry) => entry.reason));
     const snapshot = targetSnapshot(ctx, target, capability);
     const accepted = blockers.length === 0;
     const existing = await repos.externalDeployment.findOperationByIdempotency(ctx.organizationId, input.idempotencyKey);
     if (existing) {
-      return planFrom(snapshot, capability, accepted, blockers, [...warnings, "An operation with this idempotency key already exists."], existing.id);
+      if (existing.operation !== "plan" || existing.targetId !== target.id)
+        throw new AppError("This idempotency key belongs to another operation.", 409, "EXTERNAL_IDEMPOTENCY_CONFLICT");
+      const stored = existing.request as { accepted?: boolean; blockers?: string[]; warnings?: string[]; expiresAt?: string; fingerprint?: string };
+      if (stored.fingerprint && stored.fingerprint !== planFingerprint(input))
+        throw new AppError("This idempotency key belongs to a different deployment configuration.", 409, "EXTERNAL_IDEMPOTENCY_CONFLICT");
+      return { ...planFrom(snapshot, capability, stored.accepted ?? existing.status === "queued", stored.blockers ?? blockers, stored.warnings ?? warnings, existing.id),
+        expiresAt: stored.expiresAt ?? new Date(existing.createdAt.getTime() + PLAN_TTL_MS).toISOString() };
     }
     const planOperation = await repos.externalDeployment.createOperation({
       organizationId: ctx.organizationId,
@@ -367,7 +472,7 @@ export function createExternalDeploymentDependencies(
       workloadKind: input.target.workloadKind,
       idempotencyKey: input.idempotencyKey,
       status: accepted ? "queued" : "unsupported",
-      request: { target: snapshot, source: input.source ?? null, image: input.image ?? null, environment: input.environment ?? null, workload: input.workload ?? null },
+      request: { target: snapshot, source: input.source ?? null, image: input.image ?? null, environmentEnc: input.environment ? encryptSecretField(JSON.stringify(input.environment)) : null, workload: input.workload ?? null, accepted, blockers, warnings, expiresAt: expiresIso(), fingerprint: planFingerprint(input) },
       providerRequestId: null,
       providerResourceId: null,
       providerStatus: null,
@@ -391,10 +496,21 @@ export function createExternalDeploymentDependencies(
     const target = await repos.externalDeployment.findTargetById(ctx.organizationId, planRow.targetId);
     if (!target) throw new NotFoundError("External target", planRow.targetId);
     const existing = await repos.externalDeployment.findOperationByIdempotency(ctx.organizationId, input.idempotencyKey);
-    if (existing) return operationOutput(existing, target);
+    if (existing) {
+      if (existing.operation !== "apply" || existing.targetId !== target.id || existing.request.planId !== input.planId)
+        throw new AppError("This idempotency key belongs to another operation.", 409, "EXTERNAL_IDEMPOTENCY_CONFLICT");
+      return operationOutput(existing, target);
+    }
     const request = (planRow.request ?? {}) as Record<string, unknown>;
+    if (planRow.operation !== "plan" || planRow.status !== "queued" || request.accepted === false)
+      throw new AppError("The deployment plan was not accepted. Review a new plan before deploying.", 409, "EXTERNAL_PLAN_BLOCKED");
+    const expiresAt = typeof request.expiresAt === "string" ? Date.parse(request.expiresAt) : planRow.createdAt.getTime() + PLAN_TTL_MS;
+    if (!Number.isFinite(expiresAt) || expiresAt <= Date.now())
+      throw new AppError("The deployment plan has expired. Review a new plan before deploying.", 409, "EXTERNAL_PLAN_EXPIRED");
     const targetInput = request.target as ExternalTargetInput;
+    await loadCredential(ctx, targetInput);
     const adapter = adapterFor(activeRegistry, targetInput);
+    const leaseOwner = generateId("external_apply");
     const operation = await repos.externalDeployment.createOperation({
       organizationId: ctx.organizationId,
       targetId: target.id,
@@ -411,23 +527,26 @@ export function createExternalDeploymentDependencies(
       observed: null,
       errorCode: adapter ? null : "EXTERNAL_PROVIDER_UNAVAILABLE",
       errorMessage: adapter ? null : "The provider adapter is not configured on this control plane.",
-      leaseOwner: null,
-      leaseUntil: null,
+      leaseOwner,
+      leaseUntil: new Date(Date.now() + 5 * 60_000),
       reconcileAfter: null,
       startedAt: new Date(),
       finishedAt: adapter ? null : new Date(),
     });
+    // Another request may have won the durable idempotency insert while this
+    // request was validating its plan. Only the insert owner calls the provider.
+    if (operation.leaseOwner !== leaseOwner) return operationOutput(operation, target);
     if (!adapter) return operationOutput(operation, target);
     try {
       const result = await adapter.apply(
-        { organizationId: ctx.organizationId, actorId: ctx.userId, requestId: ctx.traceId },
+        { organizationId: ctx.organizationId, actorId: ctx.userId, requestId: ctx.traceId, executionContext: ctx },
         input,
         Object.assign(
-          planFrom(targetSnapshot(ctx, target), profile(targetInput, adapter), true, []),
+          planFrom(targetInput as ExternalTargetSnapshot, (targetInput as ExternalTargetSnapshot).capability ?? profile(targetInput, adapter), true, []),
           {
             source: request.source ?? undefined,
             image: request.image ?? undefined,
-            environment: request.environment ?? undefined,
+            environment: executionEnvironment(request),
             workload: request.workload ?? undefined,
           },
         ) as ExternalPlan,
@@ -437,6 +556,9 @@ export function createExternalDeploymentDependencies(
         providerRequestId: result.providerRequestId ?? null,
         providerResourceId: result.providerResourceId ?? null,
         providerStatus: result.providerStatus ?? null,
+        observed: { resource: publicResource(result.target.resource), ...(result.message ? { message: result.message } : {}) },
+        leaseOwner: null,
+        leaseUntil: null,
         finishedAt: new Date(),
       });
       return operationOutput(updated ?? operation, target);
@@ -446,6 +568,8 @@ export function createExternalDeploymentDependencies(
         status: normalized.unknownOutcome ? "reconciling" : "failed",
         errorCode: normalized.code,
         errorMessage: normalized.message,
+        leaseOwner: null,
+        leaseUntil: null,
         reconcileAfter: normalized.unknownOutcome ? new Date(Date.now() + 30_000) : null,
         finishedAt: normalized.unknownOutcome ? null : new Date(),
       });
@@ -454,11 +578,28 @@ export function createExternalDeploymentDependencies(
   };
 
   const observe = async (ctx: ExecutionContext, input: ExternalObserveInput) => {
-    const target = await ensureTarget(ctx, input.target);
-    const adapter = adapterFor(activeRegistry, input.target);
     let row = input.operationId
       ? await repos.externalDeployment.findOperationById(ctx.organizationId, input.operationId)
       : undefined;
+    if (input.operationId && !row) throw new NotFoundError("External operation", input.operationId);
+    if (row?.operation === "destroy" && row.status === "stopped") throw new AppError("This workload has been deleted.", 409, "EXTERNAL_WORKLOAD_DELETED");
+    const target = row
+      ? await repos.externalDeployment.findTargetById(ctx.organizationId, row.targetId)
+      : await ensureTarget(ctx, input.target);
+    if (!target) throw new NotFoundError("External target", row?.targetId ?? "unknown");
+    const selectedTarget = row ? boundOperationTarget(row, target) : input.target;
+    if (selectedTarget.provider !== input.target.provider || selectedTarget.connectionId !== input.target.connectionId || selectedTarget.workloadKind !== input.target.workloadKind)
+      throw new ValidationError("The selected target does not match this operation.");
+    await loadCredential(ctx, selectedTarget);
+    const adapter = adapterFor(activeRegistry, selectedTarget);
+    if (row?.leaseOwner && row.leaseUntil && row.leaseUntil.getTime() > Date.now())
+      return operationOutput(row, target);
+    if (row?.status === "provisioning" && row.leaseOwner && row.leaseUntil && row.leaseUntil.getTime() <= Date.now()) {
+      row = await repos.externalDeployment.updateOperation(ctx.organizationId, row.id, {
+        status: "reconciling", leaseOwner: null, leaseUntil: null,
+        errorCode: "EXTERNAL_UNKNOWN_OUTCOME", errorMessage: "The deployment worker stopped before confirming the provider result. Check provider status before retrying.",
+      }) ?? row;
+    }
     if (!row) {
       const key = `observe:${target.id}:${Date.now()}`;
       row = await repos.externalDeployment.createOperation({
@@ -487,25 +628,29 @@ export function createExternalDeploymentDependencies(
     if (!adapter) return operationOutput(row, target);
     try {
       const result = await adapter.observe(
-        { organizationId: ctx.organizationId, actorId: ctx.userId, requestId: ctx.traceId },
-        input,
+        { organizationId: ctx.organizationId, actorId: ctx.userId, requestId: ctx.traceId, executionContext: ctx },
+        { ...input, target: selectedTarget },
       );
-      const updated = await repos.externalDeployment.updateOperation(ctx.organizationId, row.id, {
+      const updated = await repos.externalDeployment.updateObservation(ctx.organizationId, row.id, row.updatedAt, row.operation, {
         status: result.status,
         providerRequestId: result.providerRequestId ?? null,
-        providerResourceId: result.providerResourceId ?? null,
+        providerResourceId: result.providerResourceId ?? row.providerResourceId ?? null,
         providerStatus: result.providerStatus ?? null,
+        observed: { resource: publicResource(result.target.resource), ...(result.message ? { message: result.message } : {}) },
+        errorCode: null,
+        errorMessage: null,
+        reconcileAfter: null,
         finishedAt: new Date(),
       });
       return operationOutput(updated ?? row, target);
     } catch (error) {
       const normalized = normalizeExternalError(error);
-      const updated = await repos.externalDeployment.updateOperation(ctx.organizationId, row.id, {
-        status: normalized.retryable ? "reconciling" : "failed",
+      const updated = await repos.externalDeployment.updateObservation(ctx.organizationId, row.id, row.updatedAt, row.operation, {
+        status: normalized.retryable || row.errorCode === "EXTERNAL_UNKNOWN_OUTCOME" ? "reconciling" : "failed",
         errorCode: normalized.code,
         errorMessage: normalized.message,
-        reconcileAfter: normalized.retryable ? new Date(Date.now() + 30_000) : null,
-        finishedAt: normalized.retryable ? null : new Date(),
+        reconcileAfter: normalized.retryable || row.errorCode === "EXTERNAL_UNKNOWN_OUTCOME" ? new Date(Date.now() + 30_000) : null,
+        finishedAt: normalized.retryable || row.errorCode === "EXTERNAL_UNKNOWN_OUTCOME" ? null : new Date(),
       });
       return operationOutput(updated ?? row, target);
     }
@@ -514,12 +659,13 @@ export function createExternalDeploymentDependencies(
   const exec = async (ctx: ExecutionContext, input: ExternalExecInput): Promise<ExternalExecOutput> => {
     const row = await repos.externalDeployment.findOperationById(ctx.organizationId, input.operationId);
     if (!row) throw new NotFoundError("External operation", input.operationId);
+    if (row.operation === "destroy") throw new AppError("This workload has been deleted.", 409, "EXTERNAL_WORKLOAD_DELETED");
     const target = await repos.externalDeployment.findTargetById(ctx.organizationId, row.targetId);
     if (!target) throw new NotFoundError("External target", row.targetId);
     const adapter = activeRegistry.get(target.provider as ExternalProvider, target.workloadKind as ExternalWorkloadKind);
     if (!adapter.exec) throw new AppError("The selected external workload does not support command execution.", 422, "EXTERNAL_CAPABILITY_UNSUPPORTED");
     const result = await adapter.exec(
-      { organizationId: ctx.organizationId, actorId: ctx.userId, requestId: ctx.traceId },
+      { organizationId: ctx.organizationId, actorId: ctx.userId, requestId: ctx.traceId, executionContext: ctx },
       operationOutput(row, target),
       { argv: input.argv, cwd: input.cwd, env: input.env },
     );
@@ -536,23 +682,40 @@ export function createExternalDeploymentDependencies(
     if (!row) throw new NotFoundError("External operation", input.operationId);
     const target = await repos.externalDeployment.findTargetById(ctx.organizationId, row.targetId);
     if (!target) throw new NotFoundError("External target", row.targetId);
+    if (row.operation === "destroy") return operationOutput(row, target);
+    if (row.leaseOwner || !row.providerResourceId)
+      throw new AppError("Wait for the provider resource to be confirmed before deleting it.", 409, "EXTERNAL_RESOURCE_PENDING");
     const adapter = activeRegistry.get(target.provider as ExternalProvider, target.workloadKind as ExternalWorkloadKind);
     if (!adapter.destroy) throw new AppError("The selected external workload does not support destroy.", 422, "EXTERNAL_CAPABILITY_UNSUPPORTED");
-    const result = await adapter.destroy(
-      { organizationId: ctx.organizationId, actorId: ctx.userId, requestId: ctx.traceId },
-      operationOutput(row, target),
-    );
-    const updated = await repos.externalDeployment.updateOperation(ctx.organizationId, row.id, {
-      status: result.status,
-      providerResourceId: result.providerResourceId ?? null,
-      providerStatus: result.providerStatus ?? null,
-      finishedAt: new Date(),
-    });
-    return operationOutput(updated ?? row, target);
+    const intent = await repos.externalDeployment.updateOperation(ctx.organizationId, row.id, {
+      operation: "destroy", status: "stopping", errorCode: null, errorMessage: null, finishedAt: null,
+    }) ?? row;
+    try {
+      const result = await adapter.destroy(
+        { organizationId: ctx.organizationId, actorId: ctx.userId, requestId: ctx.traceId, executionContext: ctx },
+        operationOutput(intent, target),
+      );
+      const updated = await repos.externalDeployment.updateOperation(ctx.organizationId, row.id, {
+        operation: "destroy",
+        status: result.status,
+        providerResourceId: result.providerResourceId ?? row.providerResourceId,
+        providerStatus: result.providerStatus ?? null,
+        finishedAt: result.status === "stopped" ? new Date() : null,
+      });
+      return operationOutput(updated ?? intent, target);
+    } catch (error) {
+      const normalized = normalizeExternalError(error, { mutation: true });
+      const updated = await repos.externalDeployment.updateOperation(ctx.organizationId, row.id, {
+        operation: "destroy", status: normalized.unknownOutcome || normalized.retryable ? "reconciling" : "action_required",
+        errorCode: normalized.code, errorMessage: normalized.message,
+        reconcileAfter: normalized.unknownOutcome || normalized.retryable ? new Date(Date.now() + 30_000) : null,
+      });
+      return operationOutput(updated ?? intent, target);
+    }
   };
 
   return {
-    collection: { targets, capabilities, preflight, plan, apply, observe, exec, destroy },
+    collection: { discover: discoverExternalTargets, targets, operations, capabilities, preflight, plan, apply, observe, exec, destroy, logs: createExternalLogReader(activeRegistry, operationOutput) },
   };
 }
 

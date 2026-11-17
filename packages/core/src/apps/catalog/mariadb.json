@@ -19,10 +19,20 @@
         "MARIADB_USER": "openship",
         "MARIADB_DATABASE": "app"
       },
-      "volumes": ["mariadb_data:/var/lib/mysql"],
-      "secretEnv": ["MARIADB_ROOT_PASSWORD", "MARIADB_PASSWORD"],
+      "volumes": [
+        "mariadb_data:/var/lib/mysql"
+      ],
+      "secretEnv": [
+        "MARIADB_ROOT_PASSWORD",
+        "MARIADB_PASSWORD"
+      ],
       "healthcheck": {
-        "test": ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"],
+        "test": [
+          "CMD",
+          "healthcheck.sh",
+          "--connect",
+          "--innodb_initialized"
+        ],
         "interval": "10s",
         "timeout": "5s",
         "retries": 12,
@@ -48,7 +58,9 @@
           "port": 8080
         }
       ],
-      "dependsOn": ["mariadb"],
+      "dependsOn": [
+        "mariadb"
+      ],
       "healthcheck": {
         "test": [
           "CMD-SHELL",
@@ -138,7 +150,11 @@
       "label": "Adminer",
       "kind": "http",
       "defaultMode": "domain",
-      "allowedModes": ["domain", "publish", "internal"]
+      "allowedModes": [
+        "domain",
+        "publish",
+        "internal"
+      ]
     },
     {
       "service": "mariadb",
@@ -147,7 +163,9 @@
       "kind": "tcp",
       "scope": "internal",
       "defaultMode": "internal",
-      "allowedModes": ["internal"]
+      "allowedModes": [
+        "internal"
+      ]
     }
   ],
   "marketplace": {
@@ -171,12 +189,14 @@
     {
       "id": "mysql",
       "category": "database",
-      "outputRefs": ["url"]
+      "outputRefs": [
+        "url"
+      ]
     }
   ],
   "repository": "https://github.com/MariaDB/server",
   "minResources": {
-    "cpuCores": 1.0,
+    "cpuCores": 1,
     "memoryMb": 768
   },
   "files": [
@@ -186,5 +206,10 @@
       "content": "<?php\nrequire_once __DIR__ . '/../plugins/login-servers.php';\nreturn new AdminerLoginServers(['MariaDB' => ['server' => 'mariadb', 'driver' => 'server']]);\n"
     }
   ],
-  "tags": ["mysql", "sql", "adminer", "relational"]
+  "tags": [
+    "mysql",
+    "sql",
+    "adminer",
+    "relational"
+  ]
 }

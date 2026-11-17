@@ -32,6 +32,12 @@ describe("Workbox provider adapter", () => {
     expect(workboxPath("https://workbox.example.test/", "/v1/sandboxes")).toBe(
       "https://workbox.example.test/v1/sandboxes",
     );
+    expect(workboxPath("https://workbox.example.test/workbox/", "/v1/sandboxes?limit=1")).toBe(
+      "https://workbox.example.test/workbox/v1/sandboxes?limit=1",
+    );
+    expect(new WorkboxProvider({ baseUrl: "https://workbox.example.test/workbox", apiKey: "key" }).sessionWebSocketUrl("sbx-1", "session-1")).toBe(
+      "wss://workbox.example.test/workbox/v1/sandboxes/sbx-1/sessions/session-1/ws",
+    );
     expect(() => workboxPath("https://user:secret@workbox.example.test", "/healthz")).toThrow(
       "without embedded credentials",
     );
@@ -53,8 +59,20 @@ describe("Workbox provider adapter", () => {
     expect(profile.reachable).toBe(true);
     expect(profile.ready).toBe(true);
     expect(JSON.stringify(profile)).not.toContain("wbk_super_secret");
-    expect(calls).toHaveLength(2);
+    expect(calls).toHaveLength(3);
     expect(calls[0]?.headers?.authorization).toBe("Bearer wbk_super_secret");
+  });
+
+  it("rejects a key which can reach public health but not the protected inventory", async () => {
+    const provider = new WorkboxProvider({
+      baseUrl: "https://workbox.example.test",
+      apiKey: "invalid-key",
+      request: async (url) => response({}, url.includes("/v1/sandboxes") ? 401 : 200),
+    });
+    const result = await provider.preflight();
+    expect(result.reachable).toBe(true);
+    expect(result.ready).toBe(false);
+    expect(result.checks).toContainEqual(expect.objectContaining({ name: "authentication", ok: false }));
   });
 
   it("sends an idempotency key for sandbox creation", async () => {

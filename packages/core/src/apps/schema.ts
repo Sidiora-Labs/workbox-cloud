@@ -313,8 +313,28 @@ const management = z.union([
   z.object({ kind: z.literal("custom"), href: z.string() }),
 ]);
 
+const recipeInput = z.object({
+  key: z.string().min(1).max(100), label: z.string().min(1),
+  type: z.enum(["text", "password", "number", "select"]),
+  target: z.enum(["environment", "resource", "source"]),
+  targetKey: z.string().min(1).max(100).optional(), default: z.string().optional(),
+  required: z.boolean().optional(),
+  options: z.array(z.object({ value: z.string(), label: z.string() })).optional(),
+});
+const deploymentRecipe = z.object({
+  id: z.string().regex(/^[a-z0-9][a-z0-9-]{0,99}$/), label: z.string().min(1),
+  provider: z.enum(["railway", "vercel", "fly", "blaxel", "workbox"]),
+  workloadKind: z.enum(["service", "railway-sandbox", "vercel-sandbox", "fly-machine", "fly-sprite", "blaxel-sandbox", "workbox-host", "workbox-sandbox"]),
+  image: z.string().min(1).optional(), source: z.record(z.string(), z.string()).optional(),
+  resource: z.record(z.string(), z.string()).optional(), environment: z.record(z.string(), z.string()).optional(),
+  inputs: z.array(recipeInput).optional(), requiredCapabilities: z.array(z.string()).optional(), notes: z.string().optional(),
+});
+
 export const appTemplateSchema = z.object({
   id: z.string(),
+  nativeSupport: z.boolean().optional(),
+  deploymentRecipes: z.array(deploymentRecipe).optional(),
+  provenance: z.object({ source: z.enum(["upstream", "railway", "vercel", "workbox"]), url: z.string().url(), revision: z.string().optional(), license: z.string().optional(), reviewedAt: z.string().optional() }).optional(),
   name: z.string(),
   description: z.string(),
   marketplace: z.object({
@@ -382,6 +402,18 @@ export const appTemplateSchema = z.object({
   updatedAt: z.string().optional(),
   repository: z.string().url().optional(),
 }).superRefine((data, ctx) => {
+  const recipeIds = new Set<string>();
+  for (const [index, recipe] of (data.deploymentRecipes ?? []).entries()) {
+    if (recipeIds.has(recipe.id)) ctx.addIssue({ code: "custom", path: ["deploymentRecipes", index, "id"], message: "Recipe IDs must be unique" });
+    recipeIds.add(recipe.id);
+    const keys = new Set<string>();
+    for (const [inputIndex, input] of (recipe.inputs ?? []).entries()) {
+      if (keys.has(input.key)) ctx.addIssue({ code: "custom", path: ["deploymentRecipes", index, "inputs", inputIndex, "key"], message: "Input keys must be unique" });
+      keys.add(input.key);
+      if (input.type === "password" && input.target !== "environment") ctx.addIssue({ code: "custom", path: ["deploymentRecipes", index, "inputs", inputIndex], message: "Secret recipe inputs must target encrypted environment values" });
+      if (input.type === "select" && !input.options?.length) ctx.addIssue({ code: "custom", path: ["deploymentRecipes", index, "inputs", inputIndex], message: "Select recipe inputs require choices" });
+    }
+  }
   if ((data.supportsCloud === false || data.gpu || (data.requires ?? []).some((requirement) => requirement.bundleId) || (data.services ?? []).some((s) => s.gpus !== undefined || s.shmSize !== undefined)) && (data.schemaVersion ?? 1) < 2) {
     ctx.addIssue({ code: "custom", path: ["schemaVersion"], message: "GPU, shared-memory, Cloud compatibility and connection bundle fields require schemaVersion >= 2" });
   }

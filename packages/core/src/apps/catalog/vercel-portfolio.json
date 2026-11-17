@@ -1,0 +1,66 @@
+{
+  "available": true,
+  "verified": false,
+  "id": "vercel-portfolio",
+  "name": "Portfolio Starter",
+  "description": "A portfolio and MDX blog with SEO, RSS and generated social images.",
+  "kind": "template",
+  "nativeSupport": false,
+  "logo": "nextjs",
+  "category": "other",
+  "tags": [
+    "nextjs",
+    "portfolio",
+    "blog",
+    "vercel"
+  ],
+  "services": [],
+  "deploymentRecipes": [
+    {
+      "id": "vercel",
+      "label": "Vercel project",
+      "provider": "vercel",
+      "workloadKind": "service",
+      "source": {
+        "repo": "vercel/examples",
+        "ref": "a4b4827297bec79b81ddb2ff22a53089ebe88cd8",
+        "rootDirectory": "solutions/blog",
+        "framework": "nextjs"
+      },
+      "resource": {
+        "createProject": "true"
+      },
+      "requiredCapabilities": [
+        "apply",
+        "observe",
+        "logs",
+        "destroy"
+      ],
+      "notes": "Creates a new Vercel project from a reviewed upstream Git revision. Requires Vercel access to the public Git repository. No database, storage integration or Git repository is created."
+    }
+  ],
+  "provenance": {
+    "source": "vercel",
+    "url": "https://vercel.com/templates/template/portfolio-starter-kit",
+    "revision": "a4b4827297bec79b81ddb2ff22a53089ebe88cd8",
+    "license": "MIT",
+    "reviewedAt": "2026-11-17"
+  },
+  "marketplace": {
+    "features": [
+      {
+        "title": "Native Vercel deployment",
+        "description": "Select a saved account, review, and deploy from Workbox Cloud."
+      },
+      {
+        "title": "Pinned upstream source",
+        "description": "Starts from a reviewed Git revision and preserves source attribution."
+      },
+      {
+        "title": "Managed lifecycle",
+        "description": "View deployment status and build logs, or delete the created project."
+      }
+    ],
+    "articleFile": "articles/vercel-portfolio.md"
+  }
+}

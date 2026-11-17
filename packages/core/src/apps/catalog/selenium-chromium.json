@@ -1,0 +1,282 @@
+{
+  "$schema": "https://openship.io/app.schema.json",
+  "id": "selenium-chromium",
+  "name": "Selenium Chromium",
+  "description": "A private, authenticated Chromium WebDriver service for automated browser tests, with bounded sessions and a live status endpoint.",
+  "kind": "template",
+  "logo": "selenium",
+  "category": "automation",
+  "available": true,
+  "verified": false,
+  "schemaVersion": 2,
+  "minEngine": "0.9.2",
+  "supportsCloud": false,
+  "framework": "docker-compose",
+  "repository": "https://github.com/SeleniumHQ/docker-selenium",
+  "provenance": {
+    "source": "upstream",
+    "url": "https://github.com/SeleniumHQ/docker-selenium",
+    "revision": "4.52.0-20261101",
+    "license": "Apache-2.0 (container project); bundled browser components retain their own licenses",
+    "reviewedAt": "2026-11-17"
+  },
+  "minResources": {
+    "cpuCores": 2,
+    "memoryMb": 3072
+  },
+  "tags": [
+    "browser",
+    "automation",
+    "testing",
+    "webdriver",
+    "chromium",
+    "selenium"
+  ],
+  "services": [
+    {
+      "name": "selenium",
+      "image": "selenium/standalone-chromium:4.52.0-20261101@sha256:b211549a4c35f11826bc1a7559b9f23ff055198517f8cb7d49ef74df01c5e38d",
+      "shmSize": 2147483648,
+      "restart": "unless-stopped",
+      "environment": {
+        "SE_NODE_MAX_SESSIONS": "1",
+        "SE_NODE_SESSION_TIMEOUT": "300",
+        "SE_SESSION_REQUEST_TIMEOUT": "60",
+        "SE_START_VNC": "false",
+        "SE_START_NO_VNC": "false",
+        "SE_ENABLE_TRACING": "false",
+        "SE_NODE_ENABLE_CDP": "false",
+        "SE_NODE_GRID_URL": "{{publicUrl:selenium-access}}"
+      },
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "/opt/bin/check-grid.sh",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "4444"
+        ],
+        "interval": "15s",
+        "timeout": "10s",
+        "retries": 12,
+        "startPeriod": "30s"
+      },
+      "resources": {
+        "cpuCores": 2,
+        "memoryMb": 2048,
+        "diskMb": 2048
+      }
+    },
+    {
+      "name": "selenium-access",
+      "image": "caddy:2.11.7-alpine@sha256:e70b164da81ef698b3ad19af799ea6086ce6d9e48ed4079eb9fe26f6fbf14ee5",
+      "restart": "unless-stopped",
+      "dependsOn": [
+        "selenium"
+      ],
+      "secretEnv": [
+        "OPENSHIP_ADMIN_PASSWORD"
+      ],
+      "commandArgv": [
+        "sh",
+        "/etc/workbox/access.sh"
+      ],
+      "exposed": true,
+      "exposedPort": 8080,
+      "routes": [
+        {
+          "port": 8080
+        }
+      ],
+      "healthcheck": {
+        "test": [
+          "CMD-SHELL",
+          "wget -S -O /dev/null http://127.0.0.1:8080/status 2>&1 | grep -q '401 Unauthorized'"
+        ],
+        "interval": "15s",
+        "timeout": "5s",
+        "retries": 8
+      },
+      "resources": {
+        "cpuCores": 0.25,
+        "memoryMb": 128,
+        "diskMb": 128
+      }
+    }
+  ],
+  "configFields": [
+    {
+      "service": "selenium-access",
+      "key": "OPENSHIP_ADMIN_USER",
+      "label": "API username",
+      "default": "workbox",
+      "required": true
+    },
+    {
+      "service": "selenium-access",
+      "key": "OPENSHIP_ADMIN_PASSWORD",
+      "label": "API password",
+      "generate": "secret",
+      "secret": true
+    }
+  ],
+  "settings": [
+    {
+      "id": "access",
+      "label": "WebDriver API access",
+      "columns": 2,
+      "fields": [
+        {
+          "service": "selenium-access",
+          "key": "OPENSHIP_ADMIN_USER",
+          "label": "API username",
+          "type": "text",
+          "default": "workbox",
+          "required": true,
+          "pattern": "^[a-zA-Z0-9_.-]+$",
+          "patternError": "Use letters, numbers, dots, dashes or underscores.",
+          "installStep": true,
+          "requiresRedeploy": true
+        },
+        {
+          "service": "selenium-access",
+          "key": "OPENSHIP_ADMIN_PASSWORD",
+          "label": "API password",
+          "type": "password",
+          "secret": true,
+          "required": true,
+          "requiresRedeploy": true
+        }
+      ]
+    },
+    {
+      "id": "sessions",
+      "label": "Session limits",
+      "columns": 2,
+      "fields": [
+        {
+          "service": "selenium",
+          "key": "SE_NODE_MAX_SESSIONS",
+          "label": "Concurrent sessions",
+          "type": "number",
+          "min": 1,
+          "max": 4,
+          "integer": true,
+          "default": "1",
+          "installStep": true,
+          "requiresRedeploy": true,
+          "help": "Each browser session consumes additional memory and CPU."
+        },
+        {
+          "service": "selenium",
+          "key": "SE_NODE_SESSION_TIMEOUT",
+          "label": "Idle session timeout (seconds)",
+          "type": "number",
+          "min": 30,
+          "max": 3600,
+          "integer": true,
+          "default": "300",
+          "installStep": true,
+          "requiresRedeploy": true
+        }
+      ]
+    }
+  ],
+  "management": {
+    "kind": "schema"
+  },
+  "endpoints": [
+    {
+      "service": "selenium-access",
+      "port": 8080,
+      "label": "WebDriver API",
+      "kind": "http",
+      "scope": "internal",
+      "defaultMode": "internal",
+      "allowedModes": [
+        "internal",
+        "domain"
+      ]
+    }
+  ],
+  "connection": {
+    "title": "Connect your browser tests",
+    "description": "Use the protected WebDriver endpoint and generated HTTP Basic credentials. This is an automation service, not a persistent desktop browser.",
+    "guide": {
+      "defaultMode": "internal",
+      "intro": "Use Selenium RemoteWebDriver with Chromium options and HTTP Basic credentials. Run tests from the same project network or through a local tunnel; select a HTTPS domain when remote clients need access."
+    },
+    "outputs": [
+      {
+        "id": "url",
+        "label": "WebDriver endpoint",
+        "source": "publicUrl:selenium-access",
+        "kind": "url",
+        "service": "selenium-access",
+        "envKey": "SELENIUM_REMOTE_URL",
+        "recommended": true
+      },
+      {
+        "id": "username",
+        "label": "API username",
+        "source": "env:selenium-access:OPENSHIP_ADMIN_USER",
+        "envKey": "SELENIUM_USERNAME",
+        "width": "half",
+        "recommended": true
+      },
+      {
+        "id": "password",
+        "label": "API password",
+        "source": "env:selenium-access:OPENSHIP_ADMIN_PASSWORD",
+        "envKey": "SELENIUM_PASSWORD",
+        "secret": true,
+        "width": "half",
+        "recommended": true
+      }
+    ],
+    "firstLogin": {
+      "note": "The gateway protects all WebDriver routes. Direct VNC and noVNC listeners are disabled; session profiles are temporary. End every test with driver.quit()."
+    }
+  },
+  "provides": [
+    {
+      "id": "webdriver",
+      "category": "automation",
+      "outputRefs": [
+        "url",
+        "username",
+        "password"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "service": "selenium-access",
+      "path": "/etc/workbox/access.sh",
+      "content": "#!/bin/sh\nset -eu\nexport OPENSHIP_PASSWORD_HASH=\"$(caddy hash-password --plaintext \"$OPENSHIP_ADMIN_PASSWORD\")\"\nunset OPENSHIP_ADMIN_PASSWORD\nexec caddy run --config /etc/workbox/access.Caddyfile --adapter caddyfile\n"
+    },
+    {
+      "service": "selenium-access",
+      "path": "/etc/workbox/access.Caddyfile",
+      "content": "{\n  auto_https off\n  admin off\n}\n:8080 {\n  basic_auth {\n    {$OPENSHIP_ADMIN_USER} {$OPENSHIP_PASSWORD_HASH}\n  }\n  reverse_proxy selenium:4444\n}\n"
+    }
+  ],
+  "marketplace": {
+    "features": [
+      {
+        "title": "Browser test service",
+        "description": "Run Selenium WebDriver tests against a pinned Chromium browser."
+      },
+      {
+        "title": "Bounded sessions",
+        "description": "Configure concurrent sessions and idle expiry from the app settings."
+      },
+      {
+        "title": "Authenticated endpoint",
+        "description": "A generated password protects the WebDriver API."
+      }
+    ],
+    "articleFile": "articles/selenium-chromium.md"
+  }
+}

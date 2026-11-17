@@ -25,7 +25,7 @@ describe("Fly provider adapters", () => {
       skip_launch: true,
       config: { image: "app:v1" },
     });
-    expect(buildSpriteCreatePayload({ name: "sprite", organizationId: "org", idempotencyKey: "k", image: "ubuntu" })).toEqual({ image: "ubuntu" });
+    expect(buildSpriteCreatePayload({ name: "sprite", organizationId: "org", idempotencyKey: "k", image: "ubuntu" })).toEqual({ name: "sprite" });
   });
 
   it("normalizes lifecycle states separately", () => {

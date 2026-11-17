@@ -195,7 +195,7 @@ function endpointBase(raw: string): URL {
 
 function joinPath(base: URL, path: string): string {
   if (!path.startsWith("/")) throw new Error("Workbox paths must begin with '/'");
-  return new URL(path, `${base.origin}${base.pathname || "/"}`).href;
+  return new URL(path.slice(1), `${base.origin}${base.pathname.replace(/\/$/, "")}/`).href;
 }
 
 function idPart(value: string, label = "id"): string {
@@ -291,6 +291,15 @@ export class WorkboxProvider {
       checks.push({ name: "readyz", ok: ready, detail: ready ? "Workbox reports ready." : "Workbox is reachable but not ready." });
     } catch (error) {
       checks.push({ name: "readyz", ok: false, detail: error instanceof AppError ? error.message : "Workbox readiness endpoint was unavailable." });
+    }
+    // Health/readiness are public upstream. A successful health probe does not
+    // establish that the stored key may access any sandbox resources.
+    try {
+      await this.listSandboxes({ limit: 1 });
+      checks.push({ name: "authentication", ok: true, detail: "The key can read the Workbox sandbox inventory." });
+    } catch (error) {
+      ready = false;
+      checks.push({ name: "authentication", ok: false, detail: error instanceof AppError ? error.message : "The Workbox key could not read the sandbox inventory." });
     }
     return {
       provider: "workbox",
@@ -390,7 +399,7 @@ export class WorkboxProvider {
 
   /** The caller owns the WebSocket implementation; this helper only derives a safe URL. */
   sessionWebSocketUrl(sandboxId: string, sessionId: string): string {
-    const url = new URL(`/v1/sandboxes/${idPart(sandboxId, "sandbox id")}/sessions/${idPart(sessionId, "session id")}/ws`, this.endpoint);
+    const url = new URL(joinPath(this.endpoint, `/v1/sandboxes/${idPart(sandboxId, "sandbox id")}/sessions/${idPart(sessionId, "session id")}/ws`));
     url.protocol = url.protocol === "https:" ? "wss:" : "ws:";
     return url.href;
   }

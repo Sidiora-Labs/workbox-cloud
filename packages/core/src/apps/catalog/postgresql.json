@@ -19,10 +19,18 @@
         "POSTGRES_USER": "openship",
         "POSTGRES_DB": "app"
       },
-      "volumes": ["postgres_data:/var/lib/postgresql/data"],
-      "secretEnv": ["POSTGRES_PASSWORD", "OPENSHIP_APP_PASSWORD"],
+      "volumes": [
+        "postgres_data:/var/lib/postgresql/data"
+      ],
+      "secretEnv": [
+        "POSTGRES_PASSWORD",
+        "OPENSHIP_APP_PASSWORD"
+      ],
       "healthcheck": {
-        "test": ["CMD-SHELL", "pg_isready -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\""],
+        "test": [
+          "CMD-SHELL",
+          "pg_isready -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\""
+        ],
         "interval": "10s",
         "timeout": "5s",
         "retries": 12,
@@ -42,7 +50,9 @@
         "PGADMIN_DISABLE_POSTFIX": "1",
         "PGADMIN_LISTEN_PORT": "5050"
       },
-      "volumes": ["pgadmin_data:/var/lib/pgadmin"],
+      "volumes": [
+        "pgadmin_data:/var/lib/pgadmin"
+      ],
       "exposedPort": 5050,
       "exposed": true,
       "routes": [
@@ -50,10 +60,17 @@
           "port": 5050
         }
       ],
-      "dependsOn": ["postgres"],
-      "secretEnv": ["PGADMIN_DEFAULT_PASSWORD"],
+      "dependsOn": [
+        "postgres"
+      ],
+      "secretEnv": [
+        "PGADMIN_DEFAULT_PASSWORD"
+      ],
       "healthcheck": {
-        "test": ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:5050/misc/ping"],
+        "test": [
+          "CMD-SHELL",
+          "wget -q -O /dev/null http://127.0.0.1:5050/misc/ping"
+        ],
         "interval": "15s",
         "timeout": "5s",
         "retries": 12,
@@ -159,7 +176,10 @@
       "label": "pgAdmin",
       "kind": "http",
       "defaultMode": "domain",
-      "allowedModes": ["domain", "port"]
+      "allowedModes": [
+        "domain",
+        "port"
+      ]
     },
     {
       "service": "postgres",
@@ -168,7 +188,9 @@
       "kind": "tcp",
       "scope": "internal",
       "defaultMode": "internal",
-      "allowedModes": ["internal"]
+      "allowedModes": [
+        "internal"
+      ]
     }
   ],
   "marketplace": {
@@ -230,13 +252,60 @@
     {
       "id": "postgres",
       "category": "database",
-      "outputRefs": ["url"]
+      "outputRefs": [
+        "url"
+      ]
     }
   ],
   "repository": "https://github.com/postgres/postgres",
   "minResources": {
-    "cpuCores": 1.0,
+    "cpuCores": 1,
     "memoryMb": 1024
   },
-  "tags": ["postgres", "sql", "pgadmin", "relational"]
+  "tags": [
+    "postgres",
+    "sql",
+    "pgadmin",
+    "relational"
+  ],
+  "deploymentRecipes": [
+    {
+      "id": "railway",
+      "label": "PostgreSQL on Railway",
+      "provider": "railway",
+      "workloadKind": "service",
+      "source": {
+        "templateCode": "postgres",
+        "templateId": "b55da7dc-09be-4140-bc65-1284d15d349c",
+        "templateConfigSha256": "b65cc1b388a930491004870f62054f584346cac2527f7ae03cd019c4e3c9b1ee"
+      },
+      "resource": {
+        "createProject": "true"
+      },
+      "inputs": [
+        {
+          "key": "database",
+          "label": "Database name",
+          "type": "text",
+          "target": "environment",
+          "targetKey": "Postgres.POSTGRES_DB",
+          "default": "railway",
+          "required": true
+        }
+      ],
+      "requiredCapabilities": [
+        "apply",
+        "observe",
+        "logs",
+        "destroy"
+      ],
+      "notes": "Creates a dedicated Railway project with the complete reviewed template, including persistent volumes and generated secrets. Deleting this workload deletes that project and its data.",
+      "provenance": {
+        "source": "railway",
+        "url": "https://railway.com/deploy/postgres",
+        "revision": "b65cc1b388a930491004870f62054f584346cac2527f7ae03cd019c4e3c9b1ee",
+        "reviewedAt": "2026-11-17"
+      }
+    }
+  ]
 }

@@ -147,5 +147,45 @@
       }
     ],
     "articleFile": "articles/n8n.md"
-  }
+  },
+  "deploymentRecipes": [
+    {
+      "id": "railway",
+      "label": "n8n with PostgreSQL on Railway",
+      "provider": "railway",
+      "workloadKind": "service",
+      "source": {
+        "templateCode": "n8n",
+        "templateId": "d96199dc-e27f-4bd4-ac02-a601f1753fad",
+        "templateConfigSha256": "29d3554c1456b0340164b7504bdc0877507f52b5558d9e1f65ca88d5be3ca196"
+      },
+      "resource": {
+        "createProject": "true"
+      },
+      "inputs": [
+        {
+          "key": "database",
+          "label": "Database name",
+          "type": "text",
+          "target": "environment",
+          "targetKey": "Postgres.POSTGRES_DB",
+          "default": "n8n",
+          "required": true
+        }
+      ],
+      "requiredCapabilities": [
+        "apply",
+        "observe",
+        "logs",
+        "destroy"
+      ],
+      "notes": "Creates a dedicated Railway project with the complete reviewed template, including persistent volumes and generated secrets. Deleting this workload deletes that project and its data.",
+      "provenance": {
+        "source": "railway",
+        "url": "https://railway.com/deploy/n8n",
+        "revision": "29d3554c1456b0340164b7504bdc0877507f52b5558d9e1f65ca88d5be3ca196",
+        "reviewedAt": "2026-11-17"
+      }
+    }
+  ]
 }

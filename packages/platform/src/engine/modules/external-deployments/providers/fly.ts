@@ -1,3 +1,4 @@
+import { ExecError, SpritesClient } from "@fly/sprites";
 import { AppError } from "@repo/core";
 import { safeFetch } from "../../../lib/safe-fetch";
 
@@ -163,8 +164,14 @@ export function buildMachineCreatePayload(input: CreateFlyMachineInput): Record<
 
 /** Build the Sprites API create/update body while preserving provider-specific fields. */
 export function buildSpriteCreatePayload(input: CreateFlySpriteInput): Record<string, unknown> {
-  const { name: _name, organizationId: _org, idempotencyKey: _idempotency, ...rest } = input;
-  return Object.fromEntries(Object.entries(rest).filter(([, value]) => value !== undefined));
+  // A Sprite is provisioned from Fly's managed environment, not a Docker image.
+  const payload: Record<string, unknown> = { name: input.name };
+  if (input.region) payload.config = { ...input.resources, region: input.region };
+  else if (input.resources) payload.config = input.resources;
+  if (input.urlSettings) payload.url_settings = input.urlSettings;
+  if (input.environment) payload.environment = input.environment;
+  if (input.runtime) payload.runtime = input.runtime;
+  return payload;
 }
 
 export function normalizeMachineStatus(value: unknown): NormalizedFlyStatus {
@@ -238,11 +245,27 @@ export async function flyRequest<T>({
       maxBodyBytes,
     });
   } catch {
-    throw new AppError("Fly could not be reached. Retry the operation.", 502, "FLY_UNAVAILABLE");
+    throw new AppError(method === "GET" ? "Fly could not be reached. Retry the operation." : "Fly request outcome is unknown. Refresh the target before retrying.", 502, method === "GET" ? "FLY_UNAVAILABLE" : "EXTERNAL_UNKNOWN_OUTCOME");
   }
   if (!response.ok) {
+    if (method !== "GET" && response.status >= 500) throw new AppError("Fly request outcome is unknown. Refresh the target before retrying.", 502, "EXTERNAL_UNKNOWN_OUTCOME");
     const auth = response.status === 401 || response.status === 403;
     const rateLimited = response.status === 429;
+    // Only map known validation classes to fixed messages. Never include the
+    // provider's raw body, which can repeat submitted environment secrets.
+    if (!auth && !rateLimited && response.status >= 400 && response.status < 500) {
+      let details = "";
+      try {
+        const error = await response.json() as Record<string, unknown>;
+        details = [error.error, error.message].filter(value => typeof value === "string").join(" ").slice(0, 8000).toLowerCase();
+      } catch { /* Keep the generic error for non-JSON provider responses. */ }
+      const validation = /cpu.?kind|invalid cpu|unknown cpu/.test(details) ? ["FLY_CPU_INVALID", "Fly rejected the CPU kind. Choose shared or performance."]
+        : /memory|ram.*(?:invalid|limit|minimum|maximum)/.test(details) ? ["FLY_MEMORY_INVALID", "Fly rejected the memory size. Choose a size supported by the selected CPU kind."]
+        : /image|manifest|registry|pull/.test(details) ? ["FLY_IMAGE_UNAVAILABLE", "Fly could not use this container image. Check the registry path and image access."]
+        : /quota|billing|payment|credit|spending/.test(details) ? ["FLY_ACCOUNT_LIMIT", "Fly requires an account limit or billing change before creating this Machine."]
+        : /capacity|insufficient resources|not enough/.test(details) ? ["FLY_REGION_CAPACITY", "Fly has insufficient capacity for this Machine configuration in the selected region."] : undefined;
+      if (validation) throw new AppError(validation[1]!, 422, validation[0]);
+    }
     throw new AppError(
       auth
         ? "Fly refused access for the selected organization or resource."
@@ -257,12 +280,36 @@ export async function flyRequest<T>({
   try {
     return (await response.json()) as T;
   } catch {
-    throw new AppError("Fly returned an invalid response", 502, "FLY_RESPONSE_INVALID");
+    throw new AppError("Fly returned an invalid response", 502, method === "GET" ? "FLY_RESPONSE_INVALID" : "EXTERNAL_UNKNOWN_OUTCOME");
   }
 }
 
 export class FlyMachinesClient {
   constructor(private readonly connection: FlyConnection) {}
+
+  inspectApp(appName: string): Promise<unknown> {
+    return flyRequest({ kind: "fly-machine", token: this.connection.token, path: `/v1/apps/${segment(appName, "app")}` });
+  }
+
+  createApp(appName: string, idempotencyKey?: string): Promise<unknown> {
+    if (!this.connection.organizationId) throw new AppError("A Fly organization is required", 400, "FLY_ORGANIZATION_REQUIRED");
+    return flyRequest({ kind: "fly-machine", token: this.connection.token, path: "/v1/apps", method: "POST", body: { app_name: appName, org_slug: this.connection.organizationId }, idempotencyKey });
+  }
+
+  async allocatePublicIp(appName: string, idempotencyKey: string): Promise<void> {
+    segment(appName, "app");
+    let response;
+    try {
+      response = await safeFetch("https://api.fly.io/graphql", {
+        method: "POST", headers: { ...bearer(this.connection.token), "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ query: "mutation AllocatePublicIp($input: AllocateIPAddressInput!) { allocateIpAddress(input: $input) { ipAddress { address type } } }", variables: { input: { appId: appName, type: "shared_v4", clientMutationId: idempotencyKey } } }),
+        timeoutMs: 30_000, maxBodyBytes: 256_000,
+      });
+    } catch { throw new AppError("Fly IP allocation outcome is unknown.", 502, "EXTERNAL_UNKNOWN_OUTCOME"); }
+    if (!response.ok) throw new AppError("Fly could not allocate the app's public IP address.", response.status === 403 ? 403 : 502, response.status >= 500 ? "EXTERNAL_UNKNOWN_OUTCOME" : "FLY_IP_ALLOCATION_FAILED");
+    const result = await response.json() as { data?: { allocateIpAddress?: { ipAddress?: { address?: string } } }; errors?: unknown[] };
+    if (result.errors?.length || !result.data?.allocateIpAddress?.ipAddress?.address) throw new AppError("Fly could not confirm the app's public IP allocation.", 502, "FLY_IP_ALLOCATION_FAILED");
+  }
 
   create(input: CreateFlyMachineInput): Promise<unknown> {
     return flyRequest({
@@ -300,7 +347,7 @@ export class FlyMachinesClient {
     return flyRequest({
       kind: "fly-machine",
       token: this.connection.token,
-      path: machinePath(appName, machineId),
+      path: `${machinePath(appName, machineId)}?force=true`,
       method: "DELETE",
       idempotencyKey,
     });
@@ -324,8 +371,8 @@ export class FlySpritesClient {
     return flyRequest({
       kind: "fly-sprite",
       token: this.connection.token,
-      path: spritePath(input.name),
-      method: "PUT",
+      path: spritePath(),
+      method: "POST",
       body: buildSpriteCreatePayload(input),
       idempotencyKey: input.idempotencyKey,
     });
@@ -339,15 +386,22 @@ export class FlySpritesClient {
     return flyRequest({ kind: "fly-sprite", token: this.connection.token, path: spritePath(spriteName) });
   }
 
-  exec(spriteName: string, command: string, args: string[] = [], idempotencyKey?: string): Promise<unknown> {
-    return flyRequest({
-      kind: "fly-sprite",
-      token: this.connection.token,
-      path: spritePath(spriteName, "exec"),
-      method: "POST",
-      body: { command, args },
-      idempotencyKey,
-    });
+  async exec(spriteName: string, command: string, args: string[] = [], _idempotencyKey?: string, options?: { cwd?: string; env?: Readonly<Record<string, string>>; signal?: AbortSignal }): Promise<{ stdout: string; stderr: string; exitCode: number }> {
+    // Use the maintained SDK's framed WebSocket transport. The HTTP exec stream
+    // has no frame lengths and cannot be decoded reliably after buffering.
+    segment(spriteName, "sprite");
+    try {
+      const result = await new SpritesClient(this.connection.token).sprite(spriteName).execFile(command, args, {
+        cwd: options?.cwd, env: options?.env ? { ...options.env } : undefined,
+        signal: options?.signal, timeout: 30_000, maxBuffer: 20_000,
+      });
+      return { stdout: String(result.stdout), stderr: String(result.stderr), exitCode: result.exitCode };
+    } catch (error) {
+      // execFile rejects nonzero exits with captured output; these are command
+      // results, while transport failures remain explicit provider errors.
+      if (error instanceof ExecError) return { stdout: String(error.stdout), stderr: String(error.stderr), exitCode: error.exitCode };
+      throw new AppError("Sprite command transport failed or exceeded its output/time limit.", 502, "FLY_EXEC_FAILED");
+    }
   }
 
   checkpoint(spriteName: string, name?: string, idempotencyKey?: string): Promise<unknown> {

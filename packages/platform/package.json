@@ -36,6 +36,7 @@
     "@better-auth/drizzle-adapter": "1.7.15",
     "@better-auth/oauth-provider": "1.7.15",
     "@better-auth/passkey": "1.7.15",
+    "@fly/sprites": "0.2.4",
     "@octokit/auth-oauth-device": "^8.0.3",
     "@octokit/request": "^10.0.8",
     "@repo/adapters": "workspace:*",

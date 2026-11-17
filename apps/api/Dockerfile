@@ -23,6 +23,14 @@ COPY patches/ ./patches/
 RUN --mount=type=cache,target=/root/.bun/install/cache \
     bun install --frozen-lockfile
 
+# The assistant uses isolated per-user profiles; ship only the pinned executable.
+# Credentials and profiles live on the deployment's persistent data mount.
+FROM ${NODE_IMAGE} AS agent-runtime
+ARG CODEX_VERSION=0.163.0
+RUN npm install --prefix /opt/workbox-agent-runtime --omit=dev --ignore-scripts \
+    --no-audit --no-fund "@openai/codex@${CODEX_VERSION}" \
+ && /opt/workbox-agent-runtime/node_modules/.bin/codex --version
+
 # ─── Build stage ────────────────────────────────────────
 FROM dependencies AS builder
 COPY tsconfig.base.json ./
@@ -65,6 +73,8 @@ RUN apt-get update \
 # @repo/db unresolvable and the API crashed on startup.
 # Keep this large, stable layer independent of application source and compilation.
 COPY --from=dependencies /app/node_modules ./node_modules
+# Keep the pinned agent executable cached independently of application changes.
+COPY --from=agent-runtime /opt/workbox-agent-runtime /opt/workbox-agent-runtime
 COPY --from=builder /app/package.json /app/bun.lock /app/pnpm-workspace.yaml /app/tsconfig.base.json ./
 COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/apps/api ./apps/api
@@ -74,6 +84,7 @@ COPY --from=builder /app/apps/api ./apps/api
 COPY --from=builder /app/apps/email/engine ./apps/email/engine
 
 ENV NODE_ENV=production
+ENV PATH="/opt/workbox-agent-runtime/node_modules/.bin:${PATH}"
 EXPOSE 4000
 # tsx loads the TypeScript workspace packages that tsup leaves external.
 CMD ["node", "--import", "tsx", "apps/api/dist/index.js"]

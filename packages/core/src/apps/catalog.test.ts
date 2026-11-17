@@ -433,3 +433,15 @@ describe("Appwrite startup", () => {
     );
   });
 });
+
+describe('provider recipes', () => {
+  const base = { id: 'provider-demo', name: 'Demo', description: 'Demo', kind: 'template', logo: 'package', category: 'other', nativeSupport: false, services: [], deploymentRecipes: [{ id: 'vercel', label: 'Vercel', provider: 'vercel', workloadKind: 'service', source: { repo: 'example/demo' } }] };
+  it('accepts explicit provider-only entries and preserves provenance', () => {
+    expect(isValidAppTemplate(base)).toBe(true);
+    expect(isValidAppTemplate({ ...base, provenance: { source: 'vercel', url: 'https://vercel.com/templates/example', revision: 'fixed' } })).toBe(true);
+  });
+  it('rejects duplicate recipe IDs and secrets mapped to public resources', () => {
+    expect(isValidAppTemplate({ ...base, deploymentRecipes: [...base.deploymentRecipes, ...base.deploymentRecipes] })).toBe(false);
+    expect(isValidAppTemplate({ ...base, deploymentRecipes: [{ ...base.deploymentRecipes[0], inputs: [{ key: 'password', label: 'Password', type: 'password', target: 'resource' }] }] })).toBe(false);
+  });
+});

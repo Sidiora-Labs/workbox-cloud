@@ -1,0 +1,249 @@
+{
+  "$schema": "https://openship.io/app.schema.json",
+  "id": "firefox",
+  "name": "Firefox",
+  "description": "A private Firefox browser streamed from your server, with persistent profiles and a protected access gateway.",
+  "kind": "template",
+  "logo": "firefox",
+  "category": "other",
+  "available": true,
+  "verified": false,
+  "schemaVersion": 2,
+  "minEngine": "0.9.2",
+  "supportsCloud": false,
+  "framework": "docker-compose",
+  "repository": "https://github.com/linuxserver/docker-firefox",
+  "provenance": {
+    "source": "upstream",
+    "url": "https://docs.linuxserver.io/images/docker-firefox/",
+    "revision": "1160.0build1-1xtradeb1.2404.1-ls137",
+    "license": "GPL-3.0-only (container packaging); bundled components retain their own licenses",
+    "reviewedAt": "2026-11-17"
+  },
+  "minResources": {
+    "cpuCores": 2,
+    "memoryMb": 3072
+  },
+  "tags": [
+    "browser",
+    "desktop",
+    "private",
+    "selkies",
+    "interactive"
+  ],
+  "services": [
+    {
+      "name": "firefox",
+      "image": "docker.io/linuxserver/firefox:1160.0build1-1xtradeb1.2404.1-ls137@sha256:ff6c82bab010866097f44cfeac6ae1c8d8112fe58f694c492d5051a50eea0961",
+      "shmSize": 1073741824,
+      "restart": "unless-stopped",
+      "environment": {
+        "PUID": "1000",
+        "PGID": "1000",
+        "TZ": "Etc/UTC",
+        "HARDEN_DESKTOP": "true",
+        "SELKIES_ENABLE_SHARING": "false|locked",
+        "SELKIES_ENABLE_SHARED": "false|locked",
+        "AUTO_GPU": "false",
+        "NO_GAMEPAD": "true",
+        "NO_WEBCAM": "true",
+        "HARDEN_OPENBOX": "true"
+      },
+      "volumes": [
+        "firefox_config:/config"
+      ],
+      "resources": {
+        "cpuCores": 1,
+        "memoryMb": 2048,
+        "diskMb": 4096
+      },
+      "healthcheck": {
+        "test": [
+          "CMD-SHELL",
+          "curl -fsS -o /dev/null http://127.0.0.1:3000/"
+        ],
+        "interval": "15s",
+        "timeout": "5s",
+        "retries": 12,
+        "startPeriod": "60s"
+      }
+    },
+    {
+      "name": "firefox-access",
+      "image": "caddy:2.11.7-alpine@sha256:e70b164da81ef698b3ad19af799ea6086ce6d9e48ed4079eb9fe26f6fbf14ee5",
+      "restart": "unless-stopped",
+      "dependsOn": [
+        "firefox"
+      ],
+      "secretEnv": [
+        "OPENSHIP_ADMIN_PASSWORD"
+      ],
+      "commandArgv": [
+        "sh",
+        "/etc/workbox/access.sh"
+      ],
+      "healthcheck": {
+        "test": [
+          "CMD-SHELL",
+          "wget -S -O /dev/null http://127.0.0.1:8080/ 2>&1 | grep -q '401 Unauthorized'"
+        ],
+        "interval": "15s",
+        "timeout": "5s",
+        "retries": 8
+      },
+      "exposed": true,
+      "exposedPort": 8080,
+      "routes": [
+        {
+          "port": 8080
+        }
+      ],
+      "resources": {
+        "cpuCores": 0.25,
+        "memoryMb": 128,
+        "diskMb": 128
+      }
+    }
+  ],
+  "configFields": [
+    {
+      "service": "firefox-access",
+      "key": "OPENSHIP_ADMIN_USER",
+      "label": "Access username",
+      "default": "workbox",
+      "required": true
+    },
+    {
+      "service": "firefox-access",
+      "key": "OPENSHIP_ADMIN_PASSWORD",
+      "label": "Access password",
+      "generate": "secret",
+      "secret": true
+    }
+  ],
+  "settings": [
+    {
+      "id": "access",
+      "label": "Browser access",
+      "columns": 2,
+      "fields": [
+        {
+          "service": "firefox-access",
+          "key": "OPENSHIP_ADMIN_USER",
+          "label": "Access username",
+          "type": "text",
+          "default": "workbox",
+          "required": true,
+          "pattern": "^[a-zA-Z0-9_.-]+$",
+          "patternError": "Use letters, numbers, dots, dashes or underscores.",
+          "installStep": true,
+          "requiresRedeploy": true
+        },
+        {
+          "service": "firefox-access",
+          "key": "OPENSHIP_ADMIN_PASSWORD",
+          "label": "Access password",
+          "type": "password",
+          "secret": true,
+          "required": true,
+          "requiresRedeploy": true,
+          "help": "Generated during installation. Keep the password private."
+        }
+      ]
+    },
+    {
+      "id": "browser",
+      "label": "Browser preferences",
+      "fields": [
+        {
+          "service": "firefox",
+          "key": "TZ",
+          "label": "Timezone",
+          "type": "text",
+          "default": "Etc/UTC",
+          "installStep": true,
+          "requiresRedeploy": true
+        }
+      ]
+    }
+  ],
+  "management": {
+    "kind": "schema"
+  },
+  "endpoints": [
+    {
+      "service": "firefox-access",
+      "port": 8080,
+      "label": "Private browser",
+      "kind": "http",
+      "scope": "internal",
+      "defaultMode": "internal",
+      "allowedModes": [
+        "internal",
+        "domain"
+      ]
+    }
+  ],
+  "connection": {
+    "title": "Open Firefox",
+    "description": "Connect through the protected gateway using the generated credentials. Browser profiles are stored on a project-scoped volume.",
+    "guide": {
+      "defaultMode": "internal",
+      "intro": "This is an interactive Firefox browser. Open its gateway through a local tunnel, or explicitly assign a HTTPS domain."
+    },
+    "outputs": [
+      {
+        "id": "url",
+        "label": "Firefox",
+        "source": "publicUrl:firefox-access",
+        "kind": "url",
+        "recommended": true
+      },
+      {
+        "id": "username",
+        "label": "Username",
+        "source": "env:firefox-access:OPENSHIP_ADMIN_USER",
+        "width": "half"
+      },
+      {
+        "id": "password",
+        "label": "Password",
+        "source": "env:firefox-access:OPENSHIP_ADMIN_PASSWORD",
+        "secret": true,
+        "width": "half"
+      }
+    ],
+    "firstLogin": {
+      "note": "The generated credentials protect the gateway. Desktop sudo, terminal launchers and session sharing are disabled. The browser still has network access from its server."
+    }
+  },
+  "files": [
+    {
+      "service": "firefox-access",
+      "path": "/etc/workbox/access.sh",
+      "content": "#!/bin/sh\nset -eu\nexport OPENSHIP_PASSWORD_HASH=\"$(caddy hash-password --plaintext \"$OPENSHIP_ADMIN_PASSWORD\")\"\nunset OPENSHIP_ADMIN_PASSWORD\nexec caddy run --config /etc/workbox/access.Caddyfile --adapter caddyfile\n"
+    },
+    {
+      "service": "firefox-access",
+      "path": "/etc/workbox/access.Caddyfile",
+      "content": "{\n  auto_https off\n  admin off\n}\n:8080 {\n  basic_auth {\n    {$OPENSHIP_ADMIN_USER} {$OPENSHIP_PASSWORD_HASH}\n  }\n  reverse_proxy firefox:3000\n}\n"
+    }
+  ],
+  "marketplace": {
+    "features": [
+      {
+        "title": "Interactive browser",
+        "description": "Use the browser visually with keyboard, mouse, audio and clipboard."
+      },
+      {
+        "title": "Persistent profile",
+        "description": "Project storage retains browser settings, profiles and files across redeployments."
+      },
+      {
+        "title": "Protected access",
+        "description": "Generated credentials, a private default endpoint and desktop hardening."
+      }
+    ],
+    "articleFile": "articles/firefox.md"
+  }
+}

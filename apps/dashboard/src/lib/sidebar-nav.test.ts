@@ -60,6 +60,7 @@ describe("getNavSections (the platform rail)", () => {
     expect(sectionsOf(s)).toEqual(["main", "infrastructure", "settings"]);
     expect(keysOf(find(s, "main"))).toEqual([
       "home",
+      "workloads",
       "projects",
       "apps",
       "issues",

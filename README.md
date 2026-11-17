@@ -174,6 +174,8 @@ The stack is **postgres + redis + api + dashboard + edge**. The `edge` is OpenRe
 
 ## How It Works
 
+Open **Workloads → New workload** to choose Workbox Cloud, a connected server, Railway, Vercel, Fly.io, Blaxel or a connected Workbox host. The [workload guide](docs/workloads.md) covers provider connections, service and sandbox selection, deployment review and lifecycle controls.
+
 Point Workbox Cloud at a source — a **GitHub repo**, a **local folder**, or a **prebuilt artifact** — and it runs one pipeline end to end:
 
 1. **Detect.** It reads your `package.json`, framework config, lockfiles, and any `docker-compose.yml` / `openship.json` to work out the stack, package manager, build/start commands, and port. Zero config files required; an `openship.json` overrides the guesses if you want control.

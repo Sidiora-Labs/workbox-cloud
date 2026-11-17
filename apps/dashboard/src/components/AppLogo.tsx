@@ -7,6 +7,13 @@ import { appsApi } from "@/lib/api/apps";
 export { APP_LOGO };
 
 let customLogos: Promise<Map<string, string>> | undefined;
+const curatedLogos: Record<string, { slug?: string; src?: string; icon?: "window" | "server" }> = {
+  chromium: { slug: "googlechrome" },
+  firefox: { slug: "firefoxbrowser" },
+  webtop: { slug: "linux" },
+  "selenium-chromium": { slug: "selenium" },
+  "workbox-host": { src: "/brand/wb_cloud_dark.webp" },
+};
 
 /** Custom apps have no APP_LOGO entry; their own template `logo` comes from the catalog (#1507). */
 function loadCustomLogos() {
@@ -32,7 +39,8 @@ export function refreshCustomAppLogos() {
 
 export function AppLogo(props: ComponentProps<typeof SharedAppLogo>) {
   const { appId, slug, src } = props;
-  const lookup = !!appId && !slug && !src && !(appId in APP_LOGO);
+  const curated = appId ? curatedLogos[appId] : undefined;
+  const lookup = !!appId && !slug && !src && !curated && !(appId in APP_LOGO);
   const [customLogo, setCustomLogo] = useState<string>();
   useEffect(() => {
     setCustomLogo(undefined);
@@ -45,5 +53,5 @@ export function AppLogo(props: ComponentProps<typeof SharedAppLogo>) {
       live = false;
     };
   }, [lookup, appId]);
-  return <SharedAppLogo {...props} slug={slug ?? customLogo} />;
+  return <SharedAppLogo {...curated} {...props} slug={slug ?? curated?.slug ?? customLogo} />;
 }

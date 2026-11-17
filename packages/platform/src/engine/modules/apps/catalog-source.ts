@@ -231,7 +231,7 @@ export async function listOrgCustomApps(organizationId: string): Promise<Resolve
   const rows = await repos.customAppTemplate.listByOrg(organizationId);
   const valid: ResolvedAppTemplate[] = [];
   for (const r of rows) {
-    const candidate = { ...r.template, verified: false, unlisted: false, custom: true };
+    const candidate = { ...r.template, deploymentRecipes: [], verified: false, unlisted: false, custom: true };
     if (isValidAppTemplate(candidate)) {
       valid.push(candidate);
     } else {
@@ -256,7 +256,7 @@ export async function getTemplateForOrg(
   if (curated) return curated;
   const custom = await repos.customAppTemplate.findByAppId(organizationId, id);
   if (!custom) return undefined;
-  const candidate = { ...custom.template, verified: false, unlisted: false, custom: true };
+  const candidate = { ...custom.template, deploymentRecipes: [], verified: false, unlisted: false, custom: true };
   if (!isValidAppTemplate(candidate)) {
     errorDiagnostics.warn(
       "platform/engine/modules/apps/catalog-source",

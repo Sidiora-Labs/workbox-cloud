@@ -1639,6 +1639,13 @@
       "when": 1794805032224,
       "tag": "0233_external_deployment_targets",
       "breakpoints": true
+    },
+    {
+      "idx": 234,
+      "version": "7",
+      "when": 1794891000000,
+      "tag": "0234_workbox_hosts",
+      "breakpoints": true
     }
   ]
 }

@@ -23,6 +23,7 @@ import { env } from "../../config/env";
 import { DigitalOceanApiError, digitaloceanRequest } from "../../lib/digitalocean-api";
 import { safeFetch, type SafeFetchResponse } from "../../lib/safe-fetch";
 import { trustedRegistryRealm } from "../../lib/registry-auth";
+import { verifyBlaxelAccess } from "../external-deployments/providers/blaxel";
 import {
   providerJson,
   verifyProviderAccess,
@@ -240,9 +241,9 @@ const verifyDigitalOcean: Verifier = async ({ secrets }) => {
   }
 };
 
-/** Fly credentials are checked against both fixed control-plane origins so a
- * token cannot be stored while only one of the two requested resource kinds is
- * usable. Response bodies are deliberately ignored. */
+/** Machines and Sprites use separate credentials. A valid Machines connection
+ * does not require Sprites access; verify the optional Sprite token when supplied.
+ * Response bodies are deliberately ignored. */
 const verifyFly: Verifier = async ({ publicFields, secrets }) => {
   const apiToken = secrets.apiToken ?? "";
   const organizationId = publicFields.organizationId?.trim() ?? "";
@@ -251,7 +252,11 @@ const verifyFly: Verifier = async ({ publicFields, secrets }) => {
   try {
     const auth = { Authorization: `Bearer ${apiToken}` };
     await providerJson(new URL(`https://api.machines.dev/v1/apps?org_slug=${encodeURIComponent(organizationId)}`), { headers: auth });
-    await providerJson(new URL("https://api.sprites.dev/v1/sprites"), { headers: auth });
+    if (secrets.spriteToken) {
+      await providerJson(new URL("https://api.sprites.dev/v1/sprites"), {
+        headers: { Authorization: `Bearer ${secrets.spriteToken}` },
+      });
+    }
     return { ok: true };
   } catch (error) {
     const status = error instanceof Error ? error.message : "";
@@ -287,6 +292,16 @@ const verifyWorkbox: Verifier = async ({ selector, publicFields, secrets }) => {
 };
 
 const VERIFIERS: Record<string, Verifier> = {
+  blaxel: async ({ publicFields, secrets }) => {
+    if (!publicFields.workspaceId || !secrets.apiKey) return { ok: false, reason: "A Blaxel workspace and API key are required." };
+    try {
+      await verifyBlaxelAccess({ workspaceId: publicFields.workspaceId, apiKey: secrets.apiKey });
+      return { ok: true };
+    } catch {
+      // diagnostics-ignore: provider responses may contain sensitive data.
+      return { ok: false, reason: "Blaxel could not verify this workspace. Check the API key and workspace access." };
+    }
+  },
   "docker-registry": verifyDockerRegistry,
   cloudflare: verifyCloudflare,
   digitalocean: verifyDigitalOcean,
@@ -322,8 +337,18 @@ export async function verifyCredentialValues(
     selector: string | null;
     publicFields: Record<string, string>;
     secrets: CredentialSecrets;
+    organizationId?: string;
   },
 ): Promise<VerifyResult> {
+  if (provider.id === "workbox" && args.publicFields.managedHostId) {
+    if (!args.organizationId) return {ok:false,reason:"Managed Workbox connections require their owning workspace."};
+    try {
+      const { managedWorkboxClient } = await import("../workbox-hosts/service");
+      const client=await managedWorkboxClient(args.organizationId,args.publicFields,args.secrets.apiKey??"", undefined, true);
+      const checked=await client.preflight();
+      return {ok:checked.ready&&checked.reachable,reason:checked.ready?undefined:"The managed Workbox host is not ready."};
+    } catch {return {ok:false,reason:"The managed Workbox host could not verify its private connection."};}
+  }
   const verifier = VERIFIERS[provider.id];
   if (!verifier) {
     return { ok: false, reason: `Workbox Cloud cannot verify ${provider.label} credentials yet.` };

@@ -104,6 +104,9 @@ export async function getAppCatalog(ctx: RequestContext) {
   const custom = await listOrgCustomApps(ctx.organizationId);
   return [...getRuntimeCatalog(), ...custom].filter((t) => !t.unlisted).map((t) => ({
     id: t.id,
+    nativeSupport: t.nativeSupport ?? true,
+    deploymentRecipes: t.custom ? [] : t.deploymentRecipes ?? [],
+    provenance: t.provenance,
     name: t.name,
     description: t.description,
     kind: t.kind,
@@ -389,6 +392,9 @@ export async function installApp(
   // Server-side gate: a "coming soon" app is dimmed in the UI, but also refuse
   // it here so a direct API call can't install a not-yet-enabled app.
   if (!template.available) throw new Error("app-not-available");
+
+  if (template.nativeSupport === false)
+    throw new AppError("Choose a supported provider recipe to deploy this app.", 400, "APP_NATIVE_UNSUPPORTED");
 
   if (template.kind === "flow") {
     return { kind: "flow", flowHref: template.flowHref ?? "/" };

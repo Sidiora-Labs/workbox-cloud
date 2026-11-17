@@ -21,6 +21,12 @@ This page walks through writing one from scratch. Every field is catalogued in t
 Both use the **same format** and the **same strict validation**, so everything below applies either
 way. [Jump to the custom-app path](#upload-a-custom-app-no-pull-request) if you are not opening a PR.
 
+## Provider deployment recipes
+
+Curated entries can also declare provider-specific installation recipes. The catalog then offers a supported provider destination beside the native server flow, and retains the app identity in **Apps** after deployment. Recipes describe a reviewed source, image or provider template plus a bounded set of configuration inputs. They do not infer compatibility from a Compose file.
+
+Provider recipes are resolved from the trusted catalog by the server. Custom uploaded apps use the native installation path; an upload cannot introduce trusted provider deployment instructions. See [Provider recipes](/docs/reference/app-catalog#provider-recipes) for the fields and [Install catalog apps](/docs/guides/app-catalog) for the operator flow.
+
 ## What a pull request contains
 
 Submit `packages/core/src/apps/catalog/<id>.json` and the regenerated `catalog.json`. Optionally

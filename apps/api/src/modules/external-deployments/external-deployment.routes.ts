@@ -9,6 +9,27 @@ const r = secureRouter(new Hono(), {
   basePath: "/api/external-deployments",
 });
 
+r.get("/discover", {
+  tag: "settings:read",
+  collection: true,
+  query: ExternalDeploymentCollectionSchemas.discover.input,
+  mcp: { description: "Discover accessible deployment projects, environments and applications for one organization-owned provider connection. Secrets are never returned." },
+}, controller.discover);
+
+r.get("/operations", {
+  tag: "settings:read",
+  collection: true,
+  query: ExternalDeploymentCollectionSchemas.operations.input,
+  mcp: { description: "List recent external deployment operations and their bound resource identities. Deployment secrets are never returned." },
+}, controller.operationsList);
+
+r.get("/logs", {
+  tag: "settings:read",
+  collection: true,
+  query: ExternalDeploymentCollectionSchemas.logs.input,
+  mcp: { description: "Read a bounded page of logs for an organization-owned external workload. Configured environment values and provider credentials are redacted." },
+}, controller.logs);
+
 r.get(
   "/targets",
   {
@@ -25,7 +46,7 @@ r.get(
 r.post(
   "/capabilities",
   {
-    tag: "settings:read",
+    tag: "settings:write",
     collection: true,
     body: ExternalDeploymentCollectionSchemas.capabilities.input,
     mcp: {
@@ -39,7 +60,7 @@ r.post(
 r.post(
   "/preflight",
   {
-    tag: "settings:read",
+    tag: "settings:write",
     collection: true,
     body: ExternalDeploymentCollectionSchemas.preflight.input,
     mcp: {
@@ -53,7 +74,7 @@ r.post(
 r.post(
   "/plan",
   {
-    tag: "settings:read",
+    tag: "deployment:write",
     collection: true,
     body: ExternalDeploymentCollectionSchemas.plan.input,
     mcp: {
@@ -81,7 +102,7 @@ r.post(
 r.post(
   "/observe",
   {
-    tag: "settings:read",
+    tag: "deployment:write",
     collection: true,
     body: ExternalDeploymentCollectionSchemas.observe.input,
     mcp: {

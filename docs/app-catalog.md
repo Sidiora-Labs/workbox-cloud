@@ -1,0 +1,55 @@
+# Install and manage catalog apps
+
+Open **Apps → Install app** to browse the catalog. Search by name or category, or filter by a provider badge. Select an app and choose **Install on** to see the destinations supported by that app. A provider account being connected does not make every catalog app compatible with it.
+
+## Choose a destination
+
+For a native installation, select **Workbox Cloud & your servers**, then a compatible connected server or managed workspace. Configure the app's settings, storage and endpoints using the existing installation form. Some apps, including the browser entries below, require a compatible self-managed server and are not offered on managed Cloud.
+
+For a provider recipe, select the named Railway or Vercel option, choose a saved connection, and complete the destination and app settings. Connections retain their account or team identity even if multiple accounts contain projects with the same name. The recipe supplies the reviewed image or source and any service dependencies; you do not need to recreate those resources by hand.
+
+Select **Review installation**. Workbox Cloud checks the connection, required capabilities and app configuration before offering **Install app**. Read the storage and ownership information in the review. Changing the configuration invalidates that review. An accepted plan permits installation; the app becomes ready only after its provider reports the required state.
+
+Provider recipes are a curated selection, not a live popularity ranking or a mirror of every provider template. Their source links, reviewed versions and license information describe what will be installed. Destinations without a supported recipe are not interchangeable: a database volume, a multi-service dependency and a browser's shared memory must be supported explicitly.
+
+## Curated provider templates
+
+| Destination | Catalog apps | Deployment and data |
+| --- | --- | --- |
+| Railway | PostgreSQL, Redis, n8n | Creates a dedicated project from the reviewed Railway template graph, preserving its services, variable references and volumes |
+| Vercel | Next.js Starter, Next.js Blog, Portfolio Starter | Creates a project and builds a reviewed upstream Git revision; does not create a database, storage integration or a copy of the source repository |
+
+Give these installations a new project name after selecting the provider connection. Railway template installation requires a workspace connection that can create projects. A project-scoped Railway token cannot create a separate project. If Railway's upstream template graph changes after its recorded review, installation stops until the catalog recipe is reviewed again.
+
+The Vercel account must have access to deploy the public source repository. The created project can be observed and removed from Workbox Cloud, but these starters do not include a source editor or automatically create a repository in your Git account.
+
+Railway installation deletion removes its dedicated project, including persistent data. Vercel installation deletion removes its created project. Workbox Cloud checks the recorded ownership before deleting; an ownership conflict stays visible for inspection instead of deleting unrelated provider resources.
+
+## Use self-hosted browsers
+
+| App | Intended use | State |
+| --- | --- | --- |
+| Chromium | Interactive browser streamed from your server | Browser profile and files use a persistent project volume |
+| Firefox | Interactive Firefox browser streamed from your server | Browser profile and files use a persistent project volume |
+| Webtop | Desktop workspace with a browser | Desktop configuration and files use a persistent project volume |
+| Selenium Chromium | Automated tests through the WebDriver API | Browser sessions are temporary; end them after each test |
+
+These entries require a compatible self-managed container host with the memory and shared memory shown in the app requirements. They use a generated password at a protected gateway and start with an internal endpoint. Use a local tunnel for private access, or deliberately assign an HTTPS domain for remote access. The upstream browser or WebDriver port is not the public endpoint.
+
+After installation, open the app's connection details for its gateway URL, username and generated password. Keep these credentials private: a remote browser operates from your server's network. Browser preferences and supported session limits can be changed in the app settings. Redeployment preserves declared persistent volumes; removing those volumes removes their data.
+
+## Prepare a Workbox host
+
+Choose **Workbox prepared host** in the catalog to turn a compatible connected Linux server into a Workbox environment. Host preparation and child sandbox creation are separate steps.
+
+Select the server, run the host checks, and review the installation. Workbox Cloud prepares the daemon, its dependencies and filesystem/runtime assets, starts the managed service and verifies authenticated readiness. Progress and any failure remain visible. The Workbox connection becomes usable after verification; its API credentials are stored privately by Workbox Cloud.
+
+Use the ready host to create a **Workbox sandbox**. Select a prepared filesystem profile and configure the child sandbox's limits and environment. A normal application container cannot stand in for a prepared Workbox host. Native Railway and Vercel sandboxes and Fly Sprites remain separate choices with their own lifecycle and persistence.
+
+## Manage installed apps
+
+Return to **Apps** after installation. Native installations open their existing project controls. Provider installations retain the catalog app name, selected connection and exact provider resource identity; they also appear in **Workloads**.
+
+Use the controls offered by that installation to check status, open its URL, inspect available logs or delete it. Actions depend on the adapter's supported capabilities. Deletion asks for confirmation and can remove persistent data. A failure or unknown outcome remains visible so that you can inspect it before trying another installation.
+
+A successful connection check, an accepted plan and a ready app are different results. The deployment's current state and the recorded qualification evidence determine which result has been verified.

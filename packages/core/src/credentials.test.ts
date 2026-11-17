@@ -76,12 +76,14 @@ describe("the provider catalogue", () => {
   it("exposes deploy and sandbox providers without changing migration selection", () => {
     expect(credentialProvidersFor("migration").map((p) => p.id)).toEqual(["railway", "vercel"]);
     expect(credentialProvidersFor("deploy").map((p) => p.id)).toEqual([
+      "blaxel",
       "railway",
       "vercel",
       "fly",
       "workbox",
     ]);
     expect(credentialProvidersFor("sandbox").map((p) => p.id)).toEqual([
+      "blaxel",
       "railway",
       "vercel",
       "fly",

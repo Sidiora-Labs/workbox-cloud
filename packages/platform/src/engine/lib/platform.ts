@@ -57,6 +57,8 @@ import { noticesDependencies } from "../modules/notices/notice.operations";
 
 import { billingDependencies } from "../modules/billing/billing.operations";
 
+import { workboxHostDependencies } from "../modules/workbox-hosts/operations";
+
 let platform: PlatformKernel | undefined;
 
 export function getPlatformKernel(): PlatformKernel {
@@ -70,6 +72,7 @@ export function getPlatformKernel(): PlatformKernel {
     dns: dnsDependencies,
     credentials: credentialDependencies,
     externalDeployments: externalDeploymentDependencies,
+    workboxHosts: workboxHostDependencies,
     servers: serverDependencies,
     system: systemDependencies,
     apps: appDependencies,

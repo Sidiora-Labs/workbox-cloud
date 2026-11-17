@@ -60,6 +60,8 @@
     "support": "Soporte",
     "scale": "Escalado",
     "home": "Inicio",
+    "workloads": "Workloads",
+    "new-workload": "New workload",
     "new-project": "Nuevo proyecto",
     "projects": "Proyectos",
     "deployments": "Despliegues",

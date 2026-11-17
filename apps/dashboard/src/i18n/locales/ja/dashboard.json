@@ -60,6 +60,8 @@
     "support": "サポート",
     "scale": "スケーリング",
     "home": "ホーム",
+    "workloads": "Workloads",
+    "new-workload": "New workload",
     "new-project": "新規プロジェクト",
     "projects": "プロジェクト",
     "deployments": "デプロイ",

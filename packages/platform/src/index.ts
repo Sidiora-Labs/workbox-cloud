@@ -12,6 +12,7 @@ export * from "./domains";
 export * from "./dns";
 export * from "./credentials";
 export * from "./external-deployments";
+export * from "./workbox-hosts";
 export * from "./servers";
 export * from "./system";
 export * from "./apps";
@@ -46,6 +47,7 @@ import { createServiceOperations, type PlatformServiceOperations, type ServiceDe
 import { createDomainOperations, type PlatformDomainOperations, type DomainDependencies } from "./domains";
 import { createDnsOperations, type PlatformDnsOperations, type DnsDependencies } from "./dns";
 import { createCredentialOperations, type PlatformCredentialOperations, type CredentialDependencies } from "./credentials";
+import { createWorkboxHostOperations, type PlatformWorkboxHostOperations, type WorkboxHostDependencies } from "./workbox-hosts";
 import { createExternalDeploymentOperations, type PlatformExternalDeploymentOperations, type ExternalDeploymentDependencies } from "./external-deployments";
 import { createServerOperations, type PlatformServerOperations, type ServerDependencies } from "./servers";
 import { createSystemOperations, type PlatformSystemOperations, type SystemDependencies } from "./system";
@@ -90,6 +92,7 @@ export interface PlatformKernel {
   readonly dns: PlatformDnsOperations;
   readonly credentials: PlatformCredentialOperations;
   readonly externalDeployments: PlatformExternalDeploymentOperations;
+  readonly workboxHosts: PlatformWorkboxHostOperations;
   readonly servers: PlatformServerOperations;
   readonly system: PlatformSystemOperations;
   readonly apps: PlatformAppOperations;
@@ -113,7 +116,7 @@ export interface PlatformKernel {
 }
 
 /** Composition boundary. It acquires no resources and owns no implicit global state. */
-export function createPlatform(deps: DeploymentDependencies & { projects?: ProjectDependencies; sources?: SourceDependencies; services?: ServiceDependencies; domains?: DomainDependencies; dns?: DnsDependencies; credentials?: CredentialDependencies; externalDeployments?: ExternalDeploymentDependencies; servers?: ServerDependencies; system?: SystemDependencies; apps?: AppDependencies; backupDestinations?: BackupDestinationDependencies; backups?: BackupDependencies; billing?: BillingDependencies; referralProgram?: ReferralDependencies; notices?: NoticeDependencies; github?: GitHubDependencies; permissions?: PermissionDependencies; tokens?: TokenDependencies; webhooks?: WebhookDependencies; updates?: UpdateDependencies; audit?: AuditDependencies; settings?: UserSettingsDependencies; notifications?: NotificationDependencies; issues?: IssueDependencies; analytics?: AnalyticsDependencies; jobs?: JobDependencies; actions?: ActionDependencies }): PlatformKernel {
+export function createPlatform(deps: DeploymentDependencies & { projects?: ProjectDependencies; sources?: SourceDependencies; services?: ServiceDependencies; domains?: DomainDependencies; dns?: DnsDependencies; credentials?: CredentialDependencies; externalDeployments?: ExternalDeploymentDependencies; workboxHosts?: WorkboxHostDependencies; servers?: ServerDependencies; system?: SystemDependencies; apps?: AppDependencies; backupDestinations?: BackupDestinationDependencies; backups?: BackupDependencies; billing?: BillingDependencies; referralProgram?: ReferralDependencies; notices?: NoticeDependencies; github?: GitHubDependencies; permissions?: PermissionDependencies; tokens?: TokenDependencies; webhooks?: WebhookDependencies; updates?: UpdateDependencies; audit?: AuditDependencies; settings?: UserSettingsDependencies; notifications?: NotificationDependencies; issues?: IssueDependencies; analytics?: AnalyticsDependencies; jobs?: JobDependencies; actions?: ActionDependencies }): PlatformKernel {
   const kernel = {
     resolveScope: deps.authorization.resolveScope,
     deployments: createDeploymentOperations(deps),
@@ -124,6 +127,7 @@ export function createPlatform(deps: DeploymentDependencies & { projects?: Proje
     dns: createDnsOperations(deps.authorization, deps.dns),
     credentials: createCredentialOperations(deps.authorization, deps.credentials),
     externalDeployments: createExternalDeploymentOperations(deps.authorization, deps.externalDeployments),
+    workboxHosts: createWorkboxHostOperations(deps.authorization, deps.workboxHosts),
     servers: createServerOperations(deps.authorization, deps.servers),
     system: createSystemOperations(deps.authorization, deps.system),
     apps: createAppOperations(deps.authorization, deps.apps),

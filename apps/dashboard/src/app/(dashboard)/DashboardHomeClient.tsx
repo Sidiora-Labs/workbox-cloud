@@ -152,14 +152,14 @@ export default function DashboardHomeClient({
             {/* Shortcuts Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <Link
-                href="/library"
+                href="/workloads/new"
                 className="bg-card border border-border/50 rounded-xl p-4 hover:bg-muted/40 hover:border-border transition-all group"
               >
                 <div className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
                   <UiIcon name="git-branch" className="size-[18px] text-muted-foreground" />
                 </div>
-                <p className="text-sm font-medium text-foreground">{t.dashboard.home.importGit}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{t.dashboard.home.importGitDesc}</p>
+                <p className="text-sm font-medium text-foreground">New workload</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Deploy an app, sandbox or machine</p>
               </Link>
               <Link
                 href="/settings?tab=mcp"

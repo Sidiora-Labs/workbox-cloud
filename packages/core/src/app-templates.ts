@@ -390,10 +390,48 @@ export interface AppMarketplaceContent {
 
 /** Shared upstream artifact used by the engine and public app directory. */
 export const APP_CATALOG_URL =
-  "https://raw.githubusercontent.com/oblien/openship/main/packages/core/src/apps/catalog.json";
+  "https://raw.githubusercontent.com/Sidiora-Labs/workbox-cloud/main/packages/core/src/apps/catalog.json";
+
+/** Reviewed, provider-specific deployment intent. Never inferred from Compose fields. */
+export interface AppDeploymentRecipe {
+  id: string;
+  label: string;
+  provider: "railway" | "vercel" | "fly" | "blaxel" | "workbox";
+  workloadKind: import("./types").ExternalWorkloadKind;
+  image?: string;
+  source?: Readonly<Record<string, string>>;
+  resource?: Readonly<Record<string, string>>;
+  environment?: Readonly<Record<string, string>>;
+  inputs?: readonly AppDeploymentInput[];
+  requiredCapabilities?: readonly string[];
+  notes?: string;
+}
+
+export interface AppDeploymentInput {
+  key: string;
+  label: string;
+  type: "text" | "password" | "number" | "select";
+  target: "environment" | "resource" | "source";
+  targetKey?: string;
+  default?: string;
+  required?: boolean;
+  options?: readonly { value: string; label: string }[];
+}
+
+export interface AppTemplateProvenance {
+  source: "upstream" | "railway" | "vercel" | "workbox";
+  url: string;
+  revision?: string;
+  license?: string;
+  reviewedAt?: string;
+}
 
 export interface AppTemplate {
   id: string;
+  /** False for provider-only entries; native installation must refuse these. */
+  nativeSupport?: boolean;
+  deploymentRecipes?: readonly AppDeploymentRecipe[];
+  provenance?: AppTemplateProvenance;
   /** Installable now (true) vs a dimmed "coming soon" placeholder (false/omitted). Drives AVAILABLE_APP_IDS. */
   available?: boolean;
   /** Trust mark shown in the catalog + wizard: an official open-source image,

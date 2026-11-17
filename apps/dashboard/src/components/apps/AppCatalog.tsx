@@ -15,6 +15,7 @@ import { AddCustomAppModal } from "@/components/apps/AddCustomAppModal";
 import { useI18n, interpolate } from "@/components/i18n-provider";
 import { useToast } from "@/context/ToastContext";
 import { HelpMenu } from "@/components/HelpMenu";
+import { catalogProviderName } from "./AppDeploymentChoices";
 
 /**
  * Create App — the one-click catalog. Clicking an app opens its clean, business-
@@ -24,7 +25,18 @@ import { HelpMenu } from "@/components/HelpMenu";
 
 // Stable display order for the category tab bar; only categories actually
 // present in the catalog are shown.
-const CATEGORY_ORDER = ["backend", "database", "cms", "ai", "analytics", "automation", "mail", "other"] as const;
+const CATEGORY_ORDER = [
+  "browser",
+  "development",
+  "backend",
+  "database",
+  "cms",
+  "ai",
+  "analytics",
+  "automation",
+  "mail",
+  "other",
+] as const;
 
 /** Not installable right now: coming-soon OR needs a newer Workbox Cloud. */
 const isLocked = (a: AppCatalogEntry) => !!a.comingSoon || !!a.requiresUpdate;
@@ -38,6 +50,7 @@ export function AppCatalog({ embedded = false }: { embedded?: boolean } = {}) {
 
   const [catalog, setCatalog] = useState<AppCatalogEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [installingId] = useState<string | null>(null);
   const [addOpen, setAddOpen] = useState(false);
   const autoStarted = useRef(false);
@@ -45,44 +58,77 @@ export function AppCatalog({ embedded = false }: { embedded?: boolean } = {}) {
   const loadCatalog = () =>
     appsApi
       .catalog()
-      .then((r) => setCatalog(r.data ?? []))
+      .then((r) => {
+        setCatalog(r.data ?? []);
+        setError("");
+      })
       .catch((diagnosticFailure) => {
         observeCaughtError(diagnosticFailure, "dashboard/components/apps/AppCatalog");
+        setError(getApiErrorMessage(diagnosticFailure, "Could not load the app catalog."));
       });
 
   const removeCustomApp = async (app: AppCatalogEntry) => {
     try {
       await appsApi.removeCustom(app.id);
       await loadCatalog();
-      showToast(interpolate(ap.removedToast || "Removed \"{name}\".", { name: app.name }), "success");
+      showToast(interpolate(ap.removedToast || 'Removed "{name}".', { name: app.name }), "success");
     } catch (err) {
-      showToast(getApiErrorMessage(err, ap.removeFailedToast || "Couldn't remove the app."), "error");
+      showToast(
+        getApiErrorMessage(err, ap.removeFailedToast || "Couldn't remove the app."),
+        "error",
+      );
     }
   };
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string>("all");
+  const [provider, setProvider] = useState("all");
+  const availableProviders = useMemo(
+    () => [
+      ...new Set(
+        catalog.flatMap((app) => (app.deploymentRecipes ?? []).map((recipe) => recipe.provider)),
+      ),
+    ],
+    [catalog],
+  );
 
   const categories = useMemo(() => {
     const present = new Set(catalog.map((a) => a.category));
-    return ["all", ...CATEGORY_ORDER.filter((c) => present.has(c))];
+    return [
+      "all",
+      ...CATEGORY_ORDER.filter((c) => present.has(c)),
+      ...[...present]
+        .filter((c) => !CATEGORY_ORDER.includes(c as (typeof CATEGORY_ORDER)[number]))
+        .sort(),
+    ];
   }, [catalog]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return catalog
-      .filter((a) => {
-        if (category !== "all" && a.category !== category) return false;
-        if (!q) return true;
-        const localizedDesc = (t.library as any)?.catalog?.apps?.[a.id] || "";
-        return `${a.name} ${a.description} ${localizedDesc} ${(a.tags ?? []).join(" ")}`.toLowerCase().includes(q);
-      })
-      // Installable apps lead (grouped up front); locked ones (coming-soon or
-      // needs-newer-Workbox Cloud) after — a stable sort keeps order within a group.
-      .sort((a, b) => Number(isLocked(a)) - Number(isLocked(b)));
-  }, [catalog, category, query, t.library]);
+    return (
+      catalog
+        .filter((a) => {
+          if (category !== "all" && a.category !== category) return false;
+          if (
+            provider !== "all" &&
+            !a.deploymentRecipes?.some((recipe) => recipe.provider === provider)
+          )
+            return false;
+          if (!q) return true;
+          const localizedDesc = (t.library as any)?.catalog?.apps?.[a.id] || "";
+          return `${a.name} ${a.description} ${localizedDesc} ${(a.tags ?? []).join(" ")}`
+            .toLowerCase()
+            .includes(q);
+        })
+        // Installable apps lead (grouped up front); locked ones (coming-soon or
+        // needs-newer-Workbox Cloud) after — a stable sort keeps order within a group.
+        .sort((a, b) => Number(isLocked(a)) - Number(isLocked(b)))
+    );
+  }, [catalog, category, provider, query, t.library]);
 
   const catLabel = (c: string) =>
-    (ap.categories as Record<string, string> | undefined)?.[c] ?? (c === "ai" ? "AI & models" : c);
+    (ap.categories as Record<string, string> | undefined)?.[c] ??
+    { ai: "AI & models", browser: "Browsers", development: "Development" }[c] ??
+    c;
 
   useEffect(() => {
     loadCatalog().finally(() => setLoading(false));
@@ -99,7 +145,12 @@ export function AppCatalog({ embedded = false }: { embedded?: boolean } = {}) {
     // Template apps → the clean, business-only install wizard. It creates the
     // project on confirm and wraps the deploy; the technical /deploy wizard is
     // its "Advanced" path. No install-on-click (avoids orphaned projects).
-    router.push(`/apps/new/${app.id}`);
+    const selected =
+      app.deploymentRecipes?.find((recipe) => recipe.provider === provider) ??
+      (app.nativeSupport === false ? app.deploymentRecipes?.[0] : undefined);
+    router.push(
+      `/apps/new/${app.id}${selected ? `?recipe=${encodeURIComponent(selected.id)}` : ""}`,
+    );
   };
 
   // Deep-link: /apps/new?app=<id> (from the Apps page "popular" / "you can also
@@ -123,7 +174,10 @@ export function AppCatalog({ embedded = false }: { embedded?: boolean } = {}) {
   const hasFilters = !loading && catalog.length > 0;
   const searchField = (
     <div className={`relative w-full max-w-md ${embedded ? "min-w-40 flex-1" : ""}`}>
-      <UiIcon name="search" className="pointer-events-none absolute start-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+      <UiIcon
+        name="search"
+        className="pointer-events-none absolute start-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground"
+      />
       <input
         type="text"
         value={query}
@@ -137,10 +191,17 @@ export function AppCatalog({ embedded = false }: { embedded?: boolean } = {}) {
 
   return (
     <div className="@container/app-catalog">
-      <div className={`flex justify-between ${embedded ? "flex-wrap items-center gap-3" : "items-start gap-4"}`}>
-        {embedded ? hasFilters && searchField : (
+      <div
+        className={`flex justify-between ${embedded ? "flex-wrap items-center gap-3" : "items-start gap-4"}`}
+      >
+        {embedded ? (
+          hasFilters && searchField
+        ) : (
           <div>
-            <h1 className="text-2xl font-medium text-foreground/80" style={{ letterSpacing: "-0.2px" }}>
+            <h1
+              className="text-2xl font-medium text-foreground/80"
+              style={{ letterSpacing: "-0.2px" }}
+            >
               {ap.catalogTitle}
             </h1>
             <p className="mt-1 text-sm text-muted-foreground/70">{ap.catalogDescription}</p>
@@ -165,7 +226,7 @@ export function AppCatalog({ embedded = false }: { embedded?: boolean } = {}) {
                 icon: <UiIcon name="book" className="size-4" />,
                 onClick: () =>
                   window.open(
-                    "https://github.com/oblien/openship/tree/main/packages/core/src/apps",
+                    "https://github.com/Sidiora-Labs/workbox-cloud/tree/main/packages/core/src/apps",
                     "_blank",
                     "noopener,noreferrer",
                   ),
@@ -174,6 +235,15 @@ export function AppCatalog({ embedded = false }: { embedded?: boolean } = {}) {
           />
         </div>
       </div>
+
+      {error && (
+        <div role="alert" className="mt-4 rounded-xl bg-card p-4 text-sm text-destructive">
+          {error}{" "}
+          <button className="underline" onClick={() => void loadCatalog()}>
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* Search + category tabs — the catalog at a glance. */}
       {hasFilters && (
@@ -199,13 +269,35 @@ export function AppCatalog({ embedded = false }: { embedded?: boolean } = {}) {
               );
             })}
           </div>
+          {!!availableProviders.length && (
+            <div
+              aria-label="Filter apps by hosting provider"
+              className="mt-3 flex flex-wrap items-center gap-2"
+            >
+              <span className="text-xs text-muted-foreground">Deploy to</span>
+              {["all", ...availableProviders].map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  aria-pressed={provider === value}
+                  onClick={() => setProvider(value)}
+                  className={`rounded-full px-3 py-1.5 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${provider === value ? "bg-foreground text-background" : "bg-card text-muted-foreground hover:bg-muted"}`}
+                >
+                  {value === "all" ? "All destinations" : catalogProviderName(value)}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
       {loading ? (
         <div className="mt-6 grid grid-cols-1 gap-4 @xl/app-catalog:grid-cols-2 @4xl/app-catalog:grid-cols-3">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-24 animate-pulse rounded-2xl border border-border/50 bg-card" />
+            <div
+              key={i}
+              className="h-24 animate-pulse rounded-2xl border border-border/50 bg-card"
+            />
           ))}
         </div>
       ) : filtered.length === 0 ? (
@@ -243,7 +335,11 @@ export function AppCatalog({ embedded = false }: { embedded?: boolean } = {}) {
                       </span>
                       {needsUpdate ? (
                         <span className="shrink-0 rounded-full border border-warning/40 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-warning">
-                          {app.requiresUpdate?.minVersion ? interpolate(ap.needsVersionBadge || "Needs v{version}", { version: app.requiresUpdate.minVersion }) : (ap.needsUpdateBadge || "Needs update")}
+                          {app.requiresUpdate?.minVersion
+                            ? interpolate(ap.needsVersionBadge || "Needs v{version}", {
+                                version: app.requiresUpdate.minVersion,
+                              })
+                            : ap.needsUpdateBadge || "Needs update"}
                         </span>
                       ) : app.comingSoon ? (
                         <span className="shrink-0 rounded-full border border-border/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
@@ -252,16 +348,37 @@ export function AppCatalog({ embedded = false }: { embedded?: boolean } = {}) {
                       ) : app.custom ? (
                         <UnverifiedBadge />
                       ) : busy ? (
-                        <UiIcon name="spinner" className="size-4 shrink-0 animate-spin text-muted-foreground" />
+                        <UiIcon
+                          name="spinner"
+                          className="size-4 shrink-0 animate-spin text-muted-foreground"
+                        />
                       ) : (
-                        <UiIcon name="arrow-right" className="size-4 shrink-0 text-muted-foreground/40 transition-colors group-hover:text-foreground" />
+                        <UiIcon
+                          name="arrow-right"
+                          className="size-4 shrink-0 text-muted-foreground/40 transition-colors group-hover:text-foreground"
+                        />
                       )}
                     </div>
                     <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
                       {needsUpdate
-                        ? (ap.needsUpdateDesc || "Update your Workbox Cloud instance to install this app.")
+                        ? ap.needsUpdateDesc ||
+                          "Update your Workbox Cloud instance to install this app."
                         : (t.library as any)?.catalog?.apps?.[app.id] || app.description}
                     </p>
+                    {!!app.deploymentRecipes?.length && (
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {[...new Set(app.deploymentRecipes.map((recipe) => recipe.provider))].map(
+                          (value) => (
+                            <span
+                              key={value}
+                              className="rounded-md bg-muted/60 px-2 py-0.5 text-[10px] font-medium text-muted-foreground"
+                            >
+                              {catalogProviderName(value)}
+                            </span>
+                          ),
+                        )}
+                      </div>
+                    )}
                   </div>
                 </button>
                 {app.custom && (
@@ -281,7 +398,11 @@ export function AppCatalog({ embedded = false }: { embedded?: boolean } = {}) {
         </div>
       )}
 
-      <AddCustomAppModal open={addOpen} onClose={() => setAddOpen(false)} onAdded={() => void loadCatalog()} />
+      <AddCustomAppModal
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
+        onAdded={() => void loadCatalog()}
+      />
     </div>
   );
 }

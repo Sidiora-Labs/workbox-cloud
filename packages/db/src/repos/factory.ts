@@ -346,6 +346,7 @@ import { createDomainDnsChallengeRepo } from "./domain-dns-challenge.repo";
 import { createDnsCredentialRepo } from "./dns-credential.repo";
 import { createCredentialRepo } from "./credential.repo";
 import { createExternalDeploymentRepo } from "./external-deployment.repo";
+import { createWorkboxHostRepo } from "./workbox-host.repo";
 import { createRouteProtectionRepo } from "./route-protection.repo";
 import { createRouteRuleRepo } from "./route-rule.repo";
 import { createWebhookSourceRepo } from "./webhook-source.repo";
@@ -438,6 +439,7 @@ export function createRepositories(db: Database, encryption: ConfigurationEncryp
     dnsCredential: createDnsCredentialRepo(db),
     credential: createCredentialRepo(db),
     externalDeployment: createExternalDeploymentRepo(db),
+    workboxHost: createWorkboxHostRepo(db),
     ingress: createIngressRepo(db),
     routeRule: createRouteRuleRepo(db),
     routeProtection: createRouteProtectionRepo(db, encryption),

@@ -306,7 +306,7 @@ export function Sidebar({ mobileOpen = false, onCloseMobile }: { mobileOpen?: bo
     ? mailScope.activeServerId && mailScope.activeServer?.completed
       ? { href: mailTabHref(mailScope.activeServerId, "mailboxes"), labelKey: "addMailbox" }
       : null
-    : { href: "/library", labelKey: "new-project" };
+    : { href: "/workloads/new", labelKey: "new-workload" };
 
   return (
     <aside

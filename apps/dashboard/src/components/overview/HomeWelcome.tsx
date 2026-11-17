@@ -24,9 +24,9 @@ export default function HomeWelcome() {
 
       <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
         <Button asChild className="px-5">
-          <Link href="/library">
+          <Link href="/workloads/new">
             <Icon name="plus" className="size-4" />
-            {copy.createProject}
+            New workload
           </Link>
         </Button>
         <Button asChild variant="secondary" className="px-5">

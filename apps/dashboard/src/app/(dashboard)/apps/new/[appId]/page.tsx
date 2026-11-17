@@ -2,6 +2,8 @@
 
 import { reportCaughtError as observeCaughtError } from "@repo/core/diagnostics";
 import { Icon as UiIcon } from "@repo/ui/icons";
+import { CatalogProviderInstall } from "@/components/apps/CatalogProviderInstall";
+import { AppDeploymentChoices } from "@/components/apps/AppDeploymentChoices";
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
@@ -144,7 +146,8 @@ function storedRouteFor(
 ): { domainType: "free" | "custom"; domain?: string; customDomain?: string } | null {
   const stored = svc.publicEndpoints ?? [];
   const hit = stored.find((e) => e.port === port);
-  if (hit) return { domainType: hit.domainType, domain: hit.domain, customDomain: hit.customDomain };
+  if (hit)
+    return { domainType: hit.domainType, domain: hit.domain, customDomain: hit.customDomain };
   if (stored.length > 0 || !svc.exposed) return null;
   const scalarPort = Number(svc.exposedPort);
   if (Number.isFinite(scalarPort) && scalarPort !== port) return null;
@@ -202,10 +205,15 @@ function rehydrateExpo(
  *  `provides` bundle ref, else the recommended (or first) connection output.
  *  Read from the BUNDLED catalog; an overlay-only source app resolves to null
  *  (the manual "Use in a project" flow remains the fallback). */
-function primaryProvidedOutputId(sourceAppTemplateId: string | undefined, bundleId?: string): string | null {
+function primaryProvidedOutputId(
+  sourceAppTemplateId: string | undefined,
+  bundleId?: string,
+): string | null {
   const tpl = sourceAppTemplateId ? getAppTemplate(sourceAppTemplateId) : undefined;
   if (!tpl) return null;
-  const provRef = (bundleId ? tpl.provides?.find((bundle) => bundle.id === bundleId) : tpl.provides?.[0])?.outputRefs?.[0];
+  const provRef = (
+    bundleId ? tpl.provides?.find((bundle) => bundle.id === bundleId) : tpl.provides?.[0]
+  )?.outputRefs?.[0];
   if (bundleId) return provRef ?? null;
   if (provRef) return provRef;
   const outs = tpl.connection?.outputs ?? [];
@@ -213,6 +221,17 @@ function primaryProvidedOutputId(sourceAppTemplateId: string | undefined, bundle
 }
 
 export default function AppInstallPage() {
+  const params = useParams();
+  const search = useSearchParams();
+  const recipe = search.get("recipe");
+  return recipe ? (
+    <CatalogProviderInstall appId={String(params?.appId ?? "")} recipeId={recipe} />
+  ) : (
+    <NativeAppInstallPage />
+  );
+}
+
+function NativeAppInstallPage() {
   const params = useParams();
   const router = useRouter();
   const { t, locale } = useI18n();
@@ -244,6 +263,13 @@ export default function AppInstallPage() {
   // from the API) is fetched so a repo-fresh app opens + installs without a redeploy.
   const bundledTemplate = useMemo(() => getAppTemplate(appId), [appId]);
   const [template, setTemplate] = useState(bundledTemplate);
+  useEffect(() => {
+    if (template?.nativeSupport === false && template.deploymentRecipes?.[0]) {
+      router.replace(
+        `/apps/new/${encodeURIComponent(appId)}?recipe=${encodeURIComponent(template.deploymentRecipes[0].id)}`,
+      );
+    }
+  }, [appId, router, template]);
   // The runtime read also discovers an existing draft. The bundled template
   // can render immediately, but cannot authorize installing over unknown routes.
   const [catalogRead, setCatalogRead] = useState<{ appId: string; status: ReadStatus }>({
@@ -325,7 +351,11 @@ export default function AppInstallPage() {
     projectsApi
       .getHome()
       .then((res) => {
-        const raw = (res?.projects ?? []) as Array<{ id?: string; name?: string; appTemplateId?: string }>;
+        const raw = (res?.projects ?? []) as Array<{
+          id?: string;
+          name?: string;
+          appTemplateId?: string;
+        }>;
         setCandidates(
           raw
             .filter((p) => p.id && p.appTemplateId)
@@ -337,10 +367,19 @@ export default function AppInstallPage() {
             })),
         );
       })
-      .catch((diagnosticFailure) => { observeCaughtError(diagnosticFailure, "dashboard/app/(dashboard)/apps/new/[appId]/page"); return setCandidates([]); });
+      .catch((diagnosticFailure) => {
+        observeCaughtError(diagnosticFailure, "dashboard/app/(dashboard)/apps/new/[appId]/page");
+        return setCandidates([]);
+      });
   }, [requires.length]);
   const candidatesFor = (category?: string, bundleId?: string) =>
-    candidates.filter((p) => (!category || p.category === category) && (!bundleId || (p.appTemplateId && getAppTemplate(p.appTemplateId)?.provides?.some((bundle) => bundle.id === bundleId))));
+    candidates.filter(
+      (p) =>
+        (!category || p.category === category) &&
+        (!bundleId ||
+          (p.appTemplateId &&
+            getAppTemplate(p.appTemplateId)?.provides?.some((bundle) => bundle.id === bundleId))),
+    );
 
   const [values, setValues] = useState<Record<string, FormValue>>(() =>
     withSettingDefaults(installFields),
@@ -351,7 +390,8 @@ export default function AppInstallPage() {
   const [expo, setExpo] = useState<Record<string, Expo>>(() => {
     const out: Record<string, Expo> = {};
     if (cloudLoading && !cloudConnected) return out;
-    for (const e of appEndpoints) out[endpointKey(e)] = defaultAppEndpointExposure(e, cloudConnected);
+    for (const e of appEndpoints)
+      out[endpointKey(e)] = defaultAppEndpointExposure(e, cloudConnected);
     return out;
   });
   // The runtime (overlay-fresh) template can declare endpoints the bundled one
@@ -373,7 +413,9 @@ export default function AppInstallPage() {
   const [destinationReady, setDestinationReady] = useState(false);
   const [gpuChoice, setGpuChoice] = useState<boolean | null>(null);
   const gpuRequirement = template ? appGpuRequirement(template) : undefined;
-  const useGpu = gpuRequirement === "required" || (gpuRequirement === "recommended" && (gpuChoice ?? destination?.hasGpu === true));
+  const useGpu =
+    gpuRequirement === "required" ||
+    (gpuRequirement === "recommended" && (gpuChoice ?? destination?.hasGpu === true));
   const showCloudPricing = useCloudDeployPricing(destination?.workspaceId);
   const cloudDestination = destination?.deployTarget === "cloud" || (!destination && !selfHosted);
   const cloudUnsupported = cloudDestination && template?.supportsCloud === false;
@@ -403,7 +445,9 @@ export default function AppInstallPage() {
   // a narrow viewport. Re-measured on resize for the same reason. The measurement
   // is skipped while expanded (where the two heights are equal by definition, so
   // measuring would clear the flag and remove the way back).
-  const localizedDescription = template ? ((t.library as any)?.catalog?.apps?.[template.id] || template.description) : "";
+  const localizedDescription = template
+    ? (t.library as any)?.catalog?.apps?.[template.id] || template.description
+    : "";
   const descRef = useRef<HTMLParagraphElement | null>(null);
   const [descExpanded, setDescExpanded] = useState(false);
   const [descClamped, setDescClamped] = useState(false);
@@ -434,7 +478,9 @@ export default function AppInstallPage() {
   const activeDeployment = useRef<string | null>(resumeDeploymentId);
   useEffect(() => {
     activeDeployment.current = deploymentId;
-    return () => { if (activeDeployment.current === deploymentId) activeDeployment.current = null; };
+    return () => {
+      if (activeDeployment.current === deploymentId) activeDeployment.current = null;
+    };
   }, [deploymentId]);
   const [projectId, setProjectId] = useState<string | null>(adoptedProjectId);
   const [progress, setProgress] = useState(0);
@@ -576,14 +622,33 @@ export default function AppInstallPage() {
     void Promise.all([projectsApi.getInfo(targetDraftId), servicesApi.list(targetDraftId)])
       .then(([info, svcRes]) => {
         if (cancelled) return;
-        const project = info?.data?.project as { slug?: string; name?: string; workspaceId?: string; serverId?: string; serverName?: string; deployTarget?: string } | undefined;
+        const project = info?.data?.project as
+          | {
+              slug?: string;
+              name?: string;
+              workspaceId?: string;
+              serverId?: string;
+              serverName?: string;
+              deployTarget?: string;
+            }
+          | undefined;
         if (!project || !Array.isArray(svcRes?.services))
           throw new Error("Incomplete draft response");
-        if (template?.gpu) setGpuChoice(svcRes.services.some((service) => hasComposeGpuRequest(service.advanced)));
+        if (template?.gpu)
+          setGpuChoice(svcRes.services.some((service) => hasComposeGpuRequest(service.advanced)));
         if (project.deployTarget === "cloud" || project.workspaceId) {
-          setDestination({ deployTarget: "cloud", workspaceId: project.workspaceId ?? undefined, serverId: project.serverId ?? undefined, serverName: project.serverName });
+          setDestination({
+            deployTarget: "cloud",
+            workspaceId: project.workspaceId ?? undefined,
+            serverId: project.serverId ?? undefined,
+            serverName: project.serverName,
+          });
         } else if (project.serverId) {
-          setDestination({ deployTarget: "server", serverId: project.serverId, serverName: project.serverName });
+          setDestination({
+            deployTarget: "server",
+            serverId: project.serverId,
+            serverName: project.serverName,
+          });
         }
         // A catalog update can cancel the pending read. Only mark the draft
         // restored after its routes are applied, including an empty service list.
@@ -615,7 +680,10 @@ export default function AppInstallPage() {
    * URL shown is the hostname that was stored, not one recomputed from intent.
    */
   const persistedRouteUrl = async (pid: string, ep: AppEndpoint): Promise<string | null> => {
-    const svcRes = await servicesApi.list(pid).catch((diagnosticFailure) => { observeCaughtError(diagnosticFailure, "dashboard/app/(dashboard)/apps/new/[appId]/page"); return null; });
+    const svcRes = await servicesApi.list(pid).catch((diagnosticFailure) => {
+      observeCaughtError(diagnosticFailure, "dashboard/app/(dashboard)/apps/new/[appId]/page");
+      return null;
+    });
     const svc = ((svcRes?.services ?? []) as Service[]).find((s) => s.name === ep.service);
     const stored = svc ? storedRouteFor(svc, ep.port) : null;
     if (!stored) return null;
@@ -664,34 +732,38 @@ export default function AppInstallPage() {
   // `action_required` / `reconciling` into a plain success/failure, so the true
   // DB status (and the precise liveUrl) comes from the read, not the stream.
   const settledRef = useRef(false);
-  const attachDeployment = useCallback((response: Awaited<ReturnType<typeof deployApi.buildAccess>>, targetPid: string) => {
-    const depId = response?.data?.deployment_id ?? response?.data?.deploymentId ?? response?.deployment_id;
-    if (typeof depId !== "string" || !depId) throw new Error(w.installFailed);
-    settledRef.current = false;
-    shownRecovery.current = null;
-    activeDeployment.current = depId;
-    setProjectId(targetPid);
-    setDeploymentId(depId);
-    setLogs("");
-    setPhases({});
-    setServices([]);
-    setProgress(0);
-    setLiveUrl(null);
-    setCancelled(false);
-    setErrorMsg("");
-    setCloudFailure(null);
-    setPhaseLabel(w.phaseQueued);
-    setStartedAt(Date.now());
-    setPhase("installing");
-    try {
-      const url = new URL(window.location.href);
-      url.searchParams.set("deployment", depId);
-      url.searchParams.set("projectId", targetPid);
-      window.history.replaceState(null, "", url.toString());
-    } catch {
-      /* resume just won't survive a reload */
-    }
-  }, [w.installFailed, w.phaseQueued]);
+  const attachDeployment = useCallback(
+    (response: Awaited<ReturnType<typeof deployApi.buildAccess>>, targetPid: string) => {
+      const depId =
+        response?.data?.deployment_id ?? response?.data?.deploymentId ?? response?.deployment_id;
+      if (typeof depId !== "string" || !depId) throw new Error(w.installFailed);
+      settledRef.current = false;
+      shownRecovery.current = null;
+      activeDeployment.current = depId;
+      setProjectId(targetPid);
+      setDeploymentId(depId);
+      setLogs("");
+      setPhases({});
+      setServices([]);
+      setProgress(0);
+      setLiveUrl(null);
+      setCancelled(false);
+      setErrorMsg("");
+      setCloudFailure(null);
+      setPhaseLabel(w.phaseQueued);
+      setStartedAt(Date.now());
+      setPhase("installing");
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.set("deployment", depId);
+        url.searchParams.set("projectId", targetPid);
+        window.history.replaceState(null, "", url.toString());
+      } catch {
+        /* resume just won't survive a reload */
+      }
+    },
+    [w.installFailed, w.phaseQueued],
+  );
   const resumeDeployment = useCallback(async (): Promise<void> => {
     if (!deploymentId || !projectId || submitting.current) return;
     submitting.current = true;
@@ -707,11 +779,18 @@ export default function AppInstallPage() {
     try {
       await resumeDeployment();
     } catch (error) {
-      if (!showCloudPricing(error, resumeDeployment)) showToast(getApiErrorMessage(error, w.installFailed), "error");
+      if (!showCloudPricing(error, resumeDeployment))
+        showToast(getApiErrorMessage(error, w.installFailed), "error");
     }
   }, [resumeDeployment, showCloudPricing, showToast, w.installFailed]);
   useEffect(() => {
-    if (phase !== "error" || !cloudFailure || !deploymentId || shownRecovery.current === deploymentId) return;
+    if (
+      phase !== "error" ||
+      !cloudFailure ||
+      !deploymentId ||
+      shownRecovery.current === deploymentId
+    )
+      return;
     if (showCloudPricing(cloudFailure, resumeDeployment)) shownRecovery.current = deploymentId;
   }, [phase, cloudFailure, deploymentId, showCloudPricing, resumeDeployment]);
   const resolveTerminal = async (fallback: {
@@ -746,12 +825,16 @@ export default function AppInstallPage() {
     if (isCancel) setCancelled(true);
     const failureProjectId = typeof s.project_id === "string" ? s.project_id : projectId;
     if (failureProjectId) setProjectId(failureProjectId);
-    setCloudFailure(isCancel ? null : cloudDeployFailure({
-      errorCode: s.errorCode ?? fallback.errorCode,
-      errorDetails: s.errorCode ? s.errorDetails : fallback.errorDetails,
-      errorMessage: s.failureMessage ?? s.errorMessage ?? fallback.message,
-      projectId: failureProjectId,
-    }));
+    setCloudFailure(
+      isCancel
+        ? null
+        : cloudDeployFailure({
+            errorCode: s.errorCode ?? fallback.errorCode,
+            errorDetails: s.errorCode ? s.errorDetails : fallback.errorDetails,
+            errorMessage: s.failureMessage ?? s.errorMessage ?? fallback.message,
+            projectId: failureProjectId,
+          }),
+    );
     // The reason under the verdict — or nothing. A cancel never inherits the
     // failure fallback; see `installSettledMessage` for why.
     const settledMessage = () =>
@@ -806,7 +889,8 @@ export default function AppInstallPage() {
         if (typeof pct === "number") setProgress(pct);
       },
       onSuccess: () => void resolveTerminal({ ok: true }),
-      onFailure: (message, errorCode, errorDetails) => void resolveTerminal({ ok: false, message, errorCode, errorDetails }),
+      onFailure: (message, errorCode, errorDetails) =>
+        void resolveTerminal({ ok: false, message, errorCode, errorDetails }),
       onCanceled: () => {
         setCancelled(true);
         // The stream's cancel message is a fixed "Build cancelled" — the verdict
@@ -839,9 +923,15 @@ export default function AppInstallPage() {
         const startedIso = Date.parse(String(s.buildStartedAt ?? ""));
         setStartedAt((prev) => prev ?? (Number.isFinite(startedIso) ? startedIso : Date.now()));
         if (
-          ["ready", "failed", "cancelled", "partial_failure", "action_required", "rejected", "no_changes"].includes(
-            status,
-          )
+          [
+            "ready",
+            "failed",
+            "cancelled",
+            "partial_failure",
+            "action_required",
+            "rejected",
+            "no_changes",
+          ].includes(status)
         ) {
           await resolveTerminal({
             ok: status === "ready" || status === "no_changes",
@@ -888,7 +978,10 @@ export default function AppInstallPage() {
   };
 
   const configurationNotice = !configurationReady && (
-    <div role={configurationError ? "alert" : "status"} className="space-y-3 rounded-2xl bg-card p-4">
+    <div
+      role={configurationError ? "alert" : "status"}
+      className="space-y-3 rounded-2xl bg-card p-4"
+    >
       <p className="flex items-start gap-2 text-sm text-muted-foreground">
         <UiIcon
           name={configurationError ? "warning" : "spinner"}
@@ -961,7 +1054,12 @@ export default function AppInstallPage() {
         // helper this wizard previews (defaultFreeLabel) — so the operator's
         // untouched choice and the stored hostname can't diverge.
         const slug = st.ep.domain.trim() ? normalizeServiceLabel(st.ep.domain) : "";
-        out.push({ service: e.service, port: e.port, mode: "free", ...(slug ? { domain: slug } : {}) });
+        out.push({
+          service: e.service,
+          port: e.port,
+          mode: "free",
+          ...(slug ? { domain: slug } : {}),
+        });
       }
     }
     return out;
@@ -971,14 +1069,18 @@ export default function AppInstallPage() {
    *  (reachable only inside the project); `publish` is a no-op — the template
    *  already publishes it. Ports, not routing: no hostname is involved. */
   const applyTcpExposure = async (pid: string) => {
-    const tcp = appEndpoints.filter((e) => e.kind === "tcp" && expo[endpointKey(e)]?.mode === "internal");
+    const tcp = appEndpoints.filter(
+      (e) => e.kind === "tcp" && expo[endpointKey(e)]?.mode === "internal",
+    );
     if (tcp.length === 0) return;
     const svcRes = await servicesApi.list(pid);
     const byName = new Map((svcRes?.services ?? []).map((s) => [s.name, s]));
     for (const e of tcp) {
       const svc = byName.get(e.service);
       if (!svc) continue;
-      const ports = ((svc.ports as string[] | null) ?? []).filter((p) => containerPortOf(p) !== e.port);
+      const ports = ((svc.ports as string[] | null) ?? []).filter(
+        (p) => containerPortOf(p) !== e.port,
+      );
       await servicesApi.update(pid, svc.id, { ports });
     }
   };
@@ -1023,18 +1125,30 @@ export default function AppInstallPage() {
             : [],
       );
       await servicesApi.update(pid, svc.id, {
-        ...(mine.length ? serviceRoutingPatch({ exposed: publicEndpoints.length > 0, publicEndpoints }) : {}),
-        ...(spec?.gpus ? {
-          advanced: useGpu ? appServiceGpuConfig(spec, true) : { gpus: null },
-          environment: appGpuEnvironment(spec, useGpu, svc.environment as Record<string, string>),
-        } : {}),
-        ...(mine.length ? { ports: installServicePorts(
-          svc.name,
-          template?.services?.find((service) => service.name === svc.name)?.ports,
-          choices,
-          svc.ports as string[] | null,
-          cloudDestination ? "cloud" : "server",
-        ) } : {}),
+        ...(mine.length
+          ? serviceRoutingPatch({ exposed: publicEndpoints.length > 0, publicEndpoints })
+          : {}),
+        ...(spec?.gpus
+          ? {
+              advanced: useGpu ? appServiceGpuConfig(spec, true) : { gpus: null },
+              environment: appGpuEnvironment(
+                spec,
+                useGpu,
+                svc.environment as Record<string, string>,
+              ),
+            }
+          : {}),
+        ...(mine.length
+          ? {
+              ports: installServicePorts(
+                svc.name,
+                template?.services?.find((service) => service.name === svc.name)?.ports,
+                choices,
+                svc.ports as string[] | null,
+                cloudDestination ? "cloud" : "server",
+              ),
+            }
+          : {}),
       });
     }
   };
@@ -1145,7 +1259,9 @@ export default function AppInstallPage() {
             cancel();
             requestAnimationFrame(() => {
               const section = document
-                .getElementById(`endpoint-${endpointKey(withoutDomains[0] ?? automaticEndpoints[0]!)}`)
+                .getElementById(
+                  `endpoint-${endpointKey(withoutDomains[0] ?? automaticEndpoints[0]!)}`,
+                )
                 ?.closest("section");
               const field =
                 section?.querySelector<HTMLElement>("input:not([disabled])") ??
@@ -1318,7 +1434,10 @@ export default function AppInstallPage() {
       // SSL attempt runs.
       const pendingDnsTargets = appInstallDnsTargets(routes ?? []);
       if (pendingDnsTargets.length > 0) {
-        const projectInfo = await projectsApi.getInfo(pid).catch((diagnosticFailure) => { observeCaughtError(diagnosticFailure, "dashboard/app/(dashboard)/apps/new/[appId]/page"); return null; });
+        const projectInfo = await projectsApi.getInfo(pid).catch((diagnosticFailure) => {
+          observeCaughtError(diagnosticFailure, "dashboard/app/(dashboard)/apps/new/[appId]/page");
+          return null;
+        });
         const domainRows = Array.isArray(projectInfo?.data?.project?.domains)
           ? projectInfo.data.project.domains
           : [];
@@ -1350,7 +1469,14 @@ export default function AppInstallPage() {
     } catch (err) {
       // Retry failures must reject to the recovery modal instead of being
       // swallowed as success, so a still-blocked deployment stays recoverable.
-      if (!started && showCloudPricing(err, withSubmission(() => retryAction()))) return;
+      if (
+        !started &&
+        showCloudPricing(
+          err,
+          withSubmission(() => retryAction()),
+        )
+      )
+        return;
       // Strip the server's "Pre-deploy checks failed:" prefix for a cleaner
       // message. Nothing deployed yet → toast + stay on the form; a deploy that
       // already started keeps the log-bearing error card (with build details).
@@ -1446,10 +1572,11 @@ export default function AppInstallPage() {
     // destination after a mid-install refresh — only the routing pickers
     // rehydrate) is left out rather than guessed.
     const summary: DeploySummaryRow[] = [];
-    const destinationValue = destination?.serverName || (
-      destination?.deployTarget === "cloud"
+    const destinationValue =
+      destination?.serverName ||
+      (destination?.deployTarget === "cloud"
         ? t.deploy.targetStep.options.cloud
-        : (destination?.serverHost || ""));
+        : destination?.serverHost || "");
     if (destinationValue) {
       summary.push({
         id: "destination",
@@ -1559,11 +1686,20 @@ export default function AppInstallPage() {
         onGoToProject={() => projectId && router.push(`/projects/${projectId}`)}
         onViewBuild={() => deploymentId && router.push(`/build/${deploymentId}`)}
         onRetry={resetToForm}
-        recoveryAction={cloudFailure ? {
-          label: cloudFailure.status === 409 ? t.billing.capacityEditor.title : t.billing.deployGate.manageBilling,
-          pending: busy,
-          onClick: () => { showCloudPricing(cloudFailure, resumeDeployment); },
-        } : undefined}
+        recoveryAction={
+          cloudFailure
+            ? {
+                label:
+                  cloudFailure.status === 409
+                    ? t.billing.capacityEditor.title
+                    : t.billing.deployGate.manageBilling,
+                pending: busy,
+                onClick: () => {
+                  showCloudPricing(cloudFailure, resumeDeployment);
+                },
+              }
+            : undefined
+        }
         onStop={stopInstall}
         isStopping={isStopping}
         cancelled={cancelled}
@@ -1594,9 +1730,9 @@ export default function AppInstallPage() {
       <p className="mt-1.5 text-xs text-muted-foreground">{w.nameHint}</p>
       {openDraft && targetDraftId === openDraft.projectId && (
         <p className="mt-2 text-xs text-warning">
-          You already have a not-yet-deployed “{openDraft.name}”. Installing with this
-          name updates it — the options below are the ones it was configured with.
-          Change the name to install a separate copy.
+          You already have a not-yet-deployed “{openDraft.name}”. Installing with this name updates
+          it — the options below are the ones it was configured with. Change the name to install a
+          separate copy.
         </p>
       )}
     </div>
@@ -1710,9 +1846,7 @@ export default function AppInstallPage() {
                           aria-label={resolveLocalized(req.label, locale)}
                           className="mt-2"
                           value={connChoices[req.id] ?? ""}
-                          onChange={(value) =>
-                            setConnChoices((p) => ({ ...p, [req.id]: value }))
-                          }
+                          onChange={(value) => setConnChoices((p) => ({ ...p, [req.id]: value }))}
                           options={[
                             { value: "", label: req.optional ? "None" : "Select an app…" },
                             ...opts.map((p) => ({ value: p.id, label: p.name })),
@@ -1858,6 +1992,11 @@ export default function AppInstallPage() {
             {/* Destination — where to install (reuses the deploy target picker) */}
             <div className="rounded-2xl bg-card p-5">
               <h3 className="text-sm font-semibold text-foreground">{w.destinationTitle}</h3>
+              {!!template.deploymentRecipes?.length && (
+                <div className="mt-3">
+                  <AppDeploymentChoices template={template} />
+                </div>
+              )}
               {selfHosted && (
                 <p className="mt-0.5 text-xs text-muted-foreground">{w.destinationHint}</p>
               )}
@@ -1894,26 +2033,46 @@ export default function AppInstallPage() {
                   onReadyChange={setDestinationReady}
                   readOnly={!!targetDraftId || !!projectId}
                   disabled={busy || !!targetDraftId || !!projectId}
-                  disabledReason={targetDraftId || projectId ? t.billing.workspaces.savedDestinationHint : undefined}
+                  disabledReason={
+                    targetDraftId || projectId
+                      ? t.billing.workspaces.savedDestinationHint
+                      : undefined
+                  }
                 />
               </div>
 
-              {gpuRequirement && <div className="mt-4 space-y-2">
-                <p className="text-sm font-medium">{t.dashboard.pages.apps.gpu.mode}</p>
-                {gpuRequirement === "recommended" ? <CustomSelect
-                  aria-label={t.dashboard.pages.apps.gpu.mode}
-                  value={useGpu ? "nvidia" : "cpu"}
-                  onChange={(value) => setGpuChoice(value === "nvidia")}
-                  options={[
-                    { value: "cpu", label: t.dashboard.pages.apps.gpu.cpu },
-                    { value: "nvidia", label: t.dashboard.pages.apps.gpu.nvidia },
-                  ]}
-                  disabled={busy}
-                /> : <p className="text-sm">{t.dashboard.pages.apps.gpu.required}</p>}
-                {useGpu && <p className="text-xs leading-relaxed text-muted-foreground">{t.dashboard.pages.apps.gpu.hint}</p>}
-                {useGpu && destination?.hasGpu === false && !cloudDestination && <p className="text-xs text-warning">{t.dashboard.pages.apps.gpu.noGpu}</p>}
-              </div>}
-              {cloudUnsupported && <p role="status" className="mt-4 text-sm text-warning">{t.dashboard.pages.apps.gpu.cloudUnsupported}</p>}
+              {gpuRequirement && (
+                <div className="mt-4 space-y-2">
+                  <p className="text-sm font-medium">{t.dashboard.pages.apps.gpu.mode}</p>
+                  {gpuRequirement === "recommended" ? (
+                    <CustomSelect
+                      aria-label={t.dashboard.pages.apps.gpu.mode}
+                      value={useGpu ? "nvidia" : "cpu"}
+                      onChange={(value) => setGpuChoice(value === "nvidia")}
+                      options={[
+                        { value: "cpu", label: t.dashboard.pages.apps.gpu.cpu },
+                        { value: "nvidia", label: t.dashboard.pages.apps.gpu.nvidia },
+                      ]}
+                      disabled={busy}
+                    />
+                  ) : (
+                    <p className="text-sm">{t.dashboard.pages.apps.gpu.required}</p>
+                  )}
+                  {useGpu && (
+                    <p className="text-xs leading-relaxed text-muted-foreground">
+                      {t.dashboard.pages.apps.gpu.hint}
+                    </p>
+                  )}
+                  {useGpu && destination?.hasGpu === false && !cloudDestination && (
+                    <p className="text-xs text-warning">{t.dashboard.pages.apps.gpu.noGpu}</p>
+                  )}
+                </div>
+              )}
+              {cloudUnsupported && (
+                <p role="status" className="mt-4 text-sm text-warning">
+                  {t.dashboard.pages.apps.gpu.cloudUnsupported}
+                </p>
+              )}
 
               {/* Declared minimum vs. the destination's measured capacity. Shown
                   only on a real shortfall — an unmeasurable box reports "unknown",
@@ -1993,7 +2152,11 @@ export default function AppInstallPage() {
                 ) : (
                   <UiIcon name="arrow-right" className="size-4 rtl:rotate-180" />
                 )}
-                {checkingCloudCapacity ? w.checkingCapacity : needsCloudUpgrade ? w.upgradePlan : w.install}
+                {checkingCloudCapacity
+                  ? w.checkingCapacity
+                  : needsCloudUpgrade
+                    ? w.upgradePlan
+                    : w.install}
               </button>
               <button
                 type="button"

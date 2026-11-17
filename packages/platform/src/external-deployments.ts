@@ -16,6 +16,7 @@ import type {
   ExternalWorkloadKind,
 } from "@repo/contracts";
 import type { Authorization } from "./authorization";
+import type { ExecutionContext } from "./context";
 import {
   createScopedOperations,
   type PlatformScopedOperations,
@@ -25,6 +26,8 @@ import {
 /** Context passed to an external provider adapter after Workbox Cloud authorization. */
 export interface ExternalProviderContext {
   readonly organizationId: string;
+  /** Original scoped authority retained for adapters that execute on a connected server. */
+  readonly executionContext?: ExecutionContext;
   readonly actorId?: string;
   readonly requestId?: string;
   readonly signal?: AbortSignal;

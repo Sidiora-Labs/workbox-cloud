@@ -57,6 +57,7 @@ export interface NavSection {
 
 const MAIN_ITEMS: NavItem[] = [
   { key: "home", href: "/", icon: "home" },
+  { key: "workloads", href: "/workloads", icon: "layers" },
   { key: "projects", href: "/projects", icon: "project" },
   { key: "apps", href: "/apps", icon: "grid" },
   // MAIN, not infrastructure: `/api/issues` reports project, domain and update items on

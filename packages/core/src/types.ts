@@ -65,11 +65,12 @@ export type ExternalWorkloadKind =
   | "vercel-sandbox"
   | "fly-machine"
   | "fly-sprite"
+  | "blaxel-sandbox"
   | "self-managed-server"
   | "workbox-host"
   | "workbox-sandbox";
 
-export type ExternalProvider = "railway" | "vercel" | "fly" | "self-managed" | "workbox";
+export type ExternalProvider = "railway" | "vercel" | "fly" | "blaxel" | "self-managed" | "workbox";
 
 export interface ExternalTargetIdentity {
   provider: ExternalProvider;

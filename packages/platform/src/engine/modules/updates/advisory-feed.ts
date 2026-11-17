@@ -1,6 +1,7 @@
 import { env } from "../../config/env";
 import {
   securityAdvisoryAppliesToMode,
+  GITHUB_REPO,
   RELEASES_LATEST_API,
   SECURITY_FEED_API,
   releaseDocuments,
@@ -17,6 +18,8 @@ import { verifySecurityManifest } from "./security-signature";
 
 const MAX_BYTES = 1_000_000;
 const SECURITY_CACHE_ID = "security:v2";
+// Never reuse release metadata cached for another product or upstream fork.
+const RELEASE_CACHE_ID = `release:${GITHUB_REPO}` as const;
 async function readText(response: Response): Promise<string> {
   if (Number(response.headers.get("content-length")) > MAX_BYTES)
     throw new Error("Advisory response is too large.");
@@ -47,7 +50,7 @@ const pending = new Map<string, Promise<CachedFeed | undefined>>();
 
 /** One cached request per feed and installation, shared across tenants/browsers/projects. Credentials stay on api.github.com. */
 async function poll(
-  id: typeof SECURITY_CACHE_ID | "release",
+  id: typeof SECURITY_CACHE_ID | typeof RELEASE_CACHE_ID,
   token: string | null,
 ): Promise<CachedFeed | undefined> {
   const running = pending.get(id);
@@ -191,7 +194,7 @@ export async function getAdvisoryFeed(ctx?: ExecutionContext): Promise<AdvisoryF
         return null;
       })
     : null;
-  const release = await poll("release", token?.token ?? null);
+  const release = await poll(RELEASE_CACHE_ID, token?.token ?? null);
   const security = await poll(SECURITY_CACHE_ID, token?.token ?? null);
   // An offline upgrade may keep old warnings visible, but cannot authorize
   // changes until this client has fetched and verified its own feed version.

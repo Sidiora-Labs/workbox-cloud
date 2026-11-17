@@ -52,6 +52,9 @@ export interface AppCatalogEntry {
   gpu?: AppTemplate["gpu"];
   supportsCloud?: boolean;
   configFields: AppCatalogField[];
+  deploymentRecipes?: AppTemplate["deploymentRecipes"];
+  provenance?: AppTemplate["provenance"];
+  nativeSupport?: boolean;
 }
 
 /** GET /apps/catalog/:id/host-fit — an app's declared minimum vs. a destination.
@@ -60,8 +63,7 @@ export interface AppCatalogEntry {
 export type AppHostFitView = AppHostFit;
 
 export type InstallAppResult =
-  | { kind: "flow"; flowHref: string }
-  | { kind: "template"; projectId: string; slug: string };
+  { kind: "flow"; flowHref: string } | { kind: "template"; projectId: string; slug: string };
 
 /** An org's never-deployed draft of a catalog app — the project an install of the
  *  same name adopts instead of creating a new one. */

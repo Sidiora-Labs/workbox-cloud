@@ -140,3 +140,4 @@ export * from "./assistant-automations";
 export * from "./assistant-agents";
 
 export * from "./oauth-provider";
+export * from "./workbox-host";

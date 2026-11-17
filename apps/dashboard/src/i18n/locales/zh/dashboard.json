@@ -60,6 +60,8 @@
     "support": "支持",
     "scale": "扩缩容",
     "home": "首页",
+    "workloads": "Workloads",
+    "new-workload": "New workload",
     "new-project": "新建项目",
     "projects": "项目",
     "deployments": "部署",

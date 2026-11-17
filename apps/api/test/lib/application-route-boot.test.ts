@@ -113,6 +113,20 @@ it.each([true, false])(
     ).toMatchObject({
       spec: { tag: "project:read", readOnly: true, ids: { project: "projectId" } },
     });
+    // The external probes persist target/operation observations. They must carry
+    // write permissions, not bypass the boot guard with readOnly metadata.
+    for (const [path, tag] of [
+      ["capabilities", "settings:write"],
+      ["preflight", "settings:write"],
+      ["plan", "deployment:write"],
+      ["observe", "deployment:write"],
+    ]) {
+      const route = getRouteRegistry().find(
+        entry => entry.method === "POST" && entry.path === `/api/external-deployments/${path}`,
+      );
+      expect(route).toMatchObject({ spec: { tag } });
+      expect(route?.spec).not.toHaveProperty("readOnly", true);
+    }
     const paths = new Set(app.routes.map((route) => route.path));
     expect(paths.has("/api/system/servers/:id/ensure")).toBe(true);
     expect(paths.has("/api/system/servers/:id/resize")).toBe(true);

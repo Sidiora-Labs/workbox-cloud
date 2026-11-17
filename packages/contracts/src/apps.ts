@@ -1,5 +1,5 @@
 import { Type, type Static } from "@sinclair/typebox";
-import { isValidAppTemplate, type AppTemplate } from "@repo/core";
+import { isValidAppTemplate, type AppTemplate, type AppDeploymentRecipe, type AppTemplateProvenance } from "@repo/core";
 import { AddCustomAppBody, AppSettingsPatchBody, InstallAppBody } from "./app-inputs";
 import type { ResourceOperationSchema, ResourceOperations, ScopedOperations } from "./resource-operations";
 
@@ -19,6 +19,9 @@ export type ResolvedAppTemplate = AppTemplate & { requiresUpdate?: { minVersion?
 /** The existing catalog validator checks the complete template, including cross-field references. */
 const template = Type.Unsafe<ResolvedAppTemplate>(Type.Object({ id: Type.String(), name: Type.String(), kind: Type.Union([Type.Literal("template"), Type.Literal("flow")]) }));
 export const AppCatalogSummarySchema = Type.Object({
+  nativeSupport: Type.Optional(Type.Boolean()),
+  deploymentRecipes: Type.Optional(Type.Unsafe<readonly AppDeploymentRecipe[]>(Type.Array(Type.Object({ id: Type.String(), label: Type.String(), provider: Type.String(), workloadKind: Type.String() }, { additionalProperties: true })))),
+  provenance: Type.Optional(Type.Unsafe<AppTemplateProvenance>(Type.Object({ source: Type.String(), url: Type.String() }, { additionalProperties: true }))),
   id: Type.String(), name: Type.String(), description: Type.String(), kind: Type.Union([Type.Literal("template"), Type.Literal("flow")]),
   logo: Type.String(), category: Type.String(), tags: Type.Array(Type.String()), flowHref: Type.Optional(Type.String()), management,
   verified: Type.Boolean(), hosting: Type.Union([Type.Literal("self-hosted"), Type.Literal("experimental")]),

@@ -60,6 +60,8 @@
     "support": "Assistance",
     "scale": "Mise à l’échelle",
     "home": "Accueil",
+    "workloads": "Workloads",
+    "new-workload": "New workload",
     "new-project": "Nouveau projet",
     "projects": "Projets",
     "deployments": "Déploiements",

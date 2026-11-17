@@ -178,7 +178,7 @@ export async function createCredential(
   }
 
   const { publicFields, secrets } = splitCredentialValues(provider, input.values);
-  const verdict = await verifyCredentialValues(provider, { selector, publicFields, secrets });
+  const verdict = await verifyCredentialValues(provider, { selector, publicFields, secrets, organizationId });
   if (!verdict.ok) throw new ValidationError(verdict.reason ?? "The provider rejected this credential.");
 
   const row = await repos.credential.create({
@@ -268,7 +268,7 @@ async function updateCredentialUnlocked(
   // Re-verified on every update: a changed username, registry host or secret can each
   // invalidate the pair, and the point of verifying at all is that a stored credential
   // was known good at the moment it was stored.
-  const verdict = await verifyCredentialValues(provider, { selector, publicFields, secrets });
+  const verdict = await verifyCredentialValues(provider, { selector, publicFields, secrets, organizationId });
   if (!verdict.ok) throw new ValidationError(verdict.reason ?? "The provider rejected this credential.");
 
   const updated = await repos.credential.update(organizationId, id, {
@@ -335,6 +335,7 @@ export async function verifyCredential(
     selector: row.selector,
     publicFields: row.publicFields ?? {},
     secrets,
+    organizationId,
   });
   if (verdict.ok) await repos.credential.markVerified(organizationId, id);
   else await repos.credential.markInvalid(organizationId, id, verdict.reason ?? "Rejected by the provider.");

@@ -357,6 +357,24 @@ The `:id` doesn't belong to your organization (or was deleted). List with `GET /
 valid IDs.
 </Callout>
 
+## External provider workloads
+
+Use **Workloads → New workload** in the dashboard to select a connection and launch a service,
+sandbox or machine. The [provider deployment guide](/docs/guides/workloads) covers the UI and its
+provider-specific limits. Native server deployments continue through the existing project flow.
+
+API clients can discover destinations with `GET /api/external-deployments/discover?connectionId=...`
+and restore recent operations with `GET /api/external-deployments/operations`. Discovery returns
+resource names and IDs only; it does not create or adopt provider resources. These collection reads
+require `settings:read`.
+
+Preflight and capability checks persist target metadata and require `settings:write`. Planning,
+applying, observing, executing and deleting use `deployment:write`. Apply rejects blocked or expired
+plans and revalidates the connection. Observe persists the bound resource's current state without
+resuming a stopped sandbox. Deletion records intent before the provider request and retains
+uncertain outcomes for inspection. Environment values and credential secrets are excluded from
+operation listings.
+
 ## Operations
 
 {/* api-operations:start */}
@@ -410,13 +428,15 @@ valid IDs.
 
 | Operation | SDK | REST API |
 | --- | --- | --- |
-| Read the normalized capability profile for an explicit provider connection and workload. | `externalDeployments.capabilities(input)` | `POST /api/external-deployments/capabilities`<br />`settings:read` |
-| Check provider, account, resource and host prerequisites before mutation. | `externalDeployments.preflight(input)` | `POST /api/external-deployments/preflight`<br />`settings:read` |
-| Create an idempotent external deployment plan with a target snapshot and expiry. | `externalDeployments.plan(input)` | `POST /api/external-deployments/plan`<br />`settings:read` |
-| Apply a confirmed external deployment plan and return a durable operation. | `externalDeployments.apply(input)` | `POST /api/external-deployments/apply`<br />`deployment:write` |
-| Observe and reconcile an external target or operation. | `externalDeployments.observe(input)` | `POST /api/external-deployments/observe`<br />`settings:read` |
+| Read the normalized capability profile for an explicit provider connection and workload. | `externalDeployments.capabilities(input)` | `POST /api/external-deployments/capabilities`<br />`settings:write` |
+| Check the selected provider connection, resource scope and host prerequisites before requesting a deployment plan. | `externalDeployments.preflight(input)` | `POST /api/external-deployments/preflight`<br />`settings:write` |
+| Validate and persist an expiring deployment plan with an immutable target snapshot. Blocked or expired plans cannot be applied. | `externalDeployments.plan(input)` | `POST /api/external-deployments/plan`<br />`deployment:write` |
+| Apply a confirmed, accepted and current plan after rechecking its connection, and return a durable operation. | `externalDeployments.apply(input)` | `POST /api/external-deployments/apply`<br />`deployment:write` |
+| Inspect the provider resource bound to this operation and persist its observed state without implicitly resuming a stopped sandbox. | `externalDeployments.observe(input)` | `POST /api/external-deployments/observe`<br />`deployment:write` |
 | List the organization's explicit provider targets for dashboard, CLI and SDK selection. | `externalDeployments.targets()` | `GET /api/external-deployments/targets`<br />`settings:read` |
 | Execute a bounded command in a selected external sandbox or Workbox child operation. | `externalDeployments.exec(input)` | `POST /api/external-deployments/exec`<br />`deployment:write` |
-| Destroy a selected external sandbox or workload after explicit confirmation. | `externalDeployments.destroy(input)` | `POST /api/external-deployments/destroy`<br />`deployment:write` |
+| Persist confirmed deletion intent before deleting the bound provider resource; retain ambiguous outcomes for inspection. | `externalDeployments.destroy(input)` | `POST /api/external-deployments/destroy`<br />`deployment:write` |
+| Discover accessible projects, environments and applications for one active organization-owned connection. Requires connectionId; optional projectId narrows Railway service discovery. Returns names and IDs without provider secrets. | HTTP only | `GET /api/external-deployments/discover`<br />`settings:read` |
+| List recent durable external operations and their bound provider resource identities. Optional targetId filters one target; limit is bounded from 1 to 200. Deployment requests and environment values are not returned. | HTTP only | `GET /api/external-deployments/operations`<br />`settings:read` |
 
 {/* api-operations:end */}

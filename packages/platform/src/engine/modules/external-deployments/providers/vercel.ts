@@ -21,8 +21,10 @@ export interface VercelApiRequest {
   query?: Record<string, string | number | boolean | undefined>;
   body?: unknown;
   headers?: Record<string, string>;
+  /** A read of a known optional resource may legitimately return no record. */
+  allowMissing?: boolean;
   /** Used by tests and by a composition layer that already owns provider transport. */
-  request?: (path: string, options: Required<Pick<VercelApiRequest, "method">> & { query: Record<string, string>; body?: unknown; headers: Record<string, string> }) => Promise<unknown>;
+  request?: (path: string, options: Required<Pick<VercelApiRequest, "method">> & { query: Record<string, string>; body?: unknown; headers: Record<string, string>; allowMissing?: boolean }) => Promise<unknown>;
 }
 
 export interface VercelApiClient {
@@ -69,7 +71,7 @@ async function readProviderError(response: SafeFetchResponse): Promise<never> {
 
 async function defaultRequest(
   path: string,
-  options: Required<Pick<VercelApiRequest, "method">> & { query: Record<string, string>; body?: unknown; headers: Record<string, string> },
+  options: Required<Pick<VercelApiRequest, "method">> & { query: Record<string, string>; body?: unknown; headers: Record<string, string>; allowMissing?: boolean },
 ): Promise<unknown> {
   assertPath(path);
   const url = new URL(path, VERCEL_ORIGIN);
@@ -81,7 +83,9 @@ async function defaultRequest(
     timeoutMs: DEFAULT_TIMEOUT_MS,
     maxBodyBytes: MAX_BODY_BYTES,
   });
+  if (options.allowMissing && options.method === "GET" && response.status === 404) return null;
   if (!response.ok) await readProviderError(response);
+  if (response.status === 204) return null;
   try {
     return await response.json();
   } catch {
@@ -116,6 +120,7 @@ export function createVercelApiClient(
         query: scopedQuery(scope, options.query),
         body: options.body,
         headers,
+        ...(options.allowMissing ? { allowMissing: true } : {}),
       });
     },
   };

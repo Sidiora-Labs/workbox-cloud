@@ -3,6 +3,8 @@
   "pages": [
     "index",
     "---Deploy code---",
+    "workloads",
+    "app-catalog",
     "deploy-from-github",
     "deploy-local-folder",
     "deploy-template-or-url",

@@ -84,6 +84,7 @@ export default function ProjectsPage() {
           </p>
         </div>
         <div className="flex w-full items-center gap-2 sm:w-auto">
+          <Button asChild variant="secondary"><Link href="/workloads/new">New workload</Link></Button>
           <Button asChild className="flex-1 sm:flex-none">
             <Link href="/library"><Icon name="plus" className="size-4" />{copy.createButton}</Link>
           </Button>

@@ -25,17 +25,21 @@ import { ownedAgent, validateAgentGrants } from "./agent-access";
 import { agentModelProvider, assertAgentModel } from "./agent-models";
 
 export function createAssistantAgents(
-  runtime: ReturnType<typeof createAssistantRuntime> = assistant,
+  suppliedRuntime?: ReturnType<typeof createAssistantRuntime>,
 ) {
+  // The bundled app loads this singleton through the assistant route cycle
+  // before `assistant` is initialized. Resolve the default when a method runs,
+  // while retaining explicit runtimes used by isolated callers and tests.
+  const runtime = () => suppliedRuntime ?? assistant;
   async function native(ctx: RequestContext) {
-    return nativeAgents(await runtime.native(ctx));
+    return nativeAgents(await runtime().native(ctx));
   }
   async function stopPreviousWork(ctx: RequestContext, id: string) {
     const { createAssistantAutomations } = await import("./automation.service");
-    await createAssistantAutomations({ runtime }).invalidateAgent(ctx, id);
+    await createAssistantAutomations({ runtime: runtime() }).invalidateAgent(ctx, id);
     for (const chat of await repos.assistantAgents.tasks(ctx, id)) {
       if (["running", "waiting"].includes(chat.state))
-        await runtime
+        await runtime()
           .stop(ctx, chat.id)
           .catch((error) => reportCaughtError(error, "api/assistant/agent-stop"));
     }
@@ -60,7 +64,7 @@ export function createAssistantAgents(
         // An edited agent may have narrower grants than its historical tasks.
         // Bearers cannot use those new grants to recover older private context.
         .filter((chat) => isAssistantUserSession(ctx) || chat.agentRevision === row.revision)
-        .map(runtime.conversationView),
+        .map(runtime().conversationView),
     };
   }
   const service = {
@@ -69,7 +73,7 @@ export function createAssistantAgents(
       const providers = await Promise.all(
         (["codex", "claude"] as const).map(async (id): Promise<AssistantAgentModelProvider> => {
           try {
-            return agentModelProvider(await runtime.provider(ctx, id));
+            return agentModelProvider(await runtime().provider(ctx, id));
           } catch {
             // A failed connection must not hide another working provider. Never
             // return the native error graph, which can contain private settings.
@@ -212,7 +216,7 @@ export function createAssistantAgents(
           (await repos.assistantAgents.list(ctx)).filter((r) => !r.archived).length >= 30
         )
           throw assistantError("Archive an unused agent before creating another.", 400);
-        const info = await runtime.provider(ctx, input.provider);
+        const info = await runtime().provider(ctx, input.provider);
         assertAgentModel(info, input.model);
         const bot = previous
           ? await api.update(id, (await api.get(id)).revision, identity)
@@ -277,7 +281,7 @@ export function createAssistantAgents(
       return withAssistantLock(`task:${conversationId}`, async () => {
         let row = await repos.assistant.find(ctx, conversationId);
         if (!row) {
-          await runtime.create(
+          await runtime().create(
             ctx,
             { provider: agent.provider as AssistantProvider, model: agent.model, agentId: id },
             { id: conversationId },
@@ -285,9 +289,9 @@ export function createAssistantAgents(
           row = await repos.assistant.find(ctx, conversationId);
         }
         if (!row || row.agentId !== id) throw assistantError("Task not found.", 404);
-        const activity = await runtime.start(ctx, row.id, input);
+        const activity = await runtime().start(ctx, row.id, input);
         return {
-          conversation: runtime.conversationView(row),
+          conversation: runtime().conversationView(row),
           activity,
           path: `/assistant?chat=${row.id}`,
         };
@@ -302,7 +306,7 @@ export function createAssistantAgents(
           "Open this older task in the dashboard. Its agent's permissions have changed.",
           403,
         );
-      return runtime.get(ctx, chatId);
+      return runtime().get(ctx, chatId);
     },
     async message(
       ctx: RequestContext,
@@ -312,11 +316,11 @@ export function createAssistantAgents(
     ) {
       await service.inspect(ctx, id, chatId);
       await validateAgentGrants(ctx, await ownedAgent(ctx, id));
-      return runtime.message(ctx, chatId, input);
+      return runtime().message(ctx, chatId, input);
     },
     async stop(ctx: RequestContext, id: string, chatId: string) {
       await service.inspect(ctx, id, chatId);
-      return runtime.stop(ctx, chatId);
+      return runtime().stop(ctx, chatId);
     },
   };
   return service;

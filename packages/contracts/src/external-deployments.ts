@@ -14,6 +14,7 @@ export const ExternalProviderSchema = Type.Union([
   Type.Literal("railway"),
   Type.Literal("vercel"),
   Type.Literal("fly"),
+  Type.Literal("blaxel"),
   Type.Literal("self-managed"),
   Type.Literal("workbox"),
 ]);
@@ -26,6 +27,7 @@ export const ExternalWorkloadKindSchema = Type.Union([
   Type.Literal("vercel-sandbox"),
   Type.Literal("fly-machine"),
   Type.Literal("fly-sprite"),
+  Type.Literal("blaxel-sandbox"),
   Type.Literal("self-managed-server"),
   Type.Literal("workbox-host"),
   Type.Literal("workbox-sandbox"),
@@ -113,6 +115,12 @@ export const ExternalCapabilityProfileSchema = Type.Object(
 );
 export type ExternalCapabilityProfile = Static<typeof ExternalCapabilityProfileSchema>;
 
+export const ExternalCatalogIdentitySchema = Type.Object({
+  templateId: id, recipeId: id, name: text, logo: text,
+  version: Type.Optional(text), digest: Type.String({ pattern: "^[a-f0-9]{64}$" }),
+}, { additionalProperties: false });
+export type ExternalCatalogIdentity = Static<typeof ExternalCatalogIdentitySchema>;
+
 /** Immutable binding used by every external operation and deployment snapshot. */
 export const ExternalTargetSnapshotSchema = Type.Object(
   {
@@ -125,6 +133,7 @@ export const ExternalTargetSnapshotSchema = Type.Object(
     resource: Type.Record(Type.String({ maxLength: 100 }), text),
     revision: Type.Optional(text),
     capability: Type.Optional(ExternalCapabilityProfileSchema),
+    catalog: Type.Optional(ExternalCatalogIdentitySchema),
     capturedAt: timestamp,
   },
   { additionalProperties: false },
@@ -193,6 +202,10 @@ export type ExternalTargetInput = Static<typeof ExternalTargetInputSchema>;
 export const ExternalPlanInputSchema = Type.Object(
   {
     target: ExternalTargetInputSchema,
+    catalog: Type.Optional(Type.Object({
+      templateId: id, recipeId: id,
+      config: Type.Optional(Type.Record(Type.String({ maxLength: 100 }), text)),
+    }, { additionalProperties: false })),
     source: Type.Optional(Type.Record(Type.String({ maxLength: 100 }), text)),
     image: Type.Optional(text),
     environment: Type.Optional(Type.Record(Type.String({ maxLength: 256 }), text)),
@@ -240,6 +253,36 @@ export type ExternalObserveInput = Static<typeof ExternalObserveInputSchema>;
 export const ExternalTargetListOutputSchema = Type.Array(ExternalTargetSnapshotSchema);
 export type ExternalTargetListOutput = Static<typeof ExternalTargetListOutputSchema>;
 
+/** Read-only, credential-scoped inputs for the deployment destination picker. */
+export const ExternalDiscoveryInputSchema = Type.Object({
+  connectionId: id,
+  projectId: Type.Optional(id),
+}, { additionalProperties: false });
+export type ExternalDiscoveryInput = Static<typeof ExternalDiscoveryInputSchema>;
+const discoveryNamed = Type.Object({ id, name: text }, { additionalProperties: false });
+export const ExternalDiscoveryOutputSchema = Type.Object({
+  provider: ExternalProviderSchema,
+  connectionId: id,
+  projects: Type.Array(Type.Object({
+    id,
+    name: text,
+    environments: Type.Array(discoveryNamed),
+    services: Type.Array(discoveryNamed),
+  }, { additionalProperties: false })),
+  apps: Type.Array(Type.Object({ id, name: text, region: Type.Optional(text) }, { additionalProperties: false })),
+  environments: Type.Array(discoveryNamed),
+  images: Type.Array(discoveryNamed),
+  warnings: Type.Array(text),
+}, { additionalProperties: false });
+export type ExternalDiscoveryOutput = Static<typeof ExternalDiscoveryOutputSchema>;
+
+export const ExternalOperationListInputSchema = Type.Object({
+  targetId: Type.Optional(id),
+  limit: Type.Optional(Type.Integer({ minimum: 1, maximum: 200 })),
+}, { additionalProperties: false });
+export type ExternalOperationListInput = Static<typeof ExternalOperationListInputSchema>;
+export const ExternalOperationListOutputSchema = Type.Array(ExternalOperationSchema);
+
 export const ExternalLogEntrySchema = Type.Object(
   {
     cursor: Type.String({ maxLength: 200 }),
@@ -251,6 +294,16 @@ export const ExternalLogEntrySchema = Type.Object(
   { additionalProperties: false },
 );
 export type ExternalLogEntry = Static<typeof ExternalLogEntrySchema>;
+
+export const ExternalLogsInputSchema = Type.Object({
+  operationId: id, cursor: Type.Optional(Type.String({ maxLength: 200 })),
+}, { additionalProperties: false });
+export type ExternalLogsInput = Static<typeof ExternalLogsInputSchema>;
+export const ExternalLogsOutputSchema = Type.Object({
+  entries: Type.Array(ExternalLogEntrySchema, { maxItems: 200 }),
+  cursor: Type.Optional(Type.String({ maxLength: 200 })), truncated: Type.Boolean(),
+}, { additionalProperties: false });
+export type ExternalLogsOutput = Static<typeof ExternalLogsOutputSchema>;
 
 export const ExternalErrorSchema = Type.Object(
   {
@@ -265,23 +318,36 @@ export const ExternalErrorSchema = Type.Object(
 export type ExternalError = Static<typeof ExternalErrorSchema>;
 
 export const ExternalDeploymentCollectionSchemas = {
+  logs: { action: "read", scope: "list", input: ExternalLogsInputSchema, output: ExternalLogsOutputSchema },
+  discover: {
+    action: "read",
+    scope: "list",
+    input: ExternalDiscoveryInputSchema,
+    output: ExternalDiscoveryOutputSchema,
+  },
+  operations: {
+    action: "read",
+    scope: "list",
+    input: ExternalOperationListInputSchema,
+    output: ExternalOperationListOutputSchema,
+  },
   targets: {
     action: "read",
     scope: "list",
     output: ExternalTargetListOutputSchema,
   },
   capabilities: {
-    action: "read",
+    action: "write",
     input: ExternalTargetInputSchema,
     output: ExternalCapabilityProfileSchema,
   },
   preflight: {
-    action: "read",
+    action: "write",
     input: ExternalTargetInputSchema,
     output: ExternalPlanSchema,
   },
   plan: {
-    action: "read",
+    action: "write",
     input: ExternalPlanInputSchema,
     output: ExternalPlanSchema,
   },
@@ -291,7 +357,7 @@ export const ExternalDeploymentCollectionSchemas = {
     output: ExternalOperationSchema,
   },
   observe: {
-    action: "read",
+    action: "write",
     input: ExternalObserveInputSchema,
     output: ExternalOperationSchema,
   },

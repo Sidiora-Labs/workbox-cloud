@@ -1,0 +1,65 @@
+{
+  "available": true,
+  "verified": false,
+  "id": "vercel-nextjs",
+  "name": "Next.js Starter",
+  "description": "Start a Next.js application from Vercel\u2019s official starter.",
+  "kind": "template",
+  "nativeSupport": false,
+  "logo": "nextjs",
+  "category": "other",
+  "tags": [
+    "nextjs",
+    "starter",
+    "vercel"
+  ],
+  "services": [],
+  "deploymentRecipes": [
+    {
+      "id": "vercel",
+      "label": "Vercel project",
+      "provider": "vercel",
+      "workloadKind": "service",
+      "source": {
+        "repo": "vercel/vercel",
+        "ref": "155eacfa16840e68ae54bc50ee72fc8e16733857",
+        "rootDirectory": "examples/nextjs",
+        "framework": "nextjs"
+      },
+      "resource": {
+        "createProject": "true"
+      },
+      "requiredCapabilities": [
+        "apply",
+        "observe",
+        "logs",
+        "destroy"
+      ],
+      "notes": "Creates a new Vercel project from a reviewed upstream Git revision. Requires Vercel access to the public Git repository. No database, storage integration or Git repository is created."
+    }
+  ],
+  "provenance": {
+    "source": "vercel",
+    "url": "https://vercel.com/templates/next.js/nextjs-boilerplate",
+    "revision": "155eacfa16840e68ae54bc50ee72fc8e16733857",
+    "license": "Apache-2.0",
+    "reviewedAt": "2026-11-17"
+  },
+  "marketplace": {
+    "features": [
+      {
+        "title": "Native Vercel deployment",
+        "description": "Select a saved account, review, and deploy from Workbox Cloud."
+      },
+      {
+        "title": "Pinned upstream source",
+        "description": "Starts from a reviewed Git revision and preserves source attribution."
+      },
+      {
+        "title": "Managed lifecycle",
+        "description": "View deployment status and build logs, or delete the created project."
+      }
+    ],
+    "articleFile": "articles/vercel-nextjs.md"
+  }
+}

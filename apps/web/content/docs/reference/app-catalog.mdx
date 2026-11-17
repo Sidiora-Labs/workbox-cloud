@@ -60,6 +60,9 @@ autocomplete field names rather than typing them from memory.
     tags: { type: 'string[]', description: 'Free-form keywords used for catalog search.' },
     framework: { type: 'string', description: 'Stack slug for the created project. Usually "docker-compose" for template apps.' },
     services: { type: 'TemplateServiceSpec[]', description: 'The containers to run. Required in practice for template apps.' },
+    nativeSupport: { type: 'boolean', description: 'Defaults to native support. Set false for a provider-only entry; native installation is then rejected.' },
+    deploymentRecipes: { type: 'AppDeploymentRecipe[]', description: 'Reviewed provider-specific install paths. See Provider recipes. Custom uploads cannot introduce trusted recipes.' },
+    provenance: { type: 'AppTemplateProvenance', description: 'Source URL, revision, license and review date for the curated entry.' },
     supportsCloud: { type: 'boolean', description: 'Defaults to true. Set false for self-hosted-only apps. The installer rejects managed Cloud before creating a project. Requires schemaVersion 2.' },
     gpu: { type: '"recommended" | "required"', description: 'NVIDIA GPU placement. Recommended offers CPU or NVIDIA mode; services with GPU requests default to required. Requires schemaVersion 2.' },
     configFields: { type: 'AppConfigField[]', description: 'Machine-generated or derived env. Never rendered as a form input.' },
@@ -84,6 +87,36 @@ autocomplete field names rather than typing them from memory.
     repository: { type: 'string (URL)', description: 'Upstream source repository. Must be a valid URL.' },
   }}
 />
+
+## Provider recipes
+
+`deploymentRecipes` is an optional list of reviewed provider installation paths. It does not make
+native `services`, volumes or preparation commands portable to every provider. A provider-only
+entry sets `nativeSupport: false`; an existing native app may add recipes while retaining its server
+installation.
+
+| Recipe field | Purpose |
+| --- | --- |
+| `id`, `label` | Stable recipe ID and the destination label shown to the operator |
+| `provider`, `workloadKind` | Explicit provider and resource semantics |
+| `image`, `source`, `resource`, `environment` | Trusted deployment defaults understood by that provider adapter |
+| `inputs` | Declared operator fields; each has `key`, `label`, `type` and a mapping `target` (`environment`, `resource` or `source`) |
+| `requiredCapabilities` | Operations or resource features the adapter must support before apply |
+| `notes` | Limitations or deployment information shown before installation |
+
+Input types are `text`, `password`, `number` and `select`. Inputs can declare `targetKey`,
+`default`, `required` and select `options`. Password inputs must target the encrypted environment
+field. The server rejects undeclared inputs and attempts to replace the trusted source, image or
+catalog identity.
+
+`provenance` records `source` (`upstream`, `railway`, `vercel` or `workbox`), `url`, and optional
+`revision`, `license` and `reviewedAt`. A review date records source review; it does not certify
+that every provider account, runtime or network route has been tested.
+
+Provider recipes are accepted only from the trusted curated catalog. Custom uploads remain native
+app templates. Installed provider apps retain their template ID, recipe ID, version/digest and
+resource binding for display and lifecycle management. Provider-specific adapters still enforce
+the recipe's topology, storage and deletion ownership.
 
 ## Public app pages
 

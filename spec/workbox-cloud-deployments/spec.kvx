@@ -4,10 +4,17 @@
 [meta]
 feature     = "workbox-cloud-deployments"
 name        = "Unified provider deployments, sandboxes, machines, and Workbox"
-version     = "0.1.0-proposed"
-status      = "proposed"
-review_date = "2026-11-16"
-intro       = "Extend Openship's existing project, credential, deployment and destination model so one explicit interface can deploy service containers, provider-managed sandboxes, VM-like machines, and Workbox workloads to Railway, multiple Vercel accounts, Fly.io, and self-managed servers. Native Railway and Vercel sandboxes are first-class provider resources and are not service containers. Workbox remains a separate adapter and host capability model; a Workbox daemon is a service/host, while a Workbox sandbox is a child workload."
+version     = "0.3.0-in-progress"
+status      = "in-progress"
+review_date = "2026-11-17"
+intro       = "Extend Openship's existing project, credential, deployment and destination model so one explicit interface can deploy service containers, provider-managed sandboxes, VM-like machines, and Workbox workloads to Railway, multiple Vercel accounts, Fly.io, Blaxel, and self-managed servers. Native Railway and Vercel sandboxes are first-class provider resources and are not service containers. Workbox remains a separate adapter and host capability model; a Workbox daemon is a service/host, while a Workbox sandbox is a child workload."
+
+[reevaluation]
+date = "2026-11-17"
+trigger = "Connected provider credentials and an isolated destination component did not expose a usable dashboard workflow. No production page supplied the external destination options or callback, and the dashboard client exposed only target listing."
+remedy = "Provide visible Workloads navigation with /workloads and /workloads/new, credential-bound discovery, typed launch configuration, preflight and plan review, explicit apply, and durable operation management. Preserve the existing source/catalog wizard for Workbox Cloud and connected servers."
+backend = "Call provider plan and preflight, enforce rejected and expired plans before apply, revalidate the selected credential, and bind every operation to its own returned provider resource ID. Refresh must inspect that resource without implicitly resuming it."
+evidence = "Source implementation, local tests/build, authenticated browser journeys, live provider creation/cleanup, and release readiness are separate evidence classes. Task status below describes intended work and never certifies all provider features or a deployed release."
 
 [decisions]
 d_1  = "RULED by this spec: deployment target identity is a provider connection plus provider resource identifiers. A project never infers an account from the newest credential, a provider default, or a caller-supplied label."
@@ -19,12 +26,14 @@ d_6  = "RULED by this spec: Workbox integration uses its REST/WebSocket/SDK cont
 d_7  = "RULED by this spec: every external mutation has a durable operation, an idempotency key, and inspect-after-timeout reconciliation. UNKNOWN is not success and cannot be retried blindly."
 d_8  = "RULED by this spec: credentials are organization-scoped, encrypted and server-resolved. Multiple Vercel accounts or teams are distinct connections with immutable provider identity snapshots and explicit project/environment bindings."
 d_9  = "FLAGGED for live qualification: a Workbox daemon needs Linux user namespaces, cgroup v2 delegation, bubblewrap, overlayfs and network tooling. A normal Railway or Vercel service container is not assumed to satisfy those prerequisites."
-d_10 = "FLAGGED for owner decision: sprite machine means the Fly Sprites API resource unless a future Workbox release defines an equivalent profile. The current Workbox upstream contains no sprite primitive."
+d_10 = "RULED by this implementation: sprite machine means the Fly Sprites API resource unless a future Workbox release defines an equivalent profile. The current Workbox upstream contains no sprite primitive."
+d_11 = "RULED by this spec: Blaxel sandboxes and Blaxel Applications are distinct workloads. Applications are private preview and must disclose that before apply; sandbox standby is not deletion."
+d_12 = "RULED by this spec: discoverable account, project, environment and app selectors are the primary UI. Manual provider IDs are an explicit fallback. A saved credential by itself is not a deployment surface."
 
 [req.1]
 title = "Explicit target and workload model"
 story = "As an operator, I need the destination picker to distinguish what is being run from where it runs, so that a service container is never treated as a sandbox or machine."
-ac_1 = "The domain model SHALL represent provider connection, deployment target, workload kind and immutable provider resource identity separately. Workload kinds SHALL include service, railway-sandbox, vercel-sandbox, fly-machine, fly-sprite, workbox-host and workbox-sandbox."
+ac_1 = "The domain model SHALL represent provider connection, deployment target, workload kind and immutable provider resource identity separately. Workload kinds SHALL include service, railway-sandbox, vercel-sandbox, fly-machine, fly-sprite, blaxel-sandbox, workbox-host and workbox-sandbox."
 ac_2 = "A target SHALL carry provider, connectionId, account or workspace identity, project/environment/region scope where applicable, and provider resource IDs. A deployment SHALL retain the resolved target snapshot and provider revision or resource ID."
 ac_3 = "Capability discovery SHALL return supported operations, persistence, snapshot/checkpoint, idle policy, exec/session, file transfer, network mode, public ingress, logs, rollback, and resource limits for the selected target. Unsupported combinations SHALL be rejected before mutation with a machine-readable reason."
 ac_4 = "Existing local, SSH/self-managed, managed Cloud, Docker, bare, Compose, Kubernetes and cluster targets SHALL remain valid and continue using their current host runtime path."
@@ -90,6 +99,9 @@ ac_1 = "The target picker SHALL show provider, account or workspace, project/env
 ac_2 = "The dashboard SHALL provide separate service and sandbox or machine detail views, including status, logs, commands or sessions, routes, snapshots/checkpoints, idle policy, cost or quota signals and destructive actions appropriate to the resource kind."
 ac_3 = "CLI and SDK operations SHALL accept explicit destination or target IDs and connection IDs; the existing server option SHALL remain a compatibility alias. No surface SHALL silently select the newest credential or last-used provider account when several qualify."
 ac_4 = "HTTP, native SDK and CLI calls SHALL enter the same authorized platform operations and return normalized status, capability, provider identifiers, URLs, operation IDs and reconciliation state."
+ac_5 = "The dashboard SHALL expose a visible Workloads entry, /workloads/new launch flow and /workloads management view. New provider workloads SHALL be creatable without pre-existing saved targets. Workbox Cloud and self-managed server choices SHALL enter the existing source/catalog and destination wizard."
+ac_6 = "Provider discovery SHALL resolve only the selected organization-owned connection. Changing connection, workload or configuration SHALL invalidate the displayed plan. No API key, environment value or provider bearer token SHALL appear in plan review or operation listing."
+ac_7 = "A workload list SHALL restore persisted operations after reload, distinguish plan-only targets from created workloads, display unknown/failed/action-required states, and expose only provider-supported actions with explicit confirmation for destruction."
 
 [req.9]
 title = "Durability, safety and reconciliation"
@@ -98,6 +110,8 @@ ac_1 = "Every mutating external call SHALL persist intent, idempotency key, targ
 ac_2 = "Timeouts, disconnects, duplicate webhooks, provider rate limits and process restarts SHALL enter reconciliation. Recovery SHALL inspect provider state and compare immutable target and revision data before completing, retrying or requesting action."
 ac_3 = "Provider responses, logs and errors SHALL be bounded and redacted. User-controlled provider endpoints, Workbox URLs and self-managed hosts SHALL retain fixed-origin or SSRF protections, DNS pinning and host-key pinning."
 ac_4 = "Destroy, rollback and transfer SHALL require explicit confirmation where the provider cannot guarantee atomicity. Partial resources SHALL remain visible with cleanup state and receipt rather than being silently forgotten."
+ac_5 = "Apply SHALL reject blocked or expired plans before any provider mutation and SHALL resolve the exact active connection again. Provider-created resource IDs SHALL be retained in operation snapshots so later redeploys cannot redirect observe, exec or destroy to a different resource."
+ac_6 = "An observe action SHALL be read-only with respect to the provider workload lifecycle. In particular, observing a stopped Vercel Sandbox SHALL not invoke automatic resume."
 
 [req.10]
 title = "Evidence and qualification"
@@ -108,15 +122,44 @@ ac_3 = "Real Docker and prepared Workbox host tests SHALL exercise sandbox/sessi
 ac_4 = "Opt-in live tests SHALL use disposable provider resources and credentials supplied through the environment, fail when enabled and unavailable, write sanitized evidence and cleanup receipts, and separately record account, browser, DNS, billing, endurance and release evidence."
 ac_5 = "Documentation SHALL publish the provider matrix, workload distinctions, credential setup, unsupported combinations, recovery behavior, cost or quota implications and the exact evidence boundary."
 
+[req.11]
+title = "Blaxel sandbox and application deployment"
+story = "As an operator, I need to select a Blaxel workspace in the same launch flow, while seeing the distinct availability and persistence of its workload types."
+ac_1 = "Blaxel SHALL be an organization-scoped encrypted connection with an explicit workspace identity and API-key reference. Discovery, verification and mutations SHALL use the selected workspace and a pinned Management API version."
+ac_2 = "blaxel-sandbox SHALL support image, name, region, memory, environment and supported port settings; create, observe, command execution and destruction SHALL retain the provider resource identity. Standby SHALL remain distinct from termination and deletion."
+ac_3 = "Blaxel Applications SHALL use the service workload kind and disclose private-preview availability before apply. Application image references SHALL satisfy the workspace registry requirement; an arbitrary external registry image SHALL fail review with remediation."
+ac_4 = "The UI SHALL distinguish provider support from implemented controls. Archive, snapshots, volumes, preview URLs, shared drives and standby controls SHALL not be advertised as available dashboard actions unless implemented and capability-checked."
+
+[req.12]
+title = "Installable catalog across supported infrastructure"
+story = "As an operator, I need to choose an application once, select a compatible destination and manage its installation in Apps, without assembling provider resources manually."
+ac_1 = "The existing Apps catalog SHALL expose curated deployment recipes for supported provider destinations alongside native server installation. A recipe SHALL declare its provider, workload kind, source or image, constrained inputs, required capabilities and provenance. Unsupported destinations SHALL not be offered as successful installs."
+ac_2 = "Provider catalog installs SHALL resolve templateId and recipeId against the server-trusted catalog. Clients SHALL NOT override trusted source, image, topology, ownership or secret-generation instructions through arbitrary recipe data. All operator inputs SHALL be validated before plan creation and mutation."
+ac_3 = "The destination step SHALL require an explicit named connection and preserve provider account or workspace identity through review, apply, refresh and deletion. Existing native server installs SHALL retain their current resource, environment, route, persistence and generated-secret behavior."
+ac_4 = "Every installed provider app SHALL retain catalog identity and its actual resource binding across reloads, appear in Apps, and expose the same capability-checked lifecycle controls as Workloads. Template provenance and source version SHALL remain inspectable."
+ac_5 = "Railway templates SHALL preserve their service graph, variable references and persistent volumes. Vercel templates SHALL create a managed project and deployment from the declared source with validated configuration. Multi-service or persistent templates SHALL NOT be silently flattened into an ephemeral container."
+ac_6 = "Provider mutation ambiguity SHALL retain partial ownership and resource identities for reconciliation and safe cleanup. Deletion SHALL affect only resources owned by that installation, and SHALL disclose when persistent application data will be removed."
+ac_7 = "The catalog SHALL describe curated provider selections without claiming an unsupported popularity ranking. Third-party source, image, license and version provenance SHALL be recorded; catalog verification labels SHALL not imply runtime or provider qualification that was not performed."
+
+[req.13]
+title = "Self-hosted browsers and prepared Workbox hosts"
+story = "As an operator, I need browser applications and a prepared Workbox host installable from the same catalog, with secure access and actual runtime readiness."
+ac_1 = "The catalog SHALL include interactive Chromium, Firefox and browser desktop applications plus a browser automation service. Entries SHALL declare the required memory and shared memory, persistent profile storage, ports, health checks, authentication and endpoint behavior. Public browser access SHALL be protected by generated credentials; credentials SHALL remain encrypted and absent from logs."
+ac_2 = "Prepared Workbox host installation SHALL select an organization-owned compatible server and use the existing authenticated server execution and provisioning lock. It SHALL inspect Linux, cgroup v2, user namespace and required system capabilities before mutation; unsupported hosts SHALL fail with an actionable reason."
+ac_3 = "Workbox host preparation SHALL install the pinned daemon, dependencies, rootfs and runtime assets, configure persistent state and protected API credentials, start the managed service, and verify authenticated readiness before registering a usable connection. A successful script exit alone SHALL NOT mean the host is ready."
+ac_4 = "The Workbox API SHALL remain reachable through the existing authenticated server transport where configured, without requiring an unprotected public daemon. Connection credentials SHALL be encrypted and scoped to the owning organization and selected server."
+ac_5 = "Host installation SHALL expose durable progress, failure details and a safe retry or recovery path. Host service management and removal SHALL preserve clear ownership of installed resources and distinguish daemon removal from deletion of sandbox data."
+ac_6 = "After readiness, the UI SHALL offer creation of a child Workbox sandbox through the prepared connection. Native Railway and Vercel sandboxes and Fly Sprites SHALL remain separate resource kinds; preparing a Workbox host SHALL NOT relabel those provider resources."
+
 [design]
 architecture = "Add an external-deployment provider layer below shared platform operations and beside the existing host runtime adapters. Keep Docker/Bare/SSH/Compose/Kubernetes resolution intact. A provider connection identifies credentials and account scope; a deployment target identifies provider resources; a workload record identifies service, sandbox or machine semantics; a durable operation records intent and reconciliation."
-provider_kinds = "railway-service, railway-sandbox, vercel-project, vercel-sandbox, fly-machine, fly-sprite, self-managed-server, workbox-host, workbox-sandbox"
+provider_kinds = "railway-service, railway-sandbox, vercel-project, vercel-sandbox, fly-machine, fly-sprite, self-managed-server, workbox-host, workbox-sandbox, blaxel-application, blaxel-sandbox"
 normalized_operations = "discover, capabilities, preflight, plan, apply, observe, logs, exec_or_session, files, checkpoint_or_snapshot, stop_or_resume, promote_or_rollback, destroy, reconcile"
 service_semantics = "A service is a provider deployment target for an image or source that exposes readiness, routes and revision history. It is long-lived or scheduled according to provider semantics and does not inherit sandbox checkpoint, idle or session behavior."
 sandbox_semantics = "A sandbox is an isolated VM or sandbox resource for commands, sessions, files and optional snapshots/checkpoints. It has provider-specific idle, persistence, network and public-route rules and is not a service container."
 workbox_semantics = "Workbox-host deploys the daemon; Workbox-sandbox creates a child sandbox through REST/WS/SDK. Native Railway and Vercel sandboxes use their own adapters and provenance even when a Workbox environment profile supplies common intent."
 security = "Reuse credential encryption, org authorization, audit, idempotency, host-key pinning and SSRF controls. Resolve secrets only in provider adapters. Bind Workbox keys to sandbox IDs or labels and never copy ambient controller credentials into a sandbox."
-references = ["https://docs.railway.com/services", "https://docs.railway.com/sandboxes", "https://vercel.com/docs/sandbox", "https://vercel.com/docs/sandbox/concepts/persistent-sandboxes", "https://github.com/Sidiora-Labs/workbox", "https://github.com/Sidiora-Labs/workbox/blob/main/docs/hyperfide-provider.md", "https://fly.io/sprites/", "https://docs.fly.io/sprites/api"]
+references = ["https://docs.railway.com/services", "https://docs.railway.com/sandboxes", "https://vercel.com/docs/sandbox", "https://vercel.com/docs/sandbox/concepts/persistent-sandboxes", "https://github.com/Sidiora-Labs/workbox", "https://github.com/Sidiora-Labs/workbox/blob/main/docs/hyperfide-provider.md", "https://fly.io/sprites/", "https://docs.fly.io/sprites/api", "https://docs.blaxel.ai/Applications/Overview", "https://docs.blaxel.ai/Sandboxes/Overview", "https://docs.blaxel.ai/api-reference/introduction"]
 
 [documentation]
 mode      = "manual"
@@ -243,3 +286,98 @@ do_2       = "Add real-Docker and prepared-Workbox-host tests for sessions, chec
 do_3       = "Add opt-in disposable Railway, Vercel and Fly live matrices with fail-when-enabled behavior, sanitized evidence and cleanup receipts; separate browser, DNS, billing, endurance and release gates."
 do_4       = "Update operator and developer docs with the service-versus-sandbox table, provider capability matrix, Workbox limitations and current official provider references."
 reqs       = ["10.1", "10.2", "10.3", "10.4", "10.5"]
+
+# Remediation tasks supplement the original staged plan. Original requirements
+# remain the full capability roadmap; they are not a statement of shipped parity.
+[task.5.1]
+title      = "Expose and connect the unified workload launch and management screens"
+status     = "implemented"
+qualification = "2026-11-17: authenticated staging navigation and Blaxel create/observe/exec/delete UI journey passed, including mobile overflow check. Native destination handoff has component evidence; broader browser and desktop journeys remain separate. Receipts: artifacts/workloads-20261117/."
+wave       = 5
+requires   = ["3.2"]
+touches    = ["apps/dashboard/src/app/(dashboard)/workloads/**", "apps/dashboard/src/components/workloads/**", "apps/dashboard/src/lib/api/external-deployments.ts", "apps/dashboard/src/components/layout/**"]
+verify_cmd = "bun run --cwd apps/dashboard lint && bun run --cwd apps/dashboard test"
+do_1       = "Add Workloads navigation, new-workload entrypoints, explicit provider/account/workload selection and native source/catalog routing."
+do_2       = "Discover provider projects, environments and apps; review typed configuration through actual preflight and plan calls; apply only an accepted current plan."
+do_3       = "Restore created workloads from persisted operations and expose status refresh, command and confirmed destruction only where supported."
+reqs       = ["8.1", "8.2", "8.5", "8.6", "8.7"]
+
+[task.5.2]
+title      = "Enforce provider plans and durable resource identity"
+status     = "implemented"
+qualification = "2026-11-17: Railway and Vercel Sandbox creation/command/cleanup and private Fly nginx Machine creation/observation/cleanup passed through the normal API, with independent provider cleanup checks. Public ingress, Sprites, rollback and crash recovery remain unqualified. Receipts: artifacts/workloads-20261117/."
+wave       = 5
+requires   = ["2.1"]
+touches    = ["packages/platform/src/engine/modules/external-deployments/**", "packages/db/src/repos/external-deployment.repo.ts", "apps/api/src/modules/external-deployments/**", "packages/contracts/src/external-deployments.ts"]
+verify_cmd = "bun run --cwd packages/platform test -- external-deployment"
+do_1       = "Run provider validation before accepting plans; reject expiry, blockers and stale credentials before mutation."
+do_2       = "Persist returned provider IDs in operation-bound snapshots and restore operation history for the organization."
+do_3       = "Fix provider request shape and status mapping against current APIs; observing stopped workloads must not resume them."
+reqs       = ["9.1", "9.2", "9.5", "9.6", "10.1"]
+
+[task.5.3]
+title      = "Add Blaxel connection, sandbox and preview application adapters"
+status     = "implemented"
+qualification = "2026-11-17: live Blaxel credential verification and authenticated UI sandbox create/observe/exec/delete passed. Independent provider evidence confirmed a disabled TERMINATED tombstone. Private-preview Applications were not deployed. Receipts: artifacts/workloads-20261117/."
+wave       = 5
+requires   = ["1.1", "2.1"]
+touches    = ["packages/core/src/credentials.ts", "packages/contracts/src/external-deployments.ts", "packages/platform/src/engine/modules/credentials/verify.ts", "packages/platform/src/engine/modules/external-deployments/providers/blaxel.ts", "apps/dashboard/src/components/workloads/**"]
+verify_cmd = "bun run --cwd packages/platform test -- blaxel"
+do_1       = "Add explicit workspace/key verification, pinned API version, sandbox lifecycle adapter and private-preview application adapter."
+do_2       = "Validate image scope, region, resources and supported ports before creation; expose sandbox standby distinctly from deletion."
+do_3       = "Record read-only credential verification separately from opt-in workload creation and cleanup evidence."
+reqs       = ["11.1", "11.2", "11.3", "11.4", "10.4"]
+
+
+# Catalog expansion continues the same deployment operation and native Apps model.
+[task.6.1]
+title      = "Connect the catalog to trusted provider recipes and installed app management"
+status     = "in-progress"
+qualification = "Implementation in progress. Schema, authorization, browser and live provider evidence must be recorded separately before this task is qualified."
+wave       = 6
+requires   = ["5.1", "5.2"]
+touches    = ["packages/core/src/app-templates.ts", "packages/contracts/src/apps.ts", "packages/contracts/src/external-deployments.ts", "packages/platform/src/engine/modules/apps/**", "packages/platform/src/engine/modules/external-deployments/**", "apps/dashboard/src/components/apps/**", "apps/dashboard/src/components/workloads/**", "apps/dashboard/src/app/(dashboard)/apps/**"]
+verify_cmd = "bun run --cwd packages/core test && bun run --cwd packages/platform test -- catalog && bun run --cwd apps/dashboard test"
+do_1       = "Add server-trusted provider recipes, provenance, constrained inputs and persisted catalog identity to the existing catalog and operation contracts."
+do_2       = "Connect Apps destination selection and review to provider plans, and show installed provider apps with capability-checked lifecycle controls."
+do_3       = "Preserve native installations and prevent incompatible persistent or multi-service recipes from selecting unsupported destinations."
+reqs       = ["12.1", "12.2", "12.3", "12.4", "12.7"]
+
+[task.6.2]
+title      = "Add curated Railway and Vercel template deployment lifecycles"
+status     = "in-progress"
+qualification = "Implementation in progress. Curated source review and mocked API checks do not prove provider readiness, data persistence or cleanup."
+wave       = 6
+requires   = ["6.1"]
+touches    = ["packages/core/src/apps/catalog/**", "packages/platform/src/engine/modules/external-deployments/providers/railway*", "packages/platform/src/engine/modules/external-deployments/providers/vercel*", "packages/platform/test/**"]
+verify_cmd = "bun run --cwd packages/platform test -- railway && bun run --cwd packages/platform test -- vercel"
+do_1       = "Deploy reviewed Railway template graphs with their variables, services and volumes and retain owned resource identities."
+do_2       = "Create Vercel projects and deployments from reviewed source templates with scoped configuration, observation, logs and owned deletion."
+do_3       = "Qualify disposable installations and cleanup through the same API and UI used by operators, recording source and provider evidence independently."
+reqs       = ["12.2", "12.3", "12.5", "12.6", "12.7"]
+
+[task.6.3]
+title      = "Add secure self-hosted browser applications"
+status     = "in-progress"
+qualification = "Implementation in progress. Image and license review, catalog validation, container readiness and browser interaction are separate checks."
+wave       = 6
+requires   = ["6.1"]
+touches    = ["packages/core/src/apps/catalog/**", "packages/core/src/apps/articles/**", "apps/dashboard/src/components/apps/**"]
+verify_cmd = "bun run --cwd packages/core test -- app-template"
+do_1       = "Add pinned Chromium, Firefox, browser desktop and browser automation entries with resource, shared-memory, storage, authentication and health requirements."
+do_2       = "Use the native installer and connection controls; protect remote browser access and retain profiles in declared persistent volumes."
+do_3       = "Record real-container and interactive browser checks without treating them as qualification of every host runtime."
+reqs       = ["13.1", "12.7"]
+
+[task.6.4]
+title      = "Automatically prepare a Workbox host on a connected Linux server"
+status     = "in-progress"
+qualification = "Implementation in progress. Isolated host provisioning and sandbox lifecycle evidence are required before claiming runtime readiness."
+wave       = 6
+requires   = ["6.1"]
+touches    = ["packages/platform/src/engine/modules/**", "packages/contracts/src/**", "apps/dashboard/src/app/(dashboard)/apps/**", "docs/workbox-connected-hosts.md"]
+verify_cmd = "bun run --cwd packages/platform test -- workbox && bun run --cwd apps/dashboard test"
+do_1       = "Preflight and provision through the organization-scoped server execution path with a pinned daemon, dependencies and actual rootfs/runtime assets."
+do_2       = "Run the managed daemon through a protected transport, verify readiness and authenticated inventory, and register the encrypted connection only after verification."
+do_3       = "Expose durable progress and safe recovery, host management and a follow-on child sandbox launch in the catalog flow."
+reqs       = ["13.2", "13.3", "13.4", "13.5", "13.6"]

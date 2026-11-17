@@ -84,27 +84,31 @@ export async function workboxReady(
   if (base.protocol !== "https:" && !(options.allowHttp && base.protocol === "http:"))
     throw new AppError("Workbox endpoint must use HTTPS", 400, "CONNECTION_ENDPOINT_INVALID");
   if (!apiKey) throw new AppError("Reconnect Workbox before verifying", 409, "CONNECTION_RECONNECT_REQUIRED");
-  const endpoint = new URL("readyz", `${base.href.replace(/\/$/, "")}/`);
-  let response;
-  try {
-    response = await safeFetch(endpoint.href, {
-      headers: { Authorization: `Bearer ${apiKey}`, Accept: "application/json" },
-      timeoutMs: 10_000,
-      maxBodyBytes: 256 * 1024,
-      allowPrivate: options.allowPrivate ?? false,
-      allowHttp: options.allowHttp ?? false,
-      maxRedirects: 0,
-    });
-  } catch {
-    throw new AppError("Workbox could not be reached. Check the endpoint and retry.", 502, "CONNECTION_UNAVAILABLE");
-  }
-  if (!response.ok) {
-    const auth = response.status === 401 || response.status === 403;
-    throw new AppError(
-      auth ? "Workbox rejected this scoped API key." : "Workbox readiness check failed. Retry the connection.",
-      auth ? 403 : 502,
-      auth ? "CONNECTION_ACCESS_DENIED" : "CONNECTION_REQUEST_FAILED",
-    );
+  // /readyz is public upstream; also verify the bearer against a read-only,
+  // authenticated endpoint before saving the connection as verified.
+  for (const path of ["readyz", "v1/sandboxes?limit=1"]) {
+    const endpoint = new URL(path, `${base.href.replace(/\/$/, "")}/`);
+    let response;
+    try {
+      response = await safeFetch(endpoint.href, {
+        headers: { Authorization: `Bearer ${apiKey}`, Accept: "application/json" },
+        timeoutMs: 10_000,
+        maxBodyBytes: 256 * 1024,
+        allowPrivate: options.allowPrivate ?? false,
+        allowHttp: options.allowHttp ?? false,
+        maxRedirects: 0,
+      });
+    } catch {
+      throw new AppError("Workbox could not be reached. Check the endpoint and retry.", 502, "CONNECTION_UNAVAILABLE");
+    }
+    if (!response.ok) {
+      const auth = response.status === 401 || response.status === 403;
+      throw new AppError(
+        auth ? "Workbox rejected this scoped API key." : "Workbox readiness check failed. Retry the connection.",
+        auth ? 403 : 502,
+        auth ? "CONNECTION_ACCESS_DENIED" : "CONNECTION_REQUEST_FAILED",
+      );
+    }
   }
 }
 
@@ -116,19 +120,27 @@ export async function railwayQuery<T>(
   const token = access.secrets.apiToken;
   if (!token)
     throw new AppError("Reconnect Railway before importing", 409, "CONNECTION_RECONNECT_REQUIRED");
-  const result = await providerJson<{ data?: T; errors?: unknown[] }>(
-    new URL("https://backboard.railway.com/graphql/v2"),
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(access.publicFields.tokenType === "project"
-          ? { "Project-Access-Token": token }
-          : { Authorization: `Bearer ${token}` }),
+  let result: { data?: T; errors?: unknown[] };
+  try {
+    result = await providerJson<{ data?: T; errors?: unknown[] }>(
+      new URL("https://backboard.railway.com/graphql/v2"),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(access.publicFields.tokenType === "project"
+            ? { "Project-Access-Token": token }
+            : { Authorization: `Bearer ${token}` }),
+        },
+        body: JSON.stringify({ query, variables }),
       },
-      body: JSON.stringify({ query, variables }),
-    },
-  );
+    );
+  } catch (error) {
+    if (/^\s*mutation\b/.test(query) && error instanceof AppError && ["CONNECTION_UNAVAILABLE", "CONNECTION_RESPONSE_INVALID", "CONNECTION_REQUEST_FAILED"].includes(error.code ?? "")) {
+      throw new AppError("Railway did not confirm the operation result. Check the provider resource before retrying.", 502, "EXTERNAL_UNKNOWN_OUTCOME");
+    }
+    throw error;
+  }
   if (result.errors?.length || !result.data)
     throw new AppError(
       "Railway could not read the selected resources. Check the connection's scope and retry.",

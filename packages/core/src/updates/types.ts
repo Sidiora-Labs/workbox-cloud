@@ -108,7 +108,8 @@ export interface UpdateState {
   latestChangelogUrl: string;
 }
 
-export const GITHUB_REPO = "oblien/openship";
+/** Product releases belong to the fork; signed security advisories have a separate feed. */
+export const GITHUB_REPO = "Sidiora-Labs/workbox-cloud";
 
 /** GitHub API: the latest published (non-prerelease) release. */
 export const RELEASES_LATEST_API = `https://api.github.com/repos/${GITHUB_REPO}/releases/latest`;

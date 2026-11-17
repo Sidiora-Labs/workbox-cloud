@@ -2,10 +2,10 @@ import { describe, expect, it, vi } from "vitest";
 
 import { releaseDocuments } from "../src/updates/release-documents";
 
-const RELEASE_URL = "https://api.github.com/repos/oblien/openship/releases/latest";
-const CHANGELOG_URL = "https://raw.githubusercontent.com/oblien/openship/v0.6.9/CHANGELOG.md";
+const RELEASE_URL = "https://api.github.com/repos/Sidiora-Labs/workbox-cloud/releases/latest";
+const CHANGELOG_URL = "https://raw.githubusercontent.com/Sidiora-Labs/workbox-cloud/v0.6.9/CHANGELOG.md";
 const MANIFEST_URL =
-  "https://raw.githubusercontent.com/oblien/openship/v0.6.9/release-advisories.json";
+  "https://raw.githubusercontent.com/Sidiora-Labs/workbox-cloud/v0.6.9/release-advisories.json";
 
 function response(body: BodyInit, init?: ResponseInit): Response {
   return new Response(body, { status: 200, ...init });

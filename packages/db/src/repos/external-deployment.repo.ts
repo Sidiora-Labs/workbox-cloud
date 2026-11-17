@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, isNotNull, lte, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, isNotNull, lte, or, sql } from "drizzle-orm";
 import { generateId } from "@repo/core";
 import type { Database } from "../client";
 import { externalDeploymentOperation, externalDeploymentTarget } from "../schema";
@@ -11,6 +11,17 @@ export type NewExternalDeploymentOperation = typeof externalDeploymentOperation.
 /** Organization-scoped persistence for provider targets and durable operations. */
 export function createExternalDeploymentRepo(db: Database) {
   return {
+    async listOperations(organizationId: string, targetId?: string, limit = 100): Promise<ExternalDeploymentOperation[]> {
+      return db.query.externalDeploymentOperation.findMany({
+        where: and(
+          eq(externalDeploymentOperation.organizationId, organizationId),
+          inArray(externalDeploymentOperation.operation, ["apply", "observe", "destroy"]),
+          targetId ? eq(externalDeploymentOperation.targetId, targetId) : undefined,
+        ),
+        orderBy: (o, { desc }) => desc(o.createdAt),
+        limit: Math.min(200, Math.max(1, limit)),
+      });
+    },
     async listTargets(organizationId: string): Promise<ExternalDeploymentTarget[]> {
       return db.query.externalDeploymentTarget.findMany({
         where: eq(externalDeploymentTarget.organizationId, organizationId),
@@ -118,8 +129,10 @@ export function createExternalDeploymentRepo(db: Database) {
       );
       if (existing) return existing;
       const row = { id: generateId("extop"), ...data };
-      await db.insert(externalDeploymentOperation).values(row);
-      const created = await this.findOperationById(data.organizationId, row.id);
+      await db.insert(externalDeploymentOperation).values(row).onConflictDoNothing({
+        target: [externalDeploymentOperation.organizationId, externalDeploymentOperation.idempotencyKey],
+      });
+      const created = await this.findOperationByIdempotency(data.organizationId, data.idempotencyKey);
       if (!created) throw new Error("external deployment operation insert did not persist");
       return created;
     },
@@ -130,6 +143,7 @@ export function createExternalDeploymentRepo(db: Database) {
       patch: Partial<
         Pick<
           NewExternalDeploymentOperation,
+          | "operation"
           | "status"
           | "providerRequestId"
           | "providerResourceId"
@@ -154,6 +168,22 @@ export function createExternalDeploymentRepo(db: Database) {
             eq(externalDeploymentOperation.id, id),
           ),
         );
+      return this.findOperationById(organizationId, id);
+    },
+
+    async updateObservation(
+      organizationId: string,
+      id: string,
+      expectedUpdatedAt: Date,
+      expectedOperation: string,
+      patch: Partial<Pick<NewExternalDeploymentOperation, "status" | "providerRequestId" | "providerResourceId" | "providerStatus" | "observed" | "errorCode" | "errorMessage" | "reconcileAfter" | "finishedAt">>,
+    ): Promise<ExternalDeploymentOperation | undefined> {
+      await db.update(externalDeploymentOperation).set({ ...patch, updatedAt: new Date() }).where(and(
+        eq(externalDeploymentOperation.organizationId, organizationId),
+        eq(externalDeploymentOperation.id, id),
+        eq(externalDeploymentOperation.updatedAt, expectedUpdatedAt),
+        eq(externalDeploymentOperation.operation, expectedOperation),
+      ));
       return this.findOperationById(organizationId, id);
     },
 

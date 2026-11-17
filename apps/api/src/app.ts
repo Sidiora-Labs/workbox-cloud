@@ -50,6 +50,7 @@ import { projectConnectionRoutes } from "./modules/projects/project-connection.r
 import { projectStorageRoutes } from "./modules/projects/project-storage.routes";
 import { deploymentRoutes } from "./modules/deployments/deployment.routes";
 import { externalDeploymentRoutes } from "./modules/external-deployments/external-deployment.routes";
+import { workboxHostRoutes } from "./modules/workbox-hosts/workbox-host.routes";
 import { domainRoutes } from "./modules/domains/domain.routes";
 import { dnsRoutes } from "./modules/dns/dns.routes";
 import { credentialRoutes } from "./modules/credentials/credential.routes";
@@ -218,6 +219,7 @@ app.route("/api/projects/:id/connections", projectConnectionRoutes);
 app.route("/api/projects/:id/storage", projectStorageRoutes);
 app.route("/api/deployments", deploymentRoutes);
 app.route("/api/external-deployments", externalDeploymentRoutes);
+app.route("/api/workbox-hosts", workboxHostRoutes);
 app.route("/api/domains", domainRoutes);
 app.route("/api/dns", dnsRoutes);
 app.route("/api/credentials", credentialRoutes);

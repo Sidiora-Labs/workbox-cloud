@@ -142,6 +142,8 @@ services:
     # `:z` relabels for SELinux-enforcing hosts; a no-op elsewhere.
     volumes:
       - ${OPENSHIP_DOCKER_SOCKET:-/var/run/docker.sock}:/var/run/docker.sock
+      # Private assistant profiles and custom gateway keys must survive API upgrades.
+      - ${OPENSHIP_DATA_PATH:-/var/lib/workbox-cloud/data}:/var/lib/workbox-cloud
       - /var/lib/openship/edge/sites-enabled:/usr/local/openresty/nginx/conf/sites-enabled:z
       - /etc/letsencrypt:/etc/letsencrypt:z
       - /var/lib/openship/edge/acme:/var/www/acme:z
@@ -178,6 +180,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: "${API_PORT:-4000}"
+      OPENSHIP_DATA_DIR: /var/lib/workbox-cloud
       DATABASE_URL: postgresql://${POSTGRES_USER:-openship}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required — re-run `openship up` to regenerate .env}@postgres:5432/${POSTGRES_DB:-openship}
       REDIS_URL: redis://redis:6379
       # Route via the containerized edge (below) instead of host OpenResty: the

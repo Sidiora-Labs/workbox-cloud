@@ -99,6 +99,19 @@ export interface CredentialProvider {
  */
 export const CREDENTIAL_PROVIDERS = [
   {
+    id: "blaxel",
+    label: "Blaxel",
+    capability: "sandbox",
+    capabilities: ["deploy", "sandbox"],
+    icon: "blaxel",
+    summary: "Deploy Blaxel sandboxes and preview applications in a selected workspace.",
+    selector: null,
+    fields: [
+      { key: "apiKey", label: "API key", type: "secret", required: true, help: "Create a Blaxel user or service-account API key with access to this workspace." },
+      { key: "workspaceId", label: "Workspace", type: "text", required: true, help: "The workspace name shown in your Blaxel console URL." },
+    ],
+  },
+  {
     id: "railway",
     label: "Railway",
     capability: "migration",
@@ -180,8 +193,8 @@ export const CREDENTIAL_PROVIDERS = [
     icon: "fly",
     summary: "Deploy Fly Machines and operate Fly Sprites through explicit organization scopes.",
     selector: {
-      label: "Organization ID",
-      placeholder: "org_…",
+      label: "Organization slug",
+      placeholder: "my-organization",
       help: "The Fly organization this token may manage.",
       required: true,
     },
@@ -195,8 +208,15 @@ export const CREDENTIAL_PROVIDERS = [
         help: "Use a token scoped to the selected Fly organization.",
       },
       {
+        key: "spriteToken",
+        label: "Sprites API token",
+        type: "secret",
+        inputType: "text",
+        help: "Optional. Sprites use a separate token from the Sprites dashboard; add it to enable Sprite workloads.",
+      },
+      {
         key: "organizationId",
-        label: "Organization ID",
+        label: "Organization slug",
         type: "text",
         required: true,
       },
