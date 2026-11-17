@@ -5,12 +5,12 @@ describe("app catalog", () => {
   it("surfaces Mail as a first-class flow app (hands off to the mail provider wizard)", () => {
     // v0.2.2: Mail is a catalog "flow" app that routes to /apps/new/mail
     // (the mail-provider wizard), not a compose template deployed only via
-    // /emails. Every OTHER catalog app is still a compose "template".
+    // /emails. Workbox host preparation has its own native provisioning flow.
     const mail = getAppTemplate("mail");
     expect(mail).toBeDefined();
     expect(mail!.kind).toBe("flow");
     expect(mail!.flowHref).toBe("/apps/new/mail");
-    expect(APP_TEMPLATES.filter((t) => t.id !== "mail").every((t) => t.kind === "template")).toBe(true);
+    expect(APP_TEMPLATES.filter((t) => !["mail", "workbox-host"].includes(t.id)).every((t) => t.kind === "template")).toBe(true);
   });
 
   it("includes Convex + n8n", () => {

@@ -145,7 +145,7 @@ ac_7 = "The catalog SHALL describe curated provider selections without claiming 
 title = "Self-hosted browsers and prepared Workbox hosts"
 story = "As an operator, I need browser applications and a prepared Workbox host installable from the same catalog, with secure access and actual runtime readiness."
 ac_1 = "The catalog SHALL include interactive Chromium, Firefox and browser desktop applications plus a browser automation service. Entries SHALL declare the required memory and shared memory, persistent profile storage, ports, health checks, authentication and endpoint behavior. Public browser access SHALL be protected by generated credentials; credentials SHALL remain encrypted and absent from logs."
-ac_2 = "Prepared Workbox host installation SHALL select an organization-owned compatible server and use the existing authenticated server execution and provisioning lock. It SHALL inspect Linux, cgroup v2, user namespace and required system capabilities before mutation; unsupported hosts SHALL fail with an actionable reason."
+ac_2 = "Prepared Workbox host installation SHALL select an organization-owned compatible server and use the existing authenticated server execution and provisioning lock. The pinned installer SHALL admit only x86_64 Debian or Ubuntu and inspect Linux, cgroup v2, user namespace and required system capabilities before mutation; unsupported hosts SHALL fail with an actionable reason."
 ac_3 = "Workbox host preparation SHALL install the pinned daemon, dependencies, rootfs and runtime assets, configure persistent state and protected API credentials, start the managed service, and verify authenticated readiness before registering a usable connection. A successful script exit alone SHALL NOT mean the host is ready."
 ac_4 = "The Workbox API SHALL remain reachable through the existing authenticated server transport where configured, without requiring an unprotected public daemon. Connection credentials SHALL be encrypted and scoped to the owning organization and selected server."
 ac_5 = "Host installation SHALL expose durable progress, failure details and a safe retry or recovery path. Host service management and removal SHALL preserve clear ownership of installed resources and distinguish daemon removal from deletion of sandbox data."
@@ -332,8 +332,8 @@ reqs       = ["11.1", "11.2", "11.3", "11.4", "10.4"]
 # Catalog expansion continues the same deployment operation and native Apps model.
 [task.6.1]
 title      = "Connect the catalog to trusted provider recipes and installed app management"
-status     = "in-progress"
-qualification = "Implementation in progress. Schema, authorization, browser and live provider evidence must be recorded separately before this task is qualified."
+status     = "implemented"
+qualification = "2026-11-17: implementation complete; catalog/schema/authorization/operation and UI component suites plus API/dashboard typechecks passed. Authenticated staging Vercel install, READY state, Apps listing, log refresh and exact-name deletion passed; independent project/deployment lookup returned 404. Final API7 staging verification passed 20 checks, including all eight recipe fingerprints, 63 visible catalog entries, 65 details and all nine additions. Fly UI installation, running/Apps/open-link state and exact-name deletion also passed with independent app/Machine absence. The schema-downgrade guard passed 10 focused tests and is deployed. API8 with a host retry lock is publishing; full host runtime remains pending. Receipts: artifacts/catalog-20261117/."
 wave       = 6
 requires   = ["5.1", "5.2"]
 touches    = ["packages/core/src/app-templates.ts", "packages/contracts/src/apps.ts", "packages/contracts/src/external-deployments.ts", "packages/platform/src/engine/modules/apps/**", "packages/platform/src/engine/modules/external-deployments/**", "apps/dashboard/src/components/apps/**", "apps/dashboard/src/components/workloads/**", "apps/dashboard/src/app/(dashboard)/apps/**"]
@@ -344,22 +344,22 @@ do_3       = "Preserve native installations and prevent incompatible persistent 
 reqs       = ["12.1", "12.2", "12.3", "12.4", "12.7"]
 
 [task.6.2]
-title      = "Add curated Railway and Vercel template deployment lifecycles"
-status     = "in-progress"
-qualification = "Implementation in progress. Curated source review and mocked API checks do not prove provider readiness, data persistence or cleanup."
+title      = "Add curated Railway, Vercel and Fly template deployment lifecycles"
+status     = "implemented"
+qualification = "2026-11-17: implementation complete. Live Railway Redis graph reached ready, returned 68 log entries and was deleted with independent absence; Fly Excalidraw served HTTPS 200 and its owned Machine/app were deleted; Vercel Next.js hello-world reached READY, served HTTP 200, returned 48 build log entries and was deleted. All four direct-adapter Vercel test projects were independently absent. An additional staging UI Vercel install, READY/Apps/logs flow and exact-name deletion passed; independent project/deployment absence and the original 19 projects were confirmed. Fly staging UI installation, running state, Apps open-link control and deletion also passed; independent app/Machine lookup returned 404 and the original 67 apps remained. Public HTTP for those UI-created resources was not tested before deletion; the separate direct-adapter HTTP checks passed. Other recipes and durability remain separate gates. Receipts: artifacts/catalog-20261117/."
 wave       = 6
 requires   = ["6.1"]
-touches    = ["packages/core/src/apps/catalog/**", "packages/platform/src/engine/modules/external-deployments/providers/railway*", "packages/platform/src/engine/modules/external-deployments/providers/vercel*", "packages/platform/test/**"]
+touches    = ["packages/core/src/apps/catalog/**", "packages/platform/src/engine/modules/external-deployments/providers/railway*", "packages/platform/src/engine/modules/external-deployments/providers/vercel*", "packages/platform/src/engine/modules/external-deployments/providers/fly*", "packages/platform/test/**"]
 verify_cmd = "bun run --cwd packages/platform test -- railway && bun run --cwd packages/platform test -- vercel"
 do_1       = "Deploy reviewed Railway template graphs with their variables, services and volumes and retain owned resource identities."
 do_2       = "Create Vercel projects and deployments from reviewed source templates with scoped configuration, observation, logs and owned deletion."
-do_3       = "Qualify disposable installations and cleanup through the same API and UI used by operators, recording source and provider evidence independently."
+do_3       = "Add owned stateless Fly application recipes and qualify disposable provider installations and cleanup, recording adapter, API and UI evidence independently."
 reqs       = ["12.2", "12.3", "12.5", "12.6", "12.7"]
 
 [task.6.3]
 title      = "Add secure self-hosted browser applications"
-status     = "in-progress"
-qualification = "Implementation in progress. Image and license review, catalog validation, container readiness and browser interaction are separate checks."
+status     = "implemented"
+qualification = "2026-11-17: implementation complete. Local Chromium gateway rejected absent/wrong credentials, accepted generated credentials and retained its profile across restart. Selenium created a WebDriver session, navigated, checked title, captured a screenshot and deleted the session; test containers cleaned. Staging browser checks confirmed all four browser catalog forms, the Railway form and mobile layout; these checks did not install the browsers. Firefox/Webtop runtime and native staging browser installation remain unqualified. Receipts: artifacts/catalog-20261117/."
 wave       = 6
 requires   = ["6.1"]
 touches    = ["packages/core/src/apps/catalog/**", "packages/core/src/apps/articles/**", "apps/dashboard/src/components/apps/**"]
@@ -371,8 +371,8 @@ reqs       = ["13.1", "12.7"]
 
 [task.6.4]
 title      = "Automatically prepare a Workbox host on a connected Linux server"
-status     = "in-progress"
-qualification = "Implementation in progress. Isolated host provisioning and sandbox lifecycle evidence are required before claiming runtime readiness."
+status     = "implemented"
+qualification = "2026-11-17: implementation complete with 25 focused host tests covering installer, authorization, progress/retry, secret transport and the inherited remote-operation lock. Host admission is restricted to x86_64 Debian/Ubuntu for the pinned upstream runtime. All 10 isolated Ubuntu VM preflight checks passed. An SSH timeout left package installation running under QEMU software emulation; a root-owned inherited flock now blocks overlapping retries, host actions and child mutations until the prior task exits. The fix is publishing in API8; full host preparation, child sandbox lifecycle and staging host UI remain pending. No live host readiness claim. Receipts: artifacts/catalog-20261117/."
 wave       = 6
 requires   = ["6.1"]
 touches    = ["packages/platform/src/engine/modules/**", "packages/contracts/src/**", "apps/dashboard/src/app/(dashboard)/apps/**", "docs/workbox-connected-hosts.md"]

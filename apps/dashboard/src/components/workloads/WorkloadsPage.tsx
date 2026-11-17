@@ -55,6 +55,8 @@ export function ExternalWorkload({
   ].find((value) => value && /^https?:\/\/[^\s]+$/.test(value));
   const deleting = operation.kind === "destroy";
   const stopped = deleting && operation.status === "stopped";
+  const retryDelete =
+    deleting && ["action_required", "failed", "reconciling"].includes(operation.status);
   async function refreshLogs() {
     setLogsLoading(true);
     setLogsError("");
@@ -166,14 +168,14 @@ export function ExternalWorkload({
             Run command
           </Button>
         )}
-        {canDestroy && !deleting && (
+        {canDestroy && (!deleting || retryDelete) && (
           <Button
             size="sm"
             variant="secondary"
             disabled={busy}
             onClick={() => setDestroyOpen(!destroyOpen)}
           >
-            Delete
+            {deleting ? "Retry deletion" : "Delete"}
           </Button>
         )}
       </div>
@@ -259,8 +261,10 @@ export function ExternalWorkload({
       {destroyOpen && (
         <div className="mt-4 space-y-3 rounded-xl bg-card p-4">
           <p className="text-sm">
-            Delete <strong>{name}</strong> and its provider resource? This may permanently remove
-            sandbox files.
+            Delete <strong>{name}</strong> and its provider resource?{" "}
+            {operation.target.catalog
+              ? "This removes the resources created for this app installation, including its dedicated provider project where applicable. Stored app data may be permanently removed."
+              : "This may permanently remove sandbox files."}
           </p>
           <label className="block space-y-2 text-sm">
             Type {name} to confirm

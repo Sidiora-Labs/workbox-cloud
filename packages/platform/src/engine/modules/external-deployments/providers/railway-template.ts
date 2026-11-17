@@ -84,7 +84,10 @@ function snapshot(
 ): ExternalTargetSnapshot {
   return {
     ...target,
-    targetId: String(target.resource.name ?? target.connectionId),
+    targetId:
+      "targetId" in target
+        ? String(target.targetId)
+        : String(target.resource.name ?? target.connectionId),
     organizationId: context.organizationId,
     capturedAt: now(),
   };
@@ -203,12 +206,33 @@ async function project(access: ProviderAccess, id: string) {
   ).project;
 }
 function ownershipProof(target: ExternalTargetSnapshot): string {
-  return createHmac("sha256", env.BETTER_AUTH_SECRET).update(JSON.stringify([target.organizationId, target.connectionId, target.resource.appTemplateId, target.resource.appRecipeId, target.resource.projectId, target.resource.ownershipMarker, target.resource.expectedServiceNames])).digest("hex");
+  return createHmac("sha256", env.BETTER_AUTH_SECRET)
+    .update(
+      JSON.stringify([
+        target.organizationId,
+        target.connectionId,
+        target.resource.appTemplateId,
+        target.resource.appRecipeId,
+        target.resource.projectId,
+        target.resource.ownershipMarker,
+        target.resource.expectedServiceNames,
+      ]),
+    )
+    .digest("hex");
 }
 function owned(access: ProviderAccess, target: ExternalTargetSnapshot, live: Project) {
   const proof = target.resource.managedProjectProof;
   const expectedProof = ownershipProof(target);
-  if (!proof || proof.length !== expectedProof.length || !timingSafeEqual(Buffer.from(proof), Buffer.from(expectedProof))) throw new AppError("The Railway project has no valid installation ownership receipt.", 409, "EXTERNAL_OWNERSHIP_CONFLICT");
+  if (
+    !proof ||
+    proof.length !== expectedProof.length ||
+    !timingSafeEqual(Buffer.from(proof), Buffer.from(expectedProof))
+  )
+    throw new AppError(
+      "The Railway project has no valid installation ownership receipt.",
+      409,
+      "EXTERNAL_OWNERSHIP_CONFLICT",
+    );
   if (
     !target.resource.ownershipMarker ||
     live.id !== target.resource.projectId ||
@@ -235,14 +259,25 @@ async function observeProject(
   const liveServices = live.services.edges.map((x) => x.node);
   const expectedNames = JSON.parse(target.resource.expectedServiceNames ?? "[]") as string[];
   const capturedIds = JSON.parse(target.resource.templateServiceIds ?? "[]") as string[];
-  if (liveServices.some(row => capturedIds.length ? !capturedIds.includes(row.id) : !expectedNames.includes(row.name))) throw new AppError("The project has services outside the installed template. Inspect the added services before managing this installation.", 409, "EXTERNAL_OWNERSHIP_CONFLICT");
-  const serviceIds = capturedIds.length ? capturedIds : liveServices.map(x => x.id);
+  if (
+    liveServices.some((row) =>
+      capturedIds.length ? !capturedIds.includes(row.id) : !expectedNames.includes(row.name),
+    )
+  )
+    throw new AppError(
+      "The project has services outside the installed template. Inspect the added services before managing this installation.",
+      409,
+      "EXTERNAL_OWNERSHIP_CONFLICT",
+    );
+  const serviceIds = capturedIds.length ? capturedIds : liveServices.map((x) => x.id);
   const captured: ExternalTargetSnapshot = {
     ...target,
     resource: {
       ...target.resource,
       ...(environmentId ? { environmentId } : {}),
-      ...(capturedIds.length ? {} : { templateServiceNames: JSON.stringify(liveServices.map((x) => x.name)) }),
+      ...(capturedIds.length
+        ? {}
+        : { templateServiceNames: JSON.stringify(liveServices.map((x) => x.name)) }),
     },
   };
   if (target.resource.workflowId) {
@@ -267,7 +302,8 @@ async function observeProject(
         "Railway no longer retains this template workflow. Inspect the project resources.",
       );
   }
-  if (!environmentId || serviceIds.length !== expectedNames.length) return result(captured, "provisioning");
+  if (!environmentId || serviceIds.length !== expectedNames.length)
+    return result(captured, "provisioning");
   if (!capturedIds.length) captured.resource.templateServiceIds = JSON.stringify(serviceIds);
   const environment = (
     await railwayQuery<{
@@ -355,7 +391,7 @@ export function createRailwayTemplateAdapter(
       { workspace: ws },
     );
     const details = await template(auth, source);
-    railwayTemplateVariables(details.serializedConfig, environment);
+    if (environment !== undefined) railwayTemplateVariables(details.serializedConfig, environment);
     const cap = capability(target);
     return {
       planId: `railway-template:${details.id}`,
@@ -378,19 +414,24 @@ export function createRailwayTemplateAdapter(
       return capability(target);
     },
     preflight: (context, target) => plan(context, target),
-    plan: (context, input) => plan(context, input.target, input.environment),
+    plan: (context, input) => plan(context, input.target, input.environment ?? {}),
     async apply(context, input, approved) {
       const auth = await access(context, approved.target);
       const ws = workspace(auth, approved.target);
       const source = (approved as ExternalPlan & Pick<ExternalPlanInput, "source">).source;
-      if (!source?.templateCode || !source.templateId || !source.templateConfigSha256) throw new AppError("The approved template source is missing.", 400, "EXTERNAL_TEMPLATE_INVALID");
+      if (!source?.templateCode || !source.templateId || !source.templateConfigSha256)
+        throw new AppError(
+          "The approved template source is missing.",
+          400,
+          "EXTERNAL_TEMPLATE_INVALID",
+        );
       const details = await template(auth, source);
       const config = railwayTemplateVariables(
         details.serializedConfig,
         (approved as ExternalPlan & Pick<ExternalPlanInput, "environment">).environment,
       );
       const ownershipMarker = `workbox-cloud:${context.organizationId}:${createHash("sha256").update(input.idempotencyKey).digest("hex")}`;
-      let captured = {
+      let captured: ExternalTargetSnapshot = {
         ...approved.target,
         resource: {
           ...approved.target.resource,
@@ -469,6 +510,20 @@ export function createRailwayTemplateAdapter(
       const auth = await access(context, operation.target);
       const live = await project(auth, operation.target.resource.projectId!);
       owned(auth, operation.target, live);
+      const ownedIds = JSON.parse(operation.target.resource.templateServiceIds ?? "[]") as string[];
+      const expectedNames = JSON.parse(
+        operation.target.resource.expectedServiceNames ?? "[]",
+      ) as string[];
+      if (
+        live.services.edges.some(({ node }) =>
+          ownedIds.length ? !ownedIds.includes(node.id) : !expectedNames.includes(node.name),
+        )
+      )
+        throw new AppError(
+          "This project has services outside the installed template; logs cannot be combined safely.",
+          409,
+          "EXTERNAL_OWNERSHIP_CONFLICT",
+        );
       const environmentId = operation.target.resource.environmentId;
       if (!environmentId)
         throw new AppError(

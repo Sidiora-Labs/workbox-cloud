@@ -3,7 +3,7 @@ import { AppError, type AppTemplate } from "@repo/core";
 import type { ExternalCatalogIdentity, ExternalPlanInput } from "@repo/contracts";
 import { getRuntimeTemplate } from "./catalog-source";
 
-export const CATALOG_RESOURCE_KEYS = ["appTemplateId", "appRecipeId", "appTemplateName", "appTemplateLogo", "appTemplateVersion", "appTemplateDigest"] as const;
+export const CATALOG_RESOURCE_KEYS = ["appTemplateId", "appRecipeId", "appTemplateName", "appTemplateLogo", "appTemplateVersion", "appTemplateDigest", "appRecipeCapabilities"] as const;
 const destinations = new Set(["name", "projectId", "environmentId", "appName", "region", "createApp"]);
 const sensitive = /^(environment|env|envs|variables|secrets|apiKey|apiToken|token|password|authorization|config)$/i;
 const canonical = (value: unknown): unknown => Array.isArray(value) ? value.map(canonical)
@@ -50,6 +50,9 @@ export function resolveTemplateRecipe(template: AppTemplate, input: ExternalPlan
   const digest = createHash("sha256").update(JSON.stringify(canonical(template))).digest("hex");
   Object.assign(resource, { appTemplateId: template.id, appRecipeId: recipe.id, appTemplateName: template.name,
     appTemplateLogo: template.logo, appTemplateVersion: template.provenance?.revision ?? template.updatedAt ?? digest, appTemplateDigest: digest });
+  // Freeze the capability contract beside the resolved recipe; later catalog
+  // refreshes cannot change what this review required.
+  resource.appRecipeCapabilities = JSON.stringify(recipe.requiredCapabilities ?? []);
   return { target: { ...input.target, resource }, idempotencyKey: input.idempotencyKey,
     ...(recipe.image ? { image: recipe.image } : {}), ...(Object.keys(source).length ? { source } : {}),
     ...(Object.keys(environment).length ? { environment } : {}) };
@@ -69,5 +72,8 @@ export function resolveCatalogDeployment(input: ExternalPlanInput): ExternalPlan
 export function requiredRecipeCapabilities(resource: Record<string, string>): readonly string[] {
   const identity = catalogIdentity(resource);
   if (!identity) return [];
-  return getRuntimeTemplate(identity.templateId)?.deploymentRecipes?.find(recipe => recipe.id === identity.recipeId)?.requiredCapabilities ?? [];
+  try {
+    const parsed: unknown = JSON.parse(resource.appRecipeCapabilities ?? "[]");
+    return Array.isArray(parsed) ? parsed.filter((value): value is string => typeof value === "string") : [];
+  } catch { return []; }
 }

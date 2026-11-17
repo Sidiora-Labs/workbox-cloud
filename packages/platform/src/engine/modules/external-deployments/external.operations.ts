@@ -252,7 +252,7 @@ function operationOutput(
 ): ExternalOperation {
   if (!row) throw new NotFoundError("External operation", "unknown");
   const status = row.status as ExternalOperationStatus;
-  const lostWorker = row.status === "provisioning" && row.leaseOwner && row.leaseUntil && row.leaseUntil.getTime() <= Date.now();
+  const lostWorker = (row.status === "provisioning" || (row.operation === "destroy" && row.status === "stopping")) && row.leaseOwner && row.leaseUntil && row.leaseUntil.getTime() <= Date.now();
   return {
     id: row.id,
     organizationId: row.organizationId,
@@ -594,7 +594,7 @@ export function createExternalDeploymentDependencies(
     const adapter = adapterFor(activeRegistry, selectedTarget);
     if (row?.leaseOwner && row.leaseUntil && row.leaseUntil.getTime() > Date.now())
       return operationOutput(row, target);
-    if (row?.status === "provisioning" && row.leaseOwner && row.leaseUntil && row.leaseUntil.getTime() <= Date.now()) {
+    if (row && (row.status === "provisioning" || (row.operation === "destroy" && row.status === "stopping")) && row.leaseOwner && row.leaseUntil && row.leaseUntil.getTime() <= Date.now()) {
       row = await repos.externalDeployment.updateOperation(ctx.organizationId, row.id, {
         status: "reconciling", leaseOwner: null, leaseUntil: null,
         errorCode: "EXTERNAL_UNKNOWN_OUTCOME", errorMessage: "The deployment worker stopped before confirming the provider result. Check provider status before retrying.",
@@ -631,22 +631,28 @@ export function createExternalDeploymentDependencies(
         { organizationId: ctx.organizationId, actorId: ctx.userId, requestId: ctx.traceId, executionContext: ctx },
         { ...input, target: selectedTarget },
       );
+      // Inspect a pending deletion without reversing its durable intent. Some
+      // providers accept deletion asynchronously and still report the resource
+      // as ready for a short period; that is never a restored workload.
+      const deleting = row.operation === "destroy";
+      const deletionComplete = result.status === "stopped" && ["DELETED", "DESTROYED", "TERMINATED", "ABSENT"].includes((result.providerStatus ?? "").toUpperCase());
+      const observedStatus = deleting ? deletionComplete ? "stopped" : ["action_required", "reconciling", "failed"].includes(row.status) ? row.status as ExternalOperationStatus : "stopping" : result.status;
       const updated = await repos.externalDeployment.updateObservation(ctx.organizationId, row.id, row.updatedAt, row.operation, {
-        status: result.status,
+        status: observedStatus,
         providerRequestId: result.providerRequestId ?? null,
         providerResourceId: result.providerResourceId ?? row.providerResourceId ?? null,
         providerStatus: result.providerStatus ?? null,
         observed: { resource: publicResource(result.target.resource), ...(result.message ? { message: result.message } : {}) },
-        errorCode: null,
-        errorMessage: null,
-        reconcileAfter: null,
-        finishedAt: new Date(),
+        errorCode: deleting && !deletionComplete ? row.errorCode : null,
+        errorMessage: deleting && !deletionComplete ? row.errorMessage : null,
+        reconcileAfter: deleting && !deletionComplete ? new Date(Date.now() + 30_000) : null,
+        finishedAt: deleting && !deletionComplete ? null : new Date(),
       });
       return operationOutput(updated ?? row, target);
     } catch (error) {
       const normalized = normalizeExternalError(error);
       const updated = await repos.externalDeployment.updateObservation(ctx.organizationId, row.id, row.updatedAt, row.operation, {
-        status: normalized.retryable || row.errorCode === "EXTERNAL_UNKNOWN_OUTCOME" ? "reconciling" : "failed",
+        status: row.operation === "destroy" ? normalized.retryable ? "reconciling" : "action_required" : normalized.retryable || row.errorCode === "EXTERNAL_UNKNOWN_OUTCOME" ? "reconciling" : "failed",
         errorCode: normalized.code,
         errorMessage: normalized.message,
         reconcileAfter: normalized.retryable || row.errorCode === "EXTERNAL_UNKNOWN_OUTCOME" ? new Date(Date.now() + 30_000) : null,
@@ -682,14 +688,18 @@ export function createExternalDeploymentDependencies(
     if (!row) throw new NotFoundError("External operation", input.operationId);
     const target = await repos.externalDeployment.findTargetById(ctx.organizationId, row.targetId);
     if (!target) throw new NotFoundError("External target", row.targetId);
-    if (row.operation === "destroy") return operationOutput(row, target);
-    if (row.leaseOwner || !row.providerResourceId)
+    if (row.operation === "destroy" && row.status === "stopped") return operationOutput(row, target);
+    if ((row.leaseOwner && row.leaseUntil && row.leaseUntil.getTime() > Date.now()) || !row.providerResourceId)
       throw new AppError("Wait for the provider resource to be confirmed before deleting it.", 409, "EXTERNAL_RESOURCE_PENDING");
+    await loadCredential(ctx, boundOperationTarget(row, target));
     const adapter = activeRegistry.get(target.provider as ExternalProvider, target.workloadKind as ExternalWorkloadKind);
     if (!adapter.destroy) throw new AppError("The selected external workload does not support destroy.", 422, "EXTERNAL_CAPABILITY_UNSUPPORTED");
-    const intent = await repos.externalDeployment.updateOperation(ctx.organizationId, row.id, {
+    const leaseOwner = generateId("external_destroy");
+    const intent = await repos.externalDeployment.updateObservation(ctx.organizationId, row.id, row.updatedAt, row.operation, {
       operation: "destroy", status: "stopping", errorCode: null, errorMessage: null, finishedAt: null,
-    }) ?? row;
+      leaseOwner, leaseUntil: new Date(Date.now() + 5 * 60_000),
+    });
+    if (!intent || intent.leaseOwner !== leaseOwner) return operationOutput(intent ?? row, target);
     try {
       const result = await adapter.destroy(
         { organizationId: ctx.organizationId, actorId: ctx.userId, requestId: ctx.traceId, executionContext: ctx },
@@ -700,6 +710,10 @@ export function createExternalDeploymentDependencies(
         status: result.status,
         providerResourceId: result.providerResourceId ?? row.providerResourceId,
         providerStatus: result.providerStatus ?? null,
+        observed: { resource: publicResource(result.target.resource), ...(result.message ? { message: result.message } : {}) },
+        leaseOwner: null,
+        leaseUntil: null,
+        reconcileAfter: result.status === "stopped" ? null : new Date(Date.now() + 30_000),
         finishedAt: result.status === "stopped" ? new Date() : null,
       });
       return operationOutput(updated ?? intent, target);
@@ -708,6 +722,8 @@ export function createExternalDeploymentDependencies(
       const updated = await repos.externalDeployment.updateOperation(ctx.organizationId, row.id, {
         operation: "destroy", status: normalized.unknownOutcome || normalized.retryable ? "reconciling" : "action_required",
         errorCode: normalized.code, errorMessage: normalized.message,
+        leaseOwner: null,
+        leaseUntil: null,
         reconcileAfter: normalized.unknownOutcome || normalized.retryable ? new Date(Date.now() + 30_000) : null,
       });
       return operationOutput(updated ?? intent, target);

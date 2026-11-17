@@ -3,11 +3,11 @@
   "verified": false,
   "id": "vercel-nextjs",
   "name": "Next.js Starter",
-  "description": "Start a Next.js application from Vercel\u2019s official starter.",
+  "description": "Start a Next.js application from the official Hello World example.",
   "kind": "template",
   "nativeSupport": false,
   "logo": "nextjs",
-  "category": "other",
+  "category": "development",
   "tags": [
     "nextjs",
     "starter",
@@ -21,10 +21,13 @@
       "provider": "vercel",
       "workloadKind": "service",
       "source": {
-        "repo": "vercel/vercel",
-        "ref": "155eacfa16840e68ae54bc50ee72fc8e16733857",
-        "rootDirectory": "examples/nextjs",
-        "framework": "nextjs"
+        "repo": "vercel/next.js",
+        "ref": "ad4859b599128915430ab68bcf344bddf81c0177",
+        "rootDirectory": "examples/hello-world",
+        "framework": "nextjs",
+        "installCommand": "npm install",
+        "buildCommand": "npm run build",
+        "outputDirectory": ".next"
       },
       "resource": {
         "createProject": "true"
@@ -40,9 +43,9 @@
   ],
   "provenance": {
     "source": "vercel",
-    "url": "https://vercel.com/templates/next.js/nextjs-boilerplate",
-    "revision": "155eacfa16840e68ae54bc50ee72fc8e16733857",
-    "license": "Apache-2.0",
+    "url": "https://github.com/vercel/next.js/tree/ad4859b599128915430ab68bcf344bddf81c0177/examples/hello-world",
+    "revision": "ad4859b599128915430ab68bcf344bddf81c0177",
+    "license": "MIT",
     "reviewedAt": "2026-11-17"
   },
   "marketplace": {
@@ -61,5 +64,6 @@
       }
     ],
     "articleFile": "articles/vercel-nextjs.md"
-  }
+  },
+  "schemaVersion": 3
 }

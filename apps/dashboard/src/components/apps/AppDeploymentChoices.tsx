@@ -4,15 +4,15 @@ import Link from "next/link";
 import type { AppTemplate } from "@repo/core";
 import { Icon } from "@repo/ui/icons";
 
-export const catalogProviderName = (provider: string) =>
-  ({
-    native: "Your servers & Cloud",
-    railway: "Railway",
-    vercel: "Vercel",
-    fly: "Fly.io",
-    blaxel: "Blaxel",
-    workbox: "Workbox",
-  })[provider] ?? provider;
+const providerLabels: Record<string, string> = {
+  native: "Your servers & Cloud",
+  railway: "Railway",
+  vercel: "Vercel",
+  fly: "Fly.io",
+  blaxel: "Blaxel",
+  workbox: "Workbox",
+};
+export const catalogProviderName = (provider: string) => providerLabels[provider] ?? provider;
 
 export function AppDeploymentChoices({
   template,

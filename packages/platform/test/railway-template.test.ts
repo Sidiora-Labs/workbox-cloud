@@ -3,29 +3,46 @@ import { createHash, createHmac } from "node:crypto";
 import type { ExternalOperation, ExternalPlan, ExternalTargetInput } from "@repo/contracts";
 import fixture from "./fixtures/railway-postgres-template.json";
 import { railwayQuery } from "../src/engine/modules/credentials/provider-api";
+import { env } from "../src/engine/config/env";
 import {
   createRailwayTemplateAdapter,
   railwayTemplateHash,
   railwayTemplateVariables,
 } from "../src/engine/modules/external-deployments/providers/railway-template";
 vi.mock("../src/engine/modules/credentials/provider-api", () => ({ railwayQuery: vi.fn() }));
-vi.mock("../src/engine/modules/apps/catalog-source", async () => { const fixture = (await import("./fixtures/railway-postgres-template.json")).default; const { createHash } = await import("node:crypto"); const canonical = (value: any): any => Array.isArray(value) ? value.map(canonical) : value && typeof value === "object" ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).map(([key, item]) => [key, canonical(item)])) : value; return ({
-  getRuntimeTemplate: () => ({
-    id: "postgresql",
-    deploymentRecipes: [
-      {
-        id: "railway",
-        provider: "railway",
-        resource: { createProject: "true" },
-        source: {
-          templateCode: "postgres",
-          templateId: fixture.data.template.id,
-          templateConfigSha256: createHash("sha256").update(JSON.stringify(canonical(fixture.data.template.serializedConfig))).digest("hex"),
+vi.mock("../src/engine/modules/apps/catalog-source", async () => {
+  const fixture = (await import("./fixtures/railway-postgres-template.json")).default;
+  const { createHash } = await import("node:crypto");
+  const canonical = (value: any): any =>
+    Array.isArray(value)
+      ? value.map(canonical)
+      : value && typeof value === "object"
+        ? Object.fromEntries(
+            Object.entries(value)
+              .sort(([a], [b]) => a.localeCompare(b))
+              .map(([key, item]) => [key, canonical(item)]),
+          )
+        : value;
+  return {
+    getRuntimeTemplate: () => ({
+      id: "postgresql",
+      deploymentRecipes: [
+        {
+          id: "railway",
+          provider: "railway",
+          resource: { createProject: "true" },
+          source: {
+            templateCode: "postgres",
+            templateId: fixture.data.template.id,
+            templateConfigSha256: createHash("sha256")
+              .update(JSON.stringify(canonical(fixture.data.template.serializedConfig)))
+              .digest("hex"),
+          },
         },
-      },
-    ],
-  }),
-}); });
+      ],
+    }),
+  };
+});
 
 const query = vi.mocked(railwayQuery);
 const context = { organizationId: "org-one" };
@@ -41,7 +58,23 @@ const target: ExternalTargetInput = {
     appRecipeId: "railway",
   },
 };
-function withProof(operation: ExternalOperation) { operation.target.resource.expectedServiceNames ??= '[]'; operation.target.resource.managedProjectProof = createHmac("sha256", env.BETTER_AUTH_SECRET).update(JSON.stringify([operation.target.organizationId,operation.target.connectionId,operation.target.resource.appTemplateId,operation.target.resource.appRecipeId,operation.target.resource.projectId,operation.target.resource.ownershipMarker,operation.target.resource.expectedServiceNames])).digest("hex"); return operation; }
+function withProof(operation: ExternalOperation) {
+  operation.target.resource.expectedServiceNames ??= "[]";
+  operation.target.resource.managedProjectProof = createHmac("sha256", env.BETTER_AUTH_SECRET)
+    .update(
+      JSON.stringify([
+        operation.target.organizationId,
+        operation.target.connectionId,
+        operation.target.resource.appTemplateId,
+        operation.target.resource.appRecipeId,
+        operation.target.resource.projectId,
+        operation.target.resource.ownershipMarker,
+        operation.target.resource.expectedServiceNames,
+      ]),
+    )
+    .digest("hex");
+  return operation;
+}
 const adapter = () =>
   createRailwayTemplateAdapter(async () => ({
     publicFields: { workspaceId: "workspace-one", tokenType: "workspace" },
@@ -55,7 +88,9 @@ const project = (description: string) => ({
   environments: { edges: [{ node: { id: "env-one", name: "production" } }] },
   services: { edges: [] },
 });
-beforeEach(() => query.mockReset());
+beforeEach(() => {
+  query.mockReset();
+});
 describe("Railway catalog template lifecycle", () => {
   it("retains the entire graph and replaces only declared variable values", () => {
     const graph = fixture.data.template.serializedConfig;
@@ -112,7 +147,11 @@ describe("Railway catalog template lifecycle", () => {
         return { workflowStatus: { status: "Running" } } as never;
       return {} as never;
     });
-    const source = { templateCode: "postgres", templateId: fixture.data.template.id, templateConfigSha256: railwayTemplateHash(fixture.data.template.serializedConfig) };
+    const source = {
+      templateCode: "postgres",
+      templateId: fixture.data.template.id,
+      templateConfigSha256: railwayTemplateHash(fixture.data.template.serializedConfig),
+    };
     const plan = await adapter().plan(context, {
       target,
       environment: { "Postgres.POSTGRES_DB": "app" },
@@ -187,5 +226,49 @@ describe("Railway catalog template lifecycle", () => {
     withProof(operation);
     expect((await adapter().destroy!(context, operation)).status).toBe("stopped");
     expect(query.mock.calls.at(-1)?.[2]).toEqual({ id: "project-one" });
+  });
+  it("does not adopt manually added services while refreshing or reading logs", async () => {
+    const operation = withProof({
+      target: {
+        ...target,
+        targetId: "target-one",
+        organizationId: context.organizationId,
+        capturedAt: new Date().toISOString(),
+        resource: {
+          ...target.resource,
+          projectId: "project-one",
+          environmentId: "env-one",
+          ownershipMarker: "own-marker",
+          templateServiceIds: '["owned-service"]',
+          expectedServiceNames: '["Postgres"]',
+        },
+      },
+    } as ExternalOperation);
+    query.mockResolvedValue({
+      project: {
+        ...project("own-marker"),
+        services: {
+          edges: [
+            { node: { id: "owned-service", name: "Postgres" } },
+            { node: { id: "manual-service", name: "Unrelated" } },
+          ],
+        },
+      },
+    } as never);
+    await expect(adapter().observe(context, { target: operation.target })).rejects.toMatchObject({
+      code: "EXTERNAL_OWNERSHIP_CONFLICT",
+    });
+    const logs = async () => {
+      for await (const _row of adapter().logs!(context, operation)) {
+        /* consume */
+      }
+    };
+    await expect(logs()).rejects.toMatchObject({ code: "EXTERNAL_OWNERSHIP_CONFLICT" });
+    expect(operation.target.resource.templateServiceIds).toBe('["owned-service"]');
+    expect(
+      query.mock.calls.every(
+        ([, text]) => !text.includes("environmentLogs") && !text.includes("projectDelete"),
+      ),
+    ).toBe(true);
   });
 });

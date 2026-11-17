@@ -5,7 +5,7 @@
   "description": "A private, authenticated Chromium WebDriver service for automated browser tests, with bounded sessions and a live status endpoint.",
   "kind": "template",
   "logo": "selenium",
-  "category": "automation",
+  "category": "browser",
   "available": true,
   "verified": false,
   "schemaVersion": 2,

@@ -102,7 +102,7 @@ Logs, terminal sessions, files, snapshots, promotion, rollback and advanced netw
 
 ## Catalog expansion
 
-The next catalog slice is tracked as requirements 12–13 and tasks 6.1–6.4 in the specification. Its implementation and qualification are in progress; the earlier staging receipts below cover the workload launcher, not these additions.
+The catalog slice is tracked as requirements 12–13 and tasks 6.1–6.4 in the specification. Implementation is complete with the bounded evidence below. Staging Vercel and Fly catalog journeys and final eight-recipe verification have passed; full Workbox host runtime qualification remains pending; the earlier workload-launcher staging receipts do not qualify these additions.
 
 A catalog entry can offer native server installation and a set of provider-specific recipes. Each recipe records its provider and workload kind, trusted source or image, constrained operator inputs, capability requirements and provenance. The server resolves the recipe by catalog and recipe ID before constructing a deployment plan. A client cannot replace its source, topology or credential scope. The remote catalog must use the Workbox Cloud fork so upstream catalog refreshes cannot erase fork-specific recipes.
 
@@ -110,11 +110,33 @@ The install flow retains one app identity. It offers compatible destinations, re
 
 The initial Railway recipes are PostgreSQL, Redis and n8n. They create dedicated projects using native template graphs, preserving service dependencies, variable references and volumes. The graph is checked against its reviewed hash; an upstream change blocks installation pending review. The Vercel recipes are Next.js Starter, Next.js Blog and Portfolio Starter. They create a scoped project and deployment from a pinned upstream revision; they do not copy a repository into the operator's Git account. Additional databases, object stores or OAuth credentials must be declared inputs or explicitly excluded from a recipe. A Docker image is not a portable substitute for all of these requirements.
 
+Fly.io recipes cover the stateless Excalidraw and IT-Tools images, with a dedicated application, shared-CPU Machine and public HTTPS. They provision no persistent volume or database. Excalidraw retains browser-local data and does not include a self-hosted collaboration backend. Ownership checks permit Machine deletion and remove its app only when it has no remaining Machines or volumes.
+
 The browser slice includes interactive Chromium, Firefox and Webtop plus Selenium browser automation. Each entry declares persistent profiles where applicable, shared memory, minimum resources, health checks and protected access. Browserless is not included in this slice: its commercial licensing conditions need a separate integration decision.
 
-Workbox preparation is a dedicated host operation. It uses an organization-owned server and the existing authenticated execution and provisioning lock, checks the host, installs pinned daemon code and required assets, starts a managed service, verifies readiness and authenticated inventory, then registers the encrypted connection. The daemon uses the protected server transport rather than requiring a public unauthenticated listener. Progress and failures remain inspectable; a ready host offers child sandbox creation. This host operation must be qualified on an isolated compatible Linux system before being called operational.
+Workbox preparation is a dedicated host operation. It admits x86_64 Debian or Ubuntu servers, uses an organization-owned server and the existing authenticated execution and provisioning lock, checks the host, installs pinned daemon code and required assets, starts a managed service, verifies readiness and authenticated inventory, then registers the encrypted connection. The daemon uses the protected server transport rather than requiring a public unauthenticated listener. Progress and failures remain inspectable; a ready host offers child sandbox creation. This host operation must be qualified on an isolated compatible Linux system before being called operational.
 
 Curated provider entries are selected for deployability and manageable dependencies. They are not presented as a measured popularity ranking. Source review, local container checks, provider API tests, authenticated UI journeys and live persistence/cleanup evidence remain separate.
+
+## Catalog qualification checkpoint
+
+The 17 November catalog receipts are stored in `artifacts/catalog-20261117/`. API and dashboard typechecks and the dashboard production build passed. API7 and dashboard `staging-022cbf543-catalog1` are live on staging. Final API7 verification passed 20 checks, including all eight recipe fingerprints, 63 visible catalog entries, 65 catalog details and all nine additions. API8 containing the Workbox host retry lock is publishing; its deployment is not yet verified.
+
+| Lane | Observed result and boundary |
+| --- | --- |
+| Source and contracts | Catalog, recipe validation, authorization, operation, host lifecycle and UI component checks passed. Ten focused tests cover a guard that prevents an older remote catalog schema replacing newer bundled recipes. The schema guard is deployed and all eight recipe fingerprints were verified through the staging API. |
+| Chromium container | Gateway returned 401 without credentials and with a wrong password, returned 200 with valid credentials, loaded its web client and retained its profile across restart. This is local container evidence. |
+| Selenium Chromium container | Created a real WebDriver session, navigated, checked the page title, captured a screenshot and deleted the session. Its service and gateway were healthy; test containers were cleaned. |
+| Railway Redis template | Deployed the reviewed complete template graph in a temporary project, observed ready, retrieved 68 log entries, deleted it and independently confirmed absence. The receipt predates the product label move from the legacy `redis` entry to `redis-server`; the graph and adapter were unchanged. PostgreSQL and n8n were not live-qualified by this run. |
+| Fly Excalidraw | Deployed the pinned image, observed a running Machine and verified Excalidraw HTML over public HTTPS with HTTP 200. Deleted the owned Machine and empty app; independent checks confirmed absence and the original 67 apps remained. IT-Tools has image/source checks but no live deployment receipt. |
+| Vercel Next.js Starter | The final pinned `vercel/next.js` hello-world source reached READY, returned HTTP 200 and exposed 48 build-log entries. The project was deleted and independently absent; all four temporary test projects were confirmed absent. Blog and Portfolio remain separate runtime lanes. |
+| Authenticated staging catalog | All six final browser checks passed. Vercel UI installation reached READY, appeared in Apps, refreshed logs and was deleted after exact-name confirmation; independent checks confirmed project/deployment 404 and the original 19 projects. Fly UI installation reached running, appeared in Apps with an Open link and was deleted; independent app/Machine checks returned 404 and the original 67 apps remained. Public HTTP for these UI-created resources was not checked before deletion. Mobile layout, all four browser catalog forms and the Railway form passed; those form checks did not install their apps. |
+| Existing staging installation | The native baseline remains one user and two projects; 15 other containers were preserved. Nine cloud connections, three gateway profiles and three agents are healthy. |
+| Workbox prepared host | Twenty-five focused host tests cover installer, ownership, authorization, progress/retry, secret transport and overlap prevention. All 10 preflight checks passed on an isolated Ubuntu VM. A 20-minute SSH timeout left its package installation running under software emulation. The inherited root-owned lock now blocks retry, host actions and child mutations until that task exits; API8 with the fix is publishing. Full preparation and child sandbox execution remain pending. |
+
+Staging inspection also found an older remote v1 catalog entry overwriting bundled v3 entries, hiding added recipes. The loader now rejects that schema downgrade; 10 focused tests and the final staging recipe checks passed.
+
+Earlier Vercel attempts found an incompatible upstream repository-level output configuration. The final starter uses the reviewed Next.js hello-world example and explicit build/output settings; failure and cleanup receipts are retained. These checks qualify the listed recipes and paths only. Long-term data retention, provider account variations, upgrades, failure recovery and the broader release gates remain separate.
 
 ## Phased implementation
 

@@ -307,5 +307,6 @@
         "reviewedAt": "2026-11-17"
       }
     }
-  ]
+  ],
+  "schemaVersion": 3
 }

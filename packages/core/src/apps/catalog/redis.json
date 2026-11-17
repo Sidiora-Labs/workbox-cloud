@@ -192,34 +192,5 @@
       }
     ],
     "articleFile": "articles/redis.md"
-  },
-  "deploymentRecipes": [
-    {
-      "id": "railway",
-      "label": "Redis on Railway",
-      "provider": "railway",
-      "workloadKind": "service",
-      "source": {
-        "templateCode": "redis",
-        "templateId": "895cb7c9-8ea9-4407-b4b6-b5013a65145e",
-        "templateConfigSha256": "61dd490244e6cd0a2f216834b6c0972321331f31f3192c2ff9d0055ec9d99b4e"
-      },
-      "resource": {
-        "createProject": "true"
-      },
-      "requiredCapabilities": [
-        "apply",
-        "observe",
-        "logs",
-        "destroy"
-      ],
-      "notes": "Creates a dedicated Railway project with the complete reviewed template, including persistent volumes and generated secrets. Deleting this workload deletes that project and its data.",
-      "provenance": {
-        "source": "railway",
-        "url": "https://railway.com/deploy/redis",
-        "revision": "61dd490244e6cd0a2f216834b6c0972321331f31f3192c2ff9d0055ec9d99b4e",
-        "reviewedAt": "2026-11-17"
-      }
-    }
-  ]
+  }
 }

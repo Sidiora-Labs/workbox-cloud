@@ -3,7 +3,7 @@
   "verified": true,
   "id": "excalidraw",
   "name": "Excalidraw",
-  "description": "Virtual whiteboard for sketches and diagrams. Stateless — drawings save in your browser.",
+  "description": "Virtual whiteboard for sketches and diagrams. Stateless \u2014 drawings save in your browser.",
   "kind": "template",
   "logo": "excalidraw",
   "category": "other",
@@ -27,7 +27,7 @@
   ],
   "connection": {
     "title": "Open Excalidraw",
-    "description": "No login and no server-side storage — open the link and start drawing.",
+    "description": "No login and no server-side storage \u2014 open the link and start drawing.",
     "guide": {
       "defaultMode": "public"
     },
@@ -42,7 +42,7 @@
       }
     ],
     "firstLogin": {
-      "note": "There is nothing to log into and nothing stored on the server: drawings live in your browser, so use Export to save anything you want to keep. Anyone who can reach this URL can use it — put it behind your own access control if that matters."
+      "note": "There is nothing to log into and nothing stored on the server: drawings live in your browser, so use Export to save anything you want to keep. Anyone who can reach this URL can use it \u2014 put it behind your own access control if that matters."
     }
   },
   "marketplace": {
@@ -60,5 +60,52 @@
         "description": "No database service is required."
       }
     ]
-  }
+  },
+  "schemaVersion": 3,
+  "provenance": {
+    "source": "upstream",
+    "url": "https://github.com/excalidraw/excalidraw",
+    "revision": "sha256:f7ee194addd607bf831d2af0f0a34463dd4225e426cf35199ef0b12a803398e9",
+    "license": "MIT",
+    "reviewedAt": "2026-11-17"
+  },
+  "deploymentRecipes": [
+    {
+      "id": "fly-static",
+      "label": "Excalidraw on Fly.io",
+      "provider": "fly",
+      "workloadKind": "fly-machine",
+      "image": "registry-1.docker.io/excalidraw/excalidraw@sha256:f7ee194addd607bf831d2af0f0a34463dd4225e426cf35199ef0b12a803398e9",
+      "resource": {
+        "createApp": "true",
+        "port": "80",
+        "memoryMb": "256",
+        "vcpus": "1"
+      },
+      "inputs": [
+        {
+          "key": "region",
+          "label": "Fly region",
+          "type": "text",
+          "target": "resource",
+          "default": "ams",
+          "required": true
+        }
+      ],
+      "requiredCapabilities": [
+        "apply",
+        "observe",
+        "destroy",
+        "public-ingress"
+      ],
+      "notes": "A stateless Excalidraw client served over HTTPS. Drawings are stored in your browser; export files to keep them. This image does not include a collaboration or sharing backend. Creates a dedicated Fly app and one shared-CPU Machine. Deletion removes its Machine and the app only when no other Machines or volumes exist.",
+      "provenance": {
+        "source": "upstream",
+        "url": "https://github.com/excalidraw/excalidraw",
+        "revision": "sha256:f7ee194addd607bf831d2af0f0a34463dd4225e426cf35199ef0b12a803398e9",
+        "license": "MIT",
+        "reviewedAt": "2026-11-17"
+      }
+    }
+  ]
 }

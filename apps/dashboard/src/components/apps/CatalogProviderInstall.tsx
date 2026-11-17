@@ -67,6 +67,7 @@ function ScopedCatalogProviderInstall({ appId, recipeId }: { appId: string; reci
   const [revision, setRevision] = useState(0);
   const applyKey = useRef("");
   const recipe = template?.deploymentRecipes?.find((item) => item.id === recipeId);
+  const createsProject = recipe?.resource?.createProject === "true";
   const connection = credentials.find(
     (item) => item.id === connectionId && item.provider === recipe?.provider,
   );
@@ -97,7 +98,7 @@ function ScopedCatalogProviderInstall({ appId, recipeId }: { appId: string; reci
   }, [appId, recipeId, revision]);
 
   useEffect(() => {
-    if (!connectionId) {
+    if (!connectionId || createsProject) {
       setDiscovery(null);
       setDiscoveryLoading(false);
       return;
@@ -119,7 +120,7 @@ function ScopedCatalogProviderInstall({ appId, recipeId }: { appId: string; reci
     return () => {
       active = false;
     };
-  }, [connectionId, selectors.projectId]);
+  }, [connectionId, selectors.projectId, createsProject]);
 
   function change(patch: Partial<typeof selectors>) {
     setSelectors((previous) => ({ ...previous, ...patch }));
@@ -141,11 +142,11 @@ function ScopedCatalogProviderInstall({ appId, recipeId }: { appId: string; reci
         ),
       );
       const resource: Record<string, string> = { name: selectors.name.trim() };
-      if (recipe.provider === "railway" || recipe.provider === "vercel") {
+      if (!createsProject && (recipe.provider === "railway" || recipe.provider === "vercel")) {
         if (!selectors.projectId) throw new Error("Choose a provider project.");
         resource.projectId = selectors.projectId;
       }
-      if (recipe.provider === "railway") {
+      if (!createsProject && recipe.provider === "railway") {
         if (!selectors.environmentId) throw new Error("Choose a Railway environment.");
         resource.environmentId = selectors.environmentId;
       }
@@ -321,7 +322,14 @@ function ScopedCatalogProviderInstall({ appId, recipeId }: { appId: string; reci
                     {discoveryError} Enter the destination IDs below.
                   </p>
                 )}
+                {createsProject && (
+                  <p className="rounded-xl bg-muted/40 p-3 text-sm">
+                    Creates a new project in this account. Its app resources stay grouped together
+                    and are removed when you delete this installation.
+                  </p>
+                )}
                 {connection &&
+                  !createsProject &&
                   (recipe.provider === "railway" || recipe.provider === "vercel") &&
                   field(
                     "Project",
@@ -333,6 +341,7 @@ function ScopedCatalogProviderInstall({ appId, recipeId }: { appId: string; reci
                     "Project ID",
                   )}
                 {connection &&
+                  !createsProject &&
                   recipe.provider === "railway" &&
                   field(
                     "Environment",
@@ -348,7 +357,11 @@ function ScopedCatalogProviderInstall({ appId, recipeId }: { appId: string; reci
               <section className="space-y-4 rounded-2xl bg-card p-5">
                 <h2 className="font-semibold">Configure {template.name}</h2>
                 {field(
-                  recipe.provider === "fly" ? "Application name" : "Workload name",
+                  createsProject
+                    ? "Project name"
+                    : recipe.provider === "fly"
+                      ? "Application name"
+                      : "Workload name",
                   selectors.name,
                   (value) => change({ name: value }),
                   undefined,
@@ -373,7 +386,7 @@ function ScopedCatalogProviderInstall({ appId, recipeId }: { appId: string; reci
                         {...selectStyle}
                         aria-label={item.label}
                         value={config[item.key] ?? ""}
-                        options={item.options ?? []}
+                        options={[...(item.options ?? [])]}
                         onChange={(value) => {
                           setConfig((previous) => ({ ...previous, [item.key]: value }));
                           setPlan(null);

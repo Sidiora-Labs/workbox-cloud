@@ -1,9 +1,9 @@
 # Next.js Starter
 
-Start a Next.js application from Vercel’s official starter.
+Start a Next.js application from the official Hello World example.
 
 Choose **Vercel project**, select a saved Vercel account and give the installation a new project name. Review and deploy without leaving Workbox Cloud. The installation manages the created Vercel project and deployment, including status, build logs and confirmed project deletion.
 
-The source is [vercel/vercel](https://github.com/vercel/vercel/tree/155eacfa16840e68ae54bc50ee72fc8e16733857/examples/nextjs) at revision `155eacfa16840e68ae54bc50ee72fc8e16733857` under Apache-2.0. No database, storage service or repository clone is created. Your Vercel account must be allowed to deploy this public repository. This recipe is a web application deployment, not a long-running container or sandbox.
+The source is [vercel/next.js](https://github.com/vercel/next.js/tree/ad4859b599128915430ab68bcf344bddf81c0177/examples/hello-world) at revision `ad4859b599128915430ab68bcf344bddf81c0177` under MIT. No database, storage service or repository clone is created. Your Vercel account must be allowed to deploy this public repository. This recipe is a web application deployment, not a long-running container or sandbox.
 
-Source: [Vercel template listing](https://vercel.com/templates/next.js/nextjs-boilerplate). Provider deployment has not been live-qualified until the installation receipt records a successful build and readiness result.
+Source: [Official Next.js example](https://github.com/vercel/next.js/tree/ad4859b599128915430ab68bcf344bddf81c0177/examples/hello-world). The reviewed recipe passed a bounded live deployment, build-log, HTTP readiness and deletion check on 17 November 2026. Account permissions and future upstream dependencies can still affect a new installation.

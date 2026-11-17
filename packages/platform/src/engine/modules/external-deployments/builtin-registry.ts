@@ -28,6 +28,7 @@ import { createRailwayExternalAdapter } from "./providers/railway-external";
 import { env } from "../../config/env";
 import { Sandbox } from "@vercel/sandbox";
 import { createBlaxelExternalAdapter } from "./providers/blaxel";
+import { createFlyTemplateAdapter, isFlyTemplateTarget } from "./providers/fly-template";
 import { createVercelTemplateAdapter, isVercelTemplateTarget } from "./providers/vercel-template";
 
 export interface BuiltinCredential {
@@ -408,6 +409,25 @@ function vercelCombinedAdapter(resolve: BuiltinCredentialResolver): ExternalProv
   };
 }
 
+function flyCombinedAdapter(resolve: BuiltinCredentialResolver): ExternalProviderAdapter {
+  const generic = flyAdapter(resolve);
+  const template = createFlyTemplateAdapter(resolve, { signingKey: env.BETTER_AUTH_SECRET });
+  const choose = (target: ExternalTargetInput | ExternalTargetSnapshot) => isFlyTemplateTarget(target) ? template : generic;
+  return { provider: "fly", workloads: ["fly-machine", "fly-sprite"],
+    capabilities: (context, target) => choose(target).capabilities(context, target),
+    preflight: (context, target) => choose(target).preflight(context, target),
+    plan: (context, input) => choose(input.target).plan(context, input),
+    apply: (context, input, plan) => choose(plan.target).apply(context, input, plan),
+    observe: (context, input) => choose(input.target).observe(context, input),
+    destroy: (context, operation) => choose(operation.target).destroy!(context, operation),
+    exec: (context, operation, input) => {
+      const handler = choose(operation.target).exec;
+      if (!handler) throw new AppError("This catalog app does not expose command execution.", 422, "EXTERNAL_CAPABILITY_UNSUPPORTED");
+      return handler(context, operation, input);
+    },
+  };
+}
+
 function flyAdapter(resolve: BuiltinCredentialResolver): ExternalProviderAdapter {
   const adapter: ExternalProviderAdapter = {
     provider: "fly",
@@ -494,6 +514,13 @@ function flyAdapter(resolve: BuiltinCredentialResolver): ExternalProviderAdapter
       const target = input.target;
       const clients = await flyClients(resolve, context, target, workload);
       const resource = target.resource;
+      if (workload === "fly-machine" && !asString(resource.machineId ?? resource.id)) {
+        const appName = String(resource.appName ?? resource.app ?? "");
+        const app = await clients.machine!.inspectAppOrNull(appName);
+        if (app == null)
+          return operation(snapshotFor(context, target), "observe", "stopped", undefined, "DELETED", "The Fly app is absent; this unconfirmed workload is no longer running.");
+        return operation(snapshotFor(context, target), "observe", "action_required", undefined, "MACHINE_UNCONFIRMED", "The Fly app exists, but no Machine identity was confirmed. Inspect the app before retrying this deployment.");
+      }
       const raw = workload === "fly-machine"
         ? await clients.machine!.inspect(String(resource.appName ?? resource.app ?? ""), String(resource.machineId ?? resource.id ?? ""))
         : await clients.sprite!.inspect(String(resource.spriteName ?? resource.name ?? resource.id ?? ""));
@@ -600,7 +627,7 @@ export function createBuiltinExternalProviderRegistry(
       return { publicFields: credential.publicFields, secrets: credential.secrets };
     }),
     vercelCombinedAdapter(resolve),
-    flyAdapter(resolve),
+    flyCombinedAdapter(resolve),
     createBlaxelExternalAdapter(async (context, connectionId) => {
       const credential = await resolve(context, connectionId, "blaxel");
       return { publicFields: credential.publicFields, secrets: credential.secrets };

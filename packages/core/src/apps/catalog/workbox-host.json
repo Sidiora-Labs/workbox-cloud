@@ -1,0 +1,30 @@
+{
+  "id": "workbox-host",
+  "name": "Workbox prepared host",
+  "description": "Prepare a connected Linux server for Workbox sandboxes: install the daemon, filesystem and runtime, then connect its private API automatically.",
+  "kind": "flow",
+  "available": true,
+  "verified": false,
+  "schemaVersion": 3,
+  "logo": "workbox",
+  "category": "development",
+  "tags": ["workbox", "sandboxes", "agents", "server", "provisioning"],
+  "supportsCloud": false,
+  "flowHref": "/workbox-hosts/new",
+  "management": { "kind": "custom", "href": "/workbox-hosts/new" },
+  "repository": "https://github.com/Sidiora-Labs/workbox",
+  "provenance": {
+    "source": "upstream",
+    "url": "https://github.com/Sidiora-Labs/workbox/blob/9741e30334139bbe7e28cd5c034e345c616a470a/docs/guides/deploy.md",
+    "revision": "9741e30334139bbe7e28cd5c034e345c616a470a",
+    "reviewedAt": "2026-11-17"
+  },
+  "marketplace": {
+    "features": [
+      { "title": "Automatic preparation", "description": "Check the server, install the pinned Workbox daemon and build its filesystem and runtime." },
+      { "title": "Private connection", "description": "Keep the API on loopback and reach it through the server's existing authenticated SSH connection." },
+      { "title": "Managed lifecycle", "description": "Follow installation progress, retry interrupted preparation and manage the host alongside its sandbox connection." }
+    ],
+    "articleFile": "articles/workbox-host.md"
+  }
+}

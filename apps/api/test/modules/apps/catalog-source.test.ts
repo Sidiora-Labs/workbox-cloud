@@ -49,5 +49,6 @@ describe("runtime catalog source", () => {
 
     expect(getRuntimeTemplate("convex")).toEqual(published);
     expect(fetchCatalog).toHaveBeenCalledTimes(1);
+    expect(String(fetchCatalog.mock.calls[0]?.[0])).toContain("raw.githubusercontent.com/Sidiora-Labs/workbox-cloud/");
   });
 });

@@ -15,7 +15,8 @@ import { readApiVersion } from "../../lib/release-dist";
  * Development (NODE_ENV=development) uses the BUNDLED catalog (`@repo/core`
  * APP_TEMPLATES), so unpublished edits are used by both the UI and installer.
  * Other environments overlay it with a repo-fetched copy, so new/updated apps
- * appear AND install without a redeploy. Stale-while-revalidate + fail-safe:
+ * appear AND install without a redeploy. Older schemas cannot replace newer
+ * bundled templates. Stale-while-revalidate + fail-safe:
  * `getRuntimeCatalog()` is synchronous (every consumer stays sync) — it returns
  * the current cache and kicks a background refresh when stale. Any fetch/parse
  * failure or an offline box simply keeps serving the last-good/bundled catalog,
@@ -23,7 +24,7 @@ import { readApiVersion } from "../../lib/release-dist";
  *
  * Versioning (the overlay can be AHEAD of this instance): each entry declares an
  * optional `minEngine`. Resolution never silently drops a too-new app — instead:
- *   - engine ok                         → the overlay entry (remote-wins).
+ *   - engine ok                         → selected overlay or protected bundled entry.
  *   - too new, but bundled copy is ok    → serve the BUNDLED copy (no break),
  *                                          flagged `updateAvailable`.
  *   - too new, no runnable copy          → a guided `requiresUpdate` PLACEHOLDER
@@ -117,8 +118,11 @@ function placeholder(entry: AppTemplate): ResolvedAppTemplate {
 }
 
 /**
- * Resolve the effective catalog for this instance: remote-wins union of bundled
- * + overlay ids, then the engine gate with bundled fallback / guided placeholder.
+ * Resolve the effective catalog for this instance, then apply the engine gate.
+ * Compatible remote entries replace bundled entries as complete templates. Older
+ * schemas cannot replace newer bundled templates: that would remove capabilities
+ * added by this engine release. Same-schema updates and new remote IDs retain the
+ * normal overlay behaviour; no service/recipe fields are grafted across versions.
  * `tooNewRaw` are placeholders for entries whose SHAPE was too new to parse.
  */
 export function resolveCatalog(
@@ -128,7 +132,11 @@ export function resolveCatalog(
 ): ResolvedAppTemplate[] {
   const byId = new Map<string, AppTemplate>();
   for (const b of bundledValid) byId.set(b.id, b);
-  for (const r of remote) byId.set(r.id, r); // remote wins
+  for (const r of remote) {
+    const bundled = bundledById.get(r.id);
+    if (bundled && (r.schemaVersion ?? 1) < (bundled.schemaVersion ?? 1)) continue;
+    byId.set(r.id, r);
+  }
 
   const out: ResolvedAppTemplate[] = [];
   for (const [id, entry] of byId) {

@@ -24,7 +24,7 @@ import type { TemplateServiceSpec } from "../app-templates";
 /** Highest catalog `schemaVersion` this build understands. An overlay entry
  *  above this is dropped (kept last-good), never mis-installed. Bump in lockstep
  *  with CURRENT_SCHEMA_VERSION when a breaking shape change ships. */
-export const MAX_SUPPORTED_SCHEMA = 2;
+export const MAX_SUPPORTED_SCHEMA = 3;
 
 /**
  * Is a template's `minEngine` satisfied by this instance's Workbox Cloud version?
@@ -344,7 +344,7 @@ export const appTemplateSchema = z.object({
   }).optional(),
   kind: z.enum(["template", "flow"]),
   logo: z.string(),
-  category: z.enum(["backend", "database", "cms", "mail", "analytics", "automation", "ai", "other"]),
+  category: z.enum(["browser", "development", "backend", "database", "cms", "mail", "analytics", "automation", "ai", "other"]),
   gpu: z.enum(["recommended", "required"]).optional(),
   supportsCloud: z.boolean().optional(),
   tags: z.array(z.string()).optional(),
@@ -402,6 +402,8 @@ export const appTemplateSchema = z.object({
   updatedAt: z.string().optional(),
   repository: z.string().url().optional(),
 }).superRefine((data, ctx) => {
+  if ((data.nativeSupport === false || data.deploymentRecipes?.length) && (data.schemaVersion ?? 1) < 3)
+    ctx.addIssue({ code: "custom", path: ["schemaVersion"], message: "Provider recipes and native installation restrictions require schemaVersion >= 3" });
   const recipeIds = new Set<string>();
   for (const [index, recipe] of (data.deploymentRecipes ?? []).entries()) {
     if (recipeIds.has(recipe.id)) ctx.addIssue({ code: "custom", path: ["deploymentRecipes", index, "id"], message: "Recipe IDs must be unique" });

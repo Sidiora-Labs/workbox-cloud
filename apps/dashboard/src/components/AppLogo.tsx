@@ -13,6 +13,7 @@ const curatedLogos: Record<string, { slug?: string; src?: string; icon?: "window
   webtop: { slug: "linux" },
   "selenium-chromium": { slug: "selenium" },
   "workbox-host": { src: "/brand/wb_cloud_dark.webp" },
+  workbox: { src: "/brand/wb_cloud_dark.webp" },
 };
 
 /** Custom apps have no APP_LOGO entry; their own template `logo` comes from the catalog (#1507). */

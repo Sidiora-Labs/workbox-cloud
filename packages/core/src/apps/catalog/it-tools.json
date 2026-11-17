@@ -41,7 +41,7 @@
       }
     ],
     "firstLogin": {
-      "note": "Nothing to log into and nothing persisted — every tool runs in your browser. Anyone who can reach this URL can use it, so keep it internal if that matters."
+      "note": "Nothing to log into and nothing persisted \u2014 every tool runs in your browser. Anyone who can reach this URL can use it, so keep it internal if that matters."
     }
   },
   "verified": true,
@@ -60,5 +60,52 @@
         "description": "The app does not require account setup."
       }
     ]
-  }
+  },
+  "schemaVersion": 3,
+  "provenance": {
+    "source": "upstream",
+    "url": "https://github.com/CorentinTh/it-tools",
+    "revision": "2024.10.22-7ca5933",
+    "license": "GPL-3.0",
+    "reviewedAt": "2026-11-17"
+  },
+  "deploymentRecipes": [
+    {
+      "id": "fly-static",
+      "label": "IT-Tools on Fly.io",
+      "provider": "fly",
+      "workloadKind": "fly-machine",
+      "image": "registry-1.docker.io/corentinth/it-tools@sha256:8b8128748339583ca951af03dfe02a9a4d7363f61a216226fc28030731a5a61f",
+      "resource": {
+        "createApp": "true",
+        "port": "80",
+        "memoryMb": "256",
+        "vcpus": "1"
+      },
+      "inputs": [
+        {
+          "key": "region",
+          "label": "Fly region",
+          "type": "text",
+          "target": "resource",
+          "default": "ams",
+          "required": true
+        }
+      ],
+      "requiredCapabilities": [
+        "apply",
+        "observe",
+        "destroy",
+        "public-ingress"
+      ],
+      "notes": "Developer utilities execute in your browser. The web server requires no database or persistent volume. Creates a dedicated Fly app and one shared-CPU Machine. Deletion removes its Machine and the app only when no other Machines or volumes exist.",
+      "provenance": {
+        "source": "upstream",
+        "url": "https://github.com/CorentinTh/it-tools",
+        "revision": "2024.10.22-7ca5933",
+        "license": "GPL-3.0",
+        "reviewedAt": "2026-11-17"
+      }
+    }
+  ]
 }

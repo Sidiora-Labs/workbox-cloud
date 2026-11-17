@@ -757,6 +757,11 @@ const TABLES: ReadonlyArray<TableSpec> = [
     hasOrganizationId: true,
   },
 
+  {
+    sqlName: "workbox_host", table: schema.workboxHost,
+    scopes: [{ in: "instance", via: "all-rows" }], hasOrganizationId: true,
+  },
+
   // Notifications
   {
     sqlName: "notification_channel",
@@ -917,6 +922,8 @@ const TABLES: ReadonlyArray<TableSpec> = [
  * whole-instance export that claims to carry "every migration-managed table".
  */
 export const EXCLUDED_TABLES: Record<string, string> = {
+  external_deployment_target: "Provider resource ownership is bound to the originating installation's signing key; external workloads must be reconciled explicitly on another installation.",
+  external_deployment_operation: "Provider mutation receipts, encrypted plans and active leases cannot be replayed or transferred to a different installation.",
   assistant_agent: "Private host profiles and saved execution authority must be reauthorized on the destination.",
   assistant_authorization: "Single-use OAuth consent and native authentication state cannot travel.",
   assistant_connection: "Private host and OAuth-client bindings must be reauthorized on the destination.",
@@ -1171,6 +1178,7 @@ export const ENCRYPTED_COLUMNS: ReadonlyArray<EncryptedColumnSpec> = [
   { table: "backup_destination", column: "sftpKeyPassphraseEnc" },
   { table: "dns_credential", column: "apiTokenEnc" },
   { table: "credential", column: "secretsEnc" },
+  { table: "workbox_host", column: "tokenEnc" },
   { table: "git_source", column: "secretsEnc" },
   { table: "servers", column: "sshPassword" },
   { table: "servers", column: "sshPrivateKey" },

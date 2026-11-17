@@ -1115,7 +1115,48 @@
           }
         ],
         "article": "## Turn repeated work into a workflow\n\nn8n connects applications and APIs through a visual workflow editor. Use it for internal automations, data movement, notifications, and integrations.\n\nThe template deploys the workflow service on your chosen server. Open the editor after installation, configure your integrations, and choose the event that starts the workflow.\n\n## Make one workflow reliable first\n\nCheck connected-service credentials and test representative inputs before using a workflow for unattended work. Review execution results and protect the service's persistent data.\n\nThe [n8n documentation](https://docs.n8n.io/) covers deployment requirements, integrations, and upstream licensing."
-      }
+      },
+      "deploymentRecipes": [
+        {
+          "id": "railway",
+          "label": "n8n with PostgreSQL on Railway",
+          "provider": "railway",
+          "workloadKind": "service",
+          "source": {
+            "templateCode": "n8n",
+            "templateId": "d96199dc-e27f-4bd4-ac02-a601f1753fad",
+            "templateConfigSha256": "29d3554c1456b0340164b7504bdc0877507f52b5558d9e1f65ca88d5be3ca196"
+          },
+          "resource": {
+            "createProject": "true"
+          },
+          "inputs": [
+            {
+              "key": "database",
+              "label": "Database name",
+              "type": "text",
+              "target": "environment",
+              "targetKey": "Postgres.POSTGRES_DB",
+              "default": "n8n",
+              "required": true
+            }
+          ],
+          "requiredCapabilities": [
+            "apply",
+            "observe",
+            "logs",
+            "destroy"
+          ],
+          "notes": "Creates a dedicated Railway project with the complete reviewed template, including persistent volumes and generated secrets. Deleting this workload deletes that project and its data.",
+          "provenance": {
+            "source": "railway",
+            "url": "https://railway.com/deploy/n8n",
+            "revision": "29d3554c1456b0340164b7504bdc0877507f52b5558d9e1f65ca88d5be3ca196",
+            "reviewedAt": "2026-11-17"
+          }
+        }
+      ],
+      "schemaVersion": 3
     },
     {
       "available": true,
@@ -2305,7 +2346,54 @@
             "description": "The app does not require account setup."
           }
         ]
-      }
+      },
+      "schemaVersion": 3,
+      "provenance": {
+        "source": "upstream",
+        "url": "https://github.com/CorentinTh/it-tools",
+        "revision": "2024.10.22-7ca5933",
+        "license": "GPL-3.0",
+        "reviewedAt": "2026-11-17"
+      },
+      "deploymentRecipes": [
+        {
+          "id": "fly-static",
+          "label": "IT-Tools on Fly.io",
+          "provider": "fly",
+          "workloadKind": "fly-machine",
+          "image": "registry-1.docker.io/corentinth/it-tools@sha256:8b8128748339583ca951af03dfe02a9a4d7363f61a216226fc28030731a5a61f",
+          "resource": {
+            "createApp": "true",
+            "port": "80",
+            "memoryMb": "256",
+            "vcpus": "1"
+          },
+          "inputs": [
+            {
+              "key": "region",
+              "label": "Fly region",
+              "type": "text",
+              "target": "resource",
+              "default": "ams",
+              "required": true
+            }
+          ],
+          "requiredCapabilities": [
+            "apply",
+            "observe",
+            "destroy",
+            "public-ingress"
+          ],
+          "notes": "Developer utilities execute in your browser. The web server requires no database or persistent volume. Creates a dedicated Fly app and one shared-CPU Machine. Deletion removes its Machine and the app only when no other Machines or volumes exist.",
+          "provenance": {
+            "source": "upstream",
+            "url": "https://github.com/CorentinTh/it-tools",
+            "revision": "2024.10.22-7ca5933",
+            "license": "GPL-3.0",
+            "reviewedAt": "2026-11-17"
+          }
+        }
+      ]
     },
     {
       "available": true,
@@ -2369,7 +2457,54 @@
             "description": "No database service is required."
           }
         ]
-      }
+      },
+      "schemaVersion": 3,
+      "provenance": {
+        "source": "upstream",
+        "url": "https://github.com/excalidraw/excalidraw",
+        "revision": "sha256:f7ee194addd607bf831d2af0f0a34463dd4225e426cf35199ef0b12a803398e9",
+        "license": "MIT",
+        "reviewedAt": "2026-11-17"
+      },
+      "deploymentRecipes": [
+        {
+          "id": "fly-static",
+          "label": "Excalidraw on Fly.io",
+          "provider": "fly",
+          "workloadKind": "fly-machine",
+          "image": "registry-1.docker.io/excalidraw/excalidraw@sha256:f7ee194addd607bf831d2af0f0a34463dd4225e426cf35199ef0b12a803398e9",
+          "resource": {
+            "createApp": "true",
+            "port": "80",
+            "memoryMb": "256",
+            "vcpus": "1"
+          },
+          "inputs": [
+            {
+              "key": "region",
+              "label": "Fly region",
+              "type": "text",
+              "target": "resource",
+              "default": "ams",
+              "required": true
+            }
+          ],
+          "requiredCapabilities": [
+            "apply",
+            "observe",
+            "destroy",
+            "public-ingress"
+          ],
+          "notes": "A stateless Excalidraw client served over HTTPS. Drawings are stored in your browser; export files to keep them. This image does not include a collaboration or sharing backend. Creates a dedicated Fly app and one shared-CPU Machine. Deletion removes its Machine and the app only when no other Machines or volumes exist.",
+          "provenance": {
+            "source": "upstream",
+            "url": "https://github.com/excalidraw/excalidraw",
+            "revision": "sha256:f7ee194addd607bf831d2af0f0a34463dd4225e426cf35199ef0b12a803398e9",
+            "license": "MIT",
+            "reviewedAt": "2026-11-17"
+          }
+        }
+      ]
     },
     {
       "available": false,
@@ -6520,7 +6655,48 @@
         "sql",
         "pgadmin",
         "relational"
-      ]
+      ],
+      "deploymentRecipes": [
+        {
+          "id": "railway",
+          "label": "PostgreSQL on Railway",
+          "provider": "railway",
+          "workloadKind": "service",
+          "source": {
+            "templateCode": "postgres",
+            "templateId": "b55da7dc-09be-4140-bc65-1284d15d349c",
+            "templateConfigSha256": "b65cc1b388a930491004870f62054f584346cac2527f7ae03cd019c4e3c9b1ee"
+          },
+          "resource": {
+            "createProject": "true"
+          },
+          "inputs": [
+            {
+              "key": "database",
+              "label": "Database name",
+              "type": "text",
+              "target": "environment",
+              "targetKey": "Postgres.POSTGRES_DB",
+              "default": "railway",
+              "required": true
+            }
+          ],
+          "requiredCapabilities": [
+            "apply",
+            "observe",
+            "logs",
+            "destroy"
+          ],
+          "notes": "Creates a dedicated Railway project with the complete reviewed template, including persistent volumes and generated secrets. Deleting this workload deletes that project and its data.",
+          "provenance": {
+            "source": "railway",
+            "url": "https://railway.com/deploy/postgres",
+            "revision": "b65cc1b388a930491004870f62054f584346cac2527f7ae03cd019c4e3c9b1ee",
+            "reviewedAt": "2026-11-17"
+          }
+        }
+      ],
+      "schemaVersion": 3
     },
     {
       "$schema": "https://openship.io/app.schema.json",
@@ -11055,6 +11231,1349 @@
           }
         ],
         "article": "## Calendars and contacts for your mailboxes\n\nRadicale adds CalDAV calendars and CardDAV address books alongside Workbox Cloud Mail. It is an optional app: install it on the mail server or another server, then manage its deployments, settings, and storage under Apps.\n\nIt uses Radicale's built-in IMAP authentication. Users sign in with their **full mailbox email address and mailbox password**, including mailboxes on additional domains hosted by that IMAP server. There is no second account database or administrator password to synchronize. Each mailbox can access only its own collections.\n\n## Install\n\n1. Set up Mail and create your mailboxes first. Copy the hostname from **Mail → Overview**, for example `mail.example.com`.\n2. Install Radicale and enter that hostname as **IMAP hostname**. The app must be able to reach it on port **993**, and the mail server must present a valid, trusted TLS certificate for that hostname. Authentication fails if the certificate is invalid or the server is unreachable.\n3. Give Radicale its own HTTPS hostname, such as `dav.example.com`, using the standard app domain settings. Wait for the domain and certificate to be ready before connecting clients. Keep the existing mail, MX, and webmail DNS records unchanged.\n4. Open the HTTPS address and sign in with a mailbox account. Use Radicale's collection manager to create a calendar and an address book, or import existing `.ics` and `.vcf` files.\n\nThe app can also use an existing external IMAPS server. That server must allow password authentication; OAuth-only mail providers are not supported by this template. When hosting the app in Cloud, the IMAPS hostname must be reachable from Cloud.\n\n## Connect native clients\n\nAdd a **CalDAV account** for calendars and a **CardDAV account** for contacts. Enter the Radicale server hostname, enable SSL/TLS, use port **443**, and supply your full mailbox email address and password. In DAVx⁵, use “Login with URL and user name” and enter the full HTTPS URL. For clients that require a collection URL, copy it from Radicale's collection manager.\n\nRadicale serves `/.well-known/caldav` and `/.well-known/carddav` on its own hostname. Workbox Cloud's standard HTTPS routing passes these requests and DAV methods to the app. Entering the DAV hostname lets compatible clients discover the collections without a custom path.\n\nFor clients that discover a server from the **email domain alone**, publish these optional DNS records for each mailbox domain (replace the target with your DAV hostname):\n\n```text\n_caldavs._tcp.example.com.  SRV  0 1 443 dav.example.com.\n_carddavs._tcp.example.com. SRV  0 1 443 dav.example.com.\n_caldavs._tcp.example.com.  TXT  \"path=/\"\n_carddavs._tcp.example.com. TXT  \"path=/\"\n```\n\nDNS discovery support varies by client. The explicit HTTPS server address works without these records. If a client instead checks the mailbox domain's website for well-known URLs, configure redirects for those two paths on that website to the DAV HTTPS address; installing this app does not change another site's routes.\n\n## Passwords and stored data\n\nSuccessful logins are not cached. Changing a mailbox password or disabling its IMAP access applies to the next DAV request. Update the password in your calendar and contacts clients when it changes in Mail.\n\nCollections live in the app's persistent `radicale_data` volume under `/var/lib/radicale/collections`, and survive deployments and container replacement. Include that volume in your backup plan. Removing a mailbox does not erase its stored collections; deleting and recreating the same mailbox address gives it access to those collections again. Renaming an address does not move its collections. Export or remove the old collections before reassigning an address.\n\nThe included web page manages collections and imports/exports. Calendar and contacts views inside Workbox Cloud Webmail are a separate feature; this app does not add JMAP or change email delivery.\n\nSee the [Radicale documentation](https://radicale.org/v3.html) for client setup and collection management."
+      }
+    },
+    {
+      "$schema": "https://openship.io/app.schema.json",
+      "id": "chromium",
+      "name": "Chromium",
+      "description": "A private Chromium browser streamed from your server, with persistent profiles and a protected access gateway.",
+      "kind": "template",
+      "logo": "chromium",
+      "category": "browser",
+      "available": true,
+      "verified": false,
+      "schemaVersion": 2,
+      "minEngine": "0.9.2",
+      "supportsCloud": false,
+      "framework": "docker-compose",
+      "repository": "https://github.com/linuxserver/docker-chromium",
+      "provenance": {
+        "source": "upstream",
+        "url": "https://docs.linuxserver.io/images/docker-chromium/",
+        "revision": "075b0b99-ls64",
+        "license": "GPL-3.0-only (container packaging); bundled components retain their own licenses",
+        "reviewedAt": "2026-11-17"
+      },
+      "minResources": {
+        "cpuCores": 2,
+        "memoryMb": 3072
+      },
+      "tags": [
+        "browser",
+        "desktop",
+        "private",
+        "selkies",
+        "interactive"
+      ],
+      "services": [
+        {
+          "name": "chromium",
+          "image": "docker.io/linuxserver/chromium:075b0b99-ls64@sha256:6d2a8da6a45d4083a7287211a619ca29fdb518ebea0ef562c27392ba2f6698d2",
+          "shmSize": 1073741824,
+          "restart": "unless-stopped",
+          "environment": {
+            "PUID": "1000",
+            "PGID": "1000",
+            "TZ": "Etc/UTC",
+            "HARDEN_DESKTOP": "true",
+            "SELKIES_ENABLE_SHARING": "false|locked",
+            "SELKIES_ENABLE_SHARED": "false|locked",
+            "AUTO_GPU": "false",
+            "NO_GAMEPAD": "true",
+            "NO_WEBCAM": "true",
+            "HARDEN_OPENBOX": "true"
+          },
+          "volumes": [
+            "chromium_config:/config"
+          ],
+          "resources": {
+            "cpuCores": 1,
+            "memoryMb": 2048,
+            "diskMb": 4096
+          },
+          "healthcheck": {
+            "test": [
+              "CMD-SHELL",
+              "curl -fsS -o /dev/null http://127.0.0.1:3000/"
+            ],
+            "interval": "15s",
+            "timeout": "5s",
+            "retries": 12,
+            "startPeriod": "60s"
+          }
+        },
+        {
+          "name": "chromium-access",
+          "image": "caddy:2.11.7-alpine@sha256:e70b164da81ef698b3ad19af799ea6086ce6d9e48ed4079eb9fe26f6fbf14ee5",
+          "restart": "unless-stopped",
+          "dependsOn": [
+            "chromium"
+          ],
+          "secretEnv": [
+            "OPENSHIP_ADMIN_PASSWORD"
+          ],
+          "commandArgv": [
+            "sh",
+            "/etc/workbox/access.sh"
+          ],
+          "healthcheck": {
+            "test": [
+              "CMD-SHELL",
+              "wget -S -O /dev/null http://127.0.0.1:8080/ 2>&1 | grep -q '401 Unauthorized'"
+            ],
+            "interval": "15s",
+            "timeout": "5s",
+            "retries": 8
+          },
+          "exposed": true,
+          "exposedPort": 8080,
+          "routes": [
+            {
+              "port": 8080
+            }
+          ],
+          "resources": {
+            "cpuCores": 0.25,
+            "memoryMb": 128,
+            "diskMb": 128
+          }
+        }
+      ],
+      "configFields": [
+        {
+          "service": "chromium-access",
+          "key": "OPENSHIP_ADMIN_USER",
+          "label": "Access username",
+          "default": "workbox",
+          "required": true
+        },
+        {
+          "service": "chromium-access",
+          "key": "OPENSHIP_ADMIN_PASSWORD",
+          "label": "Access password",
+          "generate": "secret",
+          "secret": true
+        }
+      ],
+      "settings": [
+        {
+          "id": "access",
+          "label": "Browser access",
+          "columns": 2,
+          "fields": [
+            {
+              "service": "chromium-access",
+              "key": "OPENSHIP_ADMIN_USER",
+              "label": "Access username",
+              "type": "text",
+              "default": "workbox",
+              "required": true,
+              "pattern": "^[a-zA-Z0-9_.-]+$",
+              "patternError": "Use letters, numbers, dots, dashes or underscores.",
+              "installStep": true,
+              "requiresRedeploy": true
+            },
+            {
+              "service": "chromium-access",
+              "key": "OPENSHIP_ADMIN_PASSWORD",
+              "label": "Access password",
+              "type": "password",
+              "secret": true,
+              "required": true,
+              "requiresRedeploy": true,
+              "help": "Generated during installation. Keep the password private."
+            }
+          ]
+        },
+        {
+          "id": "browser",
+          "label": "Browser preferences",
+          "fields": [
+            {
+              "service": "chromium",
+              "key": "TZ",
+              "label": "Timezone",
+              "type": "text",
+              "default": "Etc/UTC",
+              "installStep": true,
+              "requiresRedeploy": true
+            }
+          ]
+        }
+      ],
+      "management": {
+        "kind": "schema"
+      },
+      "endpoints": [
+        {
+          "service": "chromium-access",
+          "port": 8080,
+          "label": "Private browser",
+          "kind": "http",
+          "scope": "internal",
+          "defaultMode": "internal",
+          "allowedModes": [
+            "internal",
+            "domain"
+          ]
+        }
+      ],
+      "connection": {
+        "title": "Open Chromium",
+        "description": "Connect through the protected gateway using the generated credentials. Browser profiles are stored on a project-scoped volume.",
+        "guide": {
+          "defaultMode": "internal",
+          "intro": "This is an interactive Chromium browser. Open its gateway through a local tunnel, or explicitly assign a HTTPS domain."
+        },
+        "outputs": [
+          {
+            "id": "url",
+            "label": "Chromium",
+            "source": "publicUrl:chromium-access",
+            "kind": "url",
+            "recommended": true
+          },
+          {
+            "id": "username",
+            "label": "Username",
+            "source": "env:chromium-access:OPENSHIP_ADMIN_USER",
+            "width": "half"
+          },
+          {
+            "id": "password",
+            "label": "Password",
+            "source": "env:chromium-access:OPENSHIP_ADMIN_PASSWORD",
+            "secret": true,
+            "width": "half"
+          }
+        ],
+        "firstLogin": {
+          "note": "The generated credentials protect the gateway. Desktop sudo, terminal launchers and session sharing are disabled. The browser still has network access from its server."
+        }
+      },
+      "files": [
+        {
+          "service": "chromium-access",
+          "path": "/etc/workbox/access.sh",
+          "content": "#!/bin/sh\nset -eu\nexport OPENSHIP_PASSWORD_HASH=\"$(caddy hash-password --plaintext \"$OPENSHIP_ADMIN_PASSWORD\")\"\nunset OPENSHIP_ADMIN_PASSWORD\nexec caddy run --config /etc/workbox/access.Caddyfile --adapter caddyfile\n"
+        },
+        {
+          "service": "chromium-access",
+          "path": "/etc/workbox/access.Caddyfile",
+          "content": "{\n  auto_https off\n  admin off\n}\n:8080 {\n  basic_auth {\n    {$OPENSHIP_ADMIN_USER} {$OPENSHIP_PASSWORD_HASH}\n  }\n  reverse_proxy chromium:3000\n}\n"
+        }
+      ],
+      "marketplace": {
+        "features": [
+          {
+            "title": "Interactive browser",
+            "description": "Use the browser visually with keyboard, mouse, audio and clipboard."
+          },
+          {
+            "title": "Persistent profile",
+            "description": "Project storage retains browser settings, profiles and files across redeployments."
+          },
+          {
+            "title": "Protected access",
+            "description": "Generated credentials, a private default endpoint and desktop hardening."
+          }
+        ],
+        "article": "## Chromium on your own server\n\nChromium runs on your server and streams its window to your browser. This is an interactive workspace for a person. Use Selenium Chromium from the catalog for automated WebDriver tests.\n\n## Access and storage\n\nInstallation generates a password for the Caddy access gateway. The endpoint starts private; open it through a local tunnel, or explicitly choose a HTTPS domain. Only the gateway receives a route. Shared-session links, desktop sudo and terminal launchers are disabled. This remains a network-connected browser, so use a dedicated server when separating trusted and untrusted activity.\n\nThe project volume preserves `/config`, including profiles, settings and local files. Back it up before deleting storage. The template requests 1 GiB of container shared memory and a server with at least two CPU cores and 3 GiB RAM. It currently supports connected self-managed Docker hosts.\n\n## Sources\n\nThe image is published by LinuxServer.io and pinned to a reviewed release and digest. Container packaging is GPL-3.0; bundled applications retain their own licenses. Workbox Cloud adds the access gateway and installation metadata. The Caddy gateway is Apache-2.0.\n\n[Image documentation](https://docs.linuxserver.io/images/docker-chromium/) · [Source and license](https://github.com/linuxserver/docker-chromium) · [Security guidance](https://docs.linuxserver.io/selkies/user-guide/security/)"
+      }
+    },
+    {
+      "$schema": "https://openship.io/app.schema.json",
+      "id": "firefox",
+      "name": "Firefox",
+      "description": "A private Firefox browser streamed from your server, with persistent profiles and a protected access gateway.",
+      "kind": "template",
+      "logo": "firefox",
+      "category": "browser",
+      "available": true,
+      "verified": false,
+      "schemaVersion": 2,
+      "minEngine": "0.9.2",
+      "supportsCloud": false,
+      "framework": "docker-compose",
+      "repository": "https://github.com/linuxserver/docker-firefox",
+      "provenance": {
+        "source": "upstream",
+        "url": "https://docs.linuxserver.io/images/docker-firefox/",
+        "revision": "1160.0build1-1xtradeb1.2404.1-ls137",
+        "license": "GPL-3.0-only (container packaging); bundled components retain their own licenses",
+        "reviewedAt": "2026-11-17"
+      },
+      "minResources": {
+        "cpuCores": 2,
+        "memoryMb": 3072
+      },
+      "tags": [
+        "browser",
+        "desktop",
+        "private",
+        "selkies",
+        "interactive"
+      ],
+      "services": [
+        {
+          "name": "firefox",
+          "image": "docker.io/linuxserver/firefox:1160.0build1-1xtradeb1.2404.1-ls137@sha256:ff6c82bab010866097f44cfeac6ae1c8d8112fe58f694c492d5051a50eea0961",
+          "shmSize": 1073741824,
+          "restart": "unless-stopped",
+          "environment": {
+            "PUID": "1000",
+            "PGID": "1000",
+            "TZ": "Etc/UTC",
+            "HARDEN_DESKTOP": "true",
+            "SELKIES_ENABLE_SHARING": "false|locked",
+            "SELKIES_ENABLE_SHARED": "false|locked",
+            "AUTO_GPU": "false",
+            "NO_GAMEPAD": "true",
+            "NO_WEBCAM": "true",
+            "HARDEN_OPENBOX": "true"
+          },
+          "volumes": [
+            "firefox_config:/config"
+          ],
+          "resources": {
+            "cpuCores": 1,
+            "memoryMb": 2048,
+            "diskMb": 4096
+          },
+          "healthcheck": {
+            "test": [
+              "CMD-SHELL",
+              "curl -fsS -o /dev/null http://127.0.0.1:3000/"
+            ],
+            "interval": "15s",
+            "timeout": "5s",
+            "retries": 12,
+            "startPeriod": "60s"
+          }
+        },
+        {
+          "name": "firefox-access",
+          "image": "caddy:2.11.7-alpine@sha256:e70b164da81ef698b3ad19af799ea6086ce6d9e48ed4079eb9fe26f6fbf14ee5",
+          "restart": "unless-stopped",
+          "dependsOn": [
+            "firefox"
+          ],
+          "secretEnv": [
+            "OPENSHIP_ADMIN_PASSWORD"
+          ],
+          "commandArgv": [
+            "sh",
+            "/etc/workbox/access.sh"
+          ],
+          "healthcheck": {
+            "test": [
+              "CMD-SHELL",
+              "wget -S -O /dev/null http://127.0.0.1:8080/ 2>&1 | grep -q '401 Unauthorized'"
+            ],
+            "interval": "15s",
+            "timeout": "5s",
+            "retries": 8
+          },
+          "exposed": true,
+          "exposedPort": 8080,
+          "routes": [
+            {
+              "port": 8080
+            }
+          ],
+          "resources": {
+            "cpuCores": 0.25,
+            "memoryMb": 128,
+            "diskMb": 128
+          }
+        }
+      ],
+      "configFields": [
+        {
+          "service": "firefox-access",
+          "key": "OPENSHIP_ADMIN_USER",
+          "label": "Access username",
+          "default": "workbox",
+          "required": true
+        },
+        {
+          "service": "firefox-access",
+          "key": "OPENSHIP_ADMIN_PASSWORD",
+          "label": "Access password",
+          "generate": "secret",
+          "secret": true
+        }
+      ],
+      "settings": [
+        {
+          "id": "access",
+          "label": "Browser access",
+          "columns": 2,
+          "fields": [
+            {
+              "service": "firefox-access",
+              "key": "OPENSHIP_ADMIN_USER",
+              "label": "Access username",
+              "type": "text",
+              "default": "workbox",
+              "required": true,
+              "pattern": "^[a-zA-Z0-9_.-]+$",
+              "patternError": "Use letters, numbers, dots, dashes or underscores.",
+              "installStep": true,
+              "requiresRedeploy": true
+            },
+            {
+              "service": "firefox-access",
+              "key": "OPENSHIP_ADMIN_PASSWORD",
+              "label": "Access password",
+              "type": "password",
+              "secret": true,
+              "required": true,
+              "requiresRedeploy": true,
+              "help": "Generated during installation. Keep the password private."
+            }
+          ]
+        },
+        {
+          "id": "browser",
+          "label": "Browser preferences",
+          "fields": [
+            {
+              "service": "firefox",
+              "key": "TZ",
+              "label": "Timezone",
+              "type": "text",
+              "default": "Etc/UTC",
+              "installStep": true,
+              "requiresRedeploy": true
+            }
+          ]
+        }
+      ],
+      "management": {
+        "kind": "schema"
+      },
+      "endpoints": [
+        {
+          "service": "firefox-access",
+          "port": 8080,
+          "label": "Private browser",
+          "kind": "http",
+          "scope": "internal",
+          "defaultMode": "internal",
+          "allowedModes": [
+            "internal",
+            "domain"
+          ]
+        }
+      ],
+      "connection": {
+        "title": "Open Firefox",
+        "description": "Connect through the protected gateway using the generated credentials. Browser profiles are stored on a project-scoped volume.",
+        "guide": {
+          "defaultMode": "internal",
+          "intro": "This is an interactive Firefox browser. Open its gateway through a local tunnel, or explicitly assign a HTTPS domain."
+        },
+        "outputs": [
+          {
+            "id": "url",
+            "label": "Firefox",
+            "source": "publicUrl:firefox-access",
+            "kind": "url",
+            "recommended": true
+          },
+          {
+            "id": "username",
+            "label": "Username",
+            "source": "env:firefox-access:OPENSHIP_ADMIN_USER",
+            "width": "half"
+          },
+          {
+            "id": "password",
+            "label": "Password",
+            "source": "env:firefox-access:OPENSHIP_ADMIN_PASSWORD",
+            "secret": true,
+            "width": "half"
+          }
+        ],
+        "firstLogin": {
+          "note": "The generated credentials protect the gateway. Desktop sudo, terminal launchers and session sharing are disabled. The browser still has network access from its server."
+        }
+      },
+      "files": [
+        {
+          "service": "firefox-access",
+          "path": "/etc/workbox/access.sh",
+          "content": "#!/bin/sh\nset -eu\nexport OPENSHIP_PASSWORD_HASH=\"$(caddy hash-password --plaintext \"$OPENSHIP_ADMIN_PASSWORD\")\"\nunset OPENSHIP_ADMIN_PASSWORD\nexec caddy run --config /etc/workbox/access.Caddyfile --adapter caddyfile\n"
+        },
+        {
+          "service": "firefox-access",
+          "path": "/etc/workbox/access.Caddyfile",
+          "content": "{\n  auto_https off\n  admin off\n}\n:8080 {\n  basic_auth {\n    {$OPENSHIP_ADMIN_USER} {$OPENSHIP_PASSWORD_HASH}\n  }\n  reverse_proxy firefox:3000\n}\n"
+        }
+      ],
+      "marketplace": {
+        "features": [
+          {
+            "title": "Interactive browser",
+            "description": "Use the browser visually with keyboard, mouse, audio and clipboard."
+          },
+          {
+            "title": "Persistent profile",
+            "description": "Project storage retains browser settings, profiles and files across redeployments."
+          },
+          {
+            "title": "Protected access",
+            "description": "Generated credentials, a private default endpoint and desktop hardening."
+          }
+        ],
+        "article": "## Firefox on your own server\n\nFirefox runs on your server and streams its window to your browser. This is an interactive workspace for a person. Use Selenium Chromium from the catalog for automated WebDriver tests.\n\n## Access and storage\n\nInstallation generates a password for the Caddy access gateway. The endpoint starts private; open it through a local tunnel, or explicitly choose a HTTPS domain. Only the gateway receives a route. Shared-session links, desktop sudo and terminal launchers are disabled. This remains a network-connected browser, so use a dedicated server when separating trusted and untrusted activity.\n\nThe project volume preserves `/config`, including profiles, settings and local files. Back it up before deleting storage. The template requests 1 GiB of container shared memory and a server with at least two CPU cores and 3 GiB RAM. It currently supports connected self-managed Docker hosts.\n\n## Sources\n\nThe image is published by LinuxServer.io and pinned to a reviewed release and digest. Container packaging is GPL-3.0; bundled applications retain their own licenses. Workbox Cloud adds the access gateway and installation metadata. The Caddy gateway is Apache-2.0.\n\n[Image documentation](https://docs.linuxserver.io/images/docker-firefox/) · [Source and license](https://github.com/linuxserver/docker-firefox) · [Security guidance](https://docs.linuxserver.io/selkies/user-guide/security/)"
+      }
+    },
+    {
+      "$schema": "https://openship.io/app.schema.json",
+      "id": "selenium-chromium",
+      "name": "Selenium Chromium",
+      "description": "A private, authenticated Chromium WebDriver service for automated browser tests, with bounded sessions and a live status endpoint.",
+      "kind": "template",
+      "logo": "selenium",
+      "category": "browser",
+      "available": true,
+      "verified": false,
+      "schemaVersion": 2,
+      "minEngine": "0.9.2",
+      "supportsCloud": false,
+      "framework": "docker-compose",
+      "repository": "https://github.com/SeleniumHQ/docker-selenium",
+      "provenance": {
+        "source": "upstream",
+        "url": "https://github.com/SeleniumHQ/docker-selenium",
+        "revision": "4.52.0-20261101",
+        "license": "Apache-2.0 (container project); bundled browser components retain their own licenses",
+        "reviewedAt": "2026-11-17"
+      },
+      "minResources": {
+        "cpuCores": 2,
+        "memoryMb": 3072
+      },
+      "tags": [
+        "browser",
+        "automation",
+        "testing",
+        "webdriver",
+        "chromium",
+        "selenium"
+      ],
+      "services": [
+        {
+          "name": "selenium",
+          "image": "selenium/standalone-chromium:4.52.0-20261101@sha256:b211549a4c35f11826bc1a7559b9f23ff055198517f8cb7d49ef74df01c5e38d",
+          "shmSize": 2147483648,
+          "restart": "unless-stopped",
+          "environment": {
+            "SE_NODE_MAX_SESSIONS": "1",
+            "SE_NODE_SESSION_TIMEOUT": "300",
+            "SE_SESSION_REQUEST_TIMEOUT": "60",
+            "SE_START_VNC": "false",
+            "SE_START_NO_VNC": "false",
+            "SE_ENABLE_TRACING": "false",
+            "SE_NODE_ENABLE_CDP": "false",
+            "SE_NODE_GRID_URL": "{{publicUrl:selenium-access}}"
+          },
+          "healthcheck": {
+            "test": [
+              "CMD",
+              "/opt/bin/check-grid.sh",
+              "--host",
+              "127.0.0.1",
+              "--port",
+              "4444"
+            ],
+            "interval": "15s",
+            "timeout": "10s",
+            "retries": 12,
+            "startPeriod": "30s"
+          },
+          "resources": {
+            "cpuCores": 2,
+            "memoryMb": 2048,
+            "diskMb": 2048
+          }
+        },
+        {
+          "name": "selenium-access",
+          "image": "caddy:2.11.7-alpine@sha256:e70b164da81ef698b3ad19af799ea6086ce6d9e48ed4079eb9fe26f6fbf14ee5",
+          "restart": "unless-stopped",
+          "dependsOn": [
+            "selenium"
+          ],
+          "secretEnv": [
+            "OPENSHIP_ADMIN_PASSWORD"
+          ],
+          "commandArgv": [
+            "sh",
+            "/etc/workbox/access.sh"
+          ],
+          "exposed": true,
+          "exposedPort": 8080,
+          "routes": [
+            {
+              "port": 8080
+            }
+          ],
+          "healthcheck": {
+            "test": [
+              "CMD-SHELL",
+              "wget -S -O /dev/null http://127.0.0.1:8080/status 2>&1 | grep -q '401 Unauthorized'"
+            ],
+            "interval": "15s",
+            "timeout": "5s",
+            "retries": 8
+          },
+          "resources": {
+            "cpuCores": 0.25,
+            "memoryMb": 128,
+            "diskMb": 128
+          }
+        }
+      ],
+      "configFields": [
+        {
+          "service": "selenium-access",
+          "key": "OPENSHIP_ADMIN_USER",
+          "label": "API username",
+          "default": "workbox",
+          "required": true
+        },
+        {
+          "service": "selenium-access",
+          "key": "OPENSHIP_ADMIN_PASSWORD",
+          "label": "API password",
+          "generate": "secret",
+          "secret": true
+        }
+      ],
+      "settings": [
+        {
+          "id": "access",
+          "label": "WebDriver API access",
+          "columns": 2,
+          "fields": [
+            {
+              "service": "selenium-access",
+              "key": "OPENSHIP_ADMIN_USER",
+              "label": "API username",
+              "type": "text",
+              "default": "workbox",
+              "required": true,
+              "pattern": "^[a-zA-Z0-9_.-]+$",
+              "patternError": "Use letters, numbers, dots, dashes or underscores.",
+              "installStep": true,
+              "requiresRedeploy": true
+            },
+            {
+              "service": "selenium-access",
+              "key": "OPENSHIP_ADMIN_PASSWORD",
+              "label": "API password",
+              "type": "password",
+              "secret": true,
+              "required": true,
+              "requiresRedeploy": true
+            }
+          ]
+        },
+        {
+          "id": "sessions",
+          "label": "Session limits",
+          "columns": 2,
+          "fields": [
+            {
+              "service": "selenium",
+              "key": "SE_NODE_MAX_SESSIONS",
+              "label": "Concurrent sessions",
+              "type": "number",
+              "min": 1,
+              "max": 4,
+              "integer": true,
+              "default": "1",
+              "installStep": true,
+              "requiresRedeploy": true,
+              "help": "Each browser session consumes additional memory and CPU."
+            },
+            {
+              "service": "selenium",
+              "key": "SE_NODE_SESSION_TIMEOUT",
+              "label": "Idle session timeout (seconds)",
+              "type": "number",
+              "min": 30,
+              "max": 3600,
+              "integer": true,
+              "default": "300",
+              "installStep": true,
+              "requiresRedeploy": true
+            }
+          ]
+        }
+      ],
+      "management": {
+        "kind": "schema"
+      },
+      "endpoints": [
+        {
+          "service": "selenium-access",
+          "port": 8080,
+          "label": "WebDriver API",
+          "kind": "http",
+          "scope": "internal",
+          "defaultMode": "internal",
+          "allowedModes": [
+            "internal",
+            "domain"
+          ]
+        }
+      ],
+      "connection": {
+        "title": "Connect your browser tests",
+        "description": "Use the protected WebDriver endpoint and generated HTTP Basic credentials. This is an automation service, not a persistent desktop browser.",
+        "guide": {
+          "defaultMode": "internal",
+          "intro": "Use Selenium RemoteWebDriver with Chromium options and HTTP Basic credentials. Run tests from the same project network or through a local tunnel; select a HTTPS domain when remote clients need access."
+        },
+        "outputs": [
+          {
+            "id": "url",
+            "label": "WebDriver endpoint",
+            "source": "publicUrl:selenium-access",
+            "kind": "url",
+            "service": "selenium-access",
+            "envKey": "SELENIUM_REMOTE_URL",
+            "recommended": true
+          },
+          {
+            "id": "username",
+            "label": "API username",
+            "source": "env:selenium-access:OPENSHIP_ADMIN_USER",
+            "envKey": "SELENIUM_USERNAME",
+            "width": "half",
+            "recommended": true
+          },
+          {
+            "id": "password",
+            "label": "API password",
+            "source": "env:selenium-access:OPENSHIP_ADMIN_PASSWORD",
+            "envKey": "SELENIUM_PASSWORD",
+            "secret": true,
+            "width": "half",
+            "recommended": true
+          }
+        ],
+        "firstLogin": {
+          "note": "The gateway protects all WebDriver routes. Direct VNC and noVNC listeners are disabled; session profiles are temporary. End every test with driver.quit()."
+        }
+      },
+      "provides": [
+        {
+          "id": "webdriver",
+          "category": "automation",
+          "outputRefs": [
+            "url",
+            "username",
+            "password"
+          ]
+        }
+      ],
+      "files": [
+        {
+          "service": "selenium-access",
+          "path": "/etc/workbox/access.sh",
+          "content": "#!/bin/sh\nset -eu\nexport OPENSHIP_PASSWORD_HASH=\"$(caddy hash-password --plaintext \"$OPENSHIP_ADMIN_PASSWORD\")\"\nunset OPENSHIP_ADMIN_PASSWORD\nexec caddy run --config /etc/workbox/access.Caddyfile --adapter caddyfile\n"
+        },
+        {
+          "service": "selenium-access",
+          "path": "/etc/workbox/access.Caddyfile",
+          "content": "{\n  auto_https off\n  admin off\n}\n:8080 {\n  basic_auth {\n    {$OPENSHIP_ADMIN_USER} {$OPENSHIP_PASSWORD_HASH}\n  }\n  reverse_proxy selenium:4444\n}\n"
+        }
+      ],
+      "marketplace": {
+        "features": [
+          {
+            "title": "Browser test service",
+            "description": "Run Selenium WebDriver tests against a pinned Chromium browser."
+          },
+          {
+            "title": "Bounded sessions",
+            "description": "Configure concurrent sessions and idle expiry from the app settings."
+          },
+          {
+            "title": "Authenticated endpoint",
+            "description": "A generated password protects the WebDriver API."
+          }
+        ],
+        "article": "## Chromium for automated browser tests\n\nThis installs Selenium Standalone Chromium for WebDriver clients. It creates a fresh browser session for each test; it is not a persistent interactive desktop. A Caddy gateway protects every exposed API route with generated HTTP Basic credentials.\n\n## Connect and manage\n\nThe endpoint starts private. Use it from the project network or a local tunnel, or choose a HTTPS domain for remote test clients. Pass the endpoint, username and password shown under Connection to your WebDriver client. Always call `driver.quit()` after a test.\n\nOne concurrent session and a five-minute idle timeout are the defaults. Change these limits in Workbox Cloud settings and redeploy. VNC, noVNC and Chrome DevTools forwarding are disabled. This template exposes WebDriver commands; it does not advertise a Playwright/CDP endpoint. The template requests 2 GiB shared memory and at least two CPU cores and 3 GiB server memory; increase resources before increasing concurrency. No profile volume is mounted, so browser sessions do not survive recreation.\n\n## Sources\n\nThe official Selenium image is pinned to `4.52.0-20261101` and its multi-architecture digest. The container project and Caddy gateway are Apache-2.0; bundled browser components retain their licenses. This template currently supports connected self-managed Docker hosts.\n\n[Selenium Docker documentation](https://github.com/SeleniumHQ/docker-selenium) · [Pinned release](https://github.com/SeleniumHQ/docker-selenium/releases/tag/4.52.0-20261101) · [Container license](https://github.com/SeleniumHQ/docker-selenium/blob/trunk/LICENSE.md)"
+      }
+    },
+    {
+      "available": true,
+      "verified": false,
+      "id": "vercel-blog",
+      "name": "Next.js Blog",
+      "description": "Publish a Markdown blog from the official Next.js example.",
+      "kind": "template",
+      "nativeSupport": false,
+      "logo": "nextjs",
+      "category": "development",
+      "tags": [
+        "nextjs",
+        "blog",
+        "markdown",
+        "vercel"
+      ],
+      "services": [],
+      "deploymentRecipes": [
+        {
+          "id": "vercel",
+          "label": "Vercel project",
+          "provider": "vercel",
+          "workloadKind": "service",
+          "source": {
+            "repo": "vercel/next.js",
+            "ref": "ad4859b599128915430ab68bcf344bddf81c0177",
+            "rootDirectory": "examples/blog-starter",
+            "framework": "nextjs",
+            "installCommand": "npm install",
+            "buildCommand": "npm run build",
+            "outputDirectory": ".next"
+          },
+          "resource": {
+            "createProject": "true"
+          },
+          "requiredCapabilities": [
+            "apply",
+            "observe",
+            "logs",
+            "destroy"
+          ],
+          "notes": "Creates a new Vercel project from a reviewed upstream Git revision. Requires Vercel access to the public Git repository. No database, storage integration or Git repository is created."
+        }
+      ],
+      "provenance": {
+        "source": "vercel",
+        "url": "https://vercel.com/templates/next.js/blog-starter-kit",
+        "revision": "ad4859b599128915430ab68bcf344bddf81c0177",
+        "license": "MIT",
+        "reviewedAt": "2026-11-17"
+      },
+      "marketplace": {
+        "features": [
+          {
+            "title": "Native Vercel deployment",
+            "description": "Select a saved account, review, and deploy from Workbox Cloud."
+          },
+          {
+            "title": "Pinned upstream source",
+            "description": "Starts from a reviewed Git revision and preserves source attribution."
+          },
+          {
+            "title": "Managed lifecycle",
+            "description": "View deployment status and build logs, or delete the created project."
+          }
+        ],
+        "article": "# Next.js Blog\n\nPublish a Markdown blog from the official Next.js example.\n\nChoose **Vercel project**, select a saved Vercel account and give the installation a new project name. Review and deploy without leaving Workbox Cloud. The installation manages the created Vercel project and deployment, including status, build logs and confirmed project deletion.\n\nThe source is [vercel/next.js](https://github.com/vercel/next.js/tree/ad4859b599128915430ab68bcf344bddf81c0177/examples/blog-starter) at revision `ad4859b599128915430ab68bcf344bddf81c0177` under MIT. No database, storage service or repository clone is created. Your Vercel account must be allowed to deploy this public repository. This recipe is a web application deployment, not a long-running container or sandbox.\n\nSource: [Vercel template listing](https://vercel.com/templates/next.js/blog-starter-kit). Provider deployment has not been live-qualified until the installation receipt records a successful build and readiness result."
+      },
+      "schemaVersion": 3
+    },
+    {
+      "available": true,
+      "verified": false,
+      "id": "vercel-nextjs",
+      "name": "Next.js Starter",
+      "description": "Start a Next.js application from the official Hello World example.",
+      "kind": "template",
+      "nativeSupport": false,
+      "logo": "nextjs",
+      "category": "development",
+      "tags": [
+        "nextjs",
+        "starter",
+        "vercel"
+      ],
+      "services": [],
+      "deploymentRecipes": [
+        {
+          "id": "vercel",
+          "label": "Vercel project",
+          "provider": "vercel",
+          "workloadKind": "service",
+          "source": {
+            "repo": "vercel/next.js",
+            "ref": "ad4859b599128915430ab68bcf344bddf81c0177",
+            "rootDirectory": "examples/hello-world",
+            "framework": "nextjs",
+            "installCommand": "npm install",
+            "buildCommand": "npm run build",
+            "outputDirectory": ".next"
+          },
+          "resource": {
+            "createProject": "true"
+          },
+          "requiredCapabilities": [
+            "apply",
+            "observe",
+            "logs",
+            "destroy"
+          ],
+          "notes": "Creates a new Vercel project from a reviewed upstream Git revision. Requires Vercel access to the public Git repository. No database, storage integration or Git repository is created."
+        }
+      ],
+      "provenance": {
+        "source": "vercel",
+        "url": "https://github.com/vercel/next.js/tree/ad4859b599128915430ab68bcf344bddf81c0177/examples/hello-world",
+        "revision": "ad4859b599128915430ab68bcf344bddf81c0177",
+        "license": "MIT",
+        "reviewedAt": "2026-11-17"
+      },
+      "marketplace": {
+        "features": [
+          {
+            "title": "Native Vercel deployment",
+            "description": "Select a saved account, review, and deploy from Workbox Cloud."
+          },
+          {
+            "title": "Pinned upstream source",
+            "description": "Starts from a reviewed Git revision and preserves source attribution."
+          },
+          {
+            "title": "Managed lifecycle",
+            "description": "View deployment status and build logs, or delete the created project."
+          }
+        ],
+        "article": "# Next.js Starter\n\nStart a Next.js application from the official Hello World example.\n\nChoose **Vercel project**, select a saved Vercel account and give the installation a new project name. Review and deploy without leaving Workbox Cloud. The installation manages the created Vercel project and deployment, including status, build logs and confirmed project deletion.\n\nThe source is [vercel/next.js](https://github.com/vercel/next.js/tree/ad4859b599128915430ab68bcf344bddf81c0177/examples/hello-world) at revision `ad4859b599128915430ab68bcf344bddf81c0177` under MIT. No database, storage service or repository clone is created. Your Vercel account must be allowed to deploy this public repository. This recipe is a web application deployment, not a long-running container or sandbox.\n\nSource: [Official Next.js example](https://github.com/vercel/next.js/tree/ad4859b599128915430ab68bcf344bddf81c0177/examples/hello-world). The reviewed recipe passed a bounded live deployment, build-log, HTTP readiness and deletion check on 17 November 2026. Account permissions and future upstream dependencies can still affect a new installation."
+      },
+      "schemaVersion": 3
+    },
+    {
+      "available": true,
+      "verified": false,
+      "id": "vercel-portfolio",
+      "name": "Portfolio Starter",
+      "description": "A portfolio and MDX blog with SEO, RSS and generated social images.",
+      "kind": "template",
+      "nativeSupport": false,
+      "logo": "nextjs",
+      "category": "development",
+      "tags": [
+        "nextjs",
+        "portfolio",
+        "blog",
+        "vercel"
+      ],
+      "services": [],
+      "deploymentRecipes": [
+        {
+          "id": "vercel",
+          "label": "Vercel project",
+          "provider": "vercel",
+          "workloadKind": "service",
+          "source": {
+            "repo": "vercel/examples",
+            "ref": "a4b4827297bec79b81ddb2ff22a53089ebe88cd8",
+            "rootDirectory": "solutions/blog",
+            "framework": "nextjs",
+            "installCommand": "pnpm install --frozen-lockfile",
+            "buildCommand": "npm run build",
+            "outputDirectory": ".next"
+          },
+          "resource": {
+            "createProject": "true"
+          },
+          "requiredCapabilities": [
+            "apply",
+            "observe",
+            "logs",
+            "destroy"
+          ],
+          "notes": "Creates a new Vercel project from a reviewed upstream Git revision. Requires Vercel access to the public Git repository. No database, storage integration or Git repository is created."
+        }
+      ],
+      "provenance": {
+        "source": "vercel",
+        "url": "https://vercel.com/templates/template/portfolio-starter-kit",
+        "revision": "a4b4827297bec79b81ddb2ff22a53089ebe88cd8",
+        "license": "MIT",
+        "reviewedAt": "2026-11-17"
+      },
+      "marketplace": {
+        "features": [
+          {
+            "title": "Native Vercel deployment",
+            "description": "Select a saved account, review, and deploy from Workbox Cloud."
+          },
+          {
+            "title": "Pinned upstream source",
+            "description": "Starts from a reviewed Git revision and preserves source attribution."
+          },
+          {
+            "title": "Managed lifecycle",
+            "description": "View deployment status and build logs, or delete the created project."
+          }
+        ],
+        "article": "# Portfolio Starter\n\nA portfolio and MDX blog with SEO, RSS and generated social images.\n\nChoose **Vercel project**, select a saved Vercel account and give the installation a new project name. Review and deploy without leaving Workbox Cloud. The installation manages the created Vercel project and deployment, including status, build logs and confirmed project deletion.\n\nThe source is [vercel/examples](https://github.com/vercel/examples/tree/a4b4827297bec79b81ddb2ff22a53089ebe88cd8/solutions/blog) at revision `a4b4827297bec79b81ddb2ff22a53089ebe88cd8` under MIT. No database, storage service or repository clone is created. Your Vercel account must be allowed to deploy this public repository. This recipe is a web application deployment, not a long-running container or sandbox.\n\nSource: [Vercel template listing](https://vercel.com/templates/template/portfolio-starter-kit). Provider deployment has not been live-qualified until the installation receipt records a successful build and readiness result."
+      },
+      "schemaVersion": 3
+    },
+    {
+      "$schema": "https://openship.io/app.schema.json",
+      "id": "webtop",
+      "name": "Webtop",
+      "description": "An XFCE desktop and Chromium browser on your server, with persistent files and password-protected access.",
+      "kind": "template",
+      "logo": "webtop",
+      "category": "browser",
+      "available": true,
+      "verified": false,
+      "schemaVersion": 2,
+      "minEngine": "0.9.2",
+      "supportsCloud": false,
+      "framework": "docker-compose",
+      "repository": "https://github.com/linuxserver/docker-webtop",
+      "provenance": {
+        "source": "upstream",
+        "url": "https://docs.linuxserver.io/images/docker-webtop/",
+        "revision": "0c46c80a-ls325",
+        "license": "GPL-3.0-only (container packaging); bundled components retain their own licenses",
+        "reviewedAt": "2026-11-17"
+      },
+      "minResources": {
+        "cpuCores": 2,
+        "memoryMb": 3072
+      },
+      "tags": [
+        "browser",
+        "desktop",
+        "private",
+        "selkies",
+        "interactive"
+      ],
+      "services": [
+        {
+          "name": "webtop",
+          "image": "docker.io/linuxserver/webtop:0c46c80a-ls325@sha256:211570631c76df794bc2beb451cefdba225a58643be396cc911cef205a0db7a5",
+          "shmSize": 1073741824,
+          "restart": "unless-stopped",
+          "environment": {
+            "PUID": "1000",
+            "PGID": "1000",
+            "TZ": "Etc/UTC",
+            "HARDEN_DESKTOP": "true",
+            "SELKIES_ENABLE_SHARING": "false|locked",
+            "SELKIES_ENABLE_SHARED": "false|locked",
+            "AUTO_GPU": "false",
+            "NO_GAMEPAD": "true",
+            "NO_WEBCAM": "true"
+          },
+          "volumes": [
+            "webtop_config:/config"
+          ],
+          "resources": {
+            "cpuCores": 1,
+            "memoryMb": 2048,
+            "diskMb": 4096
+          },
+          "healthcheck": {
+            "test": [
+              "CMD-SHELL",
+              "curl -fsS -o /dev/null http://127.0.0.1:3000/"
+            ],
+            "interval": "15s",
+            "timeout": "5s",
+            "retries": 12,
+            "startPeriod": "60s"
+          }
+        },
+        {
+          "name": "webtop-access",
+          "image": "caddy:2.11.7-alpine@sha256:e70b164da81ef698b3ad19af799ea6086ce6d9e48ed4079eb9fe26f6fbf14ee5",
+          "restart": "unless-stopped",
+          "dependsOn": [
+            "webtop"
+          ],
+          "secretEnv": [
+            "OPENSHIP_ADMIN_PASSWORD"
+          ],
+          "commandArgv": [
+            "sh",
+            "/etc/workbox/access.sh"
+          ],
+          "healthcheck": {
+            "test": [
+              "CMD-SHELL",
+              "wget -S -O /dev/null http://127.0.0.1:8080/ 2>&1 | grep -q '401 Unauthorized'"
+            ],
+            "interval": "15s",
+            "timeout": "5s",
+            "retries": 8
+          },
+          "exposed": true,
+          "exposedPort": 8080,
+          "routes": [
+            {
+              "port": 8080
+            }
+          ],
+          "resources": {
+            "cpuCores": 0.25,
+            "memoryMb": 128,
+            "diskMb": 128
+          }
+        }
+      ],
+      "configFields": [
+        {
+          "service": "webtop-access",
+          "key": "OPENSHIP_ADMIN_USER",
+          "label": "Access username",
+          "default": "workbox",
+          "required": true
+        },
+        {
+          "service": "webtop-access",
+          "key": "OPENSHIP_ADMIN_PASSWORD",
+          "label": "Access password",
+          "generate": "secret",
+          "secret": true
+        }
+      ],
+      "settings": [
+        {
+          "id": "access",
+          "label": "Browser access",
+          "columns": 2,
+          "fields": [
+            {
+              "service": "webtop-access",
+              "key": "OPENSHIP_ADMIN_USER",
+              "label": "Access username",
+              "type": "text",
+              "default": "workbox",
+              "required": true,
+              "pattern": "^[a-zA-Z0-9_.-]+$",
+              "patternError": "Use letters, numbers, dots, dashes or underscores.",
+              "installStep": true,
+              "requiresRedeploy": true
+            },
+            {
+              "service": "webtop-access",
+              "key": "OPENSHIP_ADMIN_PASSWORD",
+              "label": "Access password",
+              "type": "password",
+              "secret": true,
+              "required": true,
+              "requiresRedeploy": true,
+              "help": "Generated during installation. Keep the password private."
+            }
+          ]
+        },
+        {
+          "id": "browser",
+          "label": "Browser preferences",
+          "fields": [
+            {
+              "service": "webtop",
+              "key": "TZ",
+              "label": "Timezone",
+              "type": "text",
+              "default": "Etc/UTC",
+              "installStep": true,
+              "requiresRedeploy": true
+            }
+          ]
+        }
+      ],
+      "management": {
+        "kind": "schema"
+      },
+      "endpoints": [
+        {
+          "service": "webtop-access",
+          "port": 8080,
+          "label": "Private desktop",
+          "kind": "http",
+          "scope": "internal",
+          "defaultMode": "internal",
+          "allowedModes": [
+            "internal",
+            "domain"
+          ]
+        }
+      ],
+      "connection": {
+        "title": "Open Webtop",
+        "description": "Connect through the protected gateway using the generated credentials. Browser profiles are stored on a project-scoped volume.",
+        "guide": {
+          "defaultMode": "internal",
+          "intro": "This is an interactive Linux desktop. Open its gateway through a local tunnel, or explicitly assign a HTTPS domain."
+        },
+        "outputs": [
+          {
+            "id": "url",
+            "label": "Webtop",
+            "source": "publicUrl:webtop-access",
+            "kind": "url",
+            "recommended": true
+          },
+          {
+            "id": "username",
+            "label": "Username",
+            "source": "env:webtop-access:OPENSHIP_ADMIN_USER",
+            "width": "half"
+          },
+          {
+            "id": "password",
+            "label": "Password",
+            "source": "env:webtop-access:OPENSHIP_ADMIN_PASSWORD",
+            "secret": true,
+            "width": "half"
+          }
+        ],
+        "firstLogin": {
+          "note": "The generated credentials protect the gateway. Desktop sudo, terminal launchers and session sharing are disabled. The browser still has network access from its server."
+        }
+      },
+      "files": [
+        {
+          "service": "webtop-access",
+          "path": "/etc/workbox/access.sh",
+          "content": "#!/bin/sh\nset -eu\nexport OPENSHIP_PASSWORD_HASH=\"$(caddy hash-password --plaintext \"$OPENSHIP_ADMIN_PASSWORD\")\"\nunset OPENSHIP_ADMIN_PASSWORD\nexec caddy run --config /etc/workbox/access.Caddyfile --adapter caddyfile\n"
+        },
+        {
+          "service": "webtop-access",
+          "path": "/etc/workbox/access.Caddyfile",
+          "content": "{\n  auto_https off\n  admin off\n}\n:8080 {\n  basic_auth {\n    {$OPENSHIP_ADMIN_USER} {$OPENSHIP_PASSWORD_HASH}\n  }\n  reverse_proxy webtop:3000\n}\n"
+        }
+      ],
+      "marketplace": {
+        "features": [
+          {
+            "title": "Remote desktop",
+            "description": "Use the browser visually with keyboard, mouse, audio and clipboard."
+          },
+          {
+            "title": "Persistent profile",
+            "description": "Project storage retains browser settings, profiles and files across redeployments."
+          },
+          {
+            "title": "Protected access",
+            "description": "Generated credentials, a private default endpoint and desktop hardening."
+          }
+        ],
+        "article": "## Webtop on your own server\n\nAn XFCE desktop with a Chromium browser runs on your server. This is an interactive workspace for a person. Use Selenium Chromium from the catalog for automated WebDriver tests.\n\n## Access and storage\n\nInstallation generates a password for the Caddy access gateway. The endpoint starts private; open it through a local tunnel, or explicitly choose a HTTPS domain. Only the gateway receives a route. Shared-session links, desktop sudo and terminal launchers are disabled. This remains a network-connected browser, so use a dedicated server when separating trusted and untrusted activity.\n\nThe project volume preserves `/config`, including profiles, settings and local files. Back it up before deleting storage. The template requests 1 GiB of container shared memory and a server with at least two CPU cores and 3 GiB RAM. It currently supports connected self-managed Docker hosts.\n\n## Sources\n\nThe image is published by LinuxServer.io and pinned to a reviewed release and digest. Container packaging is GPL-3.0; bundled applications retain their own licenses. Workbox Cloud adds the access gateway and installation metadata. The Caddy gateway is Apache-2.0.\n\n[Image documentation](https://docs.linuxserver.io/images/docker-webtop/) · [Source and license](https://github.com/linuxserver/docker-webtop) · [Security guidance](https://docs.linuxserver.io/selkies/user-guide/security/)"
+      }
+    },
+    {
+      "id": "workbox-host",
+      "name": "Workbox prepared host",
+      "description": "Prepare a connected Linux server for Workbox sandboxes: install the daemon, filesystem and runtime, then connect its private API automatically.",
+      "kind": "flow",
+      "available": true,
+      "verified": false,
+      "schemaVersion": 3,
+      "logo": "workbox",
+      "category": "development",
+      "tags": [
+        "workbox",
+        "sandboxes",
+        "agents",
+        "server",
+        "provisioning"
+      ],
+      "supportsCloud": false,
+      "flowHref": "/workbox-hosts/new",
+      "management": {
+        "kind": "custom",
+        "href": "/workbox-hosts/new"
+      },
+      "repository": "https://github.com/Sidiora-Labs/workbox",
+      "provenance": {
+        "source": "upstream",
+        "url": "https://github.com/Sidiora-Labs/workbox/blob/9741e30334139bbe7e28cd5c034e345c616a470a/docs/guides/deploy.md",
+        "revision": "9741e30334139bbe7e28cd5c034e345c616a470a",
+        "reviewedAt": "2026-11-17"
+      },
+      "marketplace": {
+        "features": [
+          {
+            "title": "Automatic preparation",
+            "description": "Check the server, install the pinned Workbox daemon and build its filesystem and runtime."
+          },
+          {
+            "title": "Private connection",
+            "description": "Keep the API on loopback and reach it through the server's existing authenticated SSH connection."
+          },
+          {
+            "title": "Managed lifecycle",
+            "description": "Follow installation progress, retry interrupted preparation and manage the host alongside its sandbox connection."
+          }
+        ],
+        "article": "## A server ready for Workbox sandboxes\n\nChoose a connected x86_64 Debian or Ubuntu server with systemd, cgroup v2 and root or passwordless sudo access. Preparation checks host capabilities and free storage before changing the server. The host is a Linux VPS or physical machine; an ordinary service container does not meet these requirements.\n\nThe installer downloads a pinned Workbox revision, installs its tools, builds a sandbox filesystem and runtime, and verifies the daemon. Choose the minimal filesystem or the agents filesystem during setup. Progress and failed steps remain visible, so interrupted preparation can be retried against the same owned installation.\n\nThe daemon listens only on the server's loopback interface. Workbox Cloud registers its generated API key encrypted and uses the existing SSH connection to reach the private API. No public API port or separate TLS domain is required.\n\nOnce the host is ready, select **Create sandbox** to launch a Workbox child through the unified workload interface. The host and its sandboxes have separate lifecycles. Stop or start the host from its management screen; remove its sandboxes before removing the daemon. Removal disables the managed service and connection while retaining host files and package installations.\n\nSource: [Sidiora-Labs Workbox deployment guide](https://github.com/Sidiora-Labs/workbox/blob/9741e30334139bbe7e28cd5c034e345c616a470a/docs/guides/deploy.md)."
+      }
+    },
+    {
+      "id": "redis-server",
+      "name": "Redis",
+      "description": "Redis database deployed with the Redis-maintained Railway template, persistent storage and generated credentials.",
+      "kind": "template",
+      "available": true,
+      "verified": false,
+      "nativeSupport": false,
+      "schemaVersion": 3,
+      "category": "database",
+      "logo": "redis",
+      "tags": [
+        "database",
+        "cache",
+        "redis",
+        "railway"
+      ],
+      "services": [],
+      "deploymentRecipes": [
+        {
+          "id": "railway",
+          "label": "Redis on Railway",
+          "provider": "railway",
+          "workloadKind": "service",
+          "source": {
+            "templateCode": "redis",
+            "templateId": "895cb7c9-8ea9-4407-b4b6-b5013a65145e",
+            "templateConfigSha256": "61dd490244e6cd0a2f216834b6c0972321331f31f3192c2ff9d0055ec9d99b4e"
+          },
+          "resource": {
+            "createProject": "true"
+          },
+          "requiredCapabilities": [
+            "apply",
+            "observe",
+            "logs",
+            "destroy"
+          ],
+          "notes": "Creates a dedicated Railway project with the complete reviewed template, including persistent volumes and generated secrets. Deleting this workload deletes that project and its data.",
+          "provenance": {
+            "source": "railway",
+            "url": "https://railway.com/deploy/redis",
+            "revision": "61dd490244e6cd0a2f216834b6c0972321331f31f3192c2ff9d0055ec9d99b4e",
+            "reviewedAt": "2026-11-17"
+          }
+        }
+      ],
+      "provenance": {
+        "source": "railway",
+        "url": "https://railway.com/deploy/redis",
+        "revision": "61dd490244e6cd0a2f216834b6c0972321331f31f3192c2ff9d0055ec9d99b4e",
+        "license": "AGPL-3.0-or-later OR RSALv2 OR SSPL-1.0",
+        "reviewedAt": "2026-11-17"
+      },
+      "marketplace": {
+        "article": "# Redis on Railway\n\nDeploy the Redis-maintained Railway template in a dedicated project. The template includes Redis 8.2, persistent storage, a generated password, private networking and its provider-defined connection variables.\n\nChoose your Railway workspace connection, enter an installation name, review the deployment, then install. Workbox Cloud retains the project identity for status, logs and confirmed removal. Removing the installation deletes its dedicated project and stored data. Changes made to the template upstream require a fresh catalog review before deployment.\n\nThis is Redis, a separate product from the native Valkey catalog entry. Redis 8 offers AGPLv3, RSALv2 and SSPLv1 licensing choices; select and comply with the applicable upstream license for your use. Workbox Cloud records the template source and configuration revision and does not redistribute the Redis image.\n\nSource: [Redis Railway template](https://railway.com/deploy/redis). Licensing: [Redis licensing](https://redis.io/legal/licenses/)."
       }
     }
   ]

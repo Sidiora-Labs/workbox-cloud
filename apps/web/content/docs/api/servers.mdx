@@ -860,4 +860,14 @@ shared storage before removing the cluster runtime.
 | Compatibility alias for `DELETE /api/system/networks/operations/:operationId`. | HTTP only | `DELETE /api/system/clusters/network-operations/:operationId`<br />`server:admin` · Self-hosted |
 | Compatibility alias for `PATCH /api/system/networks/preparations/:preparationId/connections`. | HTTP only | `PATCH /api/system/clusters/network-preparations/:preparationId/connections`<br />`server:admin` · Self-hosted |
 
+### Prepared Workbox hosts
+
+| Operation | SDK | REST API |
+| --- | --- | --- |
+| List managed Workbox host records visible through the current organization and server permissions, including saved preparation progress and connection status. | HTTP only | `GET /api/workbox-hosts`<br />`server:read` |
+| Inspect a connected Linux server before Workbox preparation. Requires serverId and server administration permission; reports compatibility checks and blockers without installing the host. | HTTP only | `POST /api/workbox-hosts/preflight`<br />`server:admin` |
+| Start managed Workbox preparation on a connected server. Requires serverId, name, rootfs (minimal or agents), confirm: true and server administration permission. Returns a durable host record with HTTP 202; readiness and encrypted connection registration happen after preparation succeeds. | HTTP only | `POST /api/workbox-hosts`<br />`server:admin` |
+| Read one organization-owned Workbox host, its saved preparation stages, error and connection status using the selected server permissions. | HTTP only | `GET /api/workbox-hosts/:id`<br />`server:read` |
+| Start, stop, retry or remove a managed Workbox host with server administration permission. Removal requires confirm: true and a verified empty sandbox inventory; it disables the managed service and connection while retaining host files. | HTTP only | `POST /api/workbox-hosts/:id/action`<br />`server:admin` |
+
 {/* api-operations:end */}

@@ -15,6 +15,30 @@ const response = (value: unknown) => ({ ok: true, status: 200, json: async () =>
 beforeEach(() => { vi.mocked(safeFetch).mockReset(); vi.mocked(Sandbox.get).mockReset(); vi.mocked(Sandbox.create).mockReset(); vi.mocked(Sandbox.getOrCreate).mockReset(); });
 
 describe("provider execution integration", () => {
+  it("reconciles an unconfirmed Machine only when its Fly app is conclusively absent", async () => {
+    const input = target("fly", "fly-machine", { appName: "missing-app" });
+    vi.mocked(safeFetch).mockResolvedValue({ ok: false, status: 404 } as never);
+    expect(await registry().get("fly").observe(context, { target: input })).toMatchObject({ status: "stopped", providerStatus: "DELETED" });
+    expect(safeFetch).toHaveBeenCalledOnce();
+    expect(safeFetch).toHaveBeenCalledWith("https://api.machines.dev/v1/apps/missing-app", expect.objectContaining({ method: "GET" }));
+  });
+
+  it("keeps an existing app with an unconfirmed Machine actionable without adopting a Machine", async () => {
+    const input = target("fly", "fly-machine", { appName: "existing-app" });
+    vi.mocked(safeFetch).mockResolvedValue(response({ id: "provider-app", name: "existing-app" }));
+    const result = await registry().get("fly").observe(context, { target: input });
+    expect(result).toMatchObject({ status: "action_required", providerStatus: "MACHINE_UNCONFIRMED" });
+    expect(result.providerResourceId).toBeUndefined();
+    expect(safeFetch).toHaveBeenCalledOnce();
+  });
+
+  it("does not classify Fly authorization or transport failures as an absent app", async () => {
+    const input = target("fly", "fly-machine", { appName: "private-app" });
+    vi.mocked(safeFetch).mockResolvedValue({ ok: false, status: 403, json: async () => ({}) } as never);
+    await expect(registry().get("fly").observe(context, { target: input })).rejects.toMatchObject({ code: "FLY_ACCESS_DENIED" });
+    vi.mocked(safeFetch).mockRejectedValue(new Error("network timeout"));
+    await expect(registry().get("fly").observe(context, { target: input })).rejects.toMatchObject({ code: "FLY_UNAVAILABLE" });
+  });
   it("rejects caller identity overrides of the selected connection", async () => {
     const fly = target("fly", "fly-machine", { appName: "demo" });
     await expect(registry().get("fly").preflight(context, { ...fly, providerIdentity: { organizationId: "other-org" } })).rejects.toMatchObject({ code: "EXTERNAL_TARGET_SCOPE_DENIED" });
@@ -58,7 +82,7 @@ describe("provider execution integration", () => {
 
   it("allocates shared public ingress for a new Fly app and keeps partial machine identity on failure", async () => {
     const input = target("fly", "fly-machine", { appName: "demo", createApp: "true", port: "8080" });
-    vi.mocked(safeFetch).mockImplementation(async url => response(String(url).includes("graphql") ? { data: { allocateIpAddress: { ipAddress: { address: "1.2.3.4" } } } } : String(url).includes("machines") ? { id: "machine-public", state: "started" } : { id: "app-public" }));
+    vi.mocked(safeFetch).mockImplementation(async url => response(String(url).includes("graphql") ? { data: { allocateIpAddress: { app: { sharedIpAddress: "1.2.3.4" }, ipAddress: null } } } : String(url).includes("machines") ? { id: "machine-public", state: "started" } : { id: "app-public" }));
     const adapter = registry().get("fly");
     const plan = { planId: "plan", target: snapshot(input), capability: await adapter.capabilities(context, input), accepted: true, blockers: [], warnings: [], expiresAt: new Date(Date.now() + 60000).toISOString(), image: "nginx:alpine" };
     expect(await adapter.apply(context, { planId: "plan", confirm: true, idempotencyKey: "apply:0001" }, plan)).toMatchObject({ status: "running", providerResourceId: "machine-public", target: { resource: { url: "https://demo.fly.dev" } } });

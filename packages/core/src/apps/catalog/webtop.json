@@ -5,7 +5,7 @@
   "description": "An XFCE desktop and Chromium browser on your server, with persistent files and password-protected access.",
   "kind": "template",
   "logo": "webtop",
-  "category": "other",
+  "category": "browser",
   "available": true,
   "verified": false,
   "schemaVersion": 2,

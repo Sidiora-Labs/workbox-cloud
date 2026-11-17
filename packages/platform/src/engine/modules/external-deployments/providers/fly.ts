@@ -212,6 +212,7 @@ export interface FlyRequestOptions {
   body?: unknown;
   idempotencyKey?: string;
   maxBodyBytes?: number;
+  allowMissing?: boolean;
 }
 
 /**
@@ -227,6 +228,7 @@ export async function flyRequest<T>({
   body,
   idempotencyKey,
   maxBodyBytes = 8 * 1024 * 1024,
+  allowMissing = false,
 }: FlyRequestOptions): Promise<T> {
   const url = pathFor(kind, path);
   const headers = {
@@ -247,6 +249,7 @@ export async function flyRequest<T>({
   } catch {
     throw new AppError(method === "GET" ? "Fly could not be reached. Retry the operation." : "Fly request outcome is unknown. Refresh the target before retrying.", 502, method === "GET" ? "FLY_UNAVAILABLE" : "EXTERNAL_UNKNOWN_OUTCOME");
   }
+  if (response.status === 404 && allowMissing) return undefined as T;
   if (!response.ok) {
     if (method !== "GET" && response.status >= 500) throw new AppError("Fly request outcome is unknown. Refresh the target before retrying.", 502, "EXTERNAL_UNKNOWN_OUTCOME");
     const auth = response.status === 401 || response.status === 403;
@@ -276,7 +279,7 @@ export async function flyRequest<T>({
       auth ? "FLY_ACCESS_DENIED" : rateLimited ? "FLY_RATE_LIMITED" : "FLY_REQUEST_FAILED",
     );
   }
-  if (response.status === 204) return undefined as T;
+  if (response.status === 204 || (response.status === 202 && method === "DELETE")) return undefined as T;
   try {
     return (await response.json()) as T;
   } catch {
@@ -291,6 +294,22 @@ export class FlyMachinesClient {
     return flyRequest({ kind: "fly-machine", token: this.connection.token, path: `/v1/apps/${segment(appName, "app")}` });
   }
 
+  inspectAppOrNull(appName: string): Promise<unknown> {
+    return flyRequest({ kind: "fly-machine", token: this.connection.token, path: `/v1/apps/${segment(appName, "app")}`, allowMissing: true });
+  }
+
+  inspectOrNull(appName: string, machineId: string): Promise<unknown> {
+    return flyRequest({ kind: "fly-machine", token: this.connection.token, path: machinePath(appName, machineId), allowMissing: true });
+  }
+
+  listVolumes(appName: string): Promise<unknown> {
+    return flyRequest({ kind: "fly-machine", token: this.connection.token, path: `/v1/apps/${segment(appName, "app")}/volumes` });
+  }
+
+  deleteEmptyApp(appName: string): Promise<unknown> {
+    return flyRequest({ kind: "fly-machine", token: this.connection.token, path: `/v1/apps/${segment(appName, "app")}`, method: "DELETE" });
+  }
+
   createApp(appName: string, idempotencyKey?: string): Promise<unknown> {
     if (!this.connection.organizationId) throw new AppError("A Fly organization is required", 400, "FLY_ORGANIZATION_REQUIRED");
     return flyRequest({ kind: "fly-machine", token: this.connection.token, path: "/v1/apps", method: "POST", body: { app_name: appName, org_slug: this.connection.organizationId }, idempotencyKey });
@@ -302,13 +321,13 @@ export class FlyMachinesClient {
     try {
       response = await safeFetch("https://api.fly.io/graphql", {
         method: "POST", headers: { ...bearer(this.connection.token), "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ query: "mutation AllocatePublicIp($input: AllocateIPAddressInput!) { allocateIpAddress(input: $input) { ipAddress { address type } } }", variables: { input: { appId: appName, type: "shared_v4", clientMutationId: idempotencyKey } } }),
+        body: JSON.stringify({ query: "mutation AllocatePublicIp($input: AllocateIPAddressInput!) { allocateIpAddress(input: $input) { app { sharedIpAddress } ipAddress { address type } } }", variables: { input: { appId: appName, type: "shared_v4", clientMutationId: idempotencyKey } } }),
         timeoutMs: 30_000, maxBodyBytes: 256_000,
       });
     } catch { throw new AppError("Fly IP allocation outcome is unknown.", 502, "EXTERNAL_UNKNOWN_OUTCOME"); }
     if (!response.ok) throw new AppError("Fly could not allocate the app's public IP address.", response.status === 403 ? 403 : 502, response.status >= 500 ? "EXTERNAL_UNKNOWN_OUTCOME" : "FLY_IP_ALLOCATION_FAILED");
-    const result = await response.json() as { data?: { allocateIpAddress?: { ipAddress?: { address?: string } } }; errors?: unknown[] };
-    if (result.errors?.length || !result.data?.allocateIpAddress?.ipAddress?.address) throw new AppError("Fly could not confirm the app's public IP allocation.", 502, "FLY_IP_ALLOCATION_FAILED");
+    const result = await response.json() as { data?: { allocateIpAddress?: { app?: { sharedIpAddress?: string }; ipAddress?: { address?: string } } }; errors?: unknown[] };
+    if (result.errors?.length || !(result.data?.allocateIpAddress?.app?.sharedIpAddress ?? result.data?.allocateIpAddress?.ipAddress?.address)) throw new AppError("Fly could not confirm the app's public IP allocation.", 502, "FLY_IP_ALLOCATION_FAILED");
   }
 
   create(input: CreateFlyMachineInput): Promise<unknown> {

@@ -1,0 +1,58 @@
+{
+  "id": "redis-server",
+  "name": "Redis",
+  "description": "Redis database deployed with the Redis-maintained Railway template, persistent storage and generated credentials.",
+  "kind": "template",
+  "available": true,
+  "verified": false,
+  "nativeSupport": false,
+  "schemaVersion": 3,
+  "category": "database",
+  "logo": "redis",
+  "tags": [
+    "database",
+    "cache",
+    "redis",
+    "railway"
+  ],
+  "services": [],
+  "deploymentRecipes": [
+    {
+      "id": "railway",
+      "label": "Redis on Railway",
+      "provider": "railway",
+      "workloadKind": "service",
+      "source": {
+        "templateCode": "redis",
+        "templateId": "895cb7c9-8ea9-4407-b4b6-b5013a65145e",
+        "templateConfigSha256": "61dd490244e6cd0a2f216834b6c0972321331f31f3192c2ff9d0055ec9d99b4e"
+      },
+      "resource": {
+        "createProject": "true"
+      },
+      "requiredCapabilities": [
+        "apply",
+        "observe",
+        "logs",
+        "destroy"
+      ],
+      "notes": "Creates a dedicated Railway project with the complete reviewed template, including persistent volumes and generated secrets. Deleting this workload deletes that project and its data.",
+      "provenance": {
+        "source": "railway",
+        "url": "https://railway.com/deploy/redis",
+        "revision": "61dd490244e6cd0a2f216834b6c0972321331f31f3192c2ff9d0055ec9d99b4e",
+        "reviewedAt": "2026-11-17"
+      }
+    }
+  ],
+  "provenance": {
+    "source": "railway",
+    "url": "https://railway.com/deploy/redis",
+    "revision": "61dd490244e6cd0a2f216834b6c0972321331f31f3192c2ff9d0055ec9d99b4e",
+    "license": "AGPL-3.0-or-later OR RSALv2 OR SSPL-1.0",
+    "reviewedAt": "2026-11-17"
+  },
+  "marketplace": {
+    "articleFile": "articles/redis-server.md"
+  }
+}

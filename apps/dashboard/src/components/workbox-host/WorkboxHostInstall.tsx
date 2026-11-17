@@ -196,10 +196,17 @@ export function WorkboxHostInstall() {
       if (owner.current === expectedScope) setHost(response.data);
     });
 
-  const steps: StepItem[] = (host?.progress ?? []).map((step) => ({
+  const steps: StepItem[] = (host?.progress ?? []).map((step): StepItem => ({
     id: step.id,
     label: step.label,
-    status: step.status === "completed" ? "done" : step.status,
+    status:
+      step.status === "completed"
+        ? "done"
+        : step.status === "running"
+          ? "running"
+          : step.status === "failed"
+            ? "failed"
+            : "pending",
     children: step.message ? (
       <p className="whitespace-pre-wrap text-xs text-muted-foreground">{step.message}</p>
     ) : undefined,

@@ -176,7 +176,7 @@ export function createExternalDeploymentRepo(db: Database) {
       id: string,
       expectedUpdatedAt: Date,
       expectedOperation: string,
-      patch: Partial<Pick<NewExternalDeploymentOperation, "status" | "providerRequestId" | "providerResourceId" | "providerStatus" | "observed" | "errorCode" | "errorMessage" | "reconcileAfter" | "finishedAt">>,
+      patch: Partial<Pick<NewExternalDeploymentOperation, "operation" | "status" | "providerRequestId" | "providerResourceId" | "providerStatus" | "observed" | "errorCode" | "errorMessage" | "leaseOwner" | "leaseUntil" | "reconcileAfter" | "finishedAt">>,
     ): Promise<ExternalDeploymentOperation | undefined> {
       await db.update(externalDeploymentOperation).set({ ...patch, updatedAt: new Date() }).where(and(
         eq(externalDeploymentOperation.organizationId, organizationId),

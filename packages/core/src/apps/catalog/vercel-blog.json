@@ -7,7 +7,7 @@
   "kind": "template",
   "nativeSupport": false,
   "logo": "nextjs",
-  "category": "other",
+  "category": "development",
   "tags": [
     "nextjs",
     "blog",
@@ -25,7 +25,10 @@
         "repo": "vercel/next.js",
         "ref": "ad4859b599128915430ab68bcf344bddf81c0177",
         "rootDirectory": "examples/blog-starter",
-        "framework": "nextjs"
+        "framework": "nextjs",
+        "installCommand": "npm install",
+        "buildCommand": "npm run build",
+        "outputDirectory": ".next"
       },
       "resource": {
         "createProject": "true"
@@ -62,5 +65,6 @@
       }
     ],
     "articleFile": "articles/vercel-blog.md"
-  }
+  },
+  "schemaVersion": 3
 }

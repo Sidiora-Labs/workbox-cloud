@@ -134,3 +134,33 @@ it("loads bounded provider logs only on request and reports empty output", async
   await click("Refresh logs");
   expect(host.textContent).toContain("No logs returned yet.");
 });
+
+it("allows an explicit confirmed retry for a failed deletion without enabling commands", async () => {
+  state.operations.mockResolvedValue({
+    data: [{ ...operation, kind: "destroy", status: "action_required" }],
+  });
+  await act(async () => root.render(<WorkloadsPage />));
+  expect(host.textContent).not.toContain("Run command");
+  await click("Retry deletion");
+  await click("Delete workload");
+  expect(state.destroy).not.toHaveBeenCalled();
+  const input = host.querySelector('input[aria-label="Confirm deletion of sandbox-one"]')!;
+  await act(async () => {
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!.call(
+      input,
+      "sandbox-one",
+    );
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  await click("Delete workload");
+  expect(state.destroy).toHaveBeenCalledWith("op-one");
+});
+
+it("keeps active deletion pending rather than offering another mutation", async () => {
+  state.operations.mockResolvedValue({
+    data: [{ ...operation, kind: "destroy", status: "stopping" }],
+  });
+  await act(async () => root.render(<WorkloadsPage />));
+  expect(host.textContent).not.toContain("Retry deletion");
+  expect(host.textContent).not.toContain("Run command");
+});

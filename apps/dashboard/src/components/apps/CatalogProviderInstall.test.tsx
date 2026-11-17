@@ -210,3 +210,39 @@ it("does not navigate when an old workspace installation finishes after the work
   await act(async () => complete!({ data: { targetId: "old-workspace" } }));
   expect(h.push).not.toHaveBeenCalled();
 });
+
+it("creates a recipe-owned project without requiring existing project or environment IDs", async () => {
+  h.template.mockResolvedValue({
+    data: {
+      ...app,
+      deploymentRecipes: [
+        {
+          ...app.deploymentRecipes[0],
+          provider: "railway",
+          resource: { createProject: "true" },
+          inputs: [],
+        },
+      ],
+    },
+  });
+  h.list.mockResolvedValue({
+    data: [
+      {
+        id: "railway",
+        provider: "railway",
+        name: "Railway team",
+        status: "active",
+        publicFields: { workspaceId: "workspace" },
+      },
+    ],
+  });
+  await act(async () => root.render(<CatalogProviderInstall appId="demo" recipeId="vercel" />));
+  await select("Provider connection", "railway");
+  expect(h.discover).not.toHaveBeenCalled();
+  expect(host.querySelector('[aria-label="Project"]')).toBeNull();
+  await click("Review installation");
+  expect(h.plan).toHaveBeenCalledWith(
+    expect.objectContaining({ target: expect.objectContaining({ resource: { name: "demo" } }) }),
+  );
+  expect(host.textContent).toContain("Creates a new project");
+});

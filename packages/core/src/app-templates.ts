@@ -32,6 +32,8 @@ import { resolveServiceHostnameLabel } from "./service-routing";
 import catalog from "./apps/catalog.json";
 
 export type AppCategory =
+  | "browser"
+  | "development"
   | "backend"
   | "database"
   | "cms"
@@ -554,7 +556,7 @@ export const APP_TEMPLATES: readonly AppTemplate[] = catalog.apps as unknown as 
  * enum members never bump it. Overlay ingest gates against `MAX_SUPPORTED_SCHEMA`
  * (see apps/schema.ts) so a newer-than-known entry degrades gracefully.
  */
-export const CURRENT_SCHEMA_VERSION = 2;
+export const CURRENT_SCHEMA_VERSION = 3;
 
 export function getAppTemplate(id: string): AppTemplate | undefined {
   return APP_TEMPLATES.find((t) => t.id === id);

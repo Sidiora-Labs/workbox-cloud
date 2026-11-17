@@ -37,6 +37,11 @@ const CATEGORY_ORDER = [
   "mail",
   "other",
 ] as const;
+const CATEGORY_LABELS: Record<string, string> = {
+  ai: "AI & models",
+  browser: "Browsers",
+  development: "Development",
+};
 
 /** Not installable right now: coming-soon OR needs a newer Workbox Cloud. */
 const isLocked = (a: AppCatalogEntry) => !!a.comingSoon || !!a.requiresUpdate;
@@ -126,9 +131,7 @@ export function AppCatalog({ embedded = false }: { embedded?: boolean } = {}) {
   }, [catalog, category, provider, query, t.library]);
 
   const catLabel = (c: string) =>
-    (ap.categories as Record<string, string> | undefined)?.[c] ??
-    { ai: "AI & models", browser: "Browsers", development: "Development" }[c] ??
-    c;
+    (ap.categories as Record<string, string> | undefined)?.[c] ?? CATEGORY_LABELS[c] ?? c;
 
   useEffect(() => {
     loadCatalog().finally(() => setLoading(false));

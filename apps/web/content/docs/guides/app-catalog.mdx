@@ -9,7 +9,7 @@ Open **Apps → Install app** to browse the catalog. Search by name or category,
 
 For a native installation, select **Workbox Cloud & your servers**, then a compatible connected server or managed workspace. Configure the app's settings, storage and endpoints using the existing installation form. Some apps, including the browser entries below, require a compatible self-managed server and are not offered on managed Cloud.
 
-For a provider recipe, select the named Railway or Vercel option, choose a saved connection, and complete the destination and app settings. Connections retain their account or team identity even if multiple accounts contain projects with the same name. The recipe supplies the reviewed image or source and any service dependencies; you do not need to recreate those resources by hand.
+For a provider recipe, select the named Railway, Vercel or Fly.io option, choose a saved connection, and complete the destination and app settings. Connections retain their account or team identity even if multiple accounts contain projects with the same name. The recipe supplies the reviewed image or source and any service dependencies; you do not need to recreate those resources by hand.
 
 Select **Review installation**. Workbox Cloud checks the connection, required capabilities and app configuration before offering **Install app**. Read the storage and ownership information in the review. Changing the configuration invalidates that review. An accepted plan permits installation; the app becomes ready only after its provider reports the required state.
 
@@ -21,8 +21,11 @@ Provider recipes are a curated selection, not a live popularity ranking or a mir
 | --- | --- | --- |
 | Railway | PostgreSQL, Redis, n8n | Creates a dedicated project from the reviewed Railway template graph, preserving its services, variable references and volumes |
 | Vercel | Next.js Starter, Next.js Blog, Portfolio Starter | Creates a project and builds a reviewed upstream Git revision; does not create a database, storage integration or a copy of the source repository |
+| Fly.io | Excalidraw, IT-Tools | Creates a dedicated app and Machine with public HTTPS; no database or volume is provisioned |
 
 Give these installations a new project name after selecting the provider connection. Railway template installation requires a workspace connection that can create projects. A project-scoped Railway token cannot create a separate project. If Railway's upstream template graph changes after its recorded review, installation stops until the catalog recipe is reviewed again.
+
+Fly.io recipes use a pinned container image and a small shared-CPU Machine. App data stays in the user’s browser; the self-hosted Excalidraw image does not include a collaboration backend. Deletion removes the owned Machine, then removes its dedicated Fly app only when no other Machines or volumes remain.
 
 The Vercel account must have access to deploy the public source repository. The created project can be observed and removed from Workbox Cloud, but these starters do not include a source editor or automatically create a repository in your Git account.
 
@@ -43,9 +46,9 @@ After installation, open the app's connection details for its gateway URL, usern
 
 ## Prepare a Workbox host
 
-Choose **Workbox prepared host** in the catalog to turn a compatible connected Linux server into a Workbox environment. Host preparation and child sandbox creation are separate steps.
+Choose **Workbox prepared host** in the catalog to turn a compatible connected x86_64 Debian or Ubuntu server into a Workbox environment. Host preparation and child sandbox creation are separate steps.
 
-Select the server, run the host checks, and review the installation. Workbox Cloud prepares the daemon, its dependencies and filesystem/runtime assets, starts the managed service and verifies authenticated readiness. Progress and any failure remain visible. The Workbox connection becomes usable after verification; its API credentials are stored privately by Workbox Cloud.
+Select the server, run the host checks, and review the installation. Workbox Cloud prepares the daemon, its dependencies and filesystem/runtime assets, starts the managed service and verifies authenticated readiness. Progress and any failure remain visible. Removal requires an empty child-sandbox inventory and retains host files. The Workbox connection becomes usable after verification; its API credentials are stored privately by Workbox Cloud.
 
 Use the ready host to create a **Workbox sandbox**. Select a prepared filesystem profile and configure the child sandbox's limits and environment. A normal application container cannot stand in for a prepared Workbox host. Native Railway and Vercel sandboxes and Fly Sprites remain separate choices with their own lifecycle and persistence.
 

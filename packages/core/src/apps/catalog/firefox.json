@@ -5,7 +5,7 @@
   "description": "A private Firefox browser streamed from your server, with persistent profiles and a protected access gateway.",
   "kind": "template",
   "logo": "firefox",
-  "category": "other",
+  "category": "browser",
   "available": true,
   "verified": false,
   "schemaVersion": 2,

@@ -7,7 +7,7 @@ import { safeFetch } from "../src/engine/lib/safe-fetch";
 vi.mock("../src/engine/lib/safe-fetch", () => ({ safeFetch: vi.fn() }));
 const ctx = { organizationId: "org-one" };
 const target: ExternalTargetInput = { provider: "vercel", workloadKind: "service", connectionId: "credential-one", providerIdentity: { teamId: "team-one" }, resource: { name: "catalog-site", createProject: "true", appTemplateId: "vercel-blog", appRecipeId: "vercel" } };
-const source = { repo: "vercel/next.js", ref: "a".repeat(40), rootDirectory: "examples/blog-starter", framework: "nextjs" };
+const source = { repo: "vercel/next.js", ref: "a".repeat(40), rootDirectory: "examples/blog-starter", framework: "nextjs", outputDirectory: ".next" };
 const resolver = async () => ({ id: "credential-one", publicFields: { accountId: "account-one", teamId: "team-one" }, secrets: { apiToken: "secret-token" } });
 const request = vi.fn();
 const adapter = () => createVercelTemplateAdapter(resolver, { signingKey: "instance-secret", client: () => ({ request }) });
@@ -28,7 +28,7 @@ describe("Vercel catalog lifecycle", () => {
   it("creates a scoped project with encrypted env, deploys the pinned repository, and retains signed ownership", async () => {
     request.mockResolvedValueOnce(null).mockResolvedValueOnce({ id: "prj-created", name: "catalog-site" }).mockResolvedValueOnce({ id: "dpl-created", projectId: "prj-created", readyState: "QUEUED", url: "catalog-site.vercel.app" });
     const result = await apply();
-    expect(request).toHaveBeenNthCalledWith(2, "/v11/projects", { method: "POST", body: { name: "catalog-site", framework: "nextjs", rootDirectory: "examples/blog-starter", environmentVariables: [{ key: "CUSTOM_SECRET", value: "secret-value", type: "encrypted", target: ["production", "preview", "development"] }] } });
+    expect(request).toHaveBeenNthCalledWith(2, "/v11/projects", { method: "POST", body: { name: "catalog-site", framework: "nextjs", rootDirectory: "examples/blog-starter", outputDirectory: ".next", environmentVariables: [{ key: "CUSTOM_SECRET", value: "secret-value", type: "encrypted", target: ["production", "preview", "development"] }] } });
     expect(request).toHaveBeenNthCalledWith(3, "/v13/deployments", { method: "POST", body: expect.objectContaining({ project: "prj-created", target: "production", gitSource: { type: "github", org: "vercel", repo: "next.js", ref: source.ref, sha: source.ref } }) });
     expect(result).toMatchObject({ providerResourceId: "dpl-created", status: "provisioning", target: { resource: { projectId: "prj-created", deploymentConfirmed: "true", url: "https://catalog-site.vercel.app" } } });
     expect(result.target.resource.managedProjectProof).toMatch(/^[a-f0-9]{64}$/);

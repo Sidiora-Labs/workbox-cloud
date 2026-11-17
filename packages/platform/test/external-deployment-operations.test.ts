@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
   operationUpdate: vi.fn(),
   operationList: vi.fn(),
   targetList: vi.fn(),
+  catalogGetTemplate: vi.fn(),
 }));
 
 vi.mock("@repo/db", () => ({
@@ -40,6 +41,8 @@ vi.mock("../src/engine/modules/credentials/credential.service", () => ({
 import { createExternalDeploymentDependencies } from "../src/engine/modules/external-deployments/external.operations";
 import { ExternalProviderRegistry, type ExternalProviderAdapter } from "../src/external-deployments";
 import { decryptSecretField } from "../src/engine/lib/credential-encryption";
+import { type AppTemplate } from "@repo/core";
+vi.mock("../src/engine/modules/apps/catalog-source", () => ({ getRuntimeTemplate: mocks.catalogGetTemplate }));
 
 const inputTarget = { provider: "railway", workloadKind: "railway-sandbox", connectionId: "cred_1", providerIdentity: { workspaceId: "workspace_1" }, resource: { projectId: "project_1", environmentId: "env_1" } } as const;
 
@@ -88,6 +91,33 @@ function checkedPlan() {
 }
 
 describe("external deployment operations", () => {
+  it("resolves catalog recipes on the server and preserves immutable identity and encrypted config", async () => {
+    reset();
+    const recipe: AppTemplate = { id: "test-catalog-recipe", name: "Catalog App", description: "Test", kind: "template", category: "other", logo: "package", available: true,
+      deploymentRecipes: [{ id: "railway", label: "Railway", provider: "railway", workloadKind: "railway-sandbox", requiredCapabilities: ["apply"], inputs: [{ key: "secret", label: "Secret", type: "password", target: "environment", targetKey: "PRIVATE_KEY" }] }] };
+    mocks.catalogGetTemplate.mockReturnValue(recipe);
+    try {
+      mocks.targetFindByFingerprint.mockResolvedValue(undefined);
+      mocks.targetCreate.mockImplementation(async value => ({ ...target, ...value }));
+      mocks.operationCreate.mockResolvedValue({ id: "catalog-plan" });
+      const adapter = { provider: "railway", workloads: ["railway-sandbox"], capabilities: async () => checkedPlan().capability, preflight: async () => checkedPlan(), plan: vi.fn(async () => checkedPlan()), apply: vi.fn(), observe: vi.fn() } as unknown as ExternalProviderAdapter;
+      const deps = createExternalDeploymentDependencies(new ExternalProviderRegistry([adapter]));
+      const result = await deps.collection.plan(context, { target: inputTarget, catalog: { templateId: recipe.id, recipeId: "railway", config: { secret: "super-private-value" } }, idempotencyKey: "catalog-plan-test" });
+      expect(result.target.catalog).toMatchObject({ templateId: recipe.id, recipeId: "railway", name: recipe.name });
+      expect(result.target.catalog?.digest).toMatch(/^[a-f0-9]{64}$/);
+      const request = mocks.operationCreate.mock.calls[0]![0].request;
+      expect(request.target.catalog).toEqual(result.target.catalog);
+      expect(JSON.stringify(result)).not.toContain("super-private-value");
+      expect(JSON.parse(decryptSecretField(request.environmentEnc)!)).toEqual({ PRIVATE_KEY: "super-private-value" });
+    } finally { mocks.catalogGetTemplate.mockReset(); }
+  });
+
+  it("rejects raw requests attempting to forge catalog ownership", async () => {
+    reset();
+    const deps = createExternalDeploymentDependencies(new ExternalProviderRegistry());
+    await expect(deps.collection.plan(context, { target: { ...inputTarget, resource: { ...inputTarget.resource, appTemplateId: "forged" } }, idempotencyKey: "forged-catalog-test" })).rejects.toMatchObject({ code: "APP_RECIPE_OVERRIDE" });
+    expect(mocks.targetCreate).not.toHaveBeenCalled();
+  });
   it("returns explicit capability blockers when no provider adapter is configured", async () => {
     reset();
     const deps = createExternalDeploymentDependencies(new ExternalProviderRegistry());
@@ -242,7 +272,7 @@ describe("external deployment operations", () => {
     const destroyed = { id: "apply_1", organizationId: "org_1", targetId: "target_1", operation: "destroy", workloadKind: "railway-sandbox", idempotencyKey: "apply:railway:0001", status: "stopped", request: { target: inputTarget }, providerResourceId: "sandbox_new", createdAt: new Date(), updatedAt: new Date() };
     const active = { ...destroyed, operation: "apply", status: "ready" };
     mocks.operationFindById.mockResolvedValue(active);
-    mocks.operationUpdate.mockResolvedValue(destroyed);
+    mocks.operationUpdate.mockImplementation(async (_org, _id, patch) => ({ ...destroyed, ...patch }));
     const destroy = vi.fn(async () => ({ ...destroyed, target: checkedPlan().target }));
     const adapter = { provider: "railway", workloads: ["railway-sandbox"], destroy } as unknown as ExternalProviderAdapter;
     const deps = createExternalDeploymentDependencies(new ExternalProviderRegistry([adapter]));
@@ -294,6 +324,64 @@ describe("external deployment operations", () => {
     const deps = createExternalDeploymentDependencies(new ExternalProviderRegistry([adapter]));
     const result = await deps.collection.destroy(context, { operationId: "apply_1", confirm: true });
     expect(result).toMatchObject({ kind: "destroy", status: "reconciling", providerResourceId: "sandbox_new" });
+  });
+
+  it("allows a confirmed deletion retry after a provider refusal", async () => {
+    reset();
+    const previous = { id: "apply_retry", organizationId: "org_1", targetId: "target_1", operation: "destroy", workloadKind: "railway-sandbox", idempotencyKey: "apply:retry:0001", status: "action_required", request: { target: inputTarget }, providerResourceId: "sandbox_new", createdAt: new Date(), updatedAt: new Date(), leaseOwner: null, leaseUntil: null };
+    mocks.operationFindById.mockResolvedValue(previous);
+    mocks.operationUpdate.mockImplementation(async (_org, _id, patch) => ({ ...previous, ...patch }));
+    const destroy = vi.fn(async () => ({ status: "stopped", target: checkedPlan().target, providerResourceId: "sandbox_new" }));
+    const deps = createExternalDeploymentDependencies(new ExternalProviderRegistry([{ provider: "railway", workloads: ["railway-sandbox"], destroy } as unknown as ExternalProviderAdapter]));
+    expect((await deps.collection.destroy(context, { operationId: previous.id, confirm: true })).status).toBe("stopped");
+    expect(destroy).toHaveBeenCalledOnce();
+  });
+
+  it("does not invoke a provider when another deletion worker wins the claim", async () => {
+    reset();
+    const previous = { id: "apply_race", organizationId: "org_1", targetId: "target_1", operation: "apply", workloadKind: "railway-sandbox", idempotencyKey: "apply:race:0001", status: "ready", request: { target: inputTarget }, providerResourceId: "sandbox_new", createdAt: new Date(), updatedAt: new Date() };
+    mocks.operationFindById.mockResolvedValue(previous);
+    mocks.operationUpdate.mockResolvedValue({ ...previous, operation: "destroy", status: "stopping", leaseOwner: "other-worker" });
+    const destroy = vi.fn();
+    const deps = createExternalDeploymentDependencies(new ExternalProviderRegistry([{ provider: "railway", workloads: ["railway-sandbox"], destroy } as unknown as ExternalProviderAdapter]));
+    await deps.collection.destroy(context, { operationId: previous.id, confirm: true });
+    expect(destroy).not.toHaveBeenCalled();
+  });
+
+  it("keeps pending deletion while observation still reports a ready resource", async () => {
+    reset();
+    const previous = { id: "apply_pending", organizationId: "org_1", targetId: "target_1", operation: "destroy", workloadKind: "railway-sandbox", idempotencyKey: "apply:pending:0001", status: "stopping", request: { target: inputTarget }, providerResourceId: "sandbox_new", createdAt: new Date(), updatedAt: new Date() };
+    mocks.operationFindById.mockResolvedValue(previous);
+    mocks.operationUpdate.mockImplementation(async (_org, _id, patch) => ({ ...previous, ...patch }));
+    const observe = vi.fn(async () => ({ status: "ready", target: checkedPlan().target, providerResourceId: "sandbox_new" }));
+    const destroy = vi.fn();
+    const deps = createExternalDeploymentDependencies(new ExternalProviderRegistry([{ provider: "railway", workloads: ["railway-sandbox"], observe, destroy } as unknown as ExternalProviderAdapter]));
+    const result = await deps.collection.observe(context, { operationId: previous.id, target: inputTarget });
+    expect(result).toMatchObject({ kind: "destroy", status: "stopping" });
+    expect(destroy).not.toHaveBeenCalled();
+  });
+
+  it("does not confuse a stopped machine with confirmed resource deletion", async () => {
+    reset();
+    const previous = { id: "apply_stopped", organizationId: "org_1", targetId: "target_1", operation: "destroy", workloadKind: "railway-sandbox", idempotencyKey: "apply:stopped:0001", status: "reconciling", request: { target: inputTarget }, providerResourceId: "sandbox_new", createdAt: new Date(), updatedAt: new Date() };
+    mocks.operationFindById.mockResolvedValue(previous);
+    mocks.operationUpdate.mockImplementation(async (_org, _id, patch) => ({ ...previous, ...patch }));
+    const observe = vi.fn(async () => ({ status: "stopped", providerStatus: "STOPPED", target: checkedPlan().target, providerResourceId: "sandbox_new" }));
+    const deps = createExternalDeploymentDependencies(new ExternalProviderRegistry([{ provider: "railway", workloads: ["railway-sandbox"], observe } as unknown as ExternalProviderAdapter]));
+    expect(await deps.collection.observe(context, { operationId: previous.id, target: inputTarget })).toMatchObject({ kind: "destroy", status: "reconciling" });
+  });
+
+  it("makes an expired deletion worker recoverable without retrying its mutation", async () => {
+    reset();
+    const previous = { id: "delete_lost", organizationId: "org_1", targetId: "target_1", operation: "destroy", workloadKind: "railway-sandbox", idempotencyKey: "apply:lost:0001", status: "stopping", request: { target: inputTarget }, providerResourceId: "sandbox_new", createdAt: new Date(), updatedAt: new Date(), leaseOwner: "lost", leaseUntil: new Date(0) };
+    mocks.operationFindById.mockResolvedValue(previous);
+    mocks.operationUpdate.mockImplementation(async (_org, _id, patch) => ({ ...previous, ...patch }));
+    const observe = vi.fn(async () => ({ status: "ready", providerStatus: "RUNNING", target: checkedPlan().target, providerResourceId: "sandbox_new" }));
+    const destroy = vi.fn();
+    const deps = createExternalDeploymentDependencies(new ExternalProviderRegistry([{ provider: "railway", workloads: ["railway-sandbox"], observe, destroy } as unknown as ExternalProviderAdapter]));
+    expect(await deps.collection.observe(context, { operationId: previous.id, target: inputTarget })).toMatchObject({ kind: "destroy", status: "reconciling" });
+    expect(destroy).not.toHaveBeenCalled();
+    expect(mocks.operationUpdate).toHaveBeenCalledWith("org_1", previous.id, expect.objectContaining({ leaseOwner: null, leaseUntil: null }));
   });
 
 });
