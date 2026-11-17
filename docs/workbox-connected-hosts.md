@@ -34,6 +34,10 @@ The connected-host adapter supports create, observe, execute, destroy and reconc
 
 Workbox child sandboxes, Railway Sandboxes, Vercel Sandboxes and Fly Sprites retain their own resource identities and APIs. A host installation does not convert one resource kind into another.
 
+## Qualification boundary
+
+The actual installer prepared both Minimal and Agents assets and verified their private API. An isolated Ubuntu VM then ran actual children from both environments: READY/HEALTHY state, successful `wb status` and command execution, file persistence across exec sessions, and deletion with an empty inventory all passed. The VM reused public assets built by the native installer and used extended test timeouts under software emulation. These checks do not establish cold installation speed, bundled coding-agent CLI execution or the full staging host-provisioning UI lifecycle. Agents doctor returned overall success with a retained Docker-version probe warning; not every individual check passed.
+
 The installer and adapter contract are pinned to Workbox commit `9741e30334139bbe7e28cd5c034e345c616a470a`:
 [create schema](https://github.com/Sidiora-Labs/workbox/blob/9741e30334139bbe7e28cd5c034e345c616a470a/packages/server/src/server.js),
 [provider mapping](https://github.com/Sidiora-Labs/workbox/blob/9741e30334139bbe7e28cd5c034e345c616a470a/docs/hyperfide-provider.md),

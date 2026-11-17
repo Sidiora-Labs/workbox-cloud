@@ -56,7 +56,7 @@ export async function runManagedWorkboxCommand(
   // Keep flock's descriptor inherited so descendants retain the busy guard even
   // after the SSH caller times out. Let package managers finish their transactions.
   return root.exec(
-    `umask 077; flock -n -E 75 -- ${q(WORKBOX_CONFIG + "/provision.lock")} sh -c ${q(command)}`,
+    `workbox_umask=$(umask); umask 077; exec 9>${q(WORKBOX_CONFIG + "/provision.lock")}; umask "$workbox_umask"; flock -n -E 75 9 || exit 75; sh -c ${q(command)}`,
     { timeout },
   );
 }
@@ -322,6 +322,9 @@ export async function installWorkboxHost(
   await run(
     `set -eu; for file in /etc/subuid /etc/subgid; do if [ -f "$file" ]; then awk -F: '$1 != "root" && $1 != "0" && $2 < 365536 && $2+$3 > 300000 {exit 1}' "$file"; fi; done; sh ${q(WORKBOX_HOME + "/source/deploy/install.sh")} --root ${q(WORKBOX_DATA)} --etc ${q(WORKBOX_CONFIG)} --cgroup-parent workbox-cloud-host`,
   );
+  // Shared asset parents must be traversable by the mapped sandbox UID.
+  // Explicit modes also repair retries after a formerly restrictive installer umask.
+  await run(`install -d -m 755 ${q(WORKBOX_DATA + "/rootfs")} ${q(WORKBOX_DATA + "/runtime")}`);
   const cli = `env PATH=${q(WORKBOX_HOME + "/node/bin")}:"$PATH" WORKBOX_ROOT=${q(WORKBOX_DATA)} WORKBOX_CGROUP_PARENT=workbox-cloud-host WORKBOX_ROOTFS=${q(input.rootfs)} ${q(WORKBOX_HOME + "/node/bin/node")} ${q(WORKBOX_HOME + "/source/packages/cli/src/main.js")}`;
   await step("rootfs", "Building the shared sandbox filesystem.");
   for (const name of input.rootfs === "agents" ? ["minimal", "agents"] : ["minimal"]) {

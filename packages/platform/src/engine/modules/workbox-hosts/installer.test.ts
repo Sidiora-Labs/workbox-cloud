@@ -99,6 +99,7 @@ describe("managed Workbox installer", () => {
     expect(commands.join("\n")).toContain("rootfs build minimal");
     expect(commands.join("\n")).toContain("rootfs build agents");
     expect(commands.join("\n")).toContain("runtime.ensureFresh()");
+    expect(commands.join("\n")).toContain("install -d -m 755");
     expect(commands.join("\n")).not.toContain(token);
     expect(JSON.stringify(files)).not.toContain(token);
     expect(files.find((f) => f.path.endsWith("serve.json"))?.content).toContain("tokenSha256");
@@ -359,6 +360,27 @@ describe("managed Workbox installer", () => {
       await expect(runManagedWorkboxCommand(root, "true")).resolves.toBe("");
     } finally {
       await completion;
+      await rm(directory, { recursive: true, force: true });
+    }
+  });
+  it("keeps the lock private without leaking its restrictive umask into asset creation", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "workbox-mask-"));
+    const root = fake({
+      exec: (command) =>
+        new Promise<string>((resolve, reject) => {
+          const child = spawn("sh", [
+            "-c",
+            "umask 022; " + command.replaceAll(WORKBOX_CONFIG, directory),
+          ]);
+          child.on("error", reject);
+          child.on("exit", (code) => (code === 0 ? resolve("") : reject(Error(`exit ${code}`))));
+        }),
+    });
+    try {
+      await runManagedWorkboxCommand(root, `mkdir '${directory}/asset'`);
+      expect((await stat(join(directory, "provision.lock"))).mode & 0o777).toBe(0o600);
+      expect((await stat(join(directory, "asset"))).mode & 0o777).toBe(0o755);
+    } finally {
       await rm(directory, { recursive: true, force: true });
     }
   });
